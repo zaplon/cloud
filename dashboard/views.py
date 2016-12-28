@@ -26,7 +26,7 @@ class SetupView(View):
     def get(self, request, *args, **kwargs):
         step = int(kwargs.get('step'))
         if step == 1:
-            form = DoctorForm()
+            form = DoctorForm(initial={'email': request.user.email})
             c = {'form': form}
             c.update(csrf(request))
             return render_to_response('dashboard/setup/step_1.html', c)
