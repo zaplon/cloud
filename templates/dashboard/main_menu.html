@@ -1,0 +1,20 @@
+<ul class="main-nav nav nav-inline" style="z-index: 10000;">
+    <li class="nav-item">
+        <a class="nav-link {% if section == 'calendar' %} active {% endif %}" href="/">Kalendarz</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if section == 'patients' %} active {% endif %}" href="/patients/">Lista pacjentów</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if section == 'medicines' %} active {% endif %}" href="/medicines/">Lista leków</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if section == 'icd' %} active {% endif %}" href="/icd10/">Kody Icd-10</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if section == 'templates' %} active {% endif %}" href="{% url 'templates' %}">Szablony</a>
+    </li>
+
+
+
+</ul>

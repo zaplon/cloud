@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section=section %}
+{% endblock %}
+
+{% block content %}
+    <section class="box-typical box-typical-padding text-center">
+        <h1 class="display-1"><i class="fa fa-warning"></i></h1>
+        <p class="text-muted">{{ message }}</p>
+    </section>
+{% endblock %}

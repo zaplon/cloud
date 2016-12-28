@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load account_tags %}
+{% load crispy_forms_tags %}
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static "css/separate/pages/login.css" %}">
+{% endblock %}
+
+{% block body %}
+       <div class="page-center">
+        <div class="page-center-in">
+            <div class="container-fluid">
+                <form class="sign-box" method="POST" action="{% url "account_login" %}"
+                      autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+                    <div class="sign-avatar">
+                        <img src="{% static "img/avatar-sign.png" %}" alt="">
+                    </div>
+                    <header class="sign-title">Zaloguj się</header>
+                    {% csrf_token %}
+                    {% crispy form NoFormFormHelper %}
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
+                    <a href="{% url "account_password_reset" %}" class="">{% trans "Forgot your password?" %}</a>
+                    {% if ACCOUNT_OPEN_SIGNUP %}
+                        <p class="login-signup">
+                            <small>
+                                {% trans "Don't have an account?" %}  <strong><a href="{% urlnext 'account_signup' %}">{% trans "Sign up" %}</a></strong>
+                            </small>
+                        </p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div><!--.page-center-->
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.css" %}">
+    <link rel="stylesheet" href="{% static "css/separate/pages/calendar.css" %}">
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static "fullcalendar/dist/fullcalendar.min.js" %}"></script>
+    <script src="{% static "fullcalendar/dist/locale/pl.js" %}"></script>
+	<script src="{% static "js/calendar.js" %}"></script>
+{% endblock %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='calendar' %}
+{% endblock %}
+
+{% block content %}
+    <div class="box-typical">
+        <div class="calendar-page">
+            <div class="calendar-page-content">
+                <div class="calendar-page-title">Calendar</div>
+                <div class="calendar-page-content-in">
+                    <div id='calendar'></div>
+                </div><!--.calendar-page-content-in-->
+            </div><!--.calendar-page-content-->
+
+            <div class="calendar-page-side">
+                <section class="calendar-page-side-section">
+                    <div class="calendar-page-side-section-in">
+                        <div id="side-datetimepicker"></div>
+                    </div>
+                </section>
+
+                <section class="calendar-page-side-section">
+                    <header class="box-typical-header-sm">Najbliższe wizyty</header>
+                    <div class="calendar-page-side-section-in">
+                        <ul class="exp-timeline" data-bind="foreach: nextVisits">
+                            <li class="exp-timeline-item">
+                                <div class="dot"></div>
+                                <div data-bind="{text: $parent.formatDate(start)}"></div>
+                                <div data-bind="{text: text}" class="color-blue-grey"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="calendar-page-side-section">
+                    <header class="box-typical-header-sm">Filtry</header>
+                    <div class="calendar-page-side-section-in">
+                        <ul class="colors-guide-list">
+                            <li>
+                                <div class="color-double green">
+                                    <div></div>
+                                </div>
+                                Wizyty zakończone
+                            </li>
+                            <li>
+                                <div class="color-double">
+                                    <div></div>
+                                </div>
+                                Wizyty zaplanowane
+                            </li>
+                            <li>
+                                <div class="color-double red">
+                                    <div></div>
+                                </div>
+                                Wizyty anulowane
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div><!--.calendar-page-side-->
+        </div><!--.calendar-page-->
+    </div><!--.box-typical-->
+{% endblock %}

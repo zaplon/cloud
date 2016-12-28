@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='templates' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">Początek</a></li>
+        <li><a href="/templates/">Szablony</a></li>
+        <li class="active">Nowy szablon</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <section class="box-typical box-typical-padding">
+        {% crispy form %}
+    </section>
+{% endblock %}

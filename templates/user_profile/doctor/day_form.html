@@ -1,0 +1,32 @@
+<form class="form-inline">
+    <tr>
+        <td>
+            <div class="form-check">
+                <label class="form-check-label" style="display: inline-block">
+                    <input class="form-check-input select-day" type="checkbox"
+                           data-bind="{checked: dayChecked}">
+                </label><span data-bind="text: dayName"></span>
+            </div>
+        </td>
+        <td>
+            <label class="control-label"></label>
+            <input data-bind="{value: start, enable: dayChecked, data-id: 'start', class: {'form-control has-errors': 'start' in errors[dayIndex]}}"
+                   type="time" class="form-control" placeholder="godzina">
+        </td>
+        <td>
+            <label class="control-label"></label>
+            <input type="time" data-bind="{value: end, enable: dayChecked}" class="form-control" placeholder="godzina">
+        </td>
+        <td>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" data-bind="checked: hasBreak"> Przerwa
+                </label>
+            </div>
+        </td>
+        <td><input data-bind="{enable: hasBreak && dayChecked, value: break_start}" type="time"
+                                         class="form-control" placeholder="godzina"></td>
+        <td><input data-bind="{enable: hasBreak && dayChecked, value: break_end}" type="time"
+                                       class="form-control" placeholder="godzina"></td>
+    </tr>
+</form>

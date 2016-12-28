@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='templates' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">Początek</a></li>
+        <li><a href="/templates">Szablony</a></li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <section class="box-typical box-typical-padding">
+        <table class="table table-striped">
+            {% for object in object_list %}
+                <tr>
+                    <td>{{ object.name }}</td>
+                    <td>{{ object.key }}</td>
+                    <td>{{ object.text }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+{% endblock %}
