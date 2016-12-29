@@ -12,12 +12,32 @@ $(document).ready(function (){
         saveDays: function(){
             $.post('/profile/settings/', {days: JSON.stringify(viewModel.days()), tab:1}).success(function(res){
                 if (res.success)
+                    if (window.location.pathname.indexOf('setup') > -1)
+                        window.location.pathname = '/';
                     notie.alert('success', 'Dane zapisano poprawnie', 3);
                 else {
                     viewModel.errors = res.errors;
                 }
             });
-        }
+        },
+        saveProfile: function(){
+            $.ajax({
+                data: $('profile-form').serialize(),
+                url: '/profile/settings/',
+                type: 'POST',
+                success: function(res){
+                    if (!(res['success'])) {
+                        // Here we replace the form, for the
+                        $('profile-form').replaceWith(res['form_html']);
+                    }
+                    else {
+                        if (window.location.pathname.indexOf('setup') > -1)
+                            window.location.pathname = '/';
+                        notie.alert('success', 'Dane zapisano poprawnie', 3);
+                        // Here you can show the user a success message or do whatever you need
+                        //$(example_form).find('.success-message').show();
+                    }
+                }
     };
     ko.applyBindings(viewModel);
 });
