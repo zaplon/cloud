@@ -9,6 +9,12 @@ $(document).ready(function (){
         days: ko.observableArray([day(1), day(2), day(3), day(4), day(5), day(6), day(7)]),
         dayNames: dayNames,
         errors: ko.observableArray([]),
+        saveSettings: function(){
+            if $('#profile-form').is(':visible'))
+                viewModel.saveProfile();
+            else
+                viewModel.saveDays();
+        },
         saveDays: function(){
             $.post('/profile/settings/', {days: JSON.stringify(viewModel.days()), tab:1}).success(function(res){
                 if (res.success)
