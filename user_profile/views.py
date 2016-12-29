@@ -2,6 +2,7 @@
 from django.shortcuts import render, HttpResponse
 from django.views import View
 from .forms import *
+from utils.forms import ajax_form_validate
 import json
 
 
@@ -12,13 +13,12 @@ class SettingsView(View):
         if hasattr(self.request.user, 'doctor'):
             doctor = self.request.user.doctor
             user = self.request.user
-            form = DoctorForm({'first_name': user.first_name, 'last_name': user.last_name, 'pwz': doctor.pwz,
+            form = DoctorForm(initial={'first_name': user.first_name, 'last_name': user.last_name, 'pwz': doctor.pwz,
                         'email': user.email})
             return form
 
     def get(self, request, *args, **kwargs):
-        day_names = [u'poniedziałek', u'wtorek', u'środa', u'czwartek', u'piątek', u'sobota', u'niedziela']
-        return render(request, self.template_name, {'day_names': day_names, 'profile_form': self.get_form()})
+        return render(request, self.template_name, {'profile_form': self.get_form()})
 
     def post(self, request):
         if not request.POST.get('tab', None):
@@ -39,5 +39,8 @@ class SettingsView(View):
                 doctor.save()
             else:
                 return HttpResponse(json.dumps({'success': False, 'errors': errors}), status=200, content_type='application/json')
+        if tab == '2':
+            res = ajax_form_validate(request.POST['data'], DoctorForm)
+            return HttpResponse(res, status=200, content_type='application/json')
         return HttpResponse('', status=200, content_type='application/json')
 
