@@ -43,8 +43,11 @@ class Term(models.Model):
                 end_visit = end_visit + datetime.timedelta(minutes=duration)
                 visit_date = datetime.datetime.combine(day.date(), start_visit.time())
                 print visit_date
-                Term.objects.create(doctor=doctor, duration=duration, patient = patient,
-                                    datetime=visit_date)
+                try:
+                    Term.objects.get(doctor=doctor, datetime=visit_date)
+                except:
+                    Term.objects.create(doctor=doctor, duration=duration, patient = patient,
+                                        datetime=visit_date)
             return True
 
 
