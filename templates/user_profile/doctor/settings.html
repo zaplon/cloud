@@ -44,11 +44,16 @@
                 </table>
                 <div class="mt-1">
                     <button data-bind="click: saveDays" class="btn">Zapisz</button>
+		    <button data-dismiss="modal" class="btn btn-danger">Anuluj</button>		
                 </div>
             </div><!--.tab-pane-->
             <div role="tabpanel" class="tab-pane fade" id="visit">{% crispy profile_form %}</div><!--.tab-pane-->
         </div><!--.tab-content-->
       </div>
+      <div class="modal-footer">
+	    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+            <button type="button" class="btn btn-primary">Zapisz</button>
+      </div>	      
    </div>
   </div>
 </div>
