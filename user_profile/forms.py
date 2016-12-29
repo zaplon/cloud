@@ -33,13 +33,5 @@ class DoctorForm(forms.Form):
             Field('last_name', css_class='form-control', wrapper_class='row'),
             Field('email', css_class='form-control', wrapper_class='row'),
             Field('mobile', css_class='form-control', wrapper_class='row'),
-            Field('pwz', css_class='form-control', wrapper_class='row'),
-            Div(
-                Div(
-                    Submit('save_changes', 'Zapisz', css_class="btn-primary"),
-                    # Submit('cancel', 'Cancel'),
-                    css_class='offset-sm-2 col-sm-10'
-                ),
-                css_class='form-group row'
-            )
+            Field('pwz', css_class='form-control', wrapper_class='row')
         ))
