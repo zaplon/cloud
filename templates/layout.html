@@ -24,7 +24,8 @@
                         <img src="{% static "img/avatar-2-64.png" %}" alt="" data-pin-nopin="true">
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
-                        <a class="dropdown-item" href="{% url 'profile-settings' %}"><span
+                        <a data-toggle="modal" data-target="#settings" class="dropdown-item" 
+                           href="{% url 'profile-settings' %}"><span
                                 class="font-icon glyphicon glyphicon-cog"></span>Ustawienia</a>
                         <a class="dropdown-item" href="#"><span
                                 class="font-icon glyphicon glyphicon-question-sign"></span>Pomoc</a>
@@ -49,4 +50,5 @@
     </div><!--.page-content-->
 
     </body>
+<div id='settings'>{% include 'user_profile/doctor/settings.html' %}</div>
 {% endblock %}
