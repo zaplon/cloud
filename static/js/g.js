@@ -1,4 +1,5 @@
 /// <reference path="types/jquery.d.ts" />
+/// <reference path="types/bootstrap.d.ts" />
 var Gabinet = (function () {
     function Gabinet() {
         this.pageLimit = 10;
@@ -13,11 +14,20 @@ var Gabinet = (function () {
     Gabinet.prototype.transformTableResponse = function (res) {
         return { total: res.count, rows: res.results };
     };
+    ;
+    Gabinet.prototype.settings = function () {
+        $.get('/profile/settings/', function (res) {
+            $('#hidden').append(res);
+            $.getScript('/static/js/user_profile/settings.js', function () { ready(); });
+            $('#settings-modal').modal({ show: true, keyboard: true });
+        });
+    };
     return Gabinet;
 })();
 var gabinet = new Gabinet();
 $(document).ready(function () {
     $('#logout').click(gabinet.logout);
+    $('#settings').click(gabinet.settings);
 });
 // using jQuery
 function getCookie(name) {

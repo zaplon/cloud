@@ -25,14 +25,19 @@ class PatientViewSet(viewsets.ReadOnlyModelViewSet):
 class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Doctor
-        fields = ('mobile')
+        fields = ('mobile', 'pwz', 'terms_start', 'terms_end')
 
 
 # ViewSets define the view behavior.
 class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Doctor.objects.all()
-    serializer_class = PatientSerializer
+    serializer_class = DoctorSerializer
 
+    def get_queryset(self, *args, **kwargs):
+        if self.request.user.doctor and not 'id' in kwargs:
+            return Doctor.objects.filter(user=self.request.user)
+        else:
+            return super(DoctorViewSet, self).get_queryset()
 
 
 

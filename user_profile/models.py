@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
+from localflavor.pl.forms import PLPESELField
 import json
 
 
@@ -10,6 +11,9 @@ class Doctor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     working_hours = models.CharField(max_length=200, blank=True, null=True)
     visit_duration = models.IntegerField(default=15)
+    terms_generated_till = models.DateField(null=True, blank=True)
+    terms_start = models.TimeField(default='09:00')
+    terms_end = models.TimeField(default='17:00')
 
     def get_working_hours(self):
         return json.loads(self.working_hours)
@@ -18,6 +22,7 @@ class Doctor(models.Model):
 class Patient(models.Model):
     mobile = models.IntegerField(blank=True, null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    pesel = PLPESELField()
 
 
 class Recipe(models.Model):

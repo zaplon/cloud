@@ -1,6 +1,8 @@
 /// <reference path="types/jquery.d.ts" />
+/// <reference path="types/bootstrap.d.ts" />
 
 class Gabinet {
+    doctor: {};
     pageLimit: number;
     constructor(){
         this.pageLimit = 10;
@@ -12,6 +14,13 @@ class Gabinet {
     };
     transformTableResponse(res){
         return {total: res.count, rows: res.results}
+    };
+    settings(){
+        $.get('/profile/settings/', function(res){
+            $('#hidden').append(res);
+            $.getScript('/static/js/user_profile/settings.js', function(){ ready(); });
+            $('#settings-modal').modal({show: true, keyboard: true});
+        });
     }
 }
 
@@ -19,6 +28,7 @@ var gabinet = new Gabinet();
 
 $(document).ready(function(){
  $('#logout').click(gabinet.logout);
+ $('#settings').click(gabinet.settings);
 });
 
 // using jQuery

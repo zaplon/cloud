@@ -17,6 +17,9 @@ $(document).ready(function(){
         locale: 'pl',
         defaultView: 'agendaWeek',
         slotDuration: '00:15:00',
+        displayEventTime: false,
+        minTime: gabinet.doctor.terms_start.substr(0,5),
+        maxTime: gabinet.doctor.terms_end.substr(0,5),
         header: {
             left: '',
             center: 'prev, title, next',
@@ -75,43 +78,32 @@ $(document).ready(function(){
                         '<p>' +
                             moment(calEvent.start).format('dddd, D YYYY, hh:mma') +
                         '</p>' +
-                        '<p class="color-blue-grey">Name Surname Patient<br/>Surgey ACL left knee</p>' +
+                        '<p class="color-blue-grey">' + calEvent.title + '</p>' +
                         '<ul class="actions">' +
-                            '<li><a href="#">More details</a></li>' +
-                            '<li><a href="#" class="fc-event-action-edit">Edit event</a></li>' +
-                            '<li><a href="#" class="fc-event-action-remove">Remove</a></li>' +
+                            '<li><a href="#">Szczegóły</a></li>' +
+                            '<li><a href="#" class="fc-event-action-edit">Edytuj termin</a></li>' +
+                            '<li><a href="#" class="fc-event-action-remove">Anuluj termin</a></li>' +
                         '</ul>' +
                     '</div>' +
-
-                    '<div class="fc-body remove-confirm">' +
-                        '<p>Are you sure to remove event?</p>' +
+                (calEvent.status == 'PENDING' ?
+                ('<div class="fc-body remove-confirm">' +
+                        '<p>Czy jesteś pewien, że chcesz anulować wizytę?</p>' +
                         '<div class="text-center">' +
-                            '<button type="button" class="btn btn-rounded btn-sm">Yes</button>' +
-                            '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">No</button>' +
+                            '<button type="button" class="btn btn-rounded btn-sm">Tak</button>' +
+                            '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Nie</button>' +
                         '</div>' +
-                    '</div>' +
+                    '</div>') : '' ) +
 
-                    '<div class="fc-body edit-event">' +
-                        '<p>Edit event</p>' +
-                        '<div class="form-group">' +
-                            '<div class="input-group date datetimepicker">' +
-                                '<input type="text" class="form-control" />' +
-                                '<span class="input-group-addon"><i class="font-icon font-icon-calend"></i></span>' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="form-group">' +
-                            '<div class="input-group date datetimepicker-2">' +
-                                '<input type="text" class="form-control" />' +
-                                '<span class="input-group-addon"><i class="font-icon font-icon-clock"></i></span>' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="form-group">' +
-                            '<textarea class="form-control" rows="2">Name Surname Patient Surgey ACL left knee</textarea>' +
-                        '</div>' +
+                    '<div class="fc-body edit-event"><div id="edit-term"><div id="edit-form"></div>' +
                         '<div class="text-center">' +
-                            '<button type="button" class="btn btn-rounded btn-sm">Save</button>' +
-                            '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Cancel</button>' +
-                        '</div>' +
+                            '<button type="button" class="btn btn-rounded btn-sm">Zapisz</button>' +
+                            '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>' +
+                        '</div></div>' +
+                        '<div style="display:none;" id="edit-patient"><div id="edit-patient-form"></div>' +
+                        '<div class="text-center">' +
+                            '<button type="button" id="save-patient" class="btn btn-rounded btn-sm">Zapisz</button>' +
+                            '<button type="button" id="cancel-patient" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>' +
+                        '</div></div>' +
                     '</div>' +
                 '</div>'
             );
@@ -169,7 +161,34 @@ $(document).ready(function(){
                 e.preventDefault();
 
                 $('.fc-popover.click .main-screen').hide();
-                $('.fc-popover.click .edit-event').show();
+                $.get('get-form', {module: 'timetable.forms', class: 'TermForm', id: calEvent.id}, function(res){
+                   $('.fc-popover.click .edit-event #edit-form').html(res.form_html);
+                   $('.fc-popover.click .edit-event').show();
+                   $('#get-add-patient-form').click(function(){
+                       $.get('/get-form/', {module: 'user_profile.forms', class: 'PatientForm'}, function(res){
+                            $('.fc-popover.click .edit-event #edit-term').hide();
+                            $('.fc-popover.click .edit-event #edit-patient-form').html(res.form_html);
+                            $('.fc-popover.click .edit-event #edit-patient').show();
+                            $('#cancel-patient').click(function(){
+                                $('.fc-popover.click .edit-event #edit-term').show();
+                                $('.fc-popover.click .edit-event #edit-patient').hide();
+                            });
+                           $('#save-patient').click(function(){
+                               $.post('/get-form/', {module: 'user_profile.forms', class: 'PatientForm',
+                                   data: $('#patient-form form').serialize()}, function(res){
+                                   if (res.success){
+                                       $('.fc-popover.click .edit-event #edit-term').show();
+                                       $('.fc-popover.click .edit-event #edit-patient').hide();
+                                   }
+                                   else {
+                                       $('#patient-form').html(res.form_html);
+                                   }
+                               });
+                               //$.post('/rest/terms/' + calEvent.id + '/', {patient})
+                           });
+                       });
+                   });
+                });
             });
 
             $('.fc-event-action-remove').click(function(e){

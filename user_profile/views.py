@@ -44,3 +44,7 @@ class SettingsView(View):
             return HttpResponse(res, status=200, content_type='application/json')
         return HttpResponse('', status=200, content_type='application/json')
 
+
+
+class PatientView():
+    pass

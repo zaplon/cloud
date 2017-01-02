@@ -16,4 +16,5 @@ class TermTestCase(TestCase):
     def test_can_create_terms_for_period(self):
         now = timezone.now()
         res = Term.create_terms_for_period(self.d, self.p, now - timezone.timedelta(days=30), now)
-        self.assertEqual(res, False)
+        self.assertEqual(res, True)
+        self.assertTrue(Term.objects.all().count() > 100)

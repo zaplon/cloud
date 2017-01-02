@@ -22,6 +22,7 @@ from timetable.rest import TermViewSet
 from user_profile.rest import PatientViewSet, DoctorViewSet
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
+from utils.views import AjaxFormView
 
 
 router = routers.DefaultRouter()
@@ -42,5 +43,6 @@ urlpatterns = [
     url(r'^icd10/', icd10_view, name='icd10'),
     url(r'^templates/', TemplateListView.as_view(), name='templates'),
     url(r'^tabs/', TabsListView.as_view(), name='tabs'),
-    url(r"^rest/", include(router.urls), name='rest')
+    url(r"^rest/", include(router.urls), name='rest'),
+    url(r"^get-form/", AjaxFormView.as_view(), name='get-form')
 ]

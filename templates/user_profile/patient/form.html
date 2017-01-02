@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block breadcrumb %}
+
+{% endblock %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='patients' %}
+{% endblock %}
+
+{% block content %}
+    <section class="box-typical box-typical-padding">
+        {{ form }}
+    </section>
+{% endblock %}
