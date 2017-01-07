@@ -27,15 +27,15 @@ class Visit(models.Model):
 
 
 class Template(models.Model):
-    title = models.CharField(max_length=100, verbose_name=u'Tytuł')
-    name = models.CharField(max_length=100, unique=True, verbose_name=u'Nazwa')
+    name = models.CharField(max_length=100, verbose_name=u'Nazwa')
     tab = models.ForeignKey(Tab, related_name='templates', verbose_name=u'Sekcja')
     text = models.CharField(max_length=1000, verbose_name=u'Tekst')
     key = models.CharField(max_length=8, blank=True, null=True, verbose_name=u'Skrót',
                            choices=(('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2')))
+    doctor = models.ForeignKey(Doctor, related_name='templates', null=True, blank=True)
 
     def get_absolute_url(self):
-        return reverse('template-detail', kwargs={'pk': self.pk})
+        return reverse('templates')
 
 
 class Icd10(models.Model):

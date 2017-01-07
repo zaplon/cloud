@@ -7,18 +7,41 @@
 {% block breadcrumb %}
     <ol class="breadcrumb">
         <li><a href="/">Początek</a></li>
-        <li><a href="/templates">Szablony</a></li>
+        <li>Szablony</li>
     </ol>
 {% endblock %}
 
 {% block content %}
     <section class="box-typical box-typical-padding">
+        <div class="bootstrap-table">
+            <div class="fixed-table-toolbar">
+                <div class="bars pull-left">
+                    <div id="toolbar">
+                        <div class="bootstrap-table-header">Lista szablonów</div>
+                        <a href="{% url 'template-add' %}" class="btn btn-success">
+                            <i class="font-icon font-icon-plus"></i> DODAJ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nazwa</th>
+                    <th>Skrót</th>
+                    <th>Tekst</th>
+                </tr>
+            </thead>
             {% for object in object_list %}
                 <tr>
                     <td>{{ object.name }}</td>
                     <td>{{ object.key }}</td>
                     <td>{{ object.text }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">Brak wyników</td>
                 </tr>
             {% endfor %}
         </table>

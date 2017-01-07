@@ -71,6 +71,7 @@ class FullPatientForm(forms.Form):
             Field('mobile', css_class='form-control', wrapper_class='row'),
         ))
 
+
 class PatientForm(forms.Form):
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')

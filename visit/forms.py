@@ -9,7 +9,7 @@ from django.forms import HiddenInput
 class TemplateForm(ModelForm):
     class Meta:
         model = Template
-        fields = ['name', 'title', 'key', 'text', 'tab']
+        fields = ['name', 'key', 'text', 'tab']
 
     def __init__(self, *args, **kwargs):
         super(TemplateForm, self).__init__(*args, **kwargs)
@@ -20,7 +20,6 @@ class TemplateForm(ModelForm):
         #helper.field_class = 'col-md-8'
         helper.layout = Layout(
             'name',
-            'title',
             'key',
             'text',
             'tab',

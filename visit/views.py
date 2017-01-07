@@ -34,6 +34,9 @@ class TemplateCreate(CreateView):
         context['form'].fields['tab'].queryset = tabs
         return context
 
+    def post(self, request, *args, **kwargs):
+        super(TemplateCreate, self).post(request, *args, **kwargs)
+
 
 class TemplateUpdate(UpdateView):
     model = Template
@@ -50,9 +53,12 @@ class TemplateListView(ListView):
 
     model = Template
     template_name = 'visit/templates.html'
+    queryset = Template.objects.all()
 
     def get_queryset(self):
+
         q = super(TemplateListView, self).get_queryset()
+        q = q.filter(doctor=self.request.user.doctor)
         if 'orderby' in self.request.GET:
             q = q.order_by(self.request.GET['orderby'])
         return q
@@ -96,6 +102,7 @@ class TabListView(ListView):
 
     model = Tab
     Tab_name = 'visit/tabs.html'
+    queryset = Tab.objects.all()
 
     def queryset(self):
         q = super(TabListView, self).get_queryset()

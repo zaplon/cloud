@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.db import models
@@ -12,8 +13,9 @@ class Term(models.Model):
     patient = models.ForeignKey(Patient, related_name='terms', blank=True, null=True, verbose_name=u'Pacjent')
     visit = models.ForeignKey(Visit, related_name='terms', blank=True, null=True)
     datetime = models.DateTimeField()
-    status = models.CharField(max_length=10, choices=(('CANCELLED', 'cancelled'), ('PENDING', 'pending'), ('FREE', 'free'),
-                                                      ('FINISHED', 'finished')), default='PENDING')
+    status = models.CharField(max_length=10, choices=(('CANCELLED', u'Anulowany'), ('PENDING', u'Oczekujący'),
+                                                      ('FREE', u'Wolny'),
+                                                      ('FINISHED', u'Zakończony')), default='PENDING')
     doctor = models.ForeignKey(Doctor, related_name='terms')
     duration = models.IntegerField(default=15)
 

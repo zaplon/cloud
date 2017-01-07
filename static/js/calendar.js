@@ -112,7 +112,8 @@ $(document).ready(function(){
             $('.fc-popover.click .datetimepicker').datetimepicker({
                 widgetPositioning: {
                     horizontal: 'right'
-                }
+                },
+                locale: 'pl'
             });
 
             $('.fc-popover.click .datetimepicker-2').datetimepicker({
@@ -120,7 +121,7 @@ $(document).ready(function(){
                     horizontal: 'right'
                 },
                 format: 'LT',
-                debug: true
+                locale: 'pl'
             });
 
 

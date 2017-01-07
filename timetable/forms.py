@@ -13,13 +13,16 @@ class PatientSelect(Select):
         if value is None:
             value = ''
         final_attrs = self.build_attrs(attrs, name=name)
-        output = [format_html('<select{}>', flatatt(final_attrs))]
+        output = [format_html('<div class="col-md-9"><select{}></div>', flatatt(final_attrs))]
         options = self.render_options([value])
         if options:
             output.append(options)
         output.append('</select>')
-        output.append('<div class="btn btn-sm" id="get-add-patient-form"><i class="fa fa-plus" title="Dodaj pacjenta"></i></div>')
-        return mark_safe('\n'.join(output))
+        output.append('</div><div class="col-md-3"><div class="btn btn-sm" id="get-add-patient-form">'
+                      '<i class="fa fa-plus" title="Dodaj pacjenta"></i></div></div>')
+        html =  mark_safe('\n'.join(output))
+        html = '<div class="row">' + html + '</div>'
+        return html
 
 
 class TermForm(ModelForm):
