@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='tabs' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">Początek</a></li>
+        <li><a href="/templates/">Zakładki</a></li>
+        <li class="active">{{ object.name }}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <section class="box-typical box-typical-padding">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>Nazwa</td>
+                    <td>{{ object.name }}</td>
+                </tr>
+                <tr>
+                    <td>Szablon</td>
+                    <td>{{ object.template }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

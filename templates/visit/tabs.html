@@ -1,18 +1,30 @@
 {% extends 'layout.html' %}
 
 {% block menu %}
-    {% include 'dashboard/main_menu.html' with section='templates' %}
+    {% include 'dashboard/main_menu.html' with section='tabs' %}
 {% endblock %}
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
         <li><a href="/">Początek</a></li>
-        <li><a href="/templates">Zakładki</a></li>
+        <li>Zakładki</li>
     </ol>
 {% endblock %}
 
 {% block content %}
     <section class="box-typical box-typical-padding">
+        <div class="bootstrap-table">
+            <div class="fixed-table-toolbar">
+                <div class="bars pull-left">
+                    <div id="toolbar">
+                        <div class="bootstrap-table-header">Lista zakładek</div>
+                        <a href="{% url 'tab-add' %}" class="btn btn-success">
+                            <i class="font-icon font-icon-plus"></i> DODAJ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -23,7 +35,7 @@
             <tbody>
                 {% for object in object_list %}
                     <tr>
-                        <td>{{ object.title }}</td>
+                        <td><a href="{% url 'tab-update' object.id %}">{{ object.title }}</a></td>
                         <td>{{ object.template }}</td>
                     </tr>
                 {% endfor %}

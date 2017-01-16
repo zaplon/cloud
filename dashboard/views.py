@@ -21,6 +21,11 @@ def patients_view(request):
 
 
 @login_required
+def archive_view(request):
+    return render(request, 'dashboard/archive.html')
+
+
+@login_required
 def icd10_view(request):
     return render(request, 'dashboard/icd.html')
 

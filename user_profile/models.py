@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
-from localflavor.pl.forms import PLPESELField
 import json
 
 
@@ -21,8 +20,14 @@ class Doctor(models.Model):
 
 class Patient(models.Model):
     mobile = models.IntegerField(blank=True, null=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    pesel = PLPESELField()
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True)
+    first_name = models.CharField(max_length=100, default='')
+    last_name = models.CharField(max_length=100, default='')
+    pesel = models.CharField(max_length=11, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+
+    def __unicode__(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
 
 class Recipe(models.Model):

@@ -4,7 +4,7 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from .models import Term
-from django.forms.widgets import Select
+from django.forms.widgets import Select, HiddenInput, DateTimeInput
 
 
 class PatientSelect(Select):
@@ -28,7 +28,10 @@ class PatientSelect(Select):
 class TermForm(ModelForm):
     class Meta:
         model = Term
-        fields = ['patient', 'status']
+        fields = ['patient', 'status', 'datetime', 'doctor', 'id', 'duration']
         widgets = {
             'patient': PatientSelect(),
+            'doctor': HiddenInput(),
+            'id': HiddenInput(),
+            'datetime': DateTimeInput()
         }

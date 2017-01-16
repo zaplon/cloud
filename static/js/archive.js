@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    $('#patients-table').bootstrapTable({
-        url: '/rest/patients/',
+    $('#archive-table').bootstrapTable({
+        url: '/rest/archive/',
         search: true,
         queryParams: function (params) {
             params.is_table = true;
@@ -37,12 +37,12 @@ $(document).ready(function () {
         paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
         paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
         columns: [{
-            field: 'last_name',
-            title: 'Nazwisko',
+            field: 'name',
+            title: 'Nazwa',
             align: 'center'
         }, {
-            field: 'first_name',
-            title: 'Imię',
+            field: 'patient',
+            title: 'Osoba',
             align: 'center',
         },{
             field: 'pesel',

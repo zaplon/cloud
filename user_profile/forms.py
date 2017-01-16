@@ -4,6 +4,7 @@ from crispy_forms.layout import Submit, Field, Layout, Div, HTML
 from django import forms
 from django.forms.fields import TimeField
 from user_profile.models import Patient
+from localflavor.pl.forms import PLPESELField
 
 
 class HoursForm(forms.Form):
@@ -75,7 +76,10 @@ class FullPatientForm(forms.Form):
 class PatientForm(forms.Form):
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
-    email = forms.EmailField(label=u'Adres email')
+    email = forms.EmailField(label=u'Adres email', required=False)
+    pesel = PLPESELField(label=u'Pesel', required=False)
 
-    def save(self, user):
-        pass
+    def save(self):
+        Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data['email'],
+                               first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
+        return True

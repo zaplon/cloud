@@ -10,21 +10,21 @@ from django.utils import timezone
 
 
 class Term(models.Model):
-    patient = models.ForeignKey(Patient, related_name='terms', blank=True, null=True, verbose_name=u'Pacjent')
-    visit = models.ForeignKey(Visit, related_name='terms', blank=True, null=True)
-    datetime = models.DateTimeField()
+    patient = models.ForeignKey(Patient, related_name='patient', blank=True, null=True, verbose_name=u'Pacjent')
+    visit = models.OneToOneField(Visit, related_name='term', blank=True, null=True)
+    datetime = models.DateTimeField(verbose_name=u'Data')
     status = models.CharField(max_length=10, choices=(('CANCELLED', u'Anulowany'), ('PENDING', u'Oczekujący'),
                                                       ('FREE', u'Wolny'),
                                                       ('FINISHED', u'Zakończony')), default='PENDING')
-    doctor = models.ForeignKey(Doctor, related_name='terms')
-    duration = models.IntegerField(default=15)
+    doctor = models.ForeignKey(Doctor, related_name='terms', verbose_name=u'Lekarz')
+    duration = models.IntegerField(default=15, verbose_name=u'Czas trwania (min)')
 
     def get_end(self):
         return self.datetime + datetime.timedelta(minutes=self.duration)
 
     def get_title(self):
         if self.patient:
-            return '%s %s' % (self.patient.user.first_name, self.patient.user.last_name)
+            return '%s %s' % (self.patient.first_name, self.patient.last_name)
         else:
             return u'Wolny termin'
 

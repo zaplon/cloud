@@ -165,3 +165,4 @@ REST_FRAMEWORK = {
 }
 
 LANGUAGE_CODE = 'pl-pl'
+VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')

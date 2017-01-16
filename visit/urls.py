@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'template/(?P<pk>[0-9]+)/delete/$', TemplateDelete.as_view(), name='template-delete'),
     url(r'tab/add/$', TabCreate.as_view(), name='tab-add'),
     url(r'tab/(?P<pk>[0-9]+)/$', TabUpdate.as_view(), name='tab-update'),
-    url(r'tab/(?P<pk>[0-9]+)/delete/$', TabDelete.as_view(), name='tap-delete')
+    url(r'tab/(?P<pk>[0-9]+)/delete/$', TabDelete.as_view(), name='tap-delete'),
+    url(r'(?P<pk>[0-9]+)/', VisitView.as_view(), name='visit')
 ]

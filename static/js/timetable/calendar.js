@@ -36,7 +36,7 @@ $(document).ready(function () {
             return d.toLocaleString();
         }
     };
-    $.getJSON("/rest/terms/?next_visits=1", function (data) {
+    $.getJSON("/rest/terms/?next_terms=1", function (data) {
         viewModel.nextVisits(data);
     });
     ko.applyBindings(viewModel);
@@ -193,54 +193,6 @@ $(document).ready(function () {
                 $('.fc-event').removeClass('event-clicked');
             });
 
-            // Actions link
-            $('.fc-event-action-edit').click(function (e) {
-                e.preventDefault();
-
-                $('.fc-popover.click .main-screen').hide();
-                $.get('get-form', {module: 'timetable.forms', class: 'TermForm', id: calEvent.id}, function (res) {
-                    $('.fc-popover.click .edit-event #edit-form').html(res.form_html);
-                    $('.fc-popover.click .edit-event').show();
-
-                    $('#save-term').click(function () {
-                        calendar.saveTerm(calEvent);
-                    });
-
-                    $('#get-add-patient-form').click(function () {
-                        $.get('/get-form/', {module: 'user_profile.forms', class: 'PatientForm'}, function (res) {
-                            $('.fc-popover.click .edit-event #edit-term').hide();
-                            $('.fc-popover.click .edit-event #edit-patient-form').html(res.form_html);
-                            $('.fc-popover.click .edit-event #edit-patient').show();
-                            $('#cancel-patient').click(function () {
-                                $('.fc-popover.click .edit-event #edit-term').show();
-                                $('.fc-popover.click .edit-event #edit-patient').hide();
-                            });
-                            $('#save-patient').click(function () {
-                                $.post('/get-form/', {
-                                    module: 'user_profile.forms', class: 'PatientForm',
-                                    data: $('#edit-patient-form form').serialize()
-                                }, function (res) {
-                                    if (res.success) {
-                                        $('.fc-popover.click .edit-event #edit-term').show();
-                                        $('.fc-popover.click .edit-event #edit-patient').hide();
-                                    }
-                                    else {
-                                        $('#edit-patient-form').html(res.form_html);
-                                    }
-                                });
-                                //$.post('/rest/terms/' + calEvent.id + '/', {patient})
-                            });
-                        });
-                    });
-                });
-            });
-
-            $('.fc-event-action-remove').click(function (e) {
-                e.preventDefault();
-
-                $('.fc-popover.click .main-screen').hide();
-                $('.fc-popover.click .remove-confirm').show();
-            });
         }
     });
 

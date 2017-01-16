@@ -39,9 +39,15 @@ class AjaxFormView(View):
         ctx = {}
         ctx.update(csrf(self.request))
         data = self.request.POST['data']
-        if type(data) == unicode:
+        try:
+            data = json.loads(data)
+            data = {d['name']: d['value'] for d in data}
+        except:
             data = {p[0]: unicode(urllib.unquote(p[1])) for p in [par.split('=') for par in data.split('&')]}
-        form = form_class(data=data)
+        if 'id' in data:
+            form = form_class(data=data, instance=form_class._meta.model.objects.get(id=data['id']))
+        else:
+            form = form_class(data=data)
         if form.is_valid():
             if self.request.POST.get('user', None):
                 form.save(self.request.user)

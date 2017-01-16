@@ -29,19 +29,21 @@
             <thead>
                 <tr>
                     <th>Nazwa</th>
+                    <th>Sekcja</th>
                     <th>Skrót</th>
                     <th>Tekst</th>
                 </tr>
             </thead>
             {% for object in object_list %}
                 <tr>
-                    <td>{{ object.name }}</td>
+                    <td><a href="{% url 'tempate-edit' %}">{{ object.name }}</a></td>
+                    <td>{{ object.section }}</td>
                     <td>{{ object.key }}</td>
-                    <td>{{ object.text }}</td>
+                    <td>{{ object.text|truncatewords:10 }}</td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="3">Brak wyników</td>
+                    <td colspan="4">Brak wyników</td>
                 </tr>
             {% endfor %}
         </table>

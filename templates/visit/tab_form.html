@@ -2,14 +2,14 @@
 {% load crispy_forms_tags %}
 
 {% block menu %}
-    {% include 'dashboard/main_menu.html' with section='templates' %}
+    {% include 'dashboard/main_menu.html' with section='tabs' %}
 {% endblock %}
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
         <li><a href="/">Początek</a></li>
-        <li><a href="/templates/">Zakładki</a></li>
-        <li class="active">Nowa zakładka</li>
+        <li><a href="{% url 'tabs' %}">Zakładki</a></li>
+        <li class="active">{{ object.title }}</li>
     </ol>
 {% endblock %}
 

@@ -1,22 +1,46 @@
 # -*- coding: utf-8 -*-
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.template import RequestContext
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from visit.models import Template, Tab
+
+from timetable.models import Term
+from visit.models import Template, Tab, Visit
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 
 
-class VisitView(View):
+class VisitView(View, LoginRequiredMixin):
     template_name = 'visit/visit.html'
 
     def get(self, request, *args, **kwargs):
-        pass
+        doctor = self.request.user.doctor
+        term = Term.objects.get(id=kwargs['pk'])
+        if not term.visit:
+            visit = Visit.objects.create()
+            term.visit = visit
+            term.save()
+        else:
+            visit = term.visit
+        visit.in_progress = True
+        visit.save()
+        tabs = visit.tabs.all()
+        if len(tabs) == 0:
+            tabs = visit.create_tabs()
+        if len(tabs) > 0:
+            tabs[0].is_active = True
+        return render(request, self.template_name, {'doctor': doctor, 'tabs': tabs, 'visit': visit})
 
     def post(self, request, *args, **kwargs):
-        pass
+        if request.POST.get('cancel', None):
+            visit = Term.objects.get(id=kwargs['pk']).visit
+            visit.in_progress = False
+            visit.save()
+            return HttpResponse(status=200)
 
 
 class TemplateCreate(CreateView):
@@ -90,7 +114,6 @@ class TabCreate(CreateView):
 class TabUpdate(UpdateView):
     model = Tab
     form_class = TabForm
-    fields = ['name']
 
 
 class TabDelete(DeleteView):
@@ -98,26 +121,10 @@ class TabDelete(DeleteView):
     success_url = reverse_lazy('tabs')
 
 
-class TabListView(ListView):
-
-    model = Tab
-    Tab_name = 'visit/tabs.html'
-    queryset = Tab.objects.all()
-
-    def queryset(self):
-        q = super(TabListView, self).get_queryset()
-        if 'orderby' in self.request.GET:
-            q = q.order_by(self.request.GET['orderby'])
-        return q
-
-    def get_context_data(self, **kwargs):
-        context = super(TabListView, self).get_context_data(**kwargs)
-        return context
-
-
 class TabDetailView(DetailView):
 
     model = Tab
+    template_name = 'visit/tab_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(TabDetailView, self).get_context_data(**kwargs)

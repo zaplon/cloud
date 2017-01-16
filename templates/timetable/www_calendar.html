@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.css" %}">
+    <link rel="stylesheet" href="{% static "css/separate/pages/calendar.css" %}">
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static "fullcalendar/dist/fullcalendar.min.js" %}"></script>
+    <script src="{% static "fullcalendar/dist/locale/pl.js" %}"></script>
+    <script src="{% static "js/calendar.js" %}"></script>
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block body %}
+    <body class="m-3">
+
+    <div class="card">
+        <div class="card-header">
+            Wybór usługi
+        </div>
+        <div class="card-block">
+            <form>
+                <div class="form-group row">
+                    <label for="select-doctor" class="col-sm-2 col-form-label">{% trans 'Lekarz' %}</label>
+                    <div class="col-sm-4">
+                        <select class="form-control">
+                            {% for doctor in doctors %}
+                                <option value="{{ doctor.id }}">{{ doctor.user.first_name }} {{ doctor.user.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <button class="btn btn-primary">Pokaż terminy</button>
+        </div>
+    </div>
+
+    <div class="card" style="display:none;">
+        <div class="card-header">
+            Najbliższe terminy
+        </div>
+        <div class="card-block">
+            <h4 class="card-title"></h4>
+
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <button class="btn btn-primary">Pokaż cały kalendarz</button>
+        </div>
+    </div>
+
+    <div class="calendar-page box-typical">
+        <div class="calendar-page-content">
+            <div class="calendar-page-title">Kalendarz</div>
+            <div class="calendar-page-content-in">
+                <div id='calendar'></div>
+            </div><!--.calendar-page-content-in-->
+        </div><!--.calendar-page-content-->
+
+        <div class="calendar-page-side">
+            <section class="calendar-page-side-section">
+                <div class="calendar-page-side-section-in">
+                    <div id="side-datetimepicker" class="text-center"></div>
+                </div>
+            </section>
+
+            <section class="calendar-page-side-section">
+                <header class="box-typical-header-sm">Najbliższe terminy</header>
+                <div class="calendar-page-side-section-in">
+                    <ul class="exp-timeline" data-bind="foreach: nextVisits">
+                        <li class="exp-timeline-item">
+                            <div class="dot"></div>
+                            <div data-bind="{text: $parent.formatDate(start)}"></div>
+                            <div data-bind="{text: title}" class="color-blue-grey"></div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div><!--.calendar-page-side-->
+    </div><!--.calendar-page-->
+    </body><!--.box-typical-->
+{% endblock %}

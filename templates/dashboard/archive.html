@@ -6,11 +6,11 @@
     <script src="{% static "js/lib/bootstrap-table/bootstrap-table-export.min.js" %}"></script>
     <script src="{% static "js/lib/bootstrap-table/tableExport.min.js" %}"></script>
     <script src="{% static "js/lib/bootstrap-table/PL-pl.js" %}"></script>
-    <script src="{% static "js/patients.js" %}"></script>
+    <script src="{% static "js/archive.js" %}"></script>
 {% endblock %}
 
 {% block menu %}
-    {% include 'dashboard/main_menu.html' with section='patients' %}
+    {% include 'dashboard/main_menu.html' with section='archive' %}
 {% endblock %}
 
 {% block content %}
@@ -18,13 +18,13 @@
         <div class="row">
             <div class="col-md-12">
                 <div id="toolbar">
-                    <div class="bootstrap-table-header">Lista pacjentów</div>
+                    <div class="bootstrap-table-header">Archiwum</div>
                     <a href="" class="btn btn-success">
                         <i class="font-icon font-icon-plus"></i> DODAJ
                     </a>
                 </div>
                 <div class="table-responsive">
-                    <table id="patients-table">
+                    <table id="archive-table">
                     </table>
                 </div>
             </div>

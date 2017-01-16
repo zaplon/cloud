@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
+
 from django.db import models
 from django.urls import reverse
+
+from gabinet.settings import VISIT_TABS_DIR
 from user_profile.models import Doctor
 
 
 class Tab(models.Model):
-    title = models.CharField(max_length=100)
-    body = models.TextField(default='')
-    template = models.CharField(max_length=100, default='visit/tabs/default.html')
+    title = models.CharField(max_length=100, verbose_name=u'Tytuł')
+    template = models.CharField(max_length=100, default='default.html', verbose_name=u'Szablon')
     doctor = models.ForeignKey(Doctor, related_name='tabs')
+    order = models.IntegerField(unique=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ['order']
 
     def get_absolute_url(self):
         return reverse('tabs')
@@ -19,11 +26,32 @@ class Tab(models.Model):
         return self.title
 
 
+class VisitTab(models.Model):
+    title = models.CharField(max_length=100)
+    body = models.TextField(default='')
+    order = models.IntegerField(unique=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ['order']
+
+
 class Visit(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     visit_pdf = models.FileField(upload_to='visits/', null=True, blank=True)
-    tabs = models.ManyToManyField(Tab, related_name='tabs')
+    tabs = models.ManyToManyField(VisitTab, related_name='tabs')
+    in_progress = models.BooleanField(default=False)
+
+    def create_tabs(self):
+        tabs = self.term.doctor.tabs.all()
+        visit_tabs = []
+        for tab in tabs:
+            f = open(os.path.join(VISIT_TABS_DIR, tab.template), 'r')
+            body = f.read()
+            f.close()
+            visit_tab = VisitTab.objects.create(title=tab.title, body=body, order=tab.order)
+            visit_tabs.append(visit_tab)
+        return visit_tabs
 
 
 class Template(models.Model):

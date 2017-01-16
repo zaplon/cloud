@@ -37,12 +37,12 @@ class SettingsView(View):
             if not errors:
                 doctor.working_hours = request.POST['days']
                 doctor.save()
+                return HttpResponse(json.dumps({'success': True}), status=200, content_type='application/json')
             else:
                 return HttpResponse(json.dumps({'success': False, 'errors': errors}), status=200, content_type='application/json')
         if tab == '2':
             res = ajax_form_validate(request.POST['data'], DoctorForm)
             return HttpResponse(res, status=200, content_type='application/json')
-        return HttpResponse('', status=200, content_type='application/json')
 
 
 
