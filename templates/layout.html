@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <body class="horizontal-navigation">
+    <body class="horizontal-navigation {% block body_extra_class %}{% endblock %}">
     <header class="site-header" style="z-index:101">
         <div class="container-fluid">
             <a href="#" class="site-logo m-r-md">
@@ -44,6 +44,9 @@
             {% block content %}{% endblock %}
         </div><!--.container-fluid-->
     </div><!--.page-content-->
+    {% block right_panel %}
+    {% endblock %}
     <div id="hidden" style="display: block"></div>
+
     </body>
 {% endblock %}

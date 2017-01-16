@@ -5,25 +5,28 @@
     {% include 'visit/main_menu.html' %}
 {% endblock %}
 
+{% block body_extra_class %} control-panel {% endblock %}
+
 {% block content %}
-    <section class="tabs-section">
-        <div class="tabs-section-nav">
-            <div class="tbl">
-                <ul class="nav" role="tablist">
-                    {% for tab in tabs %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if tab.is_active %} active {% endif %}"
-                               href="#{{ tab.title }}" role="tab" data-toggle="tab"
-                               {% if tab.is_active %} aria-expanded="true" {% endif %}>
+    <div class="row">
+        <section class="tabs-section col-md-12">
+            <div class="tabs-section-nav">
+                <div class="tbl">
+                    <ul class="nav" role="tablist">
+                        {% for tab in tabs %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if tab.is_active %} active {% endif %}"
+                                   href="#{{ tab.title }}" role="tab" data-toggle="tab"
+                                        {% if tab.is_active %} aria-expanded="true" {% endif %}>
                                             <span class="nav-link-in">
                                                 {{ tab.title }}
                                             </span>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div><!--.tabs-section-nav-->
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div><!--.tabs-section-nav-->
             <div class="tab-content">
                 {% for tab in tabs %}
                     <div role="tabpanel" class="tab-pane fade {% if tab.is_active %} active {% endif %} in"
@@ -34,8 +37,43 @@
                     </div>
                 {% endfor %}
             </div><!--.tab-content-->
-    </section>
+        </section>
+    </div>
 
+{% endblock %}
+
+{% block right_panel %}
+    <div class="control-panel-container">
+        <ul>
+            <li class="tasks">
+                <div class="control-item-header">
+                    <a href="#" class="icon-toggle">
+                        <span class="caret-down fa fa-caret-down"></span>
+                        <span class="icon fa fa-tasks"></span>
+                    </a>
+                    <span class="text">Task list</span>
+
+                    <div class="actions">
+                        <a href="#">
+                            <span class="fa fa-refresh"></span>
+                        </a>
+                        <a href="#">
+                            <span class="fa fa-cog"></span>
+                        </a>
+                        <a href="#">
+                            <span class="fa fa-trash"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="control-item-content">
+                    <div class="control-item-content-text">You don't have pending tasks.</div>
+                </div>
+            </li>
+        </ul>
+        <a class="control-panel-toggle">
+            <span class="fa fa-angle-double-left"></span>
+        </a>
+    </div>
 {% endblock %}
 
 {% block extra_scripts %}
