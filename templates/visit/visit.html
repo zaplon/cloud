@@ -15,7 +15,7 @@
                     <ul class="nav" role="tablist">
                         {% for tab in tabs %}
                             <li class="nav-item">
-                                <a class="nav-link {% if tab.is_active %} active {% endif %}"
+                                <a class="nav-link tab-link {% if tab.is_active %} active {% endif %}"
                                    href="#{{ tab.title }}" role="tab" data-toggle="tab"
                                         {% if tab.is_active %} aria-expanded="true" {% endif %}>
                                             <span class="nav-link-in">
@@ -29,7 +29,7 @@
             </div><!--.tabs-section-nav-->
             <div class="tab-content">
                 {% for tab in tabs %}
-                    <div role="tabpanel" class="tab-pane fade {% if tab.is_active %} active {% endif %} in"
+                    <div role="tabpanel" class="tab-pane visit-tab fade {% if tab.is_active %} active {% endif %} in"
                          id="{{ tab.title }}"  {% if tab.is_active %} aria-expanded="true" {% endif %}>
                         <div class="p2">
                             {{ tab.body|safe }}
@@ -51,7 +51,7 @@
                         <span class="caret-down fa fa-caret-down"></span>
                         <span class="icon fa fa-archive"></span>
                     </a>
-                    <span class="text">Task list</span>
+                    <span class="text">Archiwum</span>
                     <div class="actions">
                         <a href="#">
                             <span class="fa fa-refresh"></span>
@@ -74,7 +74,7 @@
                         <span class="caret-down fa fa-caret-down"></span>
                         <span class="icon fa fa-edit"></span>
                     </a>
-                    <span class="text">Archiwum</span>
+                    <span class="text">Szablony</span>
                     <div class="actions">
                         <a href="#">
                             <span class="fa fa-refresh"></span>
@@ -89,7 +89,15 @@
                     </div>
                 </div>
                 <div class="control-item-content">
-                    <div class="control-item-content-text">You don't have pending tasks.</div>
+                    <ul class="control-item-lists templates-list" data-bind="foreach: templates">
+                        <li>
+                            <a href="#" data-bind="attr: {title: text}">
+                                <h6 data-bind="text: name"></h6>
+                                <div data-bind="text: text"></div>
+                            </a>
+                            <a data-bind="text: key"></a>
+                        </li>
+                    </ul>
                 </div>
             </li>
         </ul>

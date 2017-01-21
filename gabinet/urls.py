@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from dashboard.views import *
-from visit.rest import IcdViewSet
+from visit.rest import IcdViewSet, TemplateViewSet
 from result.rest import ResultViewSet
 from timetable.rest import TermViewSet
 from user_profile.rest import PatientViewSet, DoctorViewSet
@@ -31,6 +31,7 @@ router.register(r'results', ResultViewSet)
 router.register(r'terms', TermViewSet)
 router.register(r'patients', PatientViewSet)
 router.register(r'doctors', DoctorViewSet)
+router.register(r'templates', TemplateViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
