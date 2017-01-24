@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from django.db.models import Q
 from rest_framework import serializers, viewsets
 from .models import Icd10, Template
+import json
 
 
 # Serializers define the API representation.
@@ -21,6 +22,8 @@ class IcdViewSet(viewsets.ReadOnlyModelViewSet):
         if 'search' in self.request.GET:
             term = self.request.GET['search']
             q = q.filter(Q(desc__icontains=term) | Q(code__icontains=term))
+        if 'exclude' in self.request.GET:
+            q = q.exclude(id__in=json.loads(self.request.GET['exclude']))
         return q
 
 

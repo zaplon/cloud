@@ -1,0 +1,43 @@
+<div id="icd10">
+    <div class="row">
+        <div class="col-md-12">
+            <input data-bind='textInput: inputValue' type="text" class="form-control"
+                   id="icd-search" placeholder="Kod lub opis rozpoznania"/>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class=" col-md-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Kod</th>
+                    <th>Opis</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- ko foreach: icd10 -->
+                <tr class="table-info">
+                    <td data-bind="text: code"></td>
+                    <td data-bind="text: desc"></td>
+                    <td>
+                        <btn class="btn btn-danger" data-bind="click: $parent.removeIcd">Usuń</btn>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                <!-- ko foreach: suggestions -->
+                <tr>
+                    <td data-bind="text: code"></td>
+                    <td data-bind="text: desc"></td>
+                    <td>
+                        <btn class="btn btn-success" data-bind="click: $parent.addIcd">Dodaj</btn>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="/static/js/visit/tabs/icd10.js"></script>

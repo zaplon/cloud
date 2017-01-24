@@ -12,10 +12,13 @@ var viewModel = {
             viewModel.templates(data);
         });
     },
-    currentTab: $('.visit-tab:visible').attr('id')
+    currentTab: $('.visit-tab:visible').attr('id'),
+    putTemplate: function(){
+
+    }
 };
 
-ko.applyBindings(viewModel);
+ko.applyBindings(viewModel, $('.control-panel-container')[0]);
 
 $(document).ready(function () {
     $('.tab-link').click(function () {
