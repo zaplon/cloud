@@ -1,0 +1,13 @@
+<div id="notes">
+    <blockquote class="blockquote" data-bind="foreach: notes">
+        <p class="mb-0" data-bind="text: text"></p>
+        <footer class="blockquote-footer" data-bind="text: author"></footer>
+    </blockquote>
+</div>
+
+<div>
+    <p>Dodaj uwagę</p>
+    <textarea class="form-control" rows="10"></textarea>
+</div>
+
+<script src="/static/js/visit/tabs/notes.js"></script>

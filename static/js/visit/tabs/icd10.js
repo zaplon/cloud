@@ -8,8 +8,7 @@ function IcdModel() {
     this.icd10 = ko.observableArray();
     this.suggestions = ko.observableArray();
     this.delayedValue.subscribe(function (val) {
-        if (val !== '')
-            this.getSuggestions();
+        this.getSuggestions();
     }, this);
     this.addIcd = function (icd) {
         icdModel.icd10.push(icd);

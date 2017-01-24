@@ -1,0 +1,54 @@
+<div id="medicines">
+    <div class="row">
+        <div class="col-md-12">
+            <input data-bind='textInput: inputValue' type="text" class="form-control"
+                   id="medicine-search" placeholder="EAN lub nazwa leku"/>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class=" col-md-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>EAN</th>
+                    <th>Nazwa</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- ko foreach: medicines -->
+                <tr class="table-info">
+                    <td data-bind="text: ean"></td>
+                    <td data-bind="text: name"></td>
+                    <td>
+                        <btn class="btn btn-danger" data-bind="click: $parent.removeMedicine">Usuń</btn>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                <tr>
+                    <th>EAN</th>
+                    <th>Nazwa</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- ko foreach: suggestions -->
+                <tr>
+                    <td data-bind="text: ean"></td>
+                    <td data-bind="text: name"></td>
+                    <td>
+                        <btn class="btn btn-success" data-bind="click: $parent.addMedicine">Dodaj</btn>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="/static/js/visit/tabs/medicines.js"></script>
