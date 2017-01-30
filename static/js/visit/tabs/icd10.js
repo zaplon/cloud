@@ -1,5 +1,5 @@
 function IcdModel() {
-    this.inputValue = ko.observable();
+    this.inputValue = ko.observable('');
     this.delayedValue = ko.pureComputed(this.inputValue)
         .extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 400 } });
 
@@ -30,3 +30,4 @@ function IcdModel() {
 }
 var icdModel = new IcdModel();
 ko.applyBindings(icdModel, $('#icd10')[0]);
+icdModel.getSuggestions();

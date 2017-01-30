@@ -15,6 +15,7 @@ class Tab(models.Model):
     template = models.CharField(max_length=100, default='default.html', verbose_name=u'Szablon')
     doctor = models.ForeignKey(Doctor, related_name='tabs')
     order = models.IntegerField(unique=True, null=True, blank=True)
+    enabled = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['order']

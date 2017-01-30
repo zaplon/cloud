@@ -147,7 +147,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'fr
 BOWER_INSTALLED_APPS = (
     'bootstrap#v4.0.0-alpha.5',
     'knockoutjs',
-    'fullcalendar'
+    'fullcalendar',
+    'jquery-ui'
 )
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

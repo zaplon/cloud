@@ -1,13 +1,33 @@
 <div id="notes">
-    <blockquote class="blockquote" data-bind="foreach: notes">
-        <p class="mb-0" data-bind="text: text"></p>
-        <footer class="blockquote-footer" data-bind="text: author"></footer>
-    </blockquote>
-</div>
+    <form>
+        <div class="form-group row">
+            <label for="new-note" class="col-md-2 col-form-label">Treść notatki</label>
 
-<div>
-    <p>Dodaj uwagę</p>
-    <textarea class="form-control" rows="10"></textarea>
+            <div class="col-md-10">
+                <textarea max-length="1024" class="form-control" id="new-note" data-bind="textInput: note"></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-10 offset-md-2">
+                <button class="btn btn-primary" data-bind="click: addNote">Dodaj</button>
+            </div>
+        </div>
+    </form>
+    <div data-bind="foreach: notes">
+        <blockquote class="blockquote">
+            <p class="mb-0 row">
+                <span class="col-md-10" data-bind="text: text"></span>
+                <span class="col-md-2"><button class="btn btn-sm btn-danger"
+                                               data-bind="click: $parent.deleteNote">Usuń
+                </button></span>
+            </p>
+            <footer class="blockquote-footer" data-bind="text: author"></footer>
+        </blockquote>
+    </div>
+
+    <div data-bind="if: notes().length==0">
+        Brak notatek
+    </div>
 </div>
 
 <script src="/static/js/visit/tabs/notes.js"></script>

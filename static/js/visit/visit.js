@@ -19,6 +19,7 @@ var viewModel = {
 };
 
 ko.applyBindings(viewModel, $('.control-panel-container')[0]);
+ko.applyBindings(viewModel, $('#visit-menu')[0]);
 
 $(document).ready(function () {
     $('.tab-link').click(function () {

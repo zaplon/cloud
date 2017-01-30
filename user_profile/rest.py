@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from django.db.models import Q
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
-from .models import Doctor, Patient
+from .models import Doctor, Patient, Note
 import datetime
 
 
@@ -22,10 +22,31 @@ class PatientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 # Serializers define the API representation.
+class NoteSerializer(serializers.ModelSerializer):
+    author = CharField(source='get_author', required=False)
+    class Meta:
+        model = Note
+        fields = ('text', 'patient', 'doctor', 'author')
+
+
+# ViewSets define the view behavior.
+class NoteViewSet(viewsets.ModelViewSet):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+
+    def get_queryset(self):
+        q = super(NoteViewSet, self).get_queryset()
+        if 'patient' in self.request.GET:
+            q = q.filter(patient__id= self.request.GET['patient'])
+        return q
+
+
+# Serializers define the API representation.
 class DoctorSerializer(serializers.HyperlinkedModelSerializer):
+    name = CharField(source='get_name')
     class Meta:
         model = Doctor
-        fields = ('mobile', 'pwz', 'terms_start', 'terms_end')
+        fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id')
 
 
 # ViewSets define the view behavior.

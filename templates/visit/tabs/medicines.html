@@ -1,8 +1,12 @@
 <div id="medicines">
-    <div class="row">
-        <div class="col-md-12">
-            <input data-bind='textInput: inputValue' type="text" class="form-control"
-                   id="medicine-search" placeholder="EAN lub nazwa leku"/>
+
+    <div class="mb-2">
+        <div class="form-inline">
+            <label class="mr-1" for="division">Oddział NFZ</label>
+            <input maxlength="2" class="mr-2 form-control" type="text" id="division" value="11" style="width:50px;"/>
+            <label class="mr-1" for="special">Uprawnienia specjalne</label>
+            <input type="text" value="X" id="special" class="form-control mr-2" maxlength="2" style="width:50px;"/>
+            <button class="btn btn-primary">Drukuj receptę</button>
         </div>
     </div>
 
@@ -11,44 +15,59 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>EAN</th>
                     <th>Nazwa</th>
+                    <th>Opakowanie</th>
+                    <th style="width:100px;">Refundacja</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- ko foreach: medicines -->
-                <tr class="table-info">
-                    <td data-bind="text: ean"></td>
-                    <td data-bind="text: name"></td>
+                <tr>
                     <td>
-                        <btn class="btn btn-danger" data-bind="click: $parent.removeMedicine">Usuń</btn>
+                        <input class="form-control"
+                               data-bind="jqAuto: { value: this, source: $parent.getMedicines, labelProp: 'name' }"/>
+                    </td>
+                    <td><select class="form-control"></select></td>
+                    <td style="width:100px;">
+                        <select data-bind="attribute: {disabled: !name}" class="form-control"></select>
+                    </td>
+                    <td>
+                        <btn data-bind="{attribute: {disabled: !name}, click: removeMedicine}"
+                             class="btn btn-danger">Usuń
+                        </btn>
                     </td>
                 </tr>
                 <!-- /ko -->
-                </tbody>
-            </table>
-            <table>
-                <thead>
                 <tr>
-                    <th>EAN</th>
-                    <th>Nazwa</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- ko foreach: suggestions -->
-                <tr>
-                    <td data-bind="text: ean"></td>
-                    <td data-bind="text: name"></td>
                     <td>
-                        <btn class="btn btn-success" data-bind="click: $parent.addMedicine">Dodaj</btn>
+                        <input class="form-control"
+                               data-bind="jqAuto: { value: newMedicine, source: getMedicines, labelProp: 'name',
+                               options:{delay:200,
+                               classes: {'ui-autocomplete': 'autocomplete-list'}} },
+                               template: 'rowTmpl'"/>
+                    </td>
+                    <td><select class="form-control"
+                                data-bind="options: newChildren, optionsText: 'size', value: newSize,
+                     optionsCaption: 'Wybierz...', disable: !newMedicine.id"></select></td>
+                    <td style="width:100px;">
+                        <select data-bind="disable: !newMedicine.id" class="form-control"></select>
+                    </td>
+                    <td>
+                        <button data-bind="{disable: !newMedicine.id, click: addMedicine}"
+                             class="btn btn-success">Dodaj
+                        </button>
                     </td>
                 </tr>
-                <!-- /ko -->
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <script src="/static/js/visit/tabs/medicines.js"></script>
+
+<script id="rowTmpl" type="text/html">
+    <a>
+        <span data-bind="text: name"></span>
+    </a>
+</script>

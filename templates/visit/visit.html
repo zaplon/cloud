@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load utils_tags %}
 
 {% block menu %}
     {% include 'visit/main_menu.html' %}
@@ -109,4 +110,8 @@
 
 {% block extra_scripts %}
     <script src="{% static 'js/visit/visit.js' %}"></script>
+    <script>
+        gabinet.visit = {};
+        gabinet.visit.patient = {{ visit.term.patient|as_json:'id' }};
+    </script>
 {% endblock %}

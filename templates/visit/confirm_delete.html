@@ -1,0 +1,8 @@
+{% extends 'message.html' %}
+
+{% block message %}
+    <form action="" method="post">{% csrf_token %}
+        <p>Czy na pewno chcesz usunąć "{{ object }}"?</p>
+        <button class="btn btn-lg" type="submit">Potwierdzam</button>
+    </form>
+{% endblock %}

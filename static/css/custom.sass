@@ -1,3 +1,4 @@
+@import "../../components/bower_components/bootstrap/scss/variables"
 #side-datetimepicker
   .picker-switch
     text-align: center
@@ -16,3 +17,23 @@
 .templates-list
   li:after
     content: ''!important
+
+.form-inline
+  input
+    display: inline-block
+  label
+    display: inline-block
+
+ul.autocomplete-list
+  max-width: 500px
+  li
+    background-color: white
+    padding: 0.5rem 1rem
+    max-width: 500px
+    z-index: 1000
+    cursor: pointer
+  li:hover
+    background-color: $brand-info
+
+.ui-helper-hidden-accessible
+  display: none

@@ -19,7 +19,8 @@ from dashboard.views import *
 from visit.rest import IcdViewSet, TemplateViewSet
 from result.rest import ResultViewSet
 from timetable.rest import TermViewSet
-from user_profile.rest import PatientViewSet, DoctorViewSet
+from medicine.rest import *
+from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
 from utils.views import AjaxFormView
@@ -32,6 +33,10 @@ router.register(r'terms', TermViewSet)
 router.register(r'patients', PatientViewSet)
 router.register(r'doctors', DoctorViewSet)
 router.register(r'templates', TemplateViewSet)
+router.register(r'notes', NoteViewSet)
+router.register(r'medicines', MedicineViewSet)
+router.register(r'medicine_parents', MedicineParentViewSet)
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

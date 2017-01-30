@@ -17,6 +17,12 @@ class Doctor(models.Model):
     def get_working_hours(self):
         return json.loads(self.working_hours)
 
+    def get_name(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
+        return '%s %s' % (self.user.first_name, self.user.last_name)
+
 
 class Patient(models.Model):
     mobile = models.IntegerField(blank=True, null=True)
@@ -28,6 +34,15 @@ class Patient(models.Model):
 
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.last_name)
+
+
+class Note(models.Model):
+    text = models.CharField(max_length=1024)
+    patient = models.ForeignKey(Patient, related_name='notes')
+    doctor = models.ForeignKey(Doctor, related_name='notes')
+
+    def get_author(self):
+        return self.doctor.__unicode__()
 
 
 class Recipe(models.Model):

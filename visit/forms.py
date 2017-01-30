@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django.forms import ModelForm
+from django.urls import reverse
+
 from .models import Template, Tab
 from django.forms import HiddenInput
 
@@ -43,6 +46,8 @@ class TabForm(ModelForm):
         helper.layout = Layout(
             'title',
             'template',
-            HTML('<button class="btn btn-success" type="submit">Zapisz</button>')
+            HTML('<button class="btn btn-success" type="submit">Zapisz</button>'),
+            HTML(u'<a class="btn btn-danger" href="%s">Usuń</a>' % reverse('tab-delete', kwargs={'pk': self.instance.id})
+                 if self.instance.id else '')
         )
 
