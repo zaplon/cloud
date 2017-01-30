@@ -21,7 +21,10 @@ var medicinesModel = {
         medicinesModel.medicines.remove(medicine);
     },
     addMedicine: function(){
-        medicinesModel.medicines.push(medicinesModel.newMedicine());
+        var newRow = medicinesModel.newMedicine();
+        newRow.newChildren = medicinesModel.newChildren();
+        medicinesModel.medicines.push(newRow);
+        medicinesModel.newChildren([]);
         medicinesModel.newMedicine({name: '', composition: '', dose: ''});
     }
 };
