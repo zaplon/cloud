@@ -12,16 +12,17 @@ var medicinesModel = {
             callback(res);
         });
     },
-    newMedicine: ko.observable(),
-    newChildren: ko.observableArray(),
+    newMedicine: ko.observable({name: '', composition: '', dose: ''}),
+    newChildren: ko.observableArray([]),
     newRefundations: ko.observableArray(),
     newSize: ko.observable(),
     newRefundation: ko.observable(),
     removeMedicine: function(medicine){
-        this.medicines.remove(medicine);
+        medicinesModel.medicines.remove(medicine);
     },
     addMedicine: function(){
-        this.medicines.push(this.newMedicine);
+        medicinesModel.medicines.push(medicinesModel.newMedicine());
+        medicinesModel.newMedicine({name: '', composition: '', dose: ''});
     }
 };
 
@@ -29,7 +30,7 @@ $(document).ready(function(){
     ko.applyBindings(medicinesModel, $('#medicines')[0]);
     medicinesModel.newMedicine.subscribe(function(newValue) {
        if (!newValue.id) {
-           medicinesModel.newMedicine = {name: ''};
+           medicinesModel.newMedicine = {name: '', composition: '', dose: ''};
            return false;
        }
        console.log('selected');

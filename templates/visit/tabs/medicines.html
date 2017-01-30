@@ -16,7 +16,9 @@
                 <thead>
                 <tr>
                     <th>Nazwa</th>
-                    <th>Opakowanie</th>
+                    <th>Skład</th>
+                    <th>Dawka</th>
+                    <th style="width:300px">Opakowanie</th>
                     <th style="width:100px;">Refundacja</th>
                     <th></th>
                 </tr>
@@ -26,14 +28,16 @@
                 <tr>
                     <td>
                         <input class="form-control"
-                               data-bind="jqAuto: { value: this, source: $parent.getMedicines, labelProp: 'name' }"/>
+                               data-bind="jqAuto: { value: $data, source: $parent.getMedicines, labelProp: 'name' }"/>
                     </td>
+                    <td data-bind="text: composition"></td>
+                    <td data-bind="text: dose"></td>
                     <td><select class="form-control"></select></td>
                     <td style="width:100px;">
                         <select data-bind="attribute: {disabled: !name}" class="form-control"></select>
                     </td>
                     <td>
-                        <btn data-bind="{attribute: {disabled: !name}, click: removeMedicine}"
+                        <btn data-bind="{attribute: {disabled: !name}, click: $parent.removeMedicine}"
                              class="btn btn-danger">Usuń
                         </btn>
                     </td>
@@ -47,14 +51,16 @@
                                classes: {'ui-autocomplete': 'autocomplete-list'}} },
                                template: 'rowTmpl'"/>
                     </td>
-                    <td><select class="form-control"
+                    <td data-bind="text: newMedicine().composition"></td>
+                    <td data-bind="text: newMedicine().dose"></td>
+                    <td><select class="form-control" style="width:300px"
                                 data-bind="options: newChildren, optionsText: 'size', value: newSize,
-                     optionsCaption: 'Wybierz...', disable: !newMedicine.id"></select></td>
+                     optionsCaption: 'Wybierz...', disable: newChildren().length==0"></select></td>
                     <td style="width:100px;">
-                        <select data-bind="disable: !newMedicine.id" class="form-control"></select>
+                        <select data-bind="disable: newChildren().length==0" class="form-control"></select>
                     </td>
                     <td>
-                        <button data-bind="{disable: !newMedicine.id, click: addMedicine}"
+                        <button data-bind="{disable: !newSize(), click: addMedicine}"
                              class="btn btn-success">Dodaj
                         </button>
                     </td>
