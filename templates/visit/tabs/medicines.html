@@ -28,43 +28,35 @@
                 <tr>
                     <td>
                         <input class="form-control"
-                               data-bind="jqAuto: { value: $data, source: $parent.getMedicines, labelProp: 'name' }"/>
-                    </td>
-                    <td data-bind="text: composition"></td>
-                    <td data-bind="text: dose"></td>
-                    <td><select class="form-control"></select></td>
-                    <td style="width:100px;">
-                        <select data-bind="attribute: {disabled: !name}" class="form-control"></select>
-                    </td>
-                    <td>
-                        <btn data-bind="{attribute: {disabled: !name}, click: $parent.removeMedicine}"
-                             class="btn btn-danger">Usuń
-                        </btn>
-                    </td>
-                </tr>
-                <!-- /ko -->
-                <tr>
-                    <td>
-                        <input class="form-control"
-                               data-bind="jqAuto: { value: newMedicine, source: getMedicines, labelProp: 'name',
+                               data-bind="jqAuto: { value: selection, source: $parent.getMedicines, labelProp: 'name',
                                options:{delay:200,
                                classes: {'ui-autocomplete': 'autocomplete-list'}} },
                                template: 'rowTmpl'"/>
                     </td>
-                    <td data-bind="text: newMedicine().composition"></td>
-                    <td data-bind="text: newMedicine().dose"></td>
-                    <td><select class="form-control" style="width:300px"
-                                data-bind="options: newChildren, optionsText: 'size', value: newSize,
-                     optionsCaption: 'Wybierz...', disable: newChildren().length==0"></select></td>
+                    <td data-bind="text: composition"></td>
+                    <td data-bind="text: dose"></td>
+                    <td>
+                        <select class="form-control" style="width:300px"
+                                data-bind="options: children, optionsText: 'size', value: size,
+                     optionsCaption: 'Wybierz...', disable: children().length==0"></select>
+                    </td>
                     <td style="width:100px;">
-                        <select data-bind="disable: newChildren().length==0" class="form-control"></select>
+                        <select data-bind="attribute: {disabled: !id}" class="form-control"></select>
                     </td>
                     <td>
-                        <button data-bind="{disable: !newSize(), click: addMedicine}"
+                        <!-- ko if: $index==$parent.medicines.length-1 -->
+                        <button data-bind="{attribute: {disabled: !id}, click: $parent.addMedicine}"
                              class="btn btn-success">Dodaj
                         </button>
+                        <!-- /ko -->
+                        <!-- ko if: $index==3 -->
+                        <button data-bind="{click: $parent.removeMedicine}"
+                             class="btn btn-danger">Usuń
+                        </button>
+                        <!-- /ko -->
                     </td>
                 </tr>
+                <!-- /ko -->
                 </tbody>
             </table>
         </div>

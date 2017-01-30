@@ -1,5 +1,20 @@
+var medicine = function () {
+    var record =  {
+        id: false, name: '', composition: ko.observable(), dose: ko.observable(), children: ko.observableArray(),
+        refundations: ko.observableArray(), selection: ko.observable(), size: ko.observable()
+    };
+    record.selection.subscribe(function(newValue){
+       console.log('aaaaaaa');
+        $.getJSON('/rest/medicines?limit=10', {parent: newValue.id}, function(res){
+            record.children(res.results);
+        });
+        record.dose(newValue.dose);
+        record.composition(newValue.composition);
+    });
+    return record;
+};
 var medicinesModel = {
-    medicines: ko.observableArray([]),
+    medicines: ko.observableArray([medicine()]),
     getMedicines: function (searchTerm, callback) {
         $.ajax({
             dataType: "json",
@@ -12,35 +27,27 @@ var medicinesModel = {
             callback(res);
         });
     },
-    newMedicine: ko.observable({name: '', composition: '', dose: ''}),
-    newChildren: ko.observableArray([]),
-    newRefundations: ko.observableArray(),
-    newSize: ko.observable(),
-    newRefundation: ko.observable(),
-    removeMedicine: function(medicine){
+    removeMedicine: function (medicine) {
         medicinesModel.medicines.remove(medicine);
     },
-    addMedicine: function(){
-        var newRow = medicinesModel.newMedicine();
-        newRow.newChildren = medicinesModel.newChildren();
+    addMedicine: function () {
+        var newRow = medicine();
         medicinesModel.medicines.push(newRow);
-        medicinesModel.newChildren([]);
-        medicinesModel.newMedicine({name: '', composition: '', dose: ''});
     }
 };
 
-$(document).ready(function(){
+$(document).ready(function () {
     ko.applyBindings(medicinesModel, $('#medicines')[0]);
-    medicinesModel.newMedicine.subscribe(function(newValue) {
-       if (!newValue.id) {
-           medicinesModel.newMedicine = {name: '', composition: '', dose: ''};
-           return false;
-       }
-       console.log('selected');
-       $.getJSON('/rest/medicines?limit=10', {parent: newValue.id}, function(res){
-          medicinesModel.newChildren(res.results);
-        });
-
-    });
+    //medicinesModel.selection.subscribe(function(newValue) {
+    //   if (!newValue.id) {
+    //       medicinesModel.newMedicine = {name: '', composition: '', dose: ''};
+    //       return false;
+    //   }
+    //   console.log('selected');
+    //   $.getJSON('/rest/medicines?limit=10', {parent: newValue.id}, function(res){
+    //      medicinesModel.newChildren(res.results);
+    //    });
+    //
+    //});
 });
 
