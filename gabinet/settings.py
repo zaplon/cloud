@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'timetable',
     'medicine',
-    'result'
+    'result',
+    'wkhtmltopdf'
 ]
 
 MIDDLEWARE = [
@@ -133,6 +134,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/account/login/'
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
 
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 
@@ -167,3 +169,5 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'pl-pl'
 VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
+WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
+

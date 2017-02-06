@@ -43,6 +43,11 @@
                                 <div data-bind="{text: title}" class="color-blue-grey"></div>
                             </li>
                         </ul>
+                        <ul class="exp-timeline mb-1">
+                            <!-- ko if: nextVisits().length==0 -->
+                            <li class="empty-row">Brak zaplanowanych wizyt</li>
+                            <!-- /ko -->
+                        </ul>
                     </div>
                 </section>
 

@@ -14,7 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib import admin
+from wkhtmltopdf.views import PDFTemplateView
+
+from django.conf import settings
 from dashboard.views import *
 from visit.rest import IcdViewSet, TemplateViewSet
 from result.rest import ResultViewSet
@@ -36,6 +40,7 @@ router.register(r'templates', TemplateViewSet)
 router.register(r'notes', NoteViewSet)
 router.register(r'medicines', MedicineViewSet)
 router.register(r'medicine_parents', MedicineParentViewSet)
+router.register(r'refundations', RefundationViewSet)
 
 
 urlpatterns = [
@@ -49,8 +54,11 @@ urlpatterns = [
     url(r'^visit/', include("visit.urls"), name='visit'),
     url(r'^icd10/', icd10_view, name='icd10'),
     url(r'^templates/', TemplateListView.as_view(), name='templates'),
+    url(r'^medicines/', medicines_view, name='medicines'),
     url(r'^tabs/', TabsListView.as_view(), name='tabs'),
     url(r"^rest/", include(router.urls), name='rest'),
     url(r"^timetable/", include("timetable.urls"), name='timetable'),
-    url(r"^get-form/", AjaxFormView.as_view(), name='get-form')
-]
+    url(r"^get-form/", AjaxFormView.as_view(), name='get-form'),
+    url(r'^pdf/$', PdfView.as_view(template_name='no_pdf.html', filename='result.pdf'), name='pdf'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

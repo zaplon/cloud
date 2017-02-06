@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.template.context_processors import csrf
 from django.views import View
+from wkhtmltopdf.views import PDFTemplateView
+
 from user_profile.forms import DoctorForm
 from crispy_forms.layout import Layout, Div, Submit, Field
 
@@ -28,6 +30,19 @@ def archive_view(request):
 @login_required
 def icd10_view(request):
     return render(request, 'dashboard/icd.html')
+
+
+@login_required
+def medicines_view(request):
+    return render(request, 'dashboard/medicines.html')
+
+
+class PdfView(PDFTemplateView):
+
+    def get(self, request, *args, **kwargs):
+        self.template_name = 'pdf/' + request.GET.get('template_name', 'no-pdf.html')
+        self.filename = request.GET.get('filename', 'result.pdf')
+        return super(PDFTemplateView, self).get(request, *args, **kwargs)
 
 
 class SetupView(View):

@@ -12,6 +12,7 @@ class TermSerializer(serializers.HyperlinkedModelSerializer):
     end = CharField(source='get_end')
     title = CharField(source='get_title')
     className = CharField(source='status')
+
     class Meta:
         model = Term
         fields = ('patient', 'duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id')

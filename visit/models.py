@@ -15,7 +15,7 @@ class Tab(models.Model):
     template = models.CharField(max_length=100, default='default.html', verbose_name=u'Szablon')
     doctor = models.ForeignKey(Doctor, related_name='tabs')
     order = models.IntegerField(unique=True, null=True, blank=True)
-    enabled = models.BooleanField(default=True)
+    enabled = models.BooleanField(default=True, verbose_name=u'Włączona')
 
     class Meta:
         ordering = ['order']
@@ -30,6 +30,7 @@ class Tab(models.Model):
 class VisitTab(models.Model):
     title = models.CharField(max_length=100)
     body = models.TextField(default='')
+    json = models.TextField(default='null')
     order = models.IntegerField(unique=True, null=True, blank=True)
 
     class Meta:

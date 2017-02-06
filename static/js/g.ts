@@ -21,7 +21,60 @@ class Gabinet {
             $.getScript('/static/js/user_profile/settings.js', function(){ ready(); });
             $('#settings-modal').modal({show: true, keyboard: true});
         });
-    }
+    };
+    showPdf(url, title, binary=false){
+        var width = $(document).width();
+        if (width < 900)
+            width = width - 30;
+        else
+            width = 870;
+        var height = $(document).height()*0.75;
+        var save = '<button type="button" class="btn btn-primary">Save changes</button>';
+        if (!binary)
+            var pdf = `<object data="${url}" type="application/pdf" width="${width}" height="${height}">`;
+        else
+            var pdf = `<embed data="data:application/pdf;base64,${url}" type="application/pdf" width="${width}" height="${height}">
+            </embed>`;
+        if (!title)
+            title = 'Dokument';
+        this.showModal(title, pdf, save, 'modal-lg');
+    };
+    showModal(title, body, save, size=''){
+        var modal = `<div id='pdf-modal' class="modal fade">
+          <div class="modal-dialog ${size}" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">${title}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                ${body}
+              </div>
+              <div class="modal-footer">
+                ${save}
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+        $('#hidden').html(modal);
+        $('#pdf-modal').modal({show: true, keyboard: true});
+    };
+    showForm(form, params){
+        if (typeof(params) != "undefined"){
+            var params_str = '?';
+            for (p in params)
+                params_str += p + '=' + params[p] + '&';
+            params_str = params_str.substr(0, params_str.length-2);
+        }
+        if (typeof(params) == "undefined")
+            var url = `/static/forms/${form}`;
+        else
+            var url = `/static/forms/${form}/${params_str}`;
+        this.showPdf(url);
+    };
 }
 
 var gabinet = new Gabinet();

@@ -1,15 +1,19 @@
 var medicine = function () {
     var record =  {
         id: false, name: '', composition: ko.observable(), dose: ko.observable(), children: ko.observableArray(),
-        refundations: ko.observableArray(), selection: ko.observable(), size: ko.observable()
+        nfz: ko.observableArray(), selection: ko.observable(), size: ko.observable(), refundation: ko.observable()
     };
     record.selection.subscribe(function(newValue){
-       console.log('aaaaaaa');
         $.getJSON('/rest/medicines?limit=10', {parent: newValue.id}, function(res){
             record.children(res.results);
         });
         record.dose(newValue.dose);
         record.composition(newValue.composition);
+    });
+    record.children.subscribe(function(newValue){
+        $.getJSON('/rest/refundations?limit=10', {parent: newValue.id}, function(res){
+            record.nfz(res.results);
+        });
     });
     return record;
 };
@@ -33,8 +37,13 @@ var medicinesModel = {
     addMedicine: function () {
         var newRow = medicine();
         medicinesModel.medicines.push(newRow);
+    },
+    parse: function(){
+
     }
 };
+
+tabs[tabs.length-1].model = medicinesModel;
 
 $(document).ready(function () {
     ko.applyBindings(medicinesModel, $('#medicines')[0]);

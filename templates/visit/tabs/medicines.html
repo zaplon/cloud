@@ -41,15 +41,16 @@
                      optionsCaption: 'Wybierz...', disable: children().length==0"></select>
                     </td>
                     <td style="width:100px;">
-                        <select data-bind="attribute: {disabled: !id}" class="form-control"></select>
+                        <select data-bind="options: nfz, optionsText: 'to_pay', value: refundation,
+                     optionsCaption: 'Wybierz...', disable: nfz().length==0" class="form-control"></select>
                     </td>
                     <td>
-                        <!-- ko if: $index==$parent.medicines.length-1 -->
-                        <button data-bind="{attribute: {disabled: !id}, click: $parent.addMedicine}"
+                        <!-- ko if: (parseInt($index())==$parent.medicines().length-1) -->
+                        <button data-bind="{disable: children().length==0, click: $parent.addMedicine}"
                              class="btn btn-success">Dodaj
                         </button>
                         <!-- /ko -->
-                        <!-- ko if: $index==3 -->
+                        <!-- ko if: $parent.medicines().length-1>parseInt($index()) -->
                         <button data-bind="{click: $parent.removeMedicine}"
                              class="btn btn-danger">Usuń
                         </button>

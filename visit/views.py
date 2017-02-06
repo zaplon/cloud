@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext
@@ -7,11 +8,15 @@ from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from wkhtmltopdf.views import PDFTemplateView
 
 from timetable.models import Term
-from visit.models import Template, Tab, Visit
+from visit.models import Template, Tab, Visit, VisitTab
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
+import datetime
+import os
+from django.conf import settings
 
 
 class VisitView(View, LoginRequiredMixin):
@@ -41,6 +46,24 @@ class VisitView(View, LoginRequiredMixin):
             visit.in_progress = False
             visit.save()
             return HttpResponse(status=200)
+        term = Term.objects.get(id=kwargs['pk'])
+        visit = term.visit
+        data = json.loads(request.POST['data'])
+
+        rozpoznanie = filter(lambda d: d['title'] == 'Rozpoznanie', data)
+        if len(rozpoznanie) == 0 or len(rozpoznanie[0]['data']) == 0:
+            return HttpResponse(json.dumps({'success': False, 'errors': {'Rozpoznanie': u'Musisz podać rozpoznanie'}}),
+                                content_type='application/json')
+
+        for tab in data:
+            vt = VisitTab.objects.get(id=tab['id'])
+            vt.json = json.dumps(tab['data'])
+            vt.save()
+            visit.tabs.add(vt)
+        if not 'temporary' not in self.request.POST:
+            term.status = 'finished'
+            term.save()
+        return HttpResponse(content=json.dumps({'success': True}), status=200, content_type='application/json')
 
 
 class TemplateCreate(CreateView):
@@ -111,6 +134,14 @@ class TabCreate(CreateView):
         return context
 
 
+def enable_tab(request):
+    if 'id' in request.GET:
+        tab = Tab.objects.get(id=request.GET['id'])
+        tab.enabled = not tab.enabled
+        tab.save()
+        return HttpResponse(status=200)
+
+
 class TabUpdate(UpdateView):
     model = Tab
     form_class = TabForm
@@ -146,3 +177,27 @@ class TabsListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(TabsListView, self).get_context_data(**kwargs)
         return context
+
+
+class PdfView(PDFTemplateView):
+
+    def get(self, request, *args, **kwargs):
+        term = Term.objects.get(id=kwargs['pk'])
+        visit = term.visit
+        self.visit = visit
+        self.template_name = 'pdf/visit.html'
+        self.filename = term.patient.__unicode__() + '.pdf'
+        if 'as_link' in request.GET:
+            res = super(PDFTemplateView, self).get(request, *args, **kwargs)
+            name = datetime.datetime.now().strftime('%s') + '.pdf'
+            f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'w')
+            res.render()
+            f.write(res.content)
+            f.close()
+            return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
+        else:
+            return super(PDFTemplateView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        return {'visit': self.visit}
+

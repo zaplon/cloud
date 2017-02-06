@@ -1,6 +1,16 @@
 <ul class="main-nav nav nav-inline" style="z-index: 100;">
     <div class="row" id="visit-menu">
-        <div class="col-md-2 offset-md-10 col-sm-4 offset-sm-8">
+        <div class="col-md-10 col-sm-8">
+            <button class="btn btn-default-outline" data-bind="click: printVisit">
+                <i class="fa fa-print" aria-hidden="true"></i> Historia choroby
+            </button>
+            <button class="btn btn-default-outline"
+                    data-bind="{click: subMenu.showSkierowania,
+                     css: {'btn-default': subMenuName()=='skierowania', 'btn-default-outline': subMenuName()!='skierowania' }}">
+                <i class="fa fa-print" aria-hidden="true"></i> Skierowania
+            </button>
+        </div>
+        <div class="col-md-2 col-sm-4">
             <button class="btn btn-success" data-bind="click: saveVisit">Zakończ</button>
             <button class="btn btn-danger" data-bind="click: cancelVisit">Powrót</button>
         </div>

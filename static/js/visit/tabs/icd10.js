@@ -2,10 +2,7 @@ function IcdModel() {
     this.inputValue = ko.observable('');
     this.delayedValue = ko.pureComputed(this.inputValue)
         .extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 400 } });
-
-    // Keep a log of the throttled values
-    this.loggedValues = ko.observableArray([]);
-    this.icd10 = ko.observableArray();
+    this.icd10 = ko.observableArray([]);
     this.suggestions = ko.observableArray();
     this.delayedValue.subscribe(function (val) {
         this.getSuggestions();
@@ -27,7 +24,17 @@ function IcdModel() {
           me.suggestions(res.results);
         });
     };
+    this.parse = function(data){
+        if (data)
+            this.icd10(data);
+    };
+    this.save = function(){
+        return this.icd10();
+    };
+    this.errors = ko.observable();
 }
 var icdModel = new IcdModel();
 ko.applyBindings(icdModel, $('#icd10')[0]);
 icdModel.getSuggestions();
+
+tabs[tabs.length-1].model = icdModel;

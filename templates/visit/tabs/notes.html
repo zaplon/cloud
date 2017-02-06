@@ -17,16 +17,15 @@
         <blockquote class="blockquote">
             <p class="mb-0 row">
                 <span class="col-md-10" data-bind="text: text"></span>
-                <span class="col-md-2"><button class="btn btn-sm btn-danger"
-                                               data-bind="click: $parent.deleteNote">Usuń
-                </button></span>
+                <span class="col-md-2 text-right pr-2" data-bind="if: gabinet.doctor.id == doctor">
+                    <button class="btn btn-sm btn-danger" data-bind="click: $parent.deleteNote">Usuń</button></span>
             </p>
             <footer class="blockquote-footer" data-bind="text: author"></footer>
         </blockquote>
     </div>
 
-    <div data-bind="if: notes().length==0">
-        Brak notatek
+    <div class="empty-row" data-bind="if: notes().length==0">
+        Brak notatek na temat pacjenta
     </div>
 </div>
 

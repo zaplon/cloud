@@ -4,11 +4,35 @@
 
 {% block menu %}
     {% include 'visit/main_menu.html' %}
+    <div class="nav nav-inline main-nav" style="z-index: 100;" id="visit-sub-menu" data-bind="visible: !hidden()">
+        <ul data-bind="foreach: forms">
+            <li style="display: inline-block">
+                <button class="btn btn-default-outline btn-sm" data-bind="click: $parent.showForm">
+                    <span data-bind="text: title"></span>
+                </button>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
 
-{% block body_extra_class %} control-panel {% endblock %}
+{% block body_extra_class %} control-panel open {% endblock %}
 
 {% block content %}
+
+    <div id="patient">
+        <section class="box-typical box-typical-padding col-md-12">
+            <h2 class="with-border" data-bind="text: patient().name"></h2>
+
+            <div class="row">
+                <div data-bind="text: patient().address"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">Pesel</div>
+                <div class="col-md-9" data-bind="text: patient().pesel"></div>
+            </div>
+        </section>
+    </div>
+
     <div class="row">
         <section class="tabs-section col-md-12">
             <div class="tabs-section-nav">
@@ -29,13 +53,21 @@
                 </div>
             </div><!--.tabs-section-nav-->
             <div class="tab-content">
+                <script>var tabs = [];</script>
                 {% for tab in tabs %}
+                    <script>
+                        tabs.push({data: {{ tab.json|safe }}, title: "{{ tab.title }}", id: {{ tab.id }}});
+                    </script>
                     <div role="tabpanel" class="tab-pane visit-tab fade {% if tab.is_active %} active {% endif %} in"
                          id="{{ tab.title }}"  {% if tab.is_active %} aria-expanded="true" {% endif %}>
                         <div class="p2">
                             {{ tab.body|safe }}
                         </div>
                     </div>
+                    <script>
+                        if (tabs[tabs.length - 1].data)
+                            tabs[tabs.length - 1].model.parse(tabs[tabs.length - 1].data);
+                    </script>
                 {% endfor %}
             </div><!--.tab-content-->
         </section>
@@ -53,6 +85,7 @@
                         <span class="icon fa fa-archive"></span>
                     </a>
                     <span class="text">Archiwum</span>
+
                     <div class="actions">
                         <a href="#">
                             <span class="fa fa-refresh"></span>
@@ -76,6 +109,7 @@
                         <span class="icon fa fa-edit"></span>
                     </a>
                     <span class="text">Szablony</span>
+
                     <div class="actions">
                         <a href="#">
                             <span class="fa fa-refresh"></span>
@@ -86,7 +120,7 @@
                         <a href="#">
                             <span class="fa fa-trash"></span>
                         </a>
-                        
+
                     </div>
                 </div>
                 <div class="control-item-content">
@@ -94,6 +128,7 @@
                         <li>
                             <a href="#" data-bind="attr: {title: text}">
                                 <h6 data-bind="text: name"></h6>
+
                                 <div data-bind="text: text"></div>
                             </a>
                             <a data-bind="text: key"></a>
@@ -102,7 +137,7 @@
                 </div>
             </li>
         </ul>
-        <a class="control-panel-toggle">
+        <a class="control-panel-toggle open">
             <span class="fa fa-angle-double-left"></span>
         </a>
     </div>
@@ -111,7 +146,7 @@
 {% block extra_scripts %}
     <script src="{% static 'js/visit/visit.js' %}"></script>
     <script>
-        gabinet.visit = {};
-        gabinet.visit.patient = {{ visit.term.patient|as_json:'id' }};
+        visit.patient({{ visit.term.patient|as_json:'id,pesel' }});
+        visit.term = {{ visit.term|as_json:'id' }};
     </script>
 {% endblock %}

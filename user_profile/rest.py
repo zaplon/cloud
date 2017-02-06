@@ -2,6 +2,9 @@ from django.conf.urls import url, include
 from django.db.models import Q
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
+from rest_framework.response import Response
+from rest_framework import status
+
 from .models import Doctor, Patient, Note
 import datetime
 
@@ -26,7 +29,7 @@ class NoteSerializer(serializers.ModelSerializer):
     author = CharField(source='get_author', required=False)
     class Meta:
         model = Note
-        fields = ('text', 'patient', 'doctor', 'author')
+        fields = ('id', 'text', 'patient', 'doctor', 'author')
 
 
 # ViewSets define the view behavior.
@@ -39,6 +42,14 @@ class NoteViewSet(viewsets.ModelViewSet):
         if 'patient' in self.request.GET:
             q = q.filter(patient__id= self.request.GET['patient'])
         return q
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not request.user.is_authenticated() or not instance.doctor == request.user.doctor:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 # Serializers define the API representation.

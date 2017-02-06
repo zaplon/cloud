@@ -252,7 +252,11 @@ $(document).ready(function () {
     $('#side-datetimepicker').datetimepicker({
         inline: true,
         format: 'DD/MM/YYYY',
-        locale: 'pl'
+        locale: 'pl',
+    });
+    $('#side-datetimepicker').on('dp.change', function(e){
+        $('#calendar').fullCalendar('gotoDate', e.date);
+        $('#calendar').fullCalendar('refetchEvents');
     });
 
     /* ========================================================================== */
@@ -279,11 +283,6 @@ $(document).ready(function () {
                 }
             })
         );
-
-        $('.day').click(function (e) {
-            $('#calendar').fullCalendar('gotoDate', new Date($(e.target).attr('data-day')));
-            $('#calendar').fullCalendar('refetchEvents');
-        });
     });
 })(jQuery, ResponsiveBootstrapToolkit);
 
