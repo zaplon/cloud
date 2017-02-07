@@ -71,8 +71,13 @@ var visit = {
         });
     },
     currentTab: $('.visit-tab:visible').attr('id'),
-    putTemplate: function () {
-
+    putTemplate: function (template){
+        var tab = tabs.filter(function(tab){ return tab.id == template.id; });
+        if (tab.length == 0)
+            return;
+        tab = tab[0];
+        tab.model.parse(template.data);
+        return true;
     },
     showForm: function(form){
         params = {};
