@@ -9,6 +9,16 @@
                      css: {'btn-default': subMenuName()=='skierowania', 'btn-default-outline': subMenuName()!='skierowania' }}">
                 <i class="fa fa-print" aria-hidden="true"></i> Skierowania
             </button>
+            <button class="btn btn-default-outline"
+                    data-bind="{click: subMenu.showMedycynaPracy,
+                     css: {'btn-default': subMenuName()=='medycyna_pracy', 'btn-default-outline': subMenuName()!='medycyna_pracy' }}">
+                <i class="fa fa-print" aria-hidden="true"></i> Karty badań
+            </button>
+            <button class="btn btn-default-outline"
+                    data-bind="{click: subMenu.showOrzeczenia,
+                     css: {'btn-default': subMenuName()=='orzeczenia', 'btn-default-outline': subMenuName()!='orzeczenia' }}">
+                <i class="fa fa-print" aria-hidden="true"></i> Orzeczenia
+            </button>
         </div>
         <div class="col-md-2 col-sm-4">
             <button class="btn btn-success" data-bind="click: saveVisit">Zakończ</button>

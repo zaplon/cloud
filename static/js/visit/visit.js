@@ -10,8 +10,8 @@ var visit = {
       showForm: function(form){
         visit.showForm(form.name);
       },
-      show: function(){
-          this.hidden(!this.hidden());
+      show: function(hide){
+          this.hidden(hide);
           if (this.hidden()) {
               $('.page-content').css('padding-top', 166 + 'px');
               $('.control-panel-container').css('padding-top', 136 + 'px');
@@ -22,15 +22,36 @@ var visit = {
           }
       },
       showSkierowania: function(){
-          this.subMenu.show();
           this.subMenu.forms([
               {title: 'Skierowanie do szpitala', name: 'hospital.pdf'},
-              {title: 'Skierowanie do szpitala', name: 'hospital.pdf'}
+              {title: 'Skierowanie do poradni specjalistycznej', name: 'poradnia_specjalistyczna.pdf'}
           ]);
-          if (this.subMenuName().length == 0)
-            this.subMenuName('skierowania');
-          else
-            this.subMenuName('')
+          if (this.subMenuName() == 'skierowania') {
+              this.subMenu.show(1);
+              this.subMenuName('');
+          }
+          else {
+              this.subMenuName('skierowania');
+              this.subMenu.show();
+          }
+      },
+      showMedycynaPracy: function(){
+          this.subMenu.forms([
+              {title: 'Karta badania profilaktycznego', name: 'profilactic.pdf'},
+              {title: 'Karta badania lekarskiego', name: 'doctor.pdf'},
+              {title: 'Karta badania Prawo Jazdy', name: 'driver.pdf'}
+          ]);
+        if (this.subMenuName() == 'medycyna_pracy') {
+            this.subMenuName('');
+            this.subMenu.show(1);
+        }
+          else {
+            this.subMenuName('medycyna_pracy');
+            this.subMenu.show();
+        }
+      },
+      showOrzeczenia: function(){
+
       }
     },
     saveVisit: function () {
