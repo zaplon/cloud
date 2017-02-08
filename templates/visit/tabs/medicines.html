@@ -3,10 +3,10 @@
     <div class="mb-2">
         <div class="form-inline">
             <label class="mr-1" for="division">Oddział NFZ</label>
-            <input maxlength="2" class="mr-2 form-control" type="text" id="division" value="11" style="width:50px;"/>
+            <input maxlength="2" data-bind="value: nfz" class="mr-2 form-control" type="text" id="division" value="11" style="width:50px;"/>
             <label class="mr-1" for="special">Uprawnienia specjalne</label>
-            <input type="text" value="X" id="special" class="form-control mr-2" maxlength="2" style="width:50px;"/>
-            <button class="btn btn-primary">Drukuj receptę</button>
+            <input type="text" data-bind="value: permissions" id="special" class="form-control mr-2" maxlength="2" style="width:50px;"/>
+            <button class="btn btn-primary" data-bind="click: printRecipe">Drukuj receptę</button>
         </div>
     </div>
 

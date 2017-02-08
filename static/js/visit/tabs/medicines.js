@@ -1,4 +1,4 @@
-var medicine = function () {
+var medicine = function (data) {
     var record =  {
         id: false, name: '', composition: ko.observable(), dose: ko.observable(), children: ko.observableArray(),
         nfz: ko.observableArray(), selection: ko.observable(), size: ko.observable(), refundation: ko.observable()
@@ -15,10 +15,20 @@ var medicine = function () {
             record.nfz(res.results);
         });
     });
+    for (d in data){
+        if (d in record)
+            if (typeof(record[d]) == 'function')
+                record[d](data[d]);
+            else
+                record[d] = data[d];
+    }
     return record;
 };
 var medicinesModel = {
     medicines: ko.observableArray([medicine()]),
+    realisationDate: ko.observable(),
+    nfz: ko.observable(7),
+    permissions: ko.observable('X'),
     getMedicines: function (searchTerm, callback) {
         $.ajax({
             dataType: "json",
@@ -38,8 +48,30 @@ var medicinesModel = {
         var newRow = medicine();
         medicinesModel.medicines.push(newRow);
     },
-    parse: function(){
-
+    parse: function(data){
+        var me = this;
+        me.medicines([]);
+        data.forEach(function(d){
+           me.medicines().push(medicine(d));
+        });
+        me.medicines().push(medicine());
+    },
+    save: function(){
+        var data = [];
+        var me = this;
+        var medicines = this.medicines();
+        medicines.forEach(function(m, i){
+            if (i < medicines.length-1)
+                data.push({id: m.id, name: m.name, composition: m.composition(), dose: m.dose(), size: m.size(),
+                refundation: m.refundation(), selection: m.selection()});
+        });
+        return data;
+    },
+    printRecipe: function(){
+        $.post('/visit/recipe/', {medicines: this.save(), nfz: this.nfz(), permissions: this.permissions(),
+        patient: visit.patient}, function(res){
+            gabinet.showPdf(res.url);
+        });
     }
 };
 

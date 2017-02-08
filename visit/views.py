@@ -60,7 +60,7 @@ class VisitView(View, LoginRequiredMixin):
             vt.json = json.dumps(tab['data'])
             vt.save()
             visit.tabs.add(vt)
-        if not 'temporary' not in self.request.POST:
+        if self.request.POST.get('tmp', False):
             term.status = 'finished'
             term.save()
         return HttpResponse(content=json.dumps({'success': True}), status=200, content_type='application/json')
@@ -79,10 +79,9 @@ class TemplateCreate(CreateView):
             context['section'] = 'templates'
             return context
         context['form'].fields['tab'].queryset = tabs
+        if self.request.user.is_authenticated():
+            context['form'].fields['doctor'].initial = self.request.user.doctor
         return context
-
-    def post(self, request, *args, **kwargs):
-        super(TemplateCreate, self).post(request, *args, **kwargs)
 
 
 class TemplateUpdate(UpdateView):

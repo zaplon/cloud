@@ -11,10 +11,11 @@ from django.forms import HiddenInput
 class TemplateForm(ModelForm):
     class Meta:
         model = Template
-        fields = ['name', 'key', 'text', 'tab']
+        fields = ['name', 'key', 'text', 'tab', 'doctor']
 
     def __init__(self, *args, **kwargs):
         super(TemplateForm, self).__init__(*args, **kwargs)
+        self.fields['doctor'].widget = HiddenInput()
         self.helper = FormHelper()
         helper = self.helper
         # helper.form_class = 'form-horizontal'

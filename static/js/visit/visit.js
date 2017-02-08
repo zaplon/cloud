@@ -54,7 +54,7 @@ var visit = {
 
       }
     },
-    saveVisit: function () {
+    saveVisit: function (tmp) {
         var me = this;
         tabs.forEach(function (tab) {
             if (typeof(tab.model.save) == 'undefined')
@@ -64,9 +64,10 @@ var visit = {
             me.tabs.push({data: data, title: tab.title, id:tab.id});
         });
         if (me.errors.length == 0) {
-            $.post(window.location.pathname, {data: JSON.stringify(me.tabs)}, function(res){
+            $.post(window.location.pathname, {data: JSON.stringify(me.tabs), tmp: true ? tmp : false}, function(res){
               if (res.success){
-                window.location.pathname = '/';
+                if (!tmp)
+                    window.location.pathname = '/';
               }
               else {
                     for (e in res.errors){
