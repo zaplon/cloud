@@ -28,10 +28,18 @@ class PatientSelect(Select):
 class TermForm(ModelForm):
     class Meta:
         model = Term
-        fields = ['patient', 'status', 'datetime', 'doctor', 'id', 'duration']
+        fields = ['patient', 'datetime', 'doctor', 'id', 'duration', 'status']
         widgets = {
             'patient': PatientSelect(),
             'doctor': HiddenInput(),
             'id': HiddenInput(),
-            'datetime': DateTimeInput()
+            'datetime': DateTimeInput(),
+            'status': HiddenInput()
         }
+
+    def save(self, commit=True):
+        if self.data['patient'] and self.instance.status == 'FREE':
+            self.instance.status = u'PENDING'
+        if 'patient' not in self.data or not self.data['patient']:
+            self.instance.status = u'FREE'
+        super(TermForm, self).save(commit)

@@ -283,6 +283,10 @@ $(document).ready(function () {
                 }
             })
         );
+        $("#calendar-legend li").click(function(){
+           var status = $(this).attr('data-status');
+           $('#calendar').fullCalendar('refetchEvents');
+        });
     });
 })(jQuery, ResponsiveBootstrapToolkit);
 
