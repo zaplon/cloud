@@ -17,6 +17,7 @@ var Gabinet = (function () {
     ;
     Gabinet.prototype.settings = function () {
         $.get('/profile/settings/', function (res) {
+            $('#settings-modal').remove();
             $('#hidden').append(res);
             $.getScript('/static/js/user_profile/settings.js', function () { ready(); });
             $('#settings-modal').modal({ show: true, keyboard: true });

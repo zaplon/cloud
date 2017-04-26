@@ -94,18 +94,24 @@ var visit = {
     },
     currentTab: $('.visit-tab:visible').attr('id'),
     putTemplate: function (template){
-        var tab = tabs.filter(function(tab){ return tab.id == template.id; });
+        var tab = tabs.filter(function(tab){ return tab.title == template.tab_title; });
         if (tab.length == 0)
             return;
         tab = tab[0];
-        tab.model.parse(template.data);
+        tab.model.parse(template.text);
         return true;
+    },
+    addTemplate: function(){
+        $.get('get-form', {module: 'visit.forms', class: 'TermplateForm', tab: 1}, function(res){
+            var save = "<button class='btn btn-default'>Anuluj</button><button class='btn btn-success'></button>";
+            gabinet.showModal('Dodaj szablon', res.form_html, save);
+        });
     },
     showForm: function(form){
         params = {};
         params.pesel = this.patient().pesel;
         gabinet.showForm(form, params);
-    },
+    }, 
     printVisit: function(){
         $.get('/visit/pdf/'+visit.term.id + '/?as_link=1', function(res){
           gabinet.showPdf(res, 'Historia choroby', false);

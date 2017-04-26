@@ -1,6 +1,7 @@
 from django.conf.urls import url, include
 from django.db.models import Q
 from rest_framework import serializers, viewsets
+from rest_framework.fields import CharField
 from .models import Icd10, Template
 import json
 
@@ -28,9 +29,10 @@ class IcdViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TemplateSerializer(serializers.ModelSerializer):
+    tab_title = CharField(source='tab.title')
     class Meta:
         model = Template
-        fields = ('text', 'tab', 'key', 'name')
+        fields = ('text', 'tab', 'key', 'name', 'tab_title')
 
 
 class TemplateViewSet(viewsets.ReadOnlyModelViewSet):

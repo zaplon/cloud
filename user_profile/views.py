@@ -3,6 +3,7 @@ from django.shortcuts import render, HttpResponse
 from django.views import View
 from .forms import *
 from utils.forms import ajax_form_validate
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 import json
 
 
@@ -18,7 +19,8 @@ class SettingsView(View):
             return form
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'profile_form': self.get_form()})
+        return render(request, self.template_name, {'profile_form': self.get_form()},
+                      content_type='text/html; charset=utf-8')
 
     def post(self, request):
         if not request.POST.get('tab', None):
@@ -45,6 +47,7 @@ class SettingsView(View):
             return HttpResponse(res, status=200, content_type='application/json')
 
 
-
-class PatientView():
-    pass
+class PatientCreateView(CreateView):
+    model = Patient
+    form_class = PatientModelForm
+    template_name = 'user_profile/patient/form.html'

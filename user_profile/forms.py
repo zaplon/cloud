@@ -83,3 +83,8 @@ class PatientForm(forms.Form):
         Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data['email'],
                                first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
         return True
+
+class PatientModelForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = ['first_name', 'last_name', 'email']

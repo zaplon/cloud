@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
@@ -25,12 +26,12 @@ class Doctor(models.Model):
 
 
 class Patient(models.Model):
-    mobile = models.IntegerField(blank=True, null=True)
+    mobile = models.IntegerField(blank=True, null=True, verbose_name=u'Telefon')
     user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True)
-    first_name = models.CharField(max_length=100, default='')
-    last_name = models.CharField(max_length=100, default='')
-    pesel = models.CharField(max_length=11, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
+    first_name = models.CharField(max_length=100, default='', verbose_name=u'Imię')
+    last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
+    pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel')
+    email = models.EmailField(blank=True, null=True, verbose_name=u'Email')
 
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.last_name)

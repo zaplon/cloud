@@ -125,7 +125,7 @@
                 </div>
                 <div class="control-item-content">
                     <ul class="control-item-lists templates-list" data-bind="foreach: templates">
-                        <li>
+                        <li data-bind="click: $parent.putTemplate">
                             <a href="#" data-bind="attr: {title: text}">
                                 <h6 data-bind="text: name"></h6>
 

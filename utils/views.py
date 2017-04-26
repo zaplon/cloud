@@ -43,7 +43,7 @@ class AjaxFormView(View):
             data = json.loads(data)
             data = {d['name']: d['value'] for d in data}
         except:
-            data = {p[0]: unicode(urllib.unquote(p[1])) for p in [par.split('=') for par in data.split('&')]}
+            data = {p[0]: urllib.unquote(str(p[1])).decode('utf8') for p in [par.split('=') for par in data.split('&')]}
         if 'id' in data:
             form = form_class(data=data, instance=form_class._meta.model.objects.get(id=data['id']))
         else:

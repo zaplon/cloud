@@ -1,7 +1,12 @@
 {% extends 'layout.html' %}
+{% load crispy_forms_tags %}
 
 {% block breadcrumb %}
-
+    <ol class="breadcrumb"Des>
+        <li><a href="/">Początek</a></li>
+        <li><a href="{% url 'patients' %}">Pacjenci</a></li>
+        <li class="active">Nowy pacjent</li>
+    </ol>
 {% endblock %}
 
 {% block menu %}
@@ -10,6 +15,14 @@
 
 {% block content %}
     <section class="box-typical box-typical-padding">
-        {{ form }}
+        <form action="" method="post">
+            {% crispy form NoFormFormHelper %}
+            {% block form_buttons %}
+                <hr>
+                <button class="btn btn-success" type="submit">Zapisz</button>
+                <a href="/patients/" class="btn btn-default">Anuluj</a>
+            {% endblock %}
+        </form>
+
     </section>
 {% endblock %}
