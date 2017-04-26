@@ -15,6 +15,18 @@
                                 <span class="">Recept: <span>{{ recipes_available }} / {{ recipes_total }}</span></span>
                             </a>
                         {% endif %}
+                <script type="text/html" id="recipeTemplate">
+                    <form action="profile/add_recipes/" method="post" id="addRecipeForm">
+                        <div class="form-group">
+                            <label for="recipeInputFile">File input</label>
+                            <input type="file" class="form-control-file" id="recipeInputFile" aria-describedby="fileHelp">
+                            <small id="fileHelp" class="form-text text-muted">
+                                Wybierz plik zawierający numery recept
+                            </small>
+                            <small></small>
+                        </div>
+                    </form>
+                </script>
                 <div class="dropdown user-menu">
                     <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
