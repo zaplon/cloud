@@ -76,11 +76,11 @@ class Gabinet {
             var url = `/static/forms/${form}/${params_str}`;
         this.showPdf(url);
     };
-    addRecipes(){
+    addRecipes() {
         var body = $('#addRecipeForm').html();
         var save = '<button class="btn btn-primary" id="addRecipes">Dodaj</button>';
         this.showModal('Dodaj numery recept', body, save);
-        $('#addRecipes').click(function(){
+        $('#addRecipes').click(function () {
             $.ajax({
                 // Your server script to process the upload
                 url: 'profile/add_recipe/',
@@ -94,35 +94,36 @@ class Gabinet {
                 cache: false,
                 contentType: false,
                 processData: false,
-                
-                success: function(res){
-                    if (res.success){
+
+                success: function (res) {
+                    if (res.success) {
                         $('button.close').click();
                     }
                     else {
                         $('#recipe-errors').html(res.errors);
                     }
-               }, 
-                
+                },
+
                 // Custom XMLHttpRequest
-                xhr: function() {
+                xhr: function () {
                     var myXhr = $.ajaxSettings.xhr();
                     if (myXhr.upload) {
                         // For handling the progress of the upload
-                        myXhr.upload.addEventListener('progress', function(e) {
+                        myXhr.upload.addEventListener('progress', function (e) {
                             if (e.lengthComputable) {
                                 $('progress').attr({
                                     value: e.loaded,
                                     max: e.total,
                                 });
                             }
-                        } , false);
+                        }, false);
                     }
                     return myXhr;
                 },
             });
-        }):
-}
+        });
+    };
+};
 
 var gabinet = new Gabinet();
 

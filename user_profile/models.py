@@ -14,6 +14,7 @@ class Doctor(models.Model):
     terms_generated_till = models.DateField(null=True, blank=True)
     terms_start = models.TimeField(default='09:00')
     terms_end = models.TimeField(default='17:00')
+    misal_id = models.CharField(blank=True, null=True, max_length=10)
 
     def get_working_hours(self):
         return json.loads(self.working_hours)

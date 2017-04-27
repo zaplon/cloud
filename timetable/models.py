@@ -18,6 +18,10 @@ class Term(models.Model):
                                                       ('FINISHED', u'Zakończony')), default='PENDING')
     doctor = models.ForeignKey(Doctor, related_name='terms', verbose_name=u'Lekarz')
     duration = models.IntegerField(default=15, verbose_name=u'Czas trwania (min)')
+    code = models.CharField(max_length=50, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.doctor.__unicode__() + ' ' + self.patient.__unicode__() + ' ' + self.datetime.strftime('%Y-%m-%d %H:%M')
 
     def get_end(self):
         return self.datetime + datetime.timedelta(minutes=self.duration)

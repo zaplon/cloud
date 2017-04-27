@@ -1,5 +1,4 @@
-from django.conf.urls import url, include
-from django.db.models import Q
+from django.conf import settings
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
 from .models import Term
@@ -29,7 +28,7 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
                 order_by('datetime')[0:5]
         end = datetime.datetime.strptime(self.request.query_params['end'], '%Y-%m-%d')
         doctor = self.request.user.doctor
-        if not doctor.terms_generated_till or doctor.terms_generated_till < end.date():
+        if settings.GENERATE_TERMS and (not doctor.terms_generated_till or doctor.terms_generated_till < end.date()):
             Term.create_terms_for_period(doctor,
                                          datetime.datetime.strptime(self.request.query_params['start'], '%Y-%m-%d'),
                                          end)

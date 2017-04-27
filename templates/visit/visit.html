@@ -21,7 +21,7 @@
 
     <div id="patient">
         <section class="box-typical box-typical-padding col-md-12">
-            <h2 class="with-border" data-bind="text: patient().name"></h2>
+            <h2 class="with-border" data-bind="text: patient().first_name + ' ' + patient().last_name"></h2>
 
             <div class="row">
                 <div data-bind="text: patient().address"></div>
@@ -125,7 +125,8 @@
                 </div>
                 <div class="control-item-content">
                     <ul class="control-item-lists templates-list" data-bind="foreach: templates">
-                        <li data-bind="click: $parent.putTemplate">
+                        <li data-bind="click: $parent.putTemplate,
+                        visible: tab_title == $parent.currentTab">
                             <a href="#" data-bind="attr: {title: text}">
                                 <h6 data-bind="text: name"></h6>
 
@@ -146,7 +147,7 @@
 {% block extra_scripts %}
     <script src="{% static 'js/visit/visit.js' %}"></script>
     <script>
-        visit.patient({{ visit.term.patient|as_json:'id,pesel' }});
+        visit.patient({{ visit.term.patient|as_json:'id,pesel,first_name,last_name,address' }});
         visit.term = {{ visit.term|as_json:'id' }};
     </script>
 {% endblock %}
