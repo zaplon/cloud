@@ -1,4 +1,65 @@
 var visit = {
+    archive: {
+        documents: ko.observableArray(),
+        getDocument: function (d) {
+            $.get('/rest/results/' + d.id, {}, function (res) {
+
+            });
+        },
+        getArchive: function () {
+            $.get('/rest/results/', {pesel: visit.patient().pesel}, function (res) {
+                var me = this;
+                res.forEach(function (r) {
+                    me.documents.push(r);
+                });
+            })
+        },
+        addDocument: function () {
+            $.get('/get-form', {module: 'result.forms', class: 'ResultForm'}, function (res) {
+                var save = "<button id='addArchiveDocument' class='btn btn-primary'>Dodaj</button>";
+                gabinet.showModal('Dodaj plik', res.form_html, save);
+                $('#addArchiveDocument').click(function () {
+                    var form = $(this).parent().parent().find('form');
+                    $.ajax({
+                        // Your server script to process the upload
+                        url: '/get-form/',
+                        type: 'POST',
+                        // Form data
+                        data: new FormData(form[0]),
+                        // Tell jQuery not to process data or worry about content-type
+                        // You *must* include these options!
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            if (res.success) {
+                                $('button.close').click();
+                            }
+                            else {
+                                form.parent().html(res.form_html);
+                            }
+                        },
+                        // Custom XMLHttpRequest
+                        xhr: function () {
+                            var myXhr = $.ajaxSettings.xhr();
+                            if (myXhr.upload) {
+                                // For handling the progress of the upload
+                                myXhr.upload.addEventListener('progress', function (e) {
+                                    if (e.lengthComputable) {
+                                        $('progress').attr({
+                                            value: e.loaded,
+                                            max: e.total,
+                                        });
+                                    }
+                                }, false);
+                            }
+                            return myXhr;
+                        },
+                    });
+                });
+            });
+        }
+    },
     term: {},
     tabs: [],
     errors: [],
@@ -12,6 +73,8 @@ var visit = {
                 visit.showForm(form.name);
         },
         show: function (hide) {
+            if (this == window)
+                return;
             this.hidden(hide);
             if (this.hidden()) {
                 $('.page-content').css('padding-top', 166 + 'px');
@@ -23,6 +86,8 @@ var visit = {
             }
         },
         showSkierowania: function () {
+            if (this == window)
+                return;
             this.subMenu.forms([
                 {title: 'Skierowanie do szpitala', name: 'hospital.pdf'},
                 {title: 'Skierowanie do poradni specjalistycznej', name: 'poradnia_specjalistyczna.pdf'}
@@ -37,6 +102,8 @@ var visit = {
             }
         },
         showMedycynaPracy: function () {
+            if (this == window)
+                return;
             this.subMenu.forms([
                 {title: 'Karta badania profilaktycznego', name: 'profilactic.pdf'},
                 {title: 'Karta badania lekarskiego', name: 'doctor.pdf'},
@@ -52,10 +119,13 @@ var visit = {
             }
         },
         showOrzeczenia: function () {
-
+            if (this == window)
+                return;
         }
     },
     saveVisit: function (tmp) {
+        if (this == window)
+            return;
         var me = this;
         tabs.forEach(function (tab) {
             if (typeof(tab.model.save) == 'undefined')
@@ -65,22 +135,27 @@ var visit = {
             me.tabs.push({data: data, title: tab.title, id: tab.id});
         });
         if (me.errors.length == 0) {
-            $.post(window.location.pathname, {
-                data: JSON.stringify(me.tabs),
-                tmp: true ? tmp : false
-            }).success(function (res) {
-                if (res.success) {
-                    if (!tmp)
-                        window.location.pathname = '/';
-                }
-                else {
-                    for (e in res.errors) {
-                        var tab = tabs.filter(function (r) {
-                            return r.title == e
-                        });
-                        if (tab.length > 0) {
-                            $('a[href="#' + tab[0].title + '"').addClass('tab-error');
-                            tab[0].model.errors(res.errors[e]);
+            $.ajax({
+                type: "POST",
+                url: window.location.pathname,
+                data: {
+                    data: JSON.stringify(visit.tabs),
+                    tmp: tmp ? true : false
+                },
+                success: function (res) {
+                    if (res.success) {
+                        if (!tmp)
+                            window.location.pathname = '/';
+                    }
+                    else {
+                        for (e in res.errors) {
+                            var tab = tabs.filter(function (r) {
+                                return r.title == e
+                            });
+                            if (tab.length > 0) {
+                                $('a[href="#' + tab[0].title + '"').addClass('tab-error');
+                                tab[0].model.errors(res.errors[e]);
+                            }
                         }
                     }
                 }
@@ -110,10 +185,25 @@ var visit = {
         return true;
     },
     addTemplate: function () {
-        $.get('get-form', {module: 'visit.forms', class: 'TermplateForm', tab: 1}, function (res) {
-            var save = "<button class='btn btn-default'>Anuluj</button><button class='btn btn-success'></button>";
+        $.get('/get-form/', {module: 'visit.forms', class: 'TemplateForm'}, function (res) {
+            var save = "<button id='AddTemplate' class='btn btn-primary'>Dodaj</button>";
             gabinet.showModal('Dodaj szablon', res.form_html, save);
+            $('#AddTemplate').click(function(){
+                var form = $(this).parent().parent().find('form');
+                var data = form.serialize();
+                $.post('/get-form/', {module: 'visit.forms', class: 'TemplateForm', data: data}, function (res) {
+                    if (res.success){
+                        $('button.close').click();
+                    }
+                    else {
+                        form.parent().html(res.form_html);
+                    }
+                });
+            });
         });
+    },
+    removeTemplate: function(){
+
     },
     showForm: function (form) {
         params = {};

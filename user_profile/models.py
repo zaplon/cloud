@@ -57,3 +57,9 @@ class Specialization(models.Model):
     name = models.CharField(max_length=50)
     code = models.CharField(max_length=10)
     code_misal = models.CharField(max_length=100)
+
+
+class Code(models.Model):
+    code = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='codes')

@@ -11,11 +11,11 @@ import json
 class AjaxFormView(View):
     @staticmethod
     def get_form(data):
-        klass = data.get('class', False)
+        klass = data.get('class', data.get('klass', False))
         if not klass:
             return False
         m = importlib.import_module(data['module'])
-        form_class = getattr(m, data['class'])
+        form_class = getattr(m, klass)
         return form_class
 
     def get(self, *args, **kwargs):
@@ -38,16 +38,25 @@ class AjaxFormView(View):
             return HttpResponse(json.dumps({'success': False}), content_type='application/json')
         ctx = {}
         ctx.update(csrf(self.request))
-        data = self.request.POST['data']
-        try:
-            data = json.loads(data)
-            data = {d['name']: d['value'] for d in data}
-        except:
-            data = {p[0]: urllib.unquote(str(p[1])).decode('utf8') for p in [par.split('=') for par in data.split('&')]}
-        if 'id' in data:
-            form = form_class(data=data, instance=form_class._meta.model.objects.get(id=data['id']))
+        if not 'data' in self.request.POST:
+            data = self.request.POST
         else:
-            form = form_class(data=data)
+            data = self.request.POST['data']
+            try:
+                data = json.loads(data)
+                data = {d['name']: d['value'] for d in data}
+            except:
+                data = {p[0]: urllib.unquote(str(p[1])).decode('utf8') for p in [par.split('=') for par in data.split('&')]}
+        if 'id' in data:
+            if self.request.FILES:
+                form = form_class(data=data, files=self.request.FILES, instance=form_class._meta.model.objects.get(id=data['id']))
+            else:
+                form = form_class(data=data, instance=form_class._meta.model.objects.get(id=data['id']))
+        else:
+            if self.request.FILES:
+                form = form_class(data=data, files=self.request.FILES)
+            else:
+                form = form_class(data=data)
         if form.is_valid():
             if self.request.POST.get('user', None):
                 form.save(self.request.user)

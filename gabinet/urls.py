@@ -49,6 +49,7 @@ urlpatterns = [
     url(r"^setup/(?P<step>[0-9])", SetupView.as_view(), name='setup'),
     url(r'^$', calendar_view, name='calendar'),
     url(r'^patients/', patients_view, name='patients'),
+    url(r'^elo/', include("elo.urls"), name='elo'),
     url(r'^archive/', archive_view, name='archive'),
     url(r'^profile/', include("user_profile.urls")),
     url(r'^visit/', include("visit.urls"), name='visit'),

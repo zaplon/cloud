@@ -43,7 +43,7 @@ $(document).ready(function () {
         }, {
             field: 'patient',
             title: 'Osoba',
-            align: 'center',
+            align: 'center'
         },{
             field: 'pesel',
             title: 'Pesel',

@@ -88,10 +88,10 @@
 
                     <div class="actions">
                         <a href="#">
-                            <span class="fa fa-refresh"></span>
+                            <span class="fa fa-refresh" data-bind="click: archive.getArchive"></span>
                         </a>
                         <a href="#">
-                            <span class="fa fa-plus"></span>
+                            <span class="fa fa-plus" data-bind='click: archive.addDocument'></span>
                         </a>
                         <a href="#">
                             <span class="fa fa-trash"></span>
@@ -99,7 +99,19 @@
                     </div>
                 </div>
                 <div class="control-item-content">
-                    <div class="control-item-content-text">You don't have pending tasks.</div>
+                    <div class="control-item-content-text" data-bind="visible: archive.documents().length > 0">
+                        <ul class="control-item-lists archive-list" data-bind="foreach: archive.documents">
+                            <li data-bind="click: $parent.getDocument">
+                                <a href="#" data-bind="attr: {title: text}">
+                                    <h6 data-bind="text: name"></h6>
+                                    <div data-bind="text: text"></div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="control-item-content-text" data-bind="visible: archive.documents().length == 0">
+                        Brak dokumentów w archiwum
+                    </div>
                 </div>
             </li>
             <li class="templates">
@@ -112,15 +124,11 @@
 
                     <div class="actions">
                         <a href="#">
-                            <span class="fa fa-refresh"></span>
+                            <span class="fa fa-plus" data-bind="click: addTemplate"></span>
                         </a>
                         <a href="#">
-                            <span class="fa fa-plus"></span>
+                            <span class="fa fa-trash" data-bind="click: removeTemplate"></span>
                         </a>
-                        <a href="#">
-                            <span class="fa fa-trash"></span>
-                        </a>
-
                     </div>
                 </div>
                 <div class="control-item-content">

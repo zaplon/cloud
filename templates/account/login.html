@@ -23,13 +23,21 @@
                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                     {% endif %}
                     <button type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
-                    <a href="{% url "account_password_reset" %}" class="">Zapomniałeś hasła?</a>
-                    {% if ACCOUNT_OPEN_SIGNUP %}
-                        <p class="login-signup">
-                            <small>
-                                Nie masz konta?<strong><a href="{% urlnext 'account_signup' %}">Zapisz się</a></strong>
-                            </small>
-                        </p>
+                    {% if not sms_login %}
+                        <a href="{% url "account_password_reset" %}" class="">Zapomniałeś hasła?</a>
+                        {% if ACCOUNT_OPEN_SIGNUP %}
+                            <p class="login-signup">
+                                <small>
+                                    Nie masz konta?<strong><a href="{% urlnext 'account_signup' %}">Zapisz się</a></strong>
+                                </small>
+                            </p>
+                        {% endif %}
+                    {% else %}
+                        {% if code %}
+                            <a href="/" class="">Wyślij ponownie kod sms</a>
+                        {% else %}
+                            <a href="/" class="">Zaloguj jako inny użytkownik</a>
+                        {% endif %}
                     {% endif %}
                 </form>
             </div>
