@@ -4,6 +4,7 @@ import json
 import datetime
 from django.contrib.auth.models import User
 from user_profile.models import Doctor
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Command(BaseCommand):
@@ -14,8 +15,8 @@ class Command(BaseCommand):
         doctors = json.loads(res.content)
         for d in doctors:
             try:
-                u = User.objects.get(username=d['code'])
-            except:
+                u = User.objects.get(username=d['code'], email=d['email'])
+            except ObjectDoesNotExist:
                 u = User.objects.create_user(d['code'], d['email'], 'Misal123')
                 d = Doctor.objects.create(user=u, pwz=d['nr'])
                 print 'utworzono %s' % d
