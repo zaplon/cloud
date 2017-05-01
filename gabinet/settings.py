@@ -144,7 +144,7 @@ STATICFILES_FINDERS = [
     'djangobower.finders.BowerFinder'
 ]
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'frontend', 'build')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'frontend', 'static')]
 
 BOWER_INSTALLED_APPS = (
     'bootstrap#v4.0.0-alpha.5',
