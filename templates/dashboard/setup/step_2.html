@@ -1,0 +1,10 @@
+{% extends 'dashboard/setup/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    {% csrf_token %}
+    <h5 class="with-border">Podaj godziny, w których pracujesz</h5>
+    {% crispy form %}
+{% endblock %}
+

@@ -9,7 +9,7 @@ class Doctor(models.Model):
     pwz = models.CharField(max_length=7)
     mobile = models.IntegerField(blank=True, null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    working_hours = models.CharField(max_length=200, blank=True, null=True)
+    working_hours = models.CharField(max_length=500, blank=True, null=True)
     visit_duration = models.IntegerField(default=15)
     terms_generated_till = models.DateField(null=True, blank=True)
     terms_start = models.TimeField(default='09:00')

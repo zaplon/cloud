@@ -1,4 +1,5 @@
 from django.shortcuts import HttpResponseRedirect
+from django.conf import settings
 
 
 def setup_middleware(get_response):

@@ -172,6 +172,7 @@ VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
 WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
 
 # misal settings
+MISAL_SETUP = True
 GENERATE_TERMS = False
 USE_ELO = True
 USE_SMS_LOGIN = True
