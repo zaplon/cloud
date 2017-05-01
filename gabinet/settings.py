@@ -175,3 +175,4 @@ WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
 GENERATE_TERMS = False
 USE_ELO = True
 USE_SMS_LOGIN = True
+FALSE_SMS_LOGIN = True

@@ -144,8 +144,9 @@ class LoginUsernameForm(LoginForm):
             if 'code' in self.data:
                 deadline = datetime.datetime.now() - datetime.timedelta(minutes=15)
                 try:
-                    code = Code.objects.get(code=self.data['code'], user=self.user,
-                                            created__gte=deadline)
+                    if not settings.SIMULATE_SMS_LOGIN:
+                        code = Code.objects.get(code=self.data['code'], user=self.user,
+                                                created__gte=deadline)
                 except ObjectDoesNotExist:
                     raise forms.ValidationError(_("Kod sms się nie zgadza"))
             else:
