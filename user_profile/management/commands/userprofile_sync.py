@@ -18,7 +18,7 @@ class Command(BaseCommand):
                 u = User.objects.get(username=d['code'], email=d['email'])
             except ObjectDoesNotExist:
                 u = User.objects.create_user(d['code'], d['email'], 'Misal123')
-                d = Doctor.objects.create(user=u, pwz=d['nr'])
+                d = Doctor.objects.create(user=u, pwz=d['nr'], misal_id=d['code'])
                 print 'utworzono %s' % d
 
 
