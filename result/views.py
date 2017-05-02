@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from result.models import Result
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from result.forms import *
 
 
 class ResultCreateView(CreateView):
