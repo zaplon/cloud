@@ -29,6 +29,9 @@ class SettingsView(View):
         if tab == '1':
             doctor = request.user.doctor
             errors = None
+            minimum = '20:00:00'
+            maximum = '00:00:00'
+            change_range = False
             for day in json.loads(request.POST['days']):
                 f = HoursForm({'start': day['start'], 'end': day['end'], 'break_start': day['break_start'],
                                'break_end': day['break_end']})
@@ -36,7 +39,17 @@ class SettingsView(View):
                     if not errors:
                         errors = {}
                     errors[day['dayIndex']] = f.errors
+                else:
+                    if day['isChecked']:
+                        change_range = True
+                        if day['end'] > maximum:
+                            maximum = day['end']
+                        if day['start'] < minimum:
+                            minimum = day['start']
             if not errors:
+                if change_range:
+                    doctor.terms_start = minimum
+                    doctor.terms_end = maximum
                 doctor.working_hours = request.POST['days']
                 doctor.save()
                 return HttpResponse(json.dumps({'success': True}), status=200, content_type='application/json')
