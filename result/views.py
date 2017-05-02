@@ -6,5 +6,5 @@ from result.forms import *
 
 class ResultCreateView(CreateView):
     model = Result
-    form_class = ResultModelForm
+    form_class = ResultlForm
     template_name = 'result/form.html'
