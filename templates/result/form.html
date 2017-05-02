@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">Początek</a></li>
+        <li><a href="{% url 'archive' %}">Archiwum</a></li>
+        <li class="active">Nowy dokument</li>
+    </ol>
+{% endblock %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='archive' %}
+{% endblock %}
+
+{% block content %}
+    <section class="box-typical box-typical-padding">
+        <form action="" method="post">
+            {% crispy form NoFormFormHelper %}
+            {% block form_buttons %}
+                <hr>
+                <button class="btn btn-success" type="submit">Zapisz</button>
+                <a href="/archive/" class="btn btn-default">Anuluj</a>
+            {% endblock %}
+        </form>
+
+    </section>
+{% endblock %}
