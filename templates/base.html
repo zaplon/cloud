@@ -47,7 +47,11 @@
 <script src="{% static "js/app.js" %}"></script>
 {#<script src="{% static "js/calendar/pl.js" %}"></script>#}
 
-<script>gabinet.doctor = '{{ doctor_data|safe }}'; gabinet.doctor = JSON.parse(gabinet.doctor);</script>
+<script>
+    gabinet.doctor = '{{ doctor_data|safe }}';
+    if (gabinet.doctor.length > 2)
+        gabinet.doctor = JSON.parse(gabinet.doctor);
+</script>
 
 {% block extra_scripts %}{% endblock %}
 

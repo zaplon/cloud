@@ -26,7 +26,9 @@ class TemplateForm(ModelForm):
             'key',
             'text',
             'tab',
-            HTML('<button class="btn btn-success" type="submit">Zapisz</button>')
+            HTML('<hr/><div class="pull-right">'),
+            HTML('<a class="btn btn-default button-margin" href="/templates/">Anuluj</a>'),
+            HTML('<button class="btn btn-primary" type="submit">Zapisz</button></div><div class="clearfix"></div>')
         )
 
 

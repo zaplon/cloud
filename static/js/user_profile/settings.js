@@ -8,11 +8,15 @@ var day = function (dayIndex) {
 
 var dayError = function(){
     return {start: false, end: false, break_start: false, break_end: false};
-}
+};
 
 var ready = function () {
+    if (gabinet.doctor.working_hours.length > 0)
+        var days = gabinet.doctor.working_hours;
+    else
+        var days = [day(1), day(2), day(3), day(4), day(5), day(6), day(7)];
     var viewModel = {
-        days: ko.observableArray([day(1), day(2), day(3), day(4), day(5), day(6), day(7)]),
+        days: days,
         errors: ko.observableArray([dayError(1), dayError(2), dayError(3), dayError(4), dayError(5), dayError(6), dayError(7)]),
         dayNames: dayNames,
         saveSettings: function (){
@@ -22,8 +26,10 @@ var ready = function () {
                 viewModel.saveDays();
         },
         saveDays: function () {
-            $.post('/profile/settings/', {days: JSON.stringify(viewModel.days()), tab: 1}).success(function (res) {
-                if (res.success)
+            $.post('/profile/settings/', {days: ko.toJSON(viewModel.days), tab: 1}).success(function (res) {
+                if (res.success) {
+                    $('#settings-modal').modal('hide');
+                    gabinet.doctor.working_days = viewModel.days;
                     if (window.location.pathname.indexOf('setup') > -1) {
                         window.location.pathname = '/';
                         notie.alert('success', 'Dane zapisano poprawnie', 3);
@@ -31,6 +37,7 @@ var ready = function () {
                     else {
                         viewModel.errors = res.errors;
                     }
+                }
             });
         },
         saveProfile: function () {

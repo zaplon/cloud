@@ -5,6 +5,13 @@
 {% block content %}
     {% csrf_token %}
     <h5 class="with-border">Podaj godziny, w których pracujesz</h5>
-    {% crispy form %}
+    <div id="settings-modal">
+        {% include 'user_profile/doctor/day_form_single.html' %}
+        <div>
+            <hr>
+            <button class="pull-right btn btn-primary" data-bind="click: saveDays">Zapisz</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
 {% endblock %}
 

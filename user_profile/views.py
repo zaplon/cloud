@@ -40,7 +40,7 @@ class SettingsView(View):
                         errors = {}
                     errors[day['dayIndex']] = f.errors
                 else:
-                    if day['isChecked']:
+                    if day['dayChecked']:
                         change_range = True
                         if day['end'] > maximum:
                             maximum = day['end']

@@ -87,7 +87,6 @@ class TemplateCreate(CreateView):
 class TemplateUpdate(UpdateView):
     model = Template
     form_class = TemplateForm
-    fields = ['name']
 
 
 class TemplateDelete(DeleteView):

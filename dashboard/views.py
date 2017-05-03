@@ -11,6 +11,8 @@ from wkhtmltopdf.views import PDFTemplateView
 from user_profile.forms import DoctorForm
 from crispy_forms.layout import Layout, Div, Submit, Field
 
+from user_profile.rest import DoctorSerializer
+
 
 @login_required
 def calendar_view(request):
@@ -70,7 +72,8 @@ class SetupView(View):
             c.update(csrf(request))
             return render_to_response('dashboard/setup/step_1.html', c)
         if step == 2:
-            return render_to_response('dashboard/setup/step_2.html')
+            return render_to_response('dashboard/setup/step_2.html',
+                                      {'doctor_data': json.dumps(DoctorSerializer(instance=request.user.doctor).data)})
 
     def post(self, request, *args, **kwargs):
         step = int(kwargs.get('step'))

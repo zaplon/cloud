@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import models
 import json
 
+from django.urls import reverse
+
 
 class Doctor(models.Model):
     pwz = models.CharField(max_length=7)
@@ -17,6 +19,8 @@ class Doctor(models.Model):
     misal_id = models.CharField(blank=True, null=True, max_length=10)
 
     def get_working_hours(self):
+        if not self.working_hours:
+            return []
         return json.loads(self.working_hours)
 
     def get_name(self):
@@ -36,6 +40,9 @@ class Patient(models.Model):
 
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.last_name)
+
+    def get_absolute_url(self):
+        return reverse('patients')
 
 
 class Note(models.Model):

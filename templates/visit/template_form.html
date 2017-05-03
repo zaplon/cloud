@@ -9,7 +9,7 @@
     <ol class="breadcrumb">
         <li><a href="/">Początek</a></li>
         <li><a href="/templates/">Szablony</a></li>
-        <li class="active">Nowy szablon</li>
+        <li class="active">{% if object.name %} {{ object.name }} {% else %}Nowy szablon {% endif %}</li>
     </ol>
 {% endblock %}
 

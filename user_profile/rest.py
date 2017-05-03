@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from django.db.models import Q
 from rest_framework import serializers, viewsets
-from rest_framework.fields import CharField
+from rest_framework.fields import CharField, ListField
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -11,11 +11,11 @@ import datetime
 
 # Serializers define the API representation.
 class PatientSerializer(serializers.HyperlinkedModelSerializer):
-    first_name = CharField(source='user.first_name')
-    last_name = CharField(source='user.last_name')
+    #first_name = CharField(source='user.first_name')
+    #last_name = CharField(source='user.last_name')
     class Meta:
         model = Patient
-        fields = ('mobile', 'first_name', 'last_name')
+        fields = ('mobile', 'first_name', 'last_name', 'pesel')
 
 
 # ViewSets define the view behavior.
@@ -55,9 +55,10 @@ class NoteViewSet(viewsets.ModelViewSet):
 # Serializers define the API representation.
 class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     name = CharField(source='get_name')
+    working_hours = ListField(source='get_working_hours')
     class Meta:
         model = Doctor
-        fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id')
+        fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours')
 
 
 # ViewSets define the view behavior.
