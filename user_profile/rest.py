@@ -15,11 +15,11 @@ class PatientSerializer(serializers.HyperlinkedModelSerializer):
     #last_name = CharField(source='user.last_name')
     class Meta:
         model = Patient
-        fields = ('mobile', 'first_name', 'last_name', 'pesel')
+        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel')
 
 
 # ViewSets define the view behavior.
-class PatientViewSet(viewsets.ReadOnlyModelViewSet):
+class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
 

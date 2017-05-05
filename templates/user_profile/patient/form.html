@@ -5,7 +5,8 @@
     <ol class="breadcrumb"Des>
         <li><a href="/">Początek</a></li>
         <li><a href="{% url 'patients' %}">Pacjenci</a></li>
-        <li class="active">Nowy pacjent</li>
+        <li class="active">{% if object.first_name %} {{ object.first_name }} {{ object.last_name }}
+        {% else %}Nowy pacjent{% endif %}</li>
     </ol>
 {% endblock %}
 
@@ -19,8 +20,14 @@
             {% crispy form NoFormFormHelper %}
             {% block form_buttons %}
                 <hr>
-                <button class="btn btn-success" type="submit">Zapisz</button>
-                <a href="/patients/" class="btn btn-default">Anuluj</a>
+                {% if object %}
+                    <a class="pull-left btn btn-danger" href="/profile/patients/{{ object.id }}/delete/">Usuń</a>
+                {% endif %}
+                <div class="pull-right">
+                    <button class="btn btn-primary" type="submit">Zapisz</button>
+                    <a href="/patients/" class="btn btn-default">Anuluj</a>
+                </div>
+                <div class="clearfix"></div>
             {% endblock %}
         </form>
 

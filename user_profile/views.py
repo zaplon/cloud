@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, HttpResponse
+from django.urls import reverse_lazy
 from django.views import View
 from .forms import *
 from utils.forms import ajax_form_validate
@@ -64,3 +65,15 @@ class PatientCreateView(CreateView):
     model = Patient
     form_class = PatientModelForm
     template_name = 'user_profile/patient/form.html'
+
+
+class PatientUpdateView(UpdateView):
+    model = Patient
+    form_class = PatientModelForm
+    template_name = 'user_profile/patient/form.html'
+
+
+class PatientDeleteView(DeleteView):
+    model = Patient
+    success_url = reverse_lazy('patients')
+    template_name = 'confirm_delete.html'

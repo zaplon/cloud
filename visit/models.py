@@ -9,6 +9,12 @@ from django.urls import reverse
 from gabinet.settings import VISIT_TABS_DIR
 from user_profile.models import Doctor
 
+keys_choices = (('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2'), ('CTRL+F3', 'ctrl+f3'), ('CTRL+F4', 'ctrl+f4'),
+                ('CTRL+F5', 'ctrl+f5'), ('CTRL+F6', 'ctrl+f6'), ('CTRL+F7', 'ctrl+f7'), ('CTRL+F8', 'ctrl+f8'),
+                ('CTRL+F9', 'ctrl+f9'), ('CTRL+F10', 'ctrl+f10'), ('alt+f1', 'ALT+F1'), ('alt+f2', 'ALT+F2'),
+                ('alt+f3', 'ALT+F3'),  ('alt+f4', 'ALT+F4'),  ('alt+f5', 'ALT+F5'),  ('alt+f6', 'ALT+F6'),
+                 ('alt+f7', 'ALT+F7'),  ('alt+f8', 'ALT+F8'),  ('alt+f9', 'ALT+F9'),  ('alt+f10', 'ALT+F10'))
+
 
 class Tab(models.Model):
     title = models.CharField(max_length=100, verbose_name=u'Tytuł')
@@ -61,7 +67,7 @@ class Template(models.Model):
     tab = models.ForeignKey(Tab, related_name='templates', verbose_name=u'Sekcja')
     text = models.CharField(max_length=1000, verbose_name=u'Tekst')
     key = models.CharField(max_length=8, blank=True, null=True, verbose_name=u'Skrót',
-                           choices=(('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2')))
+                           choices=keys_choices)
     doctor = models.ForeignKey(Doctor, related_name='templates', null=True, blank=True)
 
     def get_absolute_url(self):

@@ -5,7 +5,8 @@ from crispy_forms.layout import Layout
 from django.forms import ModelForm
 from django.urls import reverse
 from .models import Template, Tab
-from django.forms import HiddenInput
+from django.forms import HiddenInput, Textarea
+from django.utils.translation import ugettext as _
 
 
 class TemplateForm(ModelForm):
@@ -16,6 +17,7 @@ class TemplateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(TemplateForm, self).__init__(*args, **kwargs)
         self.fields['doctor'].widget = HiddenInput()
+        self.fields['text'].widget = Textarea(attrs={'placeholder': _(u'Wpisz treść szablonu')})
         self.helper = FormHelper()
         helper = self.helper
         # helper.form_class = 'form-horizontal'
@@ -26,9 +28,12 @@ class TemplateForm(ModelForm):
             'key',
             'text',
             'tab',
-            HTML('<hr/><div class="pull-right">'),
-            HTML('<a class="btn btn-default button-margin" href="/templates/">Anuluj</a>'),
-            HTML('<button class="btn btn-primary" type="submit">Zapisz</button></div><div class="clearfix"></div>')
+            HTML('<hr/>'),
+            HTML(u'<div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
+                reverse('template-delete', kwargs={'pk': self.instance.id})
+                if self.instance.id else ''),
+            HTML('<div class="pull-right"><button class="btn btn-primary" type="submit">Zapisz</button>'),
+            HTML('<a class="btn btn-default button-margin" href="/templates/">Anuluj</a></div><div class="clearfix"></div>')
         )
 
 
@@ -50,8 +55,11 @@ class TabForm(ModelForm):
             'title',
             'template',
             'enabled',
-            HTML('<button class="btn btn-success mr-025" type="submit">Zapisz</button>'),
             HTML(
-                u'<a class="btn btn-danger" href="%s">Usuń</a>' % reverse('tab-delete', kwargs={'pk': self.instance.id})
-                if self.instance.id else '')
+                u'<hr/><div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
+                reverse('tab-delete', kwargs={'pk': self.instance.id})
+                if self.instance.id else ''),
+            HTML("""
+                 <div class="pull-right"><button class="btn btn-primary mr-025" type="submit">Zapisz</button>
+                 <a class="btn btn-default" href="/tabs/">Anuluj</a></div><div class='clearfix'/>"""),
         )

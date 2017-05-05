@@ -92,6 +92,7 @@ class TemplateUpdate(UpdateView):
 class TemplateDelete(DeleteView):
     model = Template
     success_url = reverse_lazy('templates')
+    template_name = 'confirm_delete.html'
 
 
 class TemplateListView(ListView):
@@ -148,7 +149,7 @@ class TabUpdate(UpdateView):
 class TabDelete(DeleteView):
     model = Tab
     success_url = reverse_lazy('tabs')
-    template_name = 'visit/confirm_delete.html'
+    template_name = 'confirm_delete.html'
 
 
 class TabDetailView(DetailView):

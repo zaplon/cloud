@@ -9,6 +9,7 @@ $(document).ready(function () {
         },
         responseHandler: function (res) {
             var res = gabinet.transformTableResponse(res);
+
             console.log(res);
             return res;
         },
@@ -36,19 +37,32 @@ $(document).ready(function () {
         },
         paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
         paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
-        columns: [{
-            field: 'last_name',
-            title: 'Nazwisko',
-            align: 'center'
-        }, {
-            field: 'first_name',
-            title: 'Imię',
-            align: 'center',
-        },{
-            field: 'pesel',
-            title: 'Pesel',
-            align: 'center'
-        }]
+        columns: [
+            {
+                field: 'state',
+                checkbox: true,
+                align: 'center',
+                valign: 'middle'
+            },
+            {
+                field: 'pesel',
+                title: 'Pesel',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (!value)
+                        value = 'Brak';
+                    return '<a href="/profile/patients/' + row.id + '/">' + value + '</a>';
+                }
+            },
+            {
+                field: 'last_name',
+                title: 'Nazwisko',
+                align: 'center'
+            }, {
+                field: 'first_name',
+                title: 'Imię',
+                align: 'center'
+            }]
     });
 
     $('#toolbar').find('select').change(function () {
@@ -56,4 +70,35 @@ $(document).ready(function () {
             exportDataType: $(this).val()
         });
     });
+
+    function getIdSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+    }
+
+    var $table = $('#patients-table');
+    var $remove = $('#remove');
+    $table.on('check.bs.table uncheck.bs.table ' +
+        'check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+        // save your data, here just save the current page
+        // push or splice the selections if you want to save all data selections
+    });
+    $remove.click(function () {
+        var selections = getIdSelections();
+        selections.forEach(function (s) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/rest/patients/' + s + '/',
+                success: function () {
+                    $table.bootstrapTable('remove', {field: 'id', values: [s]});
+                },
+                error: function () {
+                    notie.alert(2, 'Nie wszystkie rekordy udało się usunąć')
+                }
+            })
+        })
+    });
+
 });
