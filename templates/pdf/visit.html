@@ -1,16 +1,29 @@
 {% extends 'pdf/base.html' %}
+{% load static %}
+
+{% block header %}
+    <div style="display: inline-block; width: 30%;"><img src="{{ IMAGES_ROOT }}img/logo.jpg"/></div>
+    <div style="display: inline-block; width: 40%;">1465138.0 FILIA NR 2
+        PRZEDSIĘBIORSTWA PODMIOTU LECZNICZEGO
+        SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW
+        02-797 WARSZAWA AL. KEN 19
+        REGON:000840941
+        1580 Poradnia chirurgii urazowo-ortopedycznej
+    </div>
+    <div style="display: inline-block; width: 30%;"><img src="{{ barcode }}"/></div>
+{% endblock %}
 
 {% block body %}
-    <h1>Historia choroby</h1>
+    <h1 class="text-center">Historia choroby</h1>
     {% for tab in visit.tabs.all %}
         <div>
             {% if tab.title == 'Rozpoznanie' %}
                 <table class="table table-striped">
                     <tbody>
-                        <tr>
-                            <td>{{ icd.code }}</td>
-                            <td>{{ icd.desc }}</td>
-                        </tr>
+                    <tr>
+                        <td>{{ icd.code }}</td>
+                        <td>{{ icd.desc }}</td>
+                    </tr>
                     </tbody>
                 </table>
             {% else %}

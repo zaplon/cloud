@@ -1,0 +1,18 @@
+<div id="form-editor">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="edit-buttons">
+                <button class="btn btn-sm" data-bind="click: makePdf">Drukuj</button>
+                <button data-bind="click: saveTemporary" class="btn btn-sm">Zapisz wersję tymczasową</button>
+                <button data-bind="click: sendToElo" class="btn btn-sm">Prześlij do archiwum</button>
+                <button data-bind="click: close" class="btn btn-sm">Zamknij</button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-md-12">
+            <iframe data-template="{{ template_name }}" src="{{ form }}"
+                    style="width:100%; height:{{ params.height }}px;"></iframe>
+        </div>
+    </div>
+</div>

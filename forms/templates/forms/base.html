@@ -1,0 +1,7 @@
+{% load static %}
+<link rel="stylesheet" href="{% static "forms/css/forms.css" %}">
+<script src="{% static "forms/js/forms.js" %}"></script>
+<div style="width: {% block width %}21cm{% endblock %}; height: {% block height %}29.7cm{% endblock %};">
+    {% block content %}
+    {% endblock %}
+</div>

@@ -40,7 +40,9 @@
                             <li class="exp-timeline-item">
                                 <div class="dot"></div>
                                 <div data-bind="{text: $parent.formatDate(start)}"></div>
-                                <div data-bind="{text: title}" class="color-blue-grey"></div>
+                                <div class="color-blue-grey">
+                                    <a data-bind="{text: title, attr: {href: '/visit/'+id}}"></a>
+                                </div>
                             </li>
                         </ul>
                         <ul class="exp-timeline mb-1">

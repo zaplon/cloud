@@ -60,16 +60,17 @@ var medicinesModel = {
         var data = [];
         var me = this;
         var medicines = this.medicines();
-        medicines.forEach(function(m, i){
+        medicines.forEach(function(medicine, i){
+            var m = ko.toJS(medicine);
             if (i < medicines.length-1)
-                data.push({id: m.id, name: m.name, composition: m.composition(), dose: m.dose(), size: m.size(),
-                refundation: m.refundation(), selection: m.selection()});
+                data.push({id: m.id, name: m.name, composition: m.composition, dose: m.dose, size: m.size,
+                refundation: m.refundation, selection: m.selection});
         });
-        return data;
+        return JSON.stringify(data);
     },
     printRecipe: function(){
         $.post('/visit/recipe/', {medicines: this.save(), nfz: this.nfz(), permissions: this.permissions(),
-        patient: visit.patient}, function(res){
+        patient: JSON.stringify(visit.patient())}, function(res){
             gabinet.showPdf(res.url);
         });
     }

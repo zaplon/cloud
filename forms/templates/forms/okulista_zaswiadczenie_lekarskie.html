@@ -1,0 +1,34 @@
+{% extends 'forms/base.html' %}
+{% block width %}21cm{% endblock %}
+{% block height %}14.8cm{% endblock %}
+{% block content %}
+    <h1 class="text-center">ZAŚWIADCZENIE LEKARSKIE</h1>
+
+    <p>Zgodnie z &#167; 8.2 Rozporządzenia ministra Pracy i Polityki Socjalnej z dnia 1 grudnia 1998r. w sprawie
+        bezpieczeństwa
+        i higieny pracy na stanowiskach wyposażonych w monitory ekranowe (Dz.U.Nr 148. Poz.973) stwierdza się, że u</p>
+    <p>Pani/a
+        <figure><input type="text"/>
+            <figcaption>imię i nazwisko</figcaption>
+        </figure>
+        <span class="crossable">zatrudnionej/ego</span>, <span class="crossable">przyjmowanej/ego*)</span>
+        do pracy w
+        <figure><input type="text" name="job_name"/>
+            <figcaption>nazwa zakładu pracy</figcaption>
+        </figure>
+        na stanowisku <input type="text" name="job_position"/>
+        wyniki badania okulistycznego przeprowadzonego w ramach profilaktycznej opieki zdrowotnej wykazały potrzebę
+        stosowania
+        okularów korekcyjnych podczas pracy przy obsłudze monitora ekranowego.
+    </p>
+    <p>
+        <span class="pull-left">Data <input type="date"></span>
+        <span class="pull-right">
+            <figure>
+                <input type="text">
+                <figcaption>podpis i pieczątka lekarza okulisty</figcaption>
+            </figure>
+        </span>
+    </p>
+    <p>*) niepotrzebne skreślić</p>
+{% endblock %}

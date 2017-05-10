@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework import serializers, viewsets
 from .models import Result
 from django.conf import settings
-from elo.views import getPatientData
+from elo.views import getPatientData, getDoc
 
 
 # Serializers define the API representation.
@@ -21,7 +21,7 @@ class ResultViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         if settings.USE_ELO:
-            pass
+            return getDoc(request, kwargs['pk'])
 
     def list(self, request, *args, **kwargs):
         if settings.USE_ELO:

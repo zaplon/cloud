@@ -49,18 +49,34 @@ var Gabinet = (function () {
         $('#pdf-modal').modal({ show: true, keyboard: true });
     };
     ;
-    Gabinet.prototype.showForm = function (form, params) {
+    Gabinet.prototype.showForm = function (form, params, html5) {
         if (typeof (params) != "undefined") {
             var params_str = '?';
             for (p in params)
                 params_str += p + '=' + params[p] + '&';
             params_str = params_str.substr(0, params_str.length - 2);
         }
-        if (typeof (params) == "undefined")
-            var url = "/static/forms/" + form;
-        else
-            var url = "/static/forms/" + form + "/" + params_str;
-        this.showPdf(url);
+        if (html5) {
+            var me = this;
+            if (typeof (params) == "undefined")
+                params = {};
+            var name = form.split('.')[0];
+            params.form = name;
+            params.height = $(window).height() - 60 < 400 ? 400 : $(window).height() - 60;
+            var url = "/forms/edit_form/";
+            $.get(url, params, function (res) {
+                me.showModal(form, res, '', 'modal-form');
+                formViewModel.name = name;
+                ko.applyBindings(formViewModel, $('#form-editor')[0]);
+            });
+        }
+        else {
+            if (typeof (params) == "undefined")
+                var url = "/static/forms/" + form;
+            else
+                var url = "/static/forms/" + form + "/" + params_str;
+            this.showPdf(url);
+        }
     };
     ;
     Gabinet.prototype.addRecipes = function () {

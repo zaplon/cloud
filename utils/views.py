@@ -6,6 +6,7 @@ import urllib
 from django.template.context_processors import csrf
 from django.views import View
 import json
+import re
 
 
 class AjaxFormView(View):
@@ -66,3 +67,22 @@ class AjaxFormView(View):
         else:
             form_html = render_crispy_form(form, context=ctx)
             return HttpResponse(json.dumps({'success': False, 'form_html': form_html}), content_type='application/json')
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+def get_client_location_code(request):
+    ['192.168.11', '192.168.4']
+    ip = str(get_client_ip(request))
+    if re.match("192.168.11", ip):
+        return 'PDT'
+    if re.match("192.168.2", ip) or re.match("192.168.1", ip) or re.match("192.168.0", ip):
+        return 'WAR'
+    return 'KEN'

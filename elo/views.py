@@ -99,9 +99,9 @@ def getPatientData(pesel, request, fromDate=None):
     if not res:
         ls = []
         if len(ls) == 0:
-            return HttpResponse(json.dumps({'title': 'Brak pacjenta w archiwum'}))
+            return HttpResponse(json.dumps({'text': 'Brak pacjenta w archiwum'}))
         else:
-            ls = sorted(ls, key=itemgetter('title'), reverse=False)
+            ls = sorted(ls, key=itemgetter('text'), reverse=False)
             return HttpResponse(json.dumps(ls), content_type="application/json")
     pat = res[0]
     try:
@@ -166,40 +166,38 @@ def getPatientData(pesel, request, fromDate=None):
                 if not date:
                     date = 'Brak informacji o dacie'
 
-                node = {'title': d['dataBadania'], 'href': '/elo/getDoc/' + str(d['docID']), 'name': d['badaniaNazwy']}
+                node = {'text': d['dataBadania'], 'id': str(d['docID']), 'name': d['badaniaNazwy']}
                 if d['typZlecenia'] in keys:
                     test = True
                     if len(ls[keys[d['typZlecenia']]]['children']) > 1:
                         for k in ls[keys[d['typZlecenia']]]['children']:
                             pass
-                            # if k['title'] == node['title']:
+                            # if k['text'] == node['text']:
                             #    test = False
                     if test:
-                        rs = filter(lambda child: child['title'] == d['dataBadania'],
+                        rs = filter(lambda child: child['text'] == d['dataBadania'],
                                     ls[keys[d['typZlecenia']]]['children'])
                         if len(rs) < 10 or isAnal(request):
                             ls[keys[d['typZlecenia']]]['children'].append(node)
                 else:
                     keys[d['typZlecenia']] = len(keys)
-                    ls.append({'title': d['typZlecenia'], "isFolder": True, 'children': [node]})
-
-        ls = []
+                    ls.append({'text': d['typZlecenia'], "isFolder": True, 'children': [node]})
         if many:
-            patients.append({'title': name, "isFolder": True, 'children': ls})
+            patients.append({'text': name, "isFolder": True, 'children': ls})
             ls = []
             keys = {}
     if many:
         if len(patients) > 0:
-            patients = sorted(patients, key=itemgetter('title'), reverse=False)
+            patients = sorted(patients, key=itemgetter('text'), reverse=False)
             return HttpResponse(json.dumps(patients), content_type="application/json")
         else:
-            return HttpResponse(json.dumps({'title': 'Brak wyników'}), content_type="application/json")
+            return HttpResponse(json.dumps({'text': 'Brak wyników'}), content_type="application/json")
 
     if len(ls) > 0:
-        ls = sorted(ls, key=itemgetter('title'), reverse=False)
+        ls = sorted(ls, key=itemgetter('text'), reverse=False)
         return HttpResponse(json.dumps(ls), content_type="application/json")
     else:
-        return HttpResponse(json.dumps({'title': 'Brak wyników'}), content_type="application/json")
+        return HttpResponse(json.dumps({'text': 'Brak wyników'}), content_type="application/json")
 
 
 if __name__ == "__main__":
@@ -207,7 +205,7 @@ if __name__ == "__main__":
 
 
 def sortEls(el):
-    return el['title']
+    return el['text']
 
 
 def getDoc(request, id):

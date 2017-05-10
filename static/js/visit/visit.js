@@ -1,17 +1,31 @@
 var visit = {
     archive: {
         documents: ko.observableArray(),
-        getDocument: function (d) {
-            $.get('/rest/results/' + d.id, {}, function (res) {
-
+        getDocument: function (id, title) {
+            $.get('/rest/results/' + id, {}, function (res) {
+                gabinet.showPdf(res, title);
             });
         },
         getArchive: function () {
+            var me = visit.archive;
             $.get('/rest/results/', {pesel: visit.patient().pesel}, function (res) {
-                var me = this;
-                res.forEach(function (r) {
-                    me.documents.push(r);
+                function adjust(node){
+                    if (node.children) {
+                       node.icon = 'fa fa-folder-o';
+                       node.children.forEach(function(n){
+                        adjust(n);
+                       });
+                   }
+                   else
+                       node.icon = 'fa fa-file-pdf-o';
+                }
+                res.forEach(function(r){
+                   adjust(r);
                 });
+                me.documents(res);
+                $('#archive').on('changed.jstree', function (e, data) {
+                    me.getDocument(data.selected[0], data.node.text);
+                }).jstree({core: {data: res, multiple: false}});
             })
         },
         addDocument: function () {
@@ -169,8 +183,14 @@ var visit = {
     },
     templates: ko.observableArray(),
     loadTemplates: function () {
-        $.getJSON("/rest/templates/", function (data) {
+        $.getJSON("/rest/templates/", {tab_title: visit.currentTab}, function (data) {
             visit.templates(data);
+            visit.templates().forEach(function(t){
+                key(t.key.toLowerCase(), function(){
+                    var tab = tabs.filter(function(t){ return t.title == visit.currentTab })[0];
+                    tab.model.parse(t.text);
+                });
+            });
         });
     },
     currentTab: $('.visit-tab:visible').attr('id'),
@@ -228,6 +248,8 @@ $(document).ready(function () {
         visit.currentTab = visit.currentTab.substr(1, visit.currentTab.length - 1);
         console.log(visit.currentTab);
         visit.loadTemplates();
+
     });
     visit.loadTemplates();
+    visit.archive.getArchive();
 });

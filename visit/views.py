@@ -17,6 +17,8 @@ from .forms import *
 import datetime
 import os
 from django.conf import settings
+from reportlab.graphics.barcode import createBarcodeDrawing
+from reportlab.lib.units import cm
 
 
 class VisitView(View, LoginRequiredMixin):
@@ -198,5 +200,10 @@ class PdfView(PDFTemplateView):
             return super(PDFTemplateView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        return {'visit': self.visit}
+        pesel = self.visit.term.patient.pesel if self.visit.term.patient.pesel else ''
+        barcode = createBarcodeDrawing('Code128', value=pesel, width=5 * cm, height=0.5 * cm)
+        file_name = datetime.datetime.now().strftime('%s')
+        barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
+        return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'APP_URL': settings.APP_URL,
+                'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}
 

@@ -37,7 +37,7 @@
                         <td><a href="{% url 'tab-update' object.id %}">{{ object.title }}</a></td>
                         <td>{{ object.template }}</td>
                         <td>
-                            <div class="text-center">
+                            <div class="column-center checkbox checkbox-only">
                                 <input data-id="{{ object.id }}" type="checkbox"
                                    class="form-control tab-enable" {% if object.enabled %}checked{% endif %}>
                                 <label></label>

@@ -60,6 +60,7 @@ urlpatterns = [
     url(r"^rest/", include(router.urls), name='rest'),
     url(r"^timetable/", include("timetable.urls"), name='timetable'),
     url(r"^get-form/", AjaxFormView.as_view(), name='get-form'),
+    url(r"^forms/", include('forms.urls'), name='forms'),
     url(r'^pdf/$', PdfView.as_view(template_name='no_pdf.html', filename='result.pdf'), name='pdf'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

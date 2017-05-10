@@ -37,6 +37,7 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
     pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel')
     email = models.EmailField(blank=True, null=True, verbose_name=u'Email')
+    address = models.CharField(blank=True, null=True, verbose_name=u'Adres', max_length=200)
 
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.last_name)

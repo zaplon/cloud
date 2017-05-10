@@ -85,6 +85,7 @@ class PatientForm(forms.Form):
         return True
 
 class PatientModelForm(forms.ModelForm):
+    pesel = PLPESELField(label=u'Pesel', required=False)
     class Meta:
         model = Patient
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'pesel', 'email']

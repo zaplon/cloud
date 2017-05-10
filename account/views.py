@@ -358,7 +358,8 @@ class LoginView(FormView):
         redirect_field_name = self.get_redirect_field_name()
         ctx.update({
             "sms_login": settings.USE_SMS_LOGIN,
-            "code": self.request.POST.get('username', False) and not self.request.POST.get('code', False),
+            "code": self.request.POST.get('username', False) and not self.request.POST.get('code', False)
+                    and 'code' in ctx['form'].fields,
             "redirect_field_name": redirect_field_name,
             "redirect_field_value": self.request.POST.get(redirect_field_name, self.request.GET.get(redirect_field_name, "")),
         })

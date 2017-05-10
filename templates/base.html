@@ -43,12 +43,17 @@
 <script src="{% static "bootstrap/dist/js/bootstrap.js" %}"></script>
 <script src="{% static "js/lib/match-height/jquery.matchHeight.js" %}"></script>
 <script src="{% static "js/lib/notie/notie.js" %}"></script>
+<script src="{% static "js/utils/keymaster.js" %}"></script>
+<script src="{% static "forms/js/forms.js" %}"></script>
 
 <script src="{% static "js/app.js" %}"></script>
 {#<script src="{% static "js/calendar/pl.js" %}"></script>#}
 
 <script>
     gabinet.doctor = '{{ doctor_data|safe }}';
+    gabinet.user = '{{ user_data|safe }}';
+    if (gabinet.user.length > 2)
+        gabinet.user = JSON.parse(gabinet.user);
     if (gabinet.doctor.length > 2)
         gabinet.doctor = JSON.parse(gabinet.doctor);
 </script>

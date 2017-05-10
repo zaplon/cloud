@@ -4,6 +4,7 @@ from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField, ListField
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth.models import User
 
 from .models import Doctor, Patient, Note
 import datetime
@@ -15,7 +16,7 @@ class PatientSerializer(serializers.HyperlinkedModelSerializer):
     #last_name = CharField(source='user.last_name')
     class Meta:
         model = Patient
-        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel')
+        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address')
 
 
 # ViewSets define the view behavior.
@@ -50,6 +51,20 @@ class NoteViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class UserSerializer(serializers.ModelSerializer):
+    can_edit_terms = serializers.SerializerMethodField('check_if_can_edit_terms')
+    can_edit_visits = serializers.SerializerMethodField('check_if_can_edit_visits')
+
+    def check_if_can_edit_terms(self, instance):
+        return not instance.has_perm('timetable.change_term')
+
+    def check_if_can_edit_visits(self, instance):
+        return not instance.has_perm('visit.change_visit')
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'can_edit_terms', 'can_edit_visits')
 
 
 # Serializers define the API representation.

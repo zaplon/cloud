@@ -97,52 +97,85 @@ $(document).ready(function () {
 
                 $(this).addClass('event-clicked');
             }
-
             // Add popover
-            $('body').append(
-                '<div class="fc-popover click">' +
-                '<div class="fc-header">' +
-                moment(calEvent.start).format('dddd • D') +
-                '<button type="button" class="cl"><i class="font-icon-close-2"></i></button>' +
-                '</div>' +
-
-                '<div class="fc-body main-screen">' +
-                '<p>' +
-                moment(calEvent.start).format('dddd, D YYYY, hh:mma') +
-                '</p>' +
-                (calEvent.status != 'FREE' ?
-                '<p class="color-blue-grey"><a href="/visit/' + calEvent.id + '">' + calEvent.title + '</a></p>' :
-                '<p class="color-blue-grey">' + calEvent.title + '</p>')
-                +
-                '<ul class="actions">' +
-                '<li><a href="#">Szczegóły</a></li>' +
-                '<li><a href="#" class="fc-event-action-edit">Edytuj termin</a></li>' +
-                (calEvent.status == 'PENDING' ?
-                '<li><a href="#" class="fc-event-action-remove">Anuluj termin</a></li>' : '') +
-                '</ul>' +
-                '</div>' +
-                (calEvent.status == 'PENDING' ?
-                    ('<div class="fc-body remove-confirm">' +
-                    '<p>Czy jesteś pewien, że chcesz anulować wizytę?</p>' +
-                    '<div class="text-center">' +
-                    '<button type="button" class="btn btn-rounded btn-sm">Tak</button>' +
-                    '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Nie</button>' +
+            if (gabinet.user.can_edit_terms){
+                $('body').append(
+                    '<div class="fc-popover click">' +
+                    '<div class="fc-header">' +
+                    moment(calEvent.start).format('dddd • D') +
+                    '<button type="button" class="cl"><i class="font-icon-close-2"></i></button>' +
                     '</div>' +
-                    '</div>') : '' ) +
 
-                '<div class="fc-body edit-event"><div id="edit-term"><div id="edit-form"></div>' +
-                '<div class="text-center">' +
-                '<button id="save-term" type="button" class="btn btn-rounded btn-sm">Zapisz</button>' +
-                '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>' +
-                '</div></div>' +
-                '<div style="display:none;" id="edit-patient"><div id="edit-patient-form"></div>' +
-                '<div class="text-center">' +
-                '<button type="button" id="save-patient" class="btn btn-rounded btn-sm">Zapisz</button>' +
-                '<button type="button" id="cancel-patient" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>' +
-                '</div></div>' +
-                '</div>' +
-                '</div>'
-            );
+                    '<div class="fc-body main-screen">' +
+                    '<p>' +
+                    moment(calEvent.start).format('dddd, D YYYY, hh:mma') +
+                    '</p>' +
+                    (calEvent.status != 'FREE' ?
+                    '<p class="color-blue-grey"><a href="/visit/' + calEvent.id + '">' + calEvent.title + '</a></p>' :
+                    '<p class="color-blue-grey">' + calEvent.title + '</p>')
+                    +
+                    '<ul class="actions">' +
+                    '<li><a href="#">Szczegóły</a></li>' +
+                    '<li><a href="#" class="fc-event-action-edit">Edytuj termin</a></li>' +
+                    (calEvent.status == 'PENDING' ?
+                        '<li><a href="#" class="fc-event-action-remove">Anuluj termin</a></li>' : '') +
+                    '</ul>' +
+                    '</div>' +
+                    (calEvent.status == 'PENDING' ?
+                        ('<div class="fc-body remove-confirm">' +
+                        '<p>Czy jesteś pewien, że chcesz anulować wizytę?</p>' +
+                        '<div class="text-center">' +
+                        '<button type="button" class="btn btn-rounded btn-sm">Tak</button>' +
+                        '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Nie</button>' +
+                        '</div>' +
+                        '</div>') : '' ) +
+
+                    '<div class="fc-body edit-event"><div id="edit-term"><div id="edit-form"></div>' +
+                    '<div class="text-center">' +
+                    '<button id="save-term" type="button" class="btn btn-rounded btn-sm">Zapisz</button>' +
+                    '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>' +
+                    '</div></div>' +
+                    '<div style="display:none;" id="edit-patient"><div id="edit-patient-form"></div>' +
+                    '<div class="text-center">' +
+                    '<button type="button" id="save-patient" class="btn btn-rounded btn-sm">Zapisz</button>' +
+                    '<button type="button" id="cancel-patient" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>' +
+                    '</div></div>' +
+                    '</div>' +
+                    '</div>'
+                );
+            }
+            else {
+                $('body').append(
+                    '<div class="fc-popover click">' +
+                    '<div class="fc-header">' +
+                    moment(calEvent.start).format('dddd • D') +
+                    '<button type="button" class="cl"><i class="font-icon-close-2"></i></button>' +
+                    '</div>' +
+
+                    '<div class="fc-body main-screen">' +
+                    '<p>' +
+                    moment(calEvent.start).format('dddd, D YYYY, hh:mma') +
+                    '</p>' +
+                    (calEvent.status != 'FREE' ?
+                    '<p class="color-blue-grey"><a href="/visit/' + calEvent.id + '">' + calEvent.title + '</a></p>' :
+                    '<p class="color-blue-grey">' + calEvent.title + '</p>')
+                    +
+                    '<ul class="actions">' +
+                    '</ul>' +
+                    '</div>' +
+                    '<div class="fc-body edit-event"><div id="edit-term"><div id="edit-form"></div>' +
+                    '<div class="text-center">' +
+                    '<button id="save-term" type="button" class="btn btn-rounded btn-sm">Zapisz</button>' +
+                    '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>' +
+                    '</div></div>' +
+                    '<div class="text-center">' +
+                    '<button type="button" id="save-patient" class="btn btn-rounded btn-sm">Zapisz</button>' +
+                    '<button type="button" id="cancel-patient" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>' +
+                    '</div></div>' +
+                    '</div>' +
+                    '</div>'
+                );
+            }
 
             // Datepicker init
             $('.fc-popover.click .datetimepicker').datetimepicker({

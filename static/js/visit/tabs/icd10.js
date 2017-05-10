@@ -16,11 +16,11 @@ function IcdModel() {
     };
     this.getSuggestions = function(){
         var me = this;
-        var exclude = [];
+        var excludes = [];
         this.icd10().forEach(function(r){
             excludes.push(r.id);
         });
-        $.getJSON('/rest/icd/', {limit: 10, search: me.inputValue, exclude: JSON.stringify(exclude)}, function(res){
+        $.getJSON('/rest/icd/', {limit: 10, search: me.inputValue, exclude: JSON.stringify(excludes)}, function(res){
           me.suggestions(res.results);
         });
     };
