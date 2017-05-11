@@ -183,3 +183,5 @@ GENERATE_TERMS = False
 USE_ELO = True
 USE_SMS_LOGIN = True
 SIMULATE_SMS_LOGIN = True
+
+DATABASE_ROUTERS = ['medicine.router.MedicineRouter']
