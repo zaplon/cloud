@@ -16,6 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 import datetime
 import os
+import json
 from django.conf import settings
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib.units import cm
@@ -204,6 +205,9 @@ class PdfView(PDFTemplateView):
         barcode = createBarcodeDrawing('Code128', value=pesel, width=5 * cm, height=0.5 * cm)
         file_name = datetime.datetime.now().strftime('%s')
         barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
+        self.visit.tabs = self.visit.tabs.all()
+        for tab in self.visit.tabs
+            tab.data = json.parse(tab.json) 
         return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'APP_URL': settings.APP_URL,
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}
 

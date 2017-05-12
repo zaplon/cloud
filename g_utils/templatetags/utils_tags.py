@@ -17,3 +17,8 @@ def as_json(obj, fields=''):
     else:
         result = {f.name: getattr(obj, f.name) for f in obj._meta.fields}
     return mark_safe(json.dumps(result))
+
+
+@register.filter(name='parse_json')
+def parse_json(obj)
+    return json.parse(obj)

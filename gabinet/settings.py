@@ -94,6 +94,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'medicines': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'medicines.sqlite3')
     }
 }
 
@@ -179,3 +183,5 @@ GENERATE_TERMS = False
 USE_ELO = True
 USE_SMS_LOGIN = True
 SIMULATE_SMS_LOGIN = True
+
+DATABASE_ROUTERS = ['medicine.router.MedicineRouter']

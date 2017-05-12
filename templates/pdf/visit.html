@@ -3,7 +3,7 @@
 
 {% block header %}
     <div style="display: inline-block; width: 30%;"><img src="{{ IMAGES_ROOT }}img/logo.jpg"/></div>
-    <div style="display: inline-block; width: 40%;">1465138.0 FILIA NR 2
+    <div style="display: inline-block; width: 40%; font-size:11px;">1465138.0 FILIA NR 2
         PRZEDSIĘBIORSTWA PODMIOTU LECZNICZEGO
         SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW
         02-797 WARSZAWA AL. KEN 19
@@ -17,17 +17,11 @@
     <h1 class="text-center">Historia choroby</h1>
     {% for tab in visit.tabs.all %}
         <div>
+            <h2>{{ tab.title }}</h2>
             {% if tab.title == 'Rozpoznanie' %}
-                <table class="table table-striped">
-                    <tbody>
-                    <tr>
-                        <td>{{ icd.code }}</td>
-                        <td>{{ icd.desc }}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                {% include 'pdf/tabs/icd10.html' with icds=tab.data %}
             {% else %}
-                {{ tab.body }}
+                {{ tab.data }}
             {% endif %}
         </div>
     {% endfor %}
