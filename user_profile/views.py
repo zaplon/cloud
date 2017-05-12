@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
+import zipfile
+from xml.dom import minidom
+
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
 from .forms import *
-from utils.forms import ajax_form_validate
+from g_utils.forms import ajax_form_validate
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 import json
+from .models import Doctor, Recipe
+from django.contrib.auth.models import User
 
 
 class SettingsView(View):
@@ -77,3 +82,39 @@ class PatientDeleteView(DeleteView):
     model = Patient
     success_url = reverse_lazy('patients')
     template_name = 'confirm_delete.html'
+
+
+def add_recipes(request):
+    if request.method == 'POST':
+        try:
+            f = request.FILES['file']
+        except:
+            return HttpResponse(400)
+        if f.name.find('.xmz') > 0:
+            source = zipfile.ZipFile(f.read()).read(f.name[0:-3] + 'xml')
+        else:
+            source = f.read()
+        #return HttpResponse(content=source, status_code=200)
+        dr = Doctor.objects.get(user=request.user)
+        try:
+            xml = minidom.parseString(source)
+        except:
+            xml = minidom.parse(source)
+            xml = False
+        if xml:
+            #node = xml.getElementsByTagName('lekarz')
+            ns = xml.getElementsByTagName('n')
+            for n in ns:
+                val = n.childNodes[0].nodeValue
+                try:
+                    Recipe.objects.get(nr=val)
+                except:
+                    r = Recipe(doctor=dr, nr=val, was_used=False)
+                    r.save()
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=500)
+    else:
+        return HttpResponse(status=500)
+
+

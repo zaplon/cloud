@@ -5,6 +5,7 @@ import random
 import re
 
 from user_profile.models import Code
+from g_utils.views import send_sms_code
 
 try:
     from collections import OrderedDict
@@ -140,13 +141,17 @@ class LoginUsernameForm(LoginForm):
             try:
                 self.user = User.objects.get(username=self.data['username'])
             except ObjectDoesNotExist:
-                raise forms.ValidationError(_("Użytkownik o podanym loginie nie istnieje"))
+                try:
+                    self.user = User.objects.get(username=self.data['username'].upper())
+                except ObjectDoesNotExist:
+                    raise forms.ValidationError(_("Użytkownik o podanym loginie nie istnieje"))
             if 'code' in self.data:
                 deadline = datetime.datetime.now() - datetime.timedelta(minutes=15)
                 try:
                     if not settings.SIMULATE_SMS_LOGIN:
                         code = Code.objects.get(code=self.data['code'], user=self.user,
                                                 created__gte=deadline)
+                        send_sms_code(code, self.user.doctor.phone, self.user.username)
                 except ObjectDoesNotExist:
                     raise forms.ValidationError(_("Kod sms się nie zgadza"))
             else:

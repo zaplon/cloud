@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from user_profile.models import Doctor, Patient
 from django.contrib.auth.models import User
 from .models import Term
@@ -15,6 +15,11 @@ class TermTestCase(TestCase):
 
     def test_can_create_terms_for_period(self):
         now = timezone.now()
-        res = Term.create_terms_for_period(self.d, self.p, now - timezone.timedelta(days=30), now)
+        res = Term.create_terms_for_period(self.d, now - timezone.timedelta(days=30), now)
         self.assertEqual(res, True)
         self.assertTrue(Term.objects.all().count() > 100)
+
+    def test_cant_get_terms_when_not_logged_in(self):
+        c = Client()
+        response = c.get('/rest/terms/')
+        self.assertEqual(response.status_code, 403)

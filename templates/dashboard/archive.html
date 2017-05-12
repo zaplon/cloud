@@ -16,18 +16,42 @@
 {% block content %}
     <section class="box-typical">
         <div class="row">
+        {% if not USE_ELO %}
             <div class="col-md-12">
                 <div id="toolbar">
                     <div class="bootstrap-table-header">Archiwum</div>
-                    <a href="" class="btn btn-success">
-                        <i class="font-icon font-icon-plus"></i> DODAJ
-                    </a>
+                    {% if perms.result.can_add_result %}
+                        <a href="" class="btn btn-success">
+                            <i class="font-icon font-icon-plus"></i> DODAJ
+                        </a>
+                    {% endif %}
                 </div>
                 <div class="table-responsive">
                     <table id="archive-table">
                     </table>
                 </div>
             </div>
+        {% else %}
+            <div class="m-1">
+                <div clas="col-md-12">
+                    <div class="ml-1 mb-1 bootstrap-table-header">Archiwum</div>
+                </div>
+                <div class="col-md-4 col-sm-6 mr-2">
+                    <input type="search" class="form-control" placeholder="Wpisz pesel pacjenta" name="pesel" />
+                </div>
+                <div class="pull-left">
+                    <button id="search-results" class="btn btn-primary">Szukaj</button>
+                </div>
+                <div class="clearfix"></div>
+                <div id="archive" class="m-2">
+                    <div class="col-md-12 col-sm-12 text-center">
+                        <span class="empty-row">Wyszukaj pacjenta, wpisując jego numer pesel (cały bądź część) w polu wyszukiwania i
+                        klikając w przycisk "Szukaj"</span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        {% endif %}
         </div>
     </section><!--.box-typical-->
 {% endblock %}

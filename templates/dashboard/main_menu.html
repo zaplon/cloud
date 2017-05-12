@@ -2,9 +2,11 @@
     <li class="nav-item">
         <a class="nav-link {% if section == 'calendar' %} active {% endif %}" href="/">Kalendarz</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link {% if section == 'patients' %} active {% endif %}" href="/patients/">Lista pacjentów</a>
-    </li>
+    {% if perms.user_profile.can_edit_patient %}
+        <li class="nav-item">
+            <a class="nav-link {% if section == 'patients' %} active {% endif %}" href="/patients/">Lista pacjentów</a>
+        </li>
+    {% endif %}
     <li class="nav-item">
         <a class="nav-link {% if section == 'archive' %} active {% endif %}" href="{% url 'archive' %}">Archiwum</a>
     </li>
@@ -17,9 +19,11 @@
     <li class="nav-item">
         <a class="nav-link {% if section == 'templates' %} active {% endif %}" href="{% url 'templates' %}">Szablony</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link {% if section == 'tabs' %} active {% endif %}" href="{% url 'tabs' %}">Zakładki</a>
-    </li>
+    {% if perms.visit.can_edit_tab %}
+        <li class="nav-item">
+            <a class="nav-link {% if section == 'tabs' %} active {% endif %}" href="{% url 'tabs' %}">Zakładki</a>
+        </li>
+    {% endif %}
 
 
 

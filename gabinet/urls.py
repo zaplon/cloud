@@ -27,7 +27,7 @@ from medicine.rest import *
 from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
-from utils.views import AjaxFormView
+from g_utils.views import AjaxFormView
 
 
 router = routers.DefaultRouter()

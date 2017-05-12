@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.template.context_processors import csrf
 from django.views import View
 from wkhtmltopdf.views import PDFTemplateView
-
+from django.conf import settings
 from user_profile.forms import DoctorForm
 from crispy_forms.layout import Layout, Div, Submit, Field
 
@@ -26,7 +26,7 @@ def patients_view(request):
 
 @login_required
 def archive_view(request):
-    return render(request, 'dashboard/archive.html')
+    return render(request, 'dashboard/archive.html', {'USE_ELO': settings.USE_ELO})
 
 
 @login_required

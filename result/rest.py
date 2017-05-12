@@ -25,8 +25,13 @@ class ResultViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         if settings.USE_ELO:
-            if not 'pesel' in request.GET:
+            pesel = False
+            if 'search' in request.GET:
+                pesel = request.GET['search']
+            if 'pesel' in request.GET:
+                pesel = request.GET['pesel']
+            if not pesel:
                 return HttpResponseBadRequest()
-            return getPatientData(request.GET['pesel'], request)
+            return getPatientData(pesel, request, flat=('is_table' in request.GET))
 
 

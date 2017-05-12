@@ -94,7 +94,7 @@ def getPatient(pesel, request):
         return False
 
 
-def getPatientData(pesel, request, fromDate=None):
+def getPatientData(pesel, request, flat=True, fromDate=None):
     res = getPatient(pesel, request)
     if not res:
         ls = []
@@ -195,6 +195,12 @@ def getPatientData(pesel, request, fromDate=None):
 
     if len(ls) > 0:
         ls = sorted(ls, key=itemgetter('text'), reverse=False)
+        if flat:
+            res = []
+            for l in ls:
+                for c in l['children']:
+                    res.append({'text': c['text'], 'name': l['text']})
+            ls = res
         return HttpResponse(json.dumps(ls), content_type="application/json")
     else:
         return HttpResponse(json.dumps({'text': 'Brak wyników'}), content_type="application/json")

@@ -154,11 +154,9 @@
 {% endblock %}
 
 {% block extra_styles %}
-    <link rel="stylesheet" href="{% static "css/lib/jstree/style.min.css" %}">
 {% endblock %}
 
 {% block extra_scripts %}
-    <script src="{% static 'js/lib/jstree/jstree.min.js' %}"></script>
     <script src="{% static 'js/visit/visit.js' %}"></script>
     <script>
         visit.patient({{ visit.term.patient|as_json:'id,pesel,first_name,last_name,address' }});

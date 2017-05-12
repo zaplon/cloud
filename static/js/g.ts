@@ -95,15 +95,22 @@ class Gabinet {
     addRecipes() {
         var body = $('#addRecipeForm').html();
         var save = '<button class="btn btn-primary" id="addRecipes">Dodaj</button>';
-        this.showModal('Dodaj numery recept', body, save);
+        gabinet.showModal('Dodaj numery recept', body, save);
         $('#addRecipes').click(function () {
+            var file_data = $('.modal #recipeInputFile').prop('files')[0];
+            if (!file_data){
+                $('.modal #recipe-errors').html('Musisz wybrać plik');
+                return;
+            }
+            var form_data = new FormData();
+            form_data.append('file', file_data);
             $.ajax({
                 // Your server script to process the upload
-                url: 'profile/add_recipe/',
+                url: 'profile/add_recipes/',
                 type: 'POST',
 
                 // Form data
-                data: new FormData($('#addRecipeForm')[0]),
+                data: form_data,
 
                 // Tell jQuery not to process data or worry about content-type
                 // You *must* include these options!
@@ -116,7 +123,7 @@ class Gabinet {
                         $('button.close').click();
                     }
                     else {
-                        $('#recipe-errors').html(res.errors);
+                        $('.modal #recipe-errors').html(res.errors);
                     }
                 },
 
@@ -146,6 +153,7 @@ var gabinet = new Gabinet();
 $(document).ready(function(){
  $('#logout').click(gabinet.logout);
  $('#settings').click(gabinet.settings);
+ $('#show-ad-recipes').click(gabinet.addRecipes);
 });
 
 // using jQuery

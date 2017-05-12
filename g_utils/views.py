@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from crispy_forms.utils import render_crispy_form
 from django.shortcuts import render, HttpResponse
 import importlib
@@ -7,6 +8,8 @@ from django.template.context_processors import csrf
 from django.views import View
 import json
 import re
+import urllib2
+from django.conf import settings
 
 
 class AjaxFormView(View):
@@ -86,3 +89,19 @@ def get_client_location_code(request):
     if re.match("192.168.2", ip) or re.match("192.168.1", ip) or re.match("192.168.0", ip):
         return 'WAR'
     return 'KEN'
+
+
+def escape_chars(text):
+    text = text.lower()
+    escape_map = {'ą': 'a', 'ę': 'e', 'ł': 'l', 'ś': 's', 'ć': 'c', 'ó': 'o', 'ż': 'z', 'ź': 'z', '/':'_' }
+    for e in escape_map:
+        text = text.replace(e.decode('utf8'), escape_map[e])
+    return text
+
+
+def send_sms_code(my_code, my_mobile, username=''):
+    username = escape_chars(username)
+    url_text = 'https://api1.serwersms.pl/zdalnie/index.php?login=webapi_misalgabinet&haslo=tenibag123$&akcja=wyslij_sms&nadawca=SPSR-GAB&numer=%2B48' + str(
+        my_mobile) + '&wiadomosc=Haslo%20dla%20'+username+':' + str(my_code) + ''
+    if settings.SMS_ON:
+        urllib2.urlopen(url_text)
