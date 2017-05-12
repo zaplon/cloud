@@ -17,10 +17,11 @@
     <h1 class="text-center">Historia choroby</h1>
     {% for tab in visit.tabs.all %}
         <div>
+            <h2>{{ tab.title }}</h2>
             {% if tab.title == 'Rozpoznanie' %}
                 {% include 'pdf/tabs/icd10.html' with icds=tab.data %}
             {% else %}
-                {{ tab.body }}
+                {{ tab.data }}
             {% endif %}
         </div>
     {% endfor %}
