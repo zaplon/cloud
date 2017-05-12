@@ -1,8 +1,10 @@
 <table class="table table-striped">
     <tbody>
-    <tr>
-        <td>{{ icd.code }}</td>
-        <td>{{ icd.desc }}</td>
-    </tr>
+    {% for icd in icds %}
+        <tr>
+            <td>{{ icd.code }}</td>
+            <td>{{ icd.desc }}</td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>
