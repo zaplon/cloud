@@ -1,6 +1,7 @@
 var notesModel = {
     notes: ko.observableArray(),
     note: ko.observable(),
+    dontSave: true,
     addNote: function(){
         var text = this.note();
         $.post('/rest/notes/', {text: text, doctor: gabinet.doctor.id, patient: visit.patient().id}, function(res){

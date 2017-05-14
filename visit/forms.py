@@ -23,18 +23,26 @@ class TemplateForm(ModelForm):
         # helper.form_class = 'form-horizontal'
         # helper.label_class = 'col-md-2'
         # helper.field_class = 'col-md-8'
-        helper.layout = Layout(
-            'name',
-            'key',
-            'text',
-            'tab',
-            HTML('<hr/>'),
-            HTML(u'<div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
-                reverse('template-delete', kwargs={'pk': self.instance.id})
-                if self.instance.id else ''),
-            HTML('<div class="pull-right"><button class="btn btn-primary" type="submit">Zapisz</button>'),
-            HTML('<a class="btn btn-default button-margin" href="/templates/">Anuluj</a></div><div class="clearfix"></div>')
-        )
+        if not 'ajax' in kwargs:
+            helper.layout = Layout(
+                'name',
+                'key',
+                'text',
+                'tab',
+                HTML('<hr/>'),
+                HTML(u'<div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
+                    reverse('template-delete', kwargs={'pk': self.instance.id})
+                    if self.instance.id else ''),
+                HTML('<div class="pull-right"><button class="btn btn-primary" type="submit">Zapisz</button>'),
+                HTML('<a class="btn btn-default button-margin" href="/templates/">Anuluj</a></div><div class="clearfix"></div>')
+            )
+        else:
+            helper.layout = Layout(
+                'name',
+                'key',
+                'text',
+                'tab'
+            )
 
 
 class TabForm(ModelForm):

@@ -137,11 +137,13 @@ var visit = {
                 return;
         }
     },
-    saveVisit: function (tmp) {
+    saveVisit: function (tmp, handlerSuccess, handlerFailure) {
         if (this == window)
             return;
         var me = this;
         tabs.forEach(function (tab) {
+            if (tab.model.dontSave)
+                return;
             if (typeof(tab.model.save) == 'undefined')
                 data = null;
             else
@@ -160,8 +162,12 @@ var visit = {
                     if (res.success) {
                         if (!tmp)
                             window.location.pathname = '/';
+                        if (typeof(handlerSuccess) != undefined)
+                            handlerSuccess();
                     }
                     else {
+                        if (typeof(handlerFailure) != undefined)
+                            handlerFailure();
                         for (e in res.errors) {
                             var tab = tabs.filter(function (r) {
                                 return r.title == e
@@ -175,6 +181,13 @@ var visit = {
                 }
             });
         }
+    },
+    saveTmp: function () {
+      this.saveVisit(true, function(){
+         notie.alert(1, 'Kopia robocza została zapisana');
+      }, function(){
+          notie.alert(3, 'Wystąpił błąd podczas zapisywania kopii roboczej');
+      });
     },
     cancelVisit: function () {
         $.post(window.location.pathname, {'cancel': true}).success(function (res) {
@@ -231,8 +244,10 @@ var visit = {
         gabinet.showForm(form, params);
     },
     printVisit: function () {
-        $.get('/visit/pdf/' + visit.term.id + '/?as_link=1', function (res) {
-            gabinet.showPdf(res, 'Historia choroby', false);
+        this.saveVisit(true, function(){
+           $.get('/visit/pdf/' + visit.term.id + '/?as_link=1', function (res) {
+               gabinet.showPdf(res, 'Historia choroby', false);
+           });
         });
     }
 };

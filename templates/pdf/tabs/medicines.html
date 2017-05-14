@@ -1,0 +1,10 @@
+<table class="table table-striped">
+    <tbody>
+    {% for medicine in medicines %}
+        <tr>
+            <td>{{ medicine.name }}</td>
+            <td>{{ medicine.dosage }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

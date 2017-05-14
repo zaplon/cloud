@@ -47,7 +47,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r"^account/", include("account.urls")),
     url(r"^setup/(?P<step>[0-9])", SetupView.as_view(), name='setup'),
-    url(r'^$', calendar_view, name='calendar'),
+    url(r'^$', index_view, name='calendar'),
     url(r'^patients/', patients_view, name='patients'),
     url(r'^elo/', include("elo.urls"), name='elo'),
     url(r'^archive/', archive_view, name='archive'),

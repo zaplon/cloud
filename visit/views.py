@@ -52,18 +52,20 @@ class VisitView(View, LoginRequiredMixin):
         term = Term.objects.get(id=kwargs['pk'])
         visit = term.visit
         data = json.loads(request.POST['data'])
+        tmp = self.request.POST.get('tmp', False)
 
-        rozpoznanie = filter(lambda d: d['title'] == 'Rozpoznanie', data)
-        if len(rozpoznanie) == 0 or len(rozpoznanie[0]['data']) == 0:
-            return HttpResponse(json.dumps({'success': False, 'errors': {'Rozpoznanie': u'Musisz podać rozpoznanie'}}),
-                                content_type='application/json')
+        if not tmp:
+            rozpoznanie = filter(lambda d: d['title'] == 'Rozpoznanie', data)
+            if len(rozpoznanie) == 0 or len(rozpoznanie[0]['data']) == 0:
+                return HttpResponse(json.dumps({'success': False, 'errors': {'Rozpoznanie': u'Musisz podać rozpoznanie'}}),
+                                    content_type='application/json')
 
         for tab in data:
             vt = VisitTab.objects.get(id=tab['id'])
-            vt.json = json.dumps(tab['data'])
+            vt.json = json.dumps(tab['data']) if 'data' in tab else ''
             vt.save()
             visit.tabs.add(vt)
-        if self.request.POST.get('tmp', False):
+        if not tmp:
             term.status = 'finished'
             term.save()
         return HttpResponse(content=json.dumps({'success': True}), status=200, content_type='application/json')
@@ -206,8 +208,6 @@ class PdfView(PDFTemplateView):
         file_name = datetime.datetime.now().strftime('%s')
         barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
         self.visit.tabs = self.visit.tabs.all()
-        for tab in self.visit.tabs
-            tab.data = json.parse(tab.json) 
         return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'APP_URL': settings.APP_URL,
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}
 

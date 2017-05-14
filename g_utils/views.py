@@ -30,7 +30,7 @@ class AjaxFormView(View):
             form = form_class(instance=form_class._meta.model.objects.get(id=self.request.GET['id']))
         else:
             data = self.request.GET['data'] if 'data' in self.request.GET else {}
-            form = form_class(initial=data)
+            form = form_class(initial=data, ajax=True)
         ctx = {}
         ctx.update(csrf(self.request))
         form_html = render_crispy_form(form, context=ctx)

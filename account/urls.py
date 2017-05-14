@@ -5,7 +5,7 @@ from django.conf.urls import url
 from account.views import SignupView, LoginView, LogoutView, DeleteView
 from account.views import ConfirmEmailView
 from account.views import ChangePasswordView, PasswordResetView, PasswordResetTokenView
-from account.views import SettingsView
+from account.views import SettingsView, SetMobileView
 
 
 urlpatterns = [

@@ -8,6 +8,7 @@ from django.urls import reverse
 
 from gabinet.settings import VISIT_TABS_DIR
 from user_profile.models import Doctor
+import json
 
 keys_choices = (('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2'), ('CTRL+F3', 'ctrl+f3'), ('CTRL+F4', 'ctrl+f4'),
                 ('CTRL+F5', 'ctrl+f5'), ('CTRL+F6', 'ctrl+f6'), ('CTRL+F7', 'ctrl+f7'), ('CTRL+F8', 'ctrl+f8'),
@@ -38,6 +39,13 @@ class VisitTab(models.Model):
     body = models.TextField(default='')
     json = models.TextField(default='null')
     order = models.IntegerField(unique=True, null=True, blank=True)
+
+    @property
+    def data(self):
+        if len(self.json) > 0:
+            return json.loads(self.json)
+        else:
+            return False
 
     class Meta:
         ordering = ['order']

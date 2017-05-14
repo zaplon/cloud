@@ -11,38 +11,38 @@ var dayError = function(){
 };
 
 var ready = function () {
-    if (gabinet.doctor.working_hours.length > 0)
+    if (gabinet.doctor && gabinet.doctor.working_hours.length > 0)
         var days = gabinet.doctor.working_hours;
     else
         var days = [day(1), day(2), day(3), day(4), day(5), day(6), day(7)];
-    var viewModel = {
+    var settingsModel = {
         days: days,
         errors: ko.observableArray([dayError(1), dayError(2), dayError(3), dayError(4), dayError(5), dayError(6), dayError(7)]),
         dayNames: dayNames,
         saveSettings: function (){
             if ($('#profile').is(':visible'))
-                viewModel.saveProfile();
+                settingsModel.saveProfile();
             else
-                viewModel.saveDays();
+                settingsModel.saveDays();
         },
         saveDays: function () {
-            $.post('/profile/settings/', {days: ko.toJSON(viewModel.days), tab: 1}).success(function (res) {
+            $.post('/profile/settings/', {days: ko.toJSON(settingsModel.days), tab: 1}).success(function (res) {
                 if (res.success) {
                     $('#settings-modal').modal('hide');
-                    gabinet.doctor.working_days = viewModel.days;
+                    gabinet.doctor.working_days = settingsModel.days;
                     if (window.location.pathname.indexOf('setup') > -1) {
                         window.location.pathname = '/';
                         notie.alert('success', 'Dane zapisano poprawnie', 3);
                     }
                     else {
-                        viewModel.errors = res.errors;
+                        settingsModel.errors = res.errors;
                     }
                 }
             });
         },
         saveProfile: function () {
             $.ajax({
-                data: {data: $('#profile form').serialize(), class: 'DoctorForm', module: 'user_profile.forms', user: true},
+                data: {data: $('#profile form').serialize(), class: $('input[name="form_class"]').val(), module: 'user_profile.forms', user: true},
                 url: '/get-form/',
                 type: 'POST',
                 success: function (res) {
@@ -62,6 +62,6 @@ var ready = function () {
             });
         }
     };
-    ko.applyBindings(viewModel, $('#settings-modal')[0]);
+    ko.applyBindings(settingsModel, $('#settings-modal')[0]);
 };
 

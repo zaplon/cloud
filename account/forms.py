@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import random
 import re
 
-from user_profile.models import Code
 from g_utils.views import send_sms_code
 
 try:
@@ -19,7 +18,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import auth
 from django.contrib.auth import get_user_model
 
-from account.conf import settings
 from account.hooks import hookset
 from account.models import EmailAddress
 from account.utils import get_user_lookup_kwargs
@@ -123,6 +121,20 @@ class LoginForm(forms.Form):
 
     def user_credentials(self):
         return hookset.get_user_credentials(self, self.identifier_field)
+
+
+class MobileForm(forms.Form):
+    set_mobile = forms.CharField(label='Telefon',
+                             help_text=u'Numer wykorzysytwany jest jedynie do przesyłania kodów do logowania')
+    username = forms.CharField(widget=HiddenInput())
+
+    def save(self):
+        u = User.objects.get(username=self.cleaned_data['username'])
+        if hasattr(u, 'doctor'):
+            u.doctor.mobile = self.cleaned_data['set_mobile']
+        if hasattr(u, 'profile'):
+            u.profile.mobile = self.cleaned_data['set_mobile']
+        u.save()
 
 
 class LoginUsernameForm(LoginForm):

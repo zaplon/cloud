@@ -16,30 +16,14 @@
                     <div class="sign-avatar">
                         <img src="{% static "img/avatar-sign.png" %}" alt="">
                     </div>
-                    <header class="sign-title">Zaloguj się</header>
+                    <header class="sign-title">Wprowadź numer telefonu</header>
                     {% csrf_token %}
                     {% crispy form NoFormFormHelper %}
                     {% if redirect_field_value %}
                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                     {% endif %}
-                    <button type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
-                    {% if not sms_login %}
-                        <a href="{% url "account_password_reset" %}" class="">Zapomniałeś hasła?</a>
-                        {% if ACCOUNT_OPEN_SIGNUP %}
-                            <p class="login-signup">
-                                <small>
-                                    Nie masz konta?<strong><a href="{% urlnext 'account_signup' %}">Zapisz się</a></strong>
-                                </small>
-                            </p>
-                        {% endif %}
-                    {% else %}
-                        {% if change_login %}
-                            <a href="/" class="">Zaloguj jako inny użytkownik</a><div></div>
-                        {% endif %}
-                        {% if code %}
-                            <a href="/" class="">Wyślij ponownie kod sms</a>
-                        {% endif %}
-                    {% endif %}
+                    <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+                    <a href="/" class="">Zaloguj jako inny użytkownik</a>
                 </form>
             </div>
         </div>

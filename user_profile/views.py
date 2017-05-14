@@ -21,10 +21,17 @@ class SettingsView(View):
             doctor = self.request.user.doctor
             user = self.request.user
             form = DoctorForm(initial={'first_name': user.first_name, 'last_name': user.last_name, 'pwz': doctor.pwz,
-                        'email': user.email})
+                        'email': user.email, 'mobile': doctor.mobile})
+            return form
+        else:
+            user = self.request.user
+            form = UserForm(initial={'first_name': user.first_name, 'last_name': user.last_name,
+                        'email': user.email, 'mobile': user.profile.mobile})
             return form
 
     def get(self, request, *args, **kwargs):
+        if not hasattr(self.request.user, 'doctor'):
+            self.template_name = 'user_profile/default/settings.html'
         return render(request, self.template_name, {'profile_form': self.get_form()},
                       content_type='text/html; charset=utf-8')
 

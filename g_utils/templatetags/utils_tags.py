@@ -20,5 +20,5 @@ def as_json(obj, fields=''):
 
 
 @register.filter(name='parse_json')
-def parse_json(obj)
+def parse_json(obj):
     return json.parse(obj)

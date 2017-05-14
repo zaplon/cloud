@@ -7,13 +7,18 @@ def setup_middleware(get_response):
 
     def middleware(request):
 
-        if request.user.is_authenticated() and hasattr(request.user, 'doctor'):
+        if request.user.is_authenticated():
             if request.path.find('/setup/') == -1 and not request.method == 'POST':
-                d = request.user.doctor
-                if len(d.pwz) == 0:
-                    return HttpResponseRedirect('/setup/1/')
-                if d.working_hours is None:
-                    return HttpResponseRedirect('/setup/2/')
+                if hasattr(request.user, 'doctor'):
+                    d = request.user.doctor
+                    if len(d.pwz) == 0:
+                        return HttpResponseRedirect('/setup/1/')
+                    if d.working_hours is None:
+                        return HttpResponseRedirect('/setup/2/')
+                else:
+                    u = request.user
+                    if not u.profile.mobile:
+                        return HttpResponseRedirect('/setup/1/')
 
         response = get_response(request)
 

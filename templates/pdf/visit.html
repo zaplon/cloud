@@ -2,27 +2,40 @@
 {% load static %}
 
 {% block header %}
-    <div style="display: inline-block; width: 30%;"><img src="{{ IMAGES_ROOT }}img/logo.jpg"/></div>
-    <div style="display: inline-block; width: 40%; font-size:11px;">1465138.0 FILIA NR 2
-        PRZEDSIĘBIORSTWA PODMIOTU LECZNICZEGO
-        SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW
-        02-797 WARSZAWA AL. KEN 19
-        REGON:000840941
-        1580 Poradnia chirurgii urazowo-ortopedycznej
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div style="display: inline-block;"><img style="width:350px;" src="{{ IMAGES_ROOT }}img/logo.jpg"/></div>
+                <div class="m-1" style="display: inline-block; width: 200px; font-size:11px; vertical-align:middle; text-align:justify">
+                    1465138.0 FILIA NR 2
+                    PRZEDSIĘBIORSTWA PODMIOTU LECZNICZEGO
+                    SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW
+                    02-797 WARSZAWA AL. KEN 19
+                    REGON:000840941
+                    1580 Poradnia chirurgii urazowo-ortopedycznej
+                </div>
+                <div style="display: inline-block; width: 250px;"><img src="{{ barcode }}"/></div>
+            </div>
+        </div>
     </div>
-    <div style="display: inline-block; width: 30%;"><img src="{{ barcode }}"/></div>
 {% endblock %}
 
 {% block body %}
-    <h1 class="text-center">Historia choroby</h1>
-    {% for tab in visit.tabs.all %}
-        <div>
-            <h2>{{ tab.title }}</h2>
-            {% if tab.title == 'Rozpoznanie' %}
-                {% include 'pdf/tabs/icd10.html' with icds=tab.data %}
-            {% else %}
-                {{ tab.data }}
+    <div class="container">
+        <h1 class="text-center">Historia choroby</h1>
+        {% for tab in visit.tabs.all %}
+            {% if tab.data %}
+                <div>
+                    <h2>{{ tab.title }}</h2>
+                    {% if tab.title == 'Rozpoznanie' %}
+                        {% include 'pdf/tabs/icd10.html' with icds=tab.data %}
+                    {% elif tab.title == 'Leki' %}
+                        {% include 'pdf/tabs/medicines.html' with medicines=tab.data %}
+                    {% else %}
+                        {{ tab.data }}
+                    {% endif %}
+                </div>
             {% endif %}
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock %}

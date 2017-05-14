@@ -3,6 +3,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Field, Layout, Div, HTML
 from django import forms
 from django.forms.fields import TimeField
+from django.forms.widgets import HiddenInput
+
 from user_profile.models import Patient
 from localflavor.pl.forms import PLPESELField
 
@@ -17,12 +19,47 @@ class HoursForm(forms.Form):
         pass
 
 
+class UserForm(forms.Form):
+    first_name = forms.CharField(max_length=100, label=u'Imię')
+    last_name = forms.CharField(max_length=100, label=u'Nazwisko')
+    email = forms.EmailField(label=u'Adres email')
+    mobile = forms.CharField(max_length=9, label=u'Numer telefonu', required=False)
+    form_class = forms.CharField(max_length=50, initial='UserForm', widget=HiddenInput(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.wrapper_class = 'row'
+        self.helper.label_class = 'col-md-2'
+        self.helper.field_class = 'col-md-10'
+        self.helper.add_layout(Layout(
+            Field('first_name', css_class='form-control', wrapper_class='row'),
+            Field('last_name', css_class='form-control', wrapper_class='row'),
+            Field('email', css_class='form-control', wrapper_class='row'),
+            Field('mobile', css_class='form-control', wrapper_class='row'),
+            Field('form_class', css_class='form-control', wrapper_class='row')
+        ))
+
+    def clean_mobile(self):
+        if self.cleaned_data['mobile'] == '':
+            return None
+        return int(self.cleaned_data['mobile'])
+
+    def save(self, user):
+        user.first_name = self.data['first_name']
+        user.last_name = self.data['last_name']
+        user.email = self.data['email']
+        user.profile.mobile = self.cleaned_data['mobile']
+        user.save()
+
+
 class DoctorForm(forms.Form):
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
     email = forms.EmailField(label=u'Adres email')
     mobile = forms.CharField(max_length=9, label=u'Numer telefonu', required=False)
     pwz = forms.CharField(max_length=7, label=u'Numer PWZ')
+    form_class = forms.CharField(max_length=50, initial='DoctorForm', widget=HiddenInput(), required=False)
 
     def __init__(self, *args, **kwargs):
         super(DoctorForm, self).__init__(*args, **kwargs)
@@ -35,7 +72,8 @@ class DoctorForm(forms.Form):
             Field('last_name', css_class='form-control', wrapper_class='row'),
             Field('email', css_class='form-control', wrapper_class='row'),
             Field('mobile', css_class='form-control', wrapper_class='row'),
-            Field('pwz', css_class='form-control', wrapper_class='row')
+            Field('pwz', css_class='form-control', wrapper_class='row'),
+            Field('form_class', css_class='form-control', wrapper_class='row')
         ))
 
     def clean_mobile(self):

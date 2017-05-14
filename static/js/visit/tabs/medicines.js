@@ -66,6 +66,8 @@ var medicinesModel = {
                 data.push({id: m.id, name: m.name, composition: m.composition, dose: m.dose, size: m.size,
                 refundation: m.refundation, selection: m.selection});
         });
+        if (data.length == 0)
+            return null;
         return JSON.stringify(data);
     },
     printRecipe: function(){

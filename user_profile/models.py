@@ -3,8 +3,23 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
 import json
-
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.urls import reverse
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, related_name='profile')
+    mobile = models.IntegerField(blank=True, null=True)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    if not hasattr(instance, 'profile'):
+        Profile.objects.create(user=instance)
+    else:
+        instance.profile.save()
 
 
 class Doctor(models.Model):

@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
+from django.template import loader
 from django.utils.http import base36_to_int, int_to_base36
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin, View
@@ -16,7 +17,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from account import signals
 from account.conf import settings
-from account.forms import SignupForm, LoginUsernameForm
+from account.forms import SignupForm, LoginUsernameForm, MobileForm
 from account.forms import ChangePasswordForm, PasswordResetForm, PasswordResetTokenForm
 from account.forms import SettingsForm
 from account.hooks import hookset
@@ -362,6 +363,7 @@ class LoginView(FormView):
                     and 'code' in ctx['form'].fields,
             "redirect_field_name": redirect_field_name,
             "redirect_field_value": self.request.POST.get(redirect_field_name, self.request.GET.get(redirect_field_name, "")),
+            "change_login": 'username' in self.request.POST
         })
         return ctx
 
@@ -379,9 +381,30 @@ class LoginView(FormView):
         return super(LoginView, self).form_invalid(form)
 
     def form_valid(self, form):
+
+        if 'set_mobile' in self.request.POST:
+            form = MobileForm({'set_mobile': self.request.POST['set_mobile'], 'username': self.request.POST['username']})
+            if form.is_valid():
+                form.save()
+                self.template_name = 'account/login.html'
+                form = LoginUsernameForm(initial={'username': self.request.POST['username'], 'code': ''})
+                return self.render_to_response(self.get_context_data(form=form))
+            else:
+                self.template_name = 'account/set_mobile.html'
+                return self.render_to_response(self.get_context_data(form=form))
+
         if settings.USE_SMS_LOGIN:
             if 'username' in self.request.POST and 'code' not in self.request.POST:
-                form = LoginUsernameForm(initial={'username': self.request.POST['username'], 'code': ''})
+                set_mobile = False
+                if hasattr(form.user, 'doctor') and not form.user.doctor.mobile:
+                    set_mobile = True
+                if hasattr(form.user, 'profile') and not form.user.profile.mobile:
+                    set_mobile = True
+                if set_mobile:
+                    self.template_name = 'account/set_mobile.html'
+                    form = MobileForm(initial={'username': form.user.username})
+                else:
+                    form = LoginUsernameForm(initial={'username': self.request.POST['username'], 'code': ''})
                 return self.render_to_response(self.get_context_data(form=form))
         self.login_user(form)
         self.after_login(form)
@@ -406,6 +429,20 @@ class LoginView(FormView):
         else:
             expiry = settings.ACCOUNT_REMEMBER_ME_EXPIRY if form.cleaned_data.get("remember") else 0
         self.request.session.set_expiry(expiry)
+
+
+class SetMobileView(FormView):
+
+    template_name = "account/set_mobile.html"
+    form_class = MobileForm
+    form_kwargs = {}
+    redirect_field_name = "next"
+
+    def form_valid(self, form):
+        form.save()
+        self.template_name = 'account/set_mobile.html'
+        form = LoginUsernameForm(initial={'username': form.username})
+        return self.get_context_data(form=form)
 
 
 class LogoutView(TemplateResponseMixin, View):

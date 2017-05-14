@@ -56,7 +56,11 @@
                 <script>var tabs = [];</script>
                 {% for tab in tabs %}
                     <script>
-                        tabs.push({data: {{ tab.json|safe }}, title: "{{ tab.title }}", id: {{ tab.id }}});
+                        {% if tab.json %}
+                            tabs.push({data: {{ tab.json|safe }}, title: "{{ tab.title }}", id: {{ tab.id }}});
+                        {% else %}
+                            tabs.push({data: null, title: "{{ tab.title }}", id: {{ tab.id }}});
+                        {% endif %}
                     </script>
                     <div role="tabpanel" class="tab-pane visit-tab fade {% if tab.is_active %} active {% endif %} in"
                          id="{{ tab.title }}"  {% if tab.is_active %} aria-expanded="true" {% endif %}>
@@ -101,14 +105,14 @@
                 <div class="control-item-content">
                     <div class="control-item-content-text" data-bind="visible: archive.documents().length > 0">
                         <div id="archive"></div>
-{#                        <ul class="control-item-lists archive-list" data-bind="foreach: archive.documents">#}
-{#                            <li data-bind="click: $parent.getDocument">#}
-{#                                <a href="#" data-bind="attr: {title: text}">#}
-{#                                    <h6 data-bind="text: name"></h6>#}
-{#                                    <div data-bind="text: text"></div>#}
-{#                                </a>#}
-{#                            </li>#}
-{#                        </ul>#}
+                        {#                        <ul class="control-item-lists archive-list" data-bind="foreach: archive.documents">#}
+                        {#                            <li data-bind="click: $parent.getDocument">#}
+                        {#                                <a href="#" data-bind="attr: {title: text}">#}
+                        {#                                    <h6 data-bind="text: name"></h6>#}
+                        {#                                    <div data-bind="text: text"></div>#}
+                        {#                                </a>#}
+                        {#                            </li>#}
+                        {#                        </ul>#}
                     </div>
                     <div class="control-item-content-text" data-bind="visible: archive.documents().length == 0">
                         Brak dokumentów w archiwum
@@ -132,8 +136,9 @@
                         </a>
                     </div>
                 </div>
-                <div class="control-item-content" data-bind="visible: templates().length > 0">
-                    <ul class="control-item-lists templates-list" data-bind="foreach: templates">
+                <div class="control-item-content">
+                    <ul class="control-item-lists templates-list" data-bind="foreach: templates,
+                    visible: templates().filter(function(t){return t.tab_title==visit.currentTab}).length > 0">
                         <li data-bind="click: $parent.putTemplate,
                         visible: tab_title == $parent.currentTab">
                             <a href="#" data-bind="attr: {title: text}">
@@ -142,6 +147,14 @@
                                 <div data-bind="text: text"></div>
                             </a>
                             <a data-bind="text: key"></a>
+                        </li>
+                    </ul>
+                    <ul class="control-item-lists templates-list"
+                        data-bind="visible: templates().filter(function(t){return t.tab_title==visit.currentTab}).length == 0">
+                        <li>
+                            <div class="control-item-content-text">
+                                Brak szablonów dla zakładki
+                            </div>
                         </li>
                     </ul>
                 </div>
