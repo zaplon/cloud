@@ -16,7 +16,9 @@ from user_profile.rest import DoctorSerializer
 
 @login_required
 def index_view(request):
-    return render(request, 'dashboard/index.html')
+    for m in settings.MODULES:
+        if m[0] is True or request.user.has_perms(m[0]):
+            return render(request, 'dashboard/%s.html' % m[1])
 
 
 @login_required
@@ -36,7 +38,7 @@ def archive_view(request):
 
 @login_required
 def icd10_view(request):
-    return render(request, 'dashboard/icd.html')
+    return render(request, 'dashboard/icd10.html')
 
 
 @login_required

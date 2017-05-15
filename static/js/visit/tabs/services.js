@@ -18,7 +18,7 @@ function ServicesModel() {
     this.getSuggestions = function(){
         var me = this;
         if (this.data.length == 0){
-          $.getJSON('', function(res){
+          $.getJSON('http://www.rentgen.pl/services-list.php', function(res){
             res.forEach(function(r){
               me.data.push({name: '', group: ''});
             });
@@ -48,7 +48,7 @@ function ServicesModel() {
     };
     this.errors = ko.observable();
 }
-var servicesModel = new ServiceModel();
+var servicesModel = new ServicesModel();
 ko.applyBindings(servicesModel, $('#services')[0]);
 servicesModel.getSuggestions();
 

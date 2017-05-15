@@ -22,3 +22,12 @@ def as_json(obj, fields=''):
 @register.filter(name='parse_json')
 def parse_json(obj):
     return json.parse(obj)
+
+
+@register.assignment_tag(takes_context=True)
+def has_perm(context, perm):
+    if perm is True:
+        return True
+    if len(perm) > 1:
+        return context['request'].user.has_perm(perm[0]) or context['request'].user.has_perm(perm[1])
+    return context['request'].user.has_perm(perm)

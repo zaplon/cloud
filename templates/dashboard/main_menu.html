@@ -1,36 +1,12 @@
+{% load utils_tags %}
 <ul class="main-nav nav nav-inline" style="z-index: 100;">
-    {% if perms.timetable.can_edit_term or perms.visit.can_edit_visit %}
-        <li class="nav-item">
-            <a class="nav-link {% if section == 'calendar' %} active {% endif %}" href="/">Kalendarz</a>
-        </li>
-    {% endif %}
-    {% if perms.user_profile.can_edit_patient %}
-        <li class="nav-item">
-            <a class="nav-link {% if section == 'patients' %} active {% endif %}" href="/patients/">Lista pacjentów</a>
-        </li>
-    {% endif %}
-    <li class="nav-item">
-        <a class="nav-link {% if section == 'archive' %} active {% endif %}" href="{% url 'archive' %}">Archiwum</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if section == 'medicines' %} active {% endif %}" href="/medicines/">Lista leków</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if section == 'icd' %} active {% endif %}" href="/icd10/">Kody Icd-10</a>
-    </li>
-    {% if perms.visit.can_edit_visit %}
-        <li class="nav-item">
-            <a class="nav-link {% if section == 'templates' %} active {% endif %}" href="{% url 'templates' %}">Szablony</a>
-        </li>
-    {% endif %}
-    {% if perms.visit.can_edit_tab %}
-        <li class="nav-item">
-            <a class="nav-link {% if section == 'tabs' %} active {% endif %}" href="{% url 'tabs' %}">Zakładki</a>
-        </li>
-    {% endif %}
-</ul>
 
-<script>
-    //if ($('.main-nav li.active').length == 0)
-    //    $('.main-nav li:first a')[0].click();
-</script>
+    {% for m in MODULES %}
+        {% has_perm m.0 as perm %}
+        {% if perm %}
+            <li class="nav-item">
+                <a class="nav-link {% if section == m.1 %} active {% endif %}" href="/{{ m.1 }}/">{{ m.2 }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

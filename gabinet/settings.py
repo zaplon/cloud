@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for gabinet project.
 
@@ -176,6 +177,17 @@ LANGUAGE_CODE = 'pl-pl'
 VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
 WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
 APP_URL = 'http://localhost:8001/'
+
+MODULES = [
+    (['timetable.can_edit_term', 'visit.can_edit_visit'], 'calendar', u'Kalendarz'),
+    ('user_profile.can_edit_patient', 'patients', u'Lista pacjentów'),
+    (True, 'archive', u'Archiwum'),
+    (True, 'medicines', u'Lista leków'),
+    (True, 'icd10', u'Kody ICD-10'),
+    ('visit.can_edit_visit', 'templates', u'Szablony'),
+    ('visit.can_edit_tab', 'tabs', u'Zakładki'),
+
+]
 
 # misal settings
 MISAL_SETUP = True
