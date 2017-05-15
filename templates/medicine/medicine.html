@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='medicines' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">Początek</a></li>
+        <li><a href="/medicines/">Lista leków</a></li>
+        <li class="active">{{ object.name }} {% if object.dose %} ({{ object.dose }}) {% endif %}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <section class="box-typical box-typical-padding">
+        <h1>{{ object.name }}</h1>
+        <table class="table table-striped">
+           <tbody>
+            <tr>
+                <td>Postać</td><td>{{ object.form }}</td>
+            </tr>
+            <tr>
+                <td>Skład</td><td>{{ object.composition }}</td>
+            </tr>
+            <tr>
+                <td>Dawka</td><td>{{ object.dose }}</td>
+            </tr>
+            <tr>
+                <td>Podmiot odpowiedzialny</td><td>{{ object.mah }}</td>
+            </tr>
+           </tbody>
+        </table>
+        <h4 class="mb-1 mt-1">Opakowania</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Wielkość opakowania</th>
+                    <th>Kod EAN</th>
+                    <th>Kategoria dostępności</th>
+                    <th>Refundacja</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in medicines %}
+                    <tr>
+                        <td>{{ m.size }}</td>
+                        <td>{{ m.ean }}</td>
+                        <td>{{ m.availability_cat }}</td>
+                        <td>{% if m.refundation %}
+                            <a href="#" data-medicine="{{ m.ean }}" class="refundation">TAK</a>
+                        {% else %}NIE{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

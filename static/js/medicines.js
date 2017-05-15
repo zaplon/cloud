@@ -40,23 +40,28 @@ $(document).ready(function () {
             field: 'name',
             title: 'Nazwa',
             align: 'left',
-            width: '10%'
+            width: '10%',
+            formatter: function (value, row, index) {
+                if (!value)
+                    value = '-';
+                return '<a href="/medicines/' + row.id + '/">' + value + '</a>';
+            }
         }, {
             field: 'composition',
             title: 'Skład',
-            align: 'left',
-        },
-        {
-            field: 'form',
-            title: 'Postać',
-            align: 'left',
-            width: '33%'
-        },
-        {
-            field: 'dose',
-            title: 'Dawka',
             align: 'left'
-        }
+        },
+            {
+                field: 'form',
+                title: 'Postać',
+                align: 'left',
+                width: '33%'
+            },
+            {
+                field: 'dose',
+                title: 'Dawka',
+                align: 'left'
+            }
         ]
     });
 

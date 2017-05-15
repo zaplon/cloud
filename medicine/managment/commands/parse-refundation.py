@@ -6,7 +6,7 @@ import xlrd, math
 
 
 class Command(BaseCommand):
-    file = 'leki.xls'
+    file = 'medicine/data/leki.xls'
     source = ''
 
     def handle(self, *args, **options):

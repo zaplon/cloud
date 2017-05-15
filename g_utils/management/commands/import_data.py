@@ -30,54 +30,62 @@ class Command(BaseCommand):
         #         print specialization.name
         #     print '***** Specializations imported *****'
 
+        MedicineParent.objects.all().delete()
+        Medicine.objects.all().delete()
+
+
         with open('g_utils/initial_data/leki-a.csv', 'rU') as csv_file:
-            data = csv.reader(csv_file, delimiter=',', quotechar='"', dialect=csv.excel_tab)
+            data = csv.reader(csv_file, delimiter=',', quotechar='"')
+            j = 0
             for row in data:
+                j += 1
+                if j > 100:
+                    break
                 medicine, _ = MedicineParent.objects.get_or_create(name=row[1], composition=row[2], form=row[3],
                                                                    permission_nr=row[9], mah=row[8], dose=row[4],
                                                                    manufacturer_country=row[11])
 
-                sizes = row[5].split('\r')
-                cats = row[6].split('\r')
+                sizes = row[5].split('\n')
+                cats = row[6].split('\n')
                 print sizes
-                for i, ean in enumerate(row[7].split('\r')):
+                for i, ean in enumerate(row[7].split('\n')):
                     m = Medicine.objects.create(parent=medicine, ean=ean, size=sizes[i], availability_cat=cats[i],
                                                    in_use=True)
 
                 print medicine.name
             print '***** Medicines A imported *****'
 
-        with open('g_utils/initial_data/leki-b.csv', 'rU') as csv_file:
-            data = csv.reader(csv_file, delimiter=',', quotechar='"', dialect=csv.excel_tab)
-            for row in data:
-                medicine, _ = MedicineParent.objects.get_or_create(name=row[1], composition=row[2], form=row[3],
-                                                                   mah=row[8], dose=row[4], manufacturer_country=row[11])
-
-                sizes = row[5].split('\r')
-                cats = row[7].split('\r')
-                print sizes
-                for i, ean in enumerate(row[6].split('\r')):
-                    m = Medicine.objects.create(parent=medicine, ean=ean, size=sizes[i], availability_cat=cats[i],
-                                                   in_use=True)
-
-                print medicine.name
-            print '***** Medicines B imported *****'
-
-        with open('g_utils/initial_data/leki-c.csv', 'rU') as csv_file:
-            data = csv.reader(csv_file, delimiter=',', quotechar='"', dialect=csv.excel_tab)
-            for row in data:
-                medicine, _ = MedicineParent.objects.get_or_create(name=row[1], form=row[3], manufacturer_country=row[11],
-                                                                   permission_nr=row[9], mah=row[10], dose=row[4])
-
-                sizes = row[5].split('\r')
-                cats = row[6].split('\r')
-                print sizes
-                for i, ean in enumerate(row[7].split('\r')):
-                    m = Medicine.objects.create(parent=medicine, ean=ean, size=sizes[i], availability_cat=cats[i],
-                                                   in_use=True)
-
-                print medicine.name
-            print '***** Medicines C imported *****'
+        # with open('g_utils/initial_data/leki-b.csv', 'rU') as csv_file:
+        #     data = csv.reader(csv_file, delimiter=',', quotechar='"')
+        #     for row in data:
+        #         medicine, _ = MedicineParent.objects.get_or_create(name=row[1], composition=row[2], form=row[3],
+        #                                                            mah=row[8], dose=row[4], manufacturer_country=row[10])
+        #
+        #         sizes = row[5].split('\n')
+        #         cats = row[7].split('\n')
+        #         print sizes
+        #         for i, ean in enumerate(row[6].split('\n')):
+        #             m = Medicine.objects.create(parent=medicine, ean=ean, size=sizes[i], availability_cat=cats[i],
+        #                                            in_use=True)
+        #
+        #         print medicine.name
+        #     print '***** Medicines B imported *****'
+        #
+        # with open('g_utils/initial_data/leki-c.csv', 'rU') as csv_file:
+        #     data = csv.reader(csv_file, delimiter=',', quotechar='"')
+        #     for row in data:
+        #         medicine, _ = MedicineParent.objects.get_or_create(name=row[1], form=row[3], manufacturer_country=row[11],
+        #                                                            permission_nr=row[9], mah=row[10], dose=row[4])
+        #
+        #         sizes = row[5].split('\n')
+        #         cats = row[6].split('\n')
+        #         print sizes
+        #         for i, ean in enumerate(row[7].split('\n')):
+        #             m = Medicine.objects.create(parent=medicine, ean=ean, size=sizes[i], availability_cat=cats[i],
+        #                                            in_use=True)
+        #
+        #         print medicine.name
+        #     print '***** Medicines C imported *****'
 
 
 
