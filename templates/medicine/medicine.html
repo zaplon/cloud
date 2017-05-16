@@ -51,6 +51,32 @@
                             <a href="#" data-medicine="{{ m.ean }}" class="refundation">TAK</a>
                         {% else %}NIE{% endif %}</td>
                     </tr>
+                    {% if m.refundation %}
+                        <tr style='display:none;'>
+                            <td colspan='4'>
+                                <table class="table table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Grupa limitowa</th>
+                                            <th>Zakres wskazań objętych refundacją</th>
+                                            <th>Zakres wskazań pozarejestracyjnych objętych refundacją</th>
+                                            <th>Cena detaliczna</th>
+                                            <th>Poziom odpłatności</th><th>Wysokość dopłaty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for r in m.refundations %}
+                                            <tr>
+                                                <td>{{ r.group }}</td><td>{{ r.recommendations }}</td>
+                                                <td>{{ r.other_recommendations }}</td>
+                                                <td>{{ r.price }}</td><td>{{ r.refundation }}</td><td>{{ r.to_pay }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>
