@@ -13,6 +13,14 @@ from django.conf import settings
 
 
 class AjaxFormView(View):
+
+    def add_data(self, data):
+        if self.request.user.is_authenticated():
+            if not 'user' in data:
+                data['user'] = self.request.user
+        data['ajax'] = True
+        return data
+
     @staticmethod
     def get_form(data):
         klass = data.get('class', data.get('klass', False))
@@ -30,7 +38,8 @@ class AjaxFormView(View):
             form = form_class(instance=form_class._meta.model.objects.get(id=self.request.GET['id']))
         else:
             data = self.request.GET['data'] if 'data' in self.request.GET else {}
-            form = form_class(initial=data, ajax=True)
+            data = self.add_data(data)
+            form = form_class(initial=data)
         ctx = {}
         ctx.update(csrf(self.request))
         form_html = render_crispy_form(form, context=ctx)
@@ -51,6 +60,7 @@ class AjaxFormView(View):
                 data = {d['name']: d['value'] for d in data}
             except:
                 data = {p[0]: urllib.unquote(str(p[1])).decode('utf8') for p in [par.split('=') for par in data.split('&')]}
+        data = self.add_data(data)
         if 'id' in data:
             if self.request.FILES:
                 form = form_class(data=data, files=self.request.FILES, instance=form_class._meta.model.objects.get(id=data['id']))

@@ -5,7 +5,7 @@ from django import forms
 from django.forms.fields import TimeField
 from django.forms.widgets import HiddenInput
 
-from user_profile.models import Patient
+from user_profile.models import Patient, Specialization
 from localflavor.pl.forms import PLPESELField
 
 
@@ -59,22 +59,34 @@ class DoctorForm(forms.Form):
     email = forms.EmailField(label=u'Adres email')
     mobile = forms.CharField(max_length=9, label=u'Numer telefonu', required=False)
     pwz = forms.CharField(max_length=7, label=u'Numer PWZ')
+    title = forms.CharField(max_length=50, label=u'Tytuł')
     form_class = forms.CharField(max_length=50, initial='DoctorForm', widget=HiddenInput(), required=False)
+    factory_specializations = forms.MultipleChoiceField(label=u'Specjalizacje', required=False,
+                                                        help_text=u'Zaznacz kilka pozycji trzymając wciśnięty klawisz CTRL')
 
     def __init__(self, *args, **kwargs):
         super(DoctorForm, self).__init__(*args, **kwargs)
+        self.fields['factory_specializations'].choices = [(s.id, s.name) for s in Specialization.objects.all()]
+        if 'doctor' in self.initial:
+            specs = list(Specialization.objects.filter(doctors=self.initial['doctor']).values_list('id', flat=True))
+            self.fields['factory_specializations'].initial = specs
         self.helper = FormHelper()
         self.helper.wrapper_class = 'row'
         self.helper.label_class = 'col-md-2'
         self.helper.field_class = 'col-md-10'
         self.helper.add_layout(Layout(
+            Field('title', css_class='form-control', wrapper_class='row'),
             Field('first_name', css_class='form-control', wrapper_class='row'),
             Field('last_name', css_class='form-control', wrapper_class='row'),
             Field('email', css_class='form-control', wrapper_class='row'),
             Field('mobile', css_class='form-control', wrapper_class='row'),
             Field('pwz', css_class='form-control', wrapper_class='row'),
+            Field('factory_specializations', css_class='form-control', wrapper_class='row'),
             Field('form_class', css_class='form-control', wrapper_class='row')
         ))
+
+    def clean_factory_specializations(self):
+        return self.cleaned_data['factory_specializations']
 
     def clean_mobile(self):
         if self.cleaned_data['mobile'] == '':
@@ -82,6 +94,7 @@ class DoctorForm(forms.Form):
         return int(self.cleaned_data['mobile'])
 
     def save(self, user):
+        user.doctor.title = self.data['title']
         user.first_name = self.data['first_name']
         user.last_name = self.data['last_name']
         user.email = self.data['email']
@@ -89,6 +102,11 @@ class DoctorForm(forms.Form):
         user.doctor.mobile = self.cleaned_data['mobile']
         user.save()
         user.doctor.save()
+        if 'factory_specializations' in self.cleaned_data:
+            user.doctor.specializations.clear()
+            for s in self.cleaned_data['factory_specializations']:
+                user.doctor.specializations.add(Specialization.objects.get(id=s))
+            pass
 
 
 class FullPatientForm(forms.Form):
@@ -121,6 +139,7 @@ class PatientForm(forms.Form):
         Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data['email'],
                                first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
         return True
+
 
 class PatientModelForm(forms.ModelForm):
     pesel = PLPESELField(label=u'Pesel', required=False)

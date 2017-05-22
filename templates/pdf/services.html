@@ -1,0 +1,49 @@
+{% extends 'pdf/base.html' %}
+{% load static %}
+
+{% block header %}
+    <img class="mb-2" src="{{ APP_URL }}static/img/logo.jpg"/>
+    <table class="table">
+        <tbody>
+        <tr>
+            <td>Nazwisko</td>
+            <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+        </tr>
+        <tr>
+            <td>Pesel</td>
+            <td>{{ patient.pesel }}</td>
+        </tr>
+        <tr>
+            <td>Data</td>
+            <td>{{ date }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <h3 class="text-center" style="text-align:center;">Skierowanie na badania</h3>
+    {% if icd %}
+        <p>Rozpoznanie:</p>
+        {% for i in icd %}
+            {{ i.code }}{% if forloop.last %}{% else %}, {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <table class="table table-striped">
+        <body>
+        {% for service in services %}
+            <tr>
+                <td>{{ service.name }}</td>
+                <td>{{ service.group }}</td>
+            </tr>
+        {% endfor %}
+        </body>
+    </table>
+{% endblock %}
+
+{% block footer %}
+    <p style="text-align: right;">
+        {{ doctor.title }} {{ doctor.user.first_name }} {{ doctor.user.last_name }} <br/>
+        numer pwz: {{ doctor.pwz }}
+    </p>
+{% endblock %}

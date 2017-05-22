@@ -1,5 +1,4 @@
 import json
-
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, render
 from django.contrib.auth.decorators import login_required
@@ -10,7 +9,6 @@ from wkhtmltopdf.views import PDFTemplateView
 from django.conf import settings
 from user_profile.forms import DoctorForm, UserForm
 from crispy_forms.layout import Layout, Div, Submit, Field
-
 from user_profile.rest import DoctorSerializer
 
 
@@ -47,7 +45,6 @@ def medicines_view(request):
 
 
 class PdfView(PDFTemplateView):
-
     def get(self, request, *args, **kwargs):
         self.template_name = 'pdf/' + request.GET.get('template_name', 'no-pdf.html')
         self.filename = request.GET.get('filename', 'result.pdf')
@@ -55,45 +52,52 @@ class PdfView(PDFTemplateView):
 
 
 class SetupView(View):
+    user_form_layout = Layout(
+        Field('first_name', css_class='form-control', wrapper_class='row'),
+        Field('last_name', css_class='form-control', wrapper_class='row'),
+        Field('email', css_class='form-control', wrapper_class='row'),
+        Field('mobile', css_class='form-control', wrapper_class='row'),
+        Div(
+            Div(
+                Submit('save_changes', 'Zapisz', css_class="btn-primary"),
+                # Submit('cancel', 'Cancel'),
+                css_class='offset-sm-2 col-sm-10'
+            ),
+            css_class='form-group row'
+        )
+    )
+    doctor_form_layout = Layout(
+        Field('title', css_class='form-control', wrapper_class='row'),
+        Field('first_name', css_class='form-control', wrapper_class='row'),
+        Field('last_name', css_class='form-control', wrapper_class='row'),
+        Field('email', css_class='form-control', wrapper_class='row'),
+        Field('mobile', css_class='form-control', wrapper_class='row'),
+        Field('pwz', css_class='form-control', wrapper_class='row'),
+        Div(
+            Div(
+                Submit('save_changes', 'Zapisz', css_class="btn-primary"),
+                # Submit('cancel', 'Cancel'),
+                css_class='offset-sm-2 col-sm-10'
+            ),
+            css_class='form-group row'
+        )
+    )
 
     def get(self, request, *args, **kwargs):
         step = int(kwargs.get('step'))
         if step == 1:
             if hasattr(request.user, 'doctor'):
-                form = DoctorForm(initial={'email': request.user.email})
-                form.helper.layout = Layout(
-                     Field('first_name', css_class='form-control', wrapper_class='row'),
-                     Field('last_name', css_class='form-control', wrapper_class='row'),
-                     Field('email', css_class='form-control', wrapper_class='row'),
-                     Field('mobile', css_class='form-control', wrapper_class='row'),
-                     Field('pwz', css_class='form-control', wrapper_class='row'),
-                     Div(
-                         Div(
-                             Submit('save_changes', 'Zapisz', css_class="btn-primary"),
-                             # Submit('cancel', 'Cancel'),
-                             css_class='offset-sm-2 col-sm-10'
-                         ),
-                         css_class='form-group row'
-                     )
-                )
+                user = self.request.user
+                doctor = user.doctor
+                form = DoctorForm(
+                    initial={'first_name': user.first_name, 'last_name': user.last_name, 'pwz': doctor.pwz,
+                             'email': user.email, 'mobile': doctor.mobile, 'title': doctor.title, 'doctor': doctor})
+                form.helper.layout = self.doctor_form_layout
                 c = {'form': form}
                 c.update(csrf(request))
             else:
                 form = UserForm(initial={'email': request.user.email, 'mobile': request.user.profile.mobile})
-                form.helper.layout = Layout(
-                     Field('first_name', css_class='form-control', wrapper_class='row'),
-                     Field('last_name', css_class='form-control', wrapper_class='row'),
-                     Field('email', css_class='form-control', wrapper_class='row'),
-                     Field('mobile', css_class='form-control', wrapper_class='row'),
-                     Div(
-                         Div(
-                             Submit('save_changes', 'Zapisz', css_class="btn-primary"),
-                             # Submit('cancel', 'Cancel'),
-                             css_class='offset-sm-2 col-sm-10'
-                         ),
-                         css_class='form-group row'
-                     )
-                )
+                form.helper.layout = self.user_form_layout
                 c = {'form': form}
                 c.update(csrf(request))
             return render_to_response('dashboard/setup/step_1.html', c)
@@ -106,8 +110,10 @@ class SetupView(View):
         if step == 1:
             if hasattr(request.user, 'doctor'):
                 form = DoctorForm(request.POST)
+                form.helper.layout = self.doctor_form_layout
             else:
                 form = UserForm(request.POST)
+                form.helper.layout = self.user_form_layout
             if form.is_valid():
                 form.save(request.user)
                 return HttpResponseRedirect('/')

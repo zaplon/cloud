@@ -86,7 +86,8 @@ class FormView(PDFTemplateView):
             print css
             self.filename = request.GET.get('filename', 'result.pdf')
             config = FORMS.get(template, FORMS['default'])
-            self.cmd_options = {'page-size': config['page-size'], 'orientation': config['orientation'],
+            self.cmd_options = {'page-size': config.get('page-size', 'A4'),
+                                'orientation': config.get('orientation', 'Portrait'),
                                 'user-style-sheet': css}
             for c in config:
                 if c not in self.cmd_options:

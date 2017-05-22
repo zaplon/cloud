@@ -119,13 +119,15 @@ $(document).ready(function () {
                     '<li><a href="#" class="fc-event-action-edit">Edytuj termin</a></li>' +
                     (calEvent.status == 'PENDING' ?
                         '<li><a href="#" class="fc-event-action-remove">Anuluj termin</a></li>' : '') +
+                    (calEvent.status == 'FREE' || calEvent.status == 'PENDING'  ?
+                        '<li><a href="#" class="fc-event-action-remove remove-visit">Anuluj wizytę</a></li>' : '') +
                     '</ul>' +
                     '</div>' +
                     (calEvent.status == 'PENDING' ?
                         ('<div class="fc-body remove-confirm">' +
                         '<p>Czy jesteś pewien, że chcesz anulować wizytę?</p>' +
                         '<div class="text-center">' +
-                        '<button type="button" class="btn btn-rounded btn-sm">Tak</button>' +
+                        '<button type="button" class="btn btn-rounded btn-sm remove-confirmed">Tak</button>' +
                         '<button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Nie</button>' +
                         '</div>' +
                         '</div>') : '' ) +
@@ -227,11 +229,17 @@ $(document).ready(function () {
             });
 
             // Actions link
+            $('.remove-confirmed').click(function (e){
+                $.post('/timetable/cancel/', {id: calEvent.id, cancel: calEvent.cancel}, function(){
+                  $('.fc-popover.click').remove();
+                  $('#calendar').fullCalendar('refetchEvents');
+                });
+            }),
             $('.fc-event-action-edit').click(function (e) {
                 e.preventDefault();
 
                 $('.fc-popover.click .main-screen').hide();
-                $.get('get-form', {module: 'timetable.forms', class: 'TermForm', id: calEvent.id}, function (res) {
+                $.get('/get-form', {module: 'timetable.forms', class: 'TermForm', id: calEvent.id}, function (res) {
                     $('.fc-popover.click .edit-event #edit-form').html(res.form_html);
                     $('.fc-popover.click .edit-event').show();
 
@@ -270,7 +278,8 @@ $(document).ready(function () {
 
             $('.fc-event-action-remove').click(function (e) {
                 e.preventDefault();
-
+                if (!$(e.target).hasClass('remove-visit'))
+                    calEvent.cancel = true;
                 $('.fc-popover.click .main-screen').hide();
                 $('.fc-popover.click .remove-confirm').show();
             });

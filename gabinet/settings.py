@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'gabinet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db2.sqlite3'),
     },
     'medicines': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -179,13 +179,13 @@ WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
 APP_URL = 'http://localhost:8001/'
 
 MODULES = [
-    (['timetable.can_edit_term', 'visit.can_edit_visit'], 'calendar', u'Kalendarz'),
-    ('user_profile.can_edit_patient', 'patients', u'Lista pacjentów'),
+    (['timetable.change_term', 'visit.change_visit'], 'calendar', u'Kalendarz'),
+    ('user_profile.change_patient', 'patients', u'Lista pacjentów'),
     (True, 'archive', u'Archiwum'),
     (True, 'medicines', u'Lista leków'),
     (True, 'icd10', u'Kody ICD-10'),
-    ('visit.can_edit_visit', 'templates', u'Szablony'),
-    ('visit.can_edit_tab', 'tabs', u'Zakładki'),
+    ('visit.change_visit', 'templates', u'Szablony'),
+    ('visit.change_tab', 'tabs', u'Zakładki'),
 
 ]
 

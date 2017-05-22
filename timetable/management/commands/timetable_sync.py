@@ -10,7 +10,7 @@ class Command(BaseCommand):
     API_URL = 'https://rezerwacja.rentgen.pl/api/sync'
 
     def handle(self, *args, **options):
-        for d in Doctor.objects.all().exclude(misal_id__isnull=True):
+        for d in Doctor.objects.filter(user__username='LKMA'): # Doctor.objects.all().exclude(misal_id__isnull=True):
             res = requests.get(self.API_URL + '?id=' + d.misal_id)
             visits = json.loads(res.content)
             for v in visits:
@@ -29,7 +29,8 @@ class Command(BaseCommand):
                     t = Term(datetime=dt, doctor=d)
                 if not v['free']:
                     t.patient = p
-                t.status = 'FREE' if v['free'] else 'FREE'
+                print v
+                t.status = 'FREE' if v['free'] else 'PENDING'
                 t.save()
                 print 'Zapisano %s' % t
 

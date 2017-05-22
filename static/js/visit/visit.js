@@ -196,7 +196,7 @@ var visit = {
     },
     templates: ko.observableArray(),
     loadTemplates: function () {
-        $.getJSON("/rest/templates/", {tab_title: visit.currentTab}, function (data) {
+        $.getJSON("/rest/templates/", {tab_name: visit.currentTab}, function (data) {
             visit.templates(data);
             visit.templates().forEach(function(t){
                 key(t.key.toLowerCase(), function(){
@@ -209,7 +209,7 @@ var visit = {
     currentTab: $('.visit-tab:visible').attr('id'),
     putTemplate: function (template) {
         var tab = tabs.filter(function (tab) {
-            return tab.title == template.tab_title;
+            return tab.name == template.tab_name;
         });
         if (tab.length == 0)
             return;
@@ -218,6 +218,7 @@ var visit = {
         return true;
     },
     addTemplate: function () {
+        var me = this;
         $.get('/get-form/', {module: 'visit.forms', class: 'TemplateForm'}, function (res) {
             var save = "<button id='AddTemplate' class='btn btn-primary'>Dodaj</button>";
             gabinet.showModal('Dodaj szablon', res.form_html, save);
@@ -227,6 +228,7 @@ var visit = {
                 $.post('/get-form/', {module: 'visit.forms', class: 'TemplateForm', data: data}, function (res) {
                     if (res.success){
                         $('button.close').click();
+                        me.loadTemplates();
                     }
                     else {
                         form.parent().html(res.form_html);

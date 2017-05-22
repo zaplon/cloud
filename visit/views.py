@@ -20,6 +20,7 @@ import json
 from django.conf import settings
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib.units import cm
+from django.utils.text import slugify
 
 
 class VisitView(View, LoginRequiredMixin):
@@ -173,7 +174,7 @@ class TabsListView(ListView):
     template_name = 'visit/tabs.html'
 
     def get_queryset(self):
-        q = super(TabsListView, self).get_queryset()
+        q = super(TabsListView, self).get_queryset().filter(doctor__user=self.request.user)
         if 'orderby' in self.request.GET:
             q = q.order_by(self.request.GET['orderby'])
         return q
@@ -183,14 +184,8 @@ class TabsListView(ListView):
         return context
 
 
-class PdfView(PDFTemplateView):
-
+class GabinetPdfView(PDFTemplateView):
     def get(self, request, *args, **kwargs):
-        term = Term.objects.get(id=kwargs['pk'])
-        visit = term.visit
-        self.visit = visit
-        self.template_name = 'pdf/visit.html'
-        self.filename = term.patient.__unicode__() + '.pdf'
         if 'as_link' in request.GET:
             res = super(PDFTemplateView, self).get(request, *args, **kwargs)
             name = datetime.datetime.now().strftime('%s') + '.pdf'
@@ -202,12 +197,44 @@ class PdfView(PDFTemplateView):
         else:
             return super(PDFTemplateView, self).get(request, *args, **kwargs)
 
+
+class ServicesPdfView(GabinetPdfView):
+    def get(self, request, *args, **kwargs):
+        self.services = json.loads(request.GET.get('services'))
+        self.patient = json.loads(request.GET.get('patient'))
+        self.doctor = self.request.user.doctor
+        self.template_name = 'pdf/services.html'
+        self.now = datetime.datetime.today()
+        self.cmd_options = {'page-width': 95, 'page-height': 297, 'orientation': 'Portrait'}
+        if self.patient['last_name']:
+            self.filename = 'skierowanie_' + slugify(self.patient['last_name'])
+        else:
+            self.filename = 'skierowanie_' + self.now.strftime('%s')
+        return super(ServicesPdfView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        today = self.now.strftime('%d/%m/%Y')
+        ctx = {'services': self.services, 'doctor': self.doctor, 'patient': self.patient, 'date': today}
+        if 'icd' in self.request.GET:
+            ctx['icd'] = json.loads(self.request.GET['icd'])
+        return ctx
+
+
+class PdfView(GabinetPdfView):
+
+    def get(self, request, *args, **kwargs):
+        term = Term.objects.get(id=kwargs['pk'])
+        visit = term.visit
+        self.visit = visit
+        self.template_name = 'pdf/visit.html'
+        self.filename = term.patient.__unicode__() + '.pdf'
+        return super(PdfView, self).get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         pesel = self.visit.term.patient.pesel if self.visit.term.patient.pesel else ''
         barcode = createBarcodeDrawing('Code128', value=pesel, width=5 * cm, height=0.5 * cm)
         file_name = datetime.datetime.now().strftime('%s')
         barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
         self.visit.tabs = self.visit.tabs.all()
-        return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'APP_URL': settings.APP_URL,
+        return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/',
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}
-

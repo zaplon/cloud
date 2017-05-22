@@ -18,12 +18,16 @@ class TemplateForm(ModelForm):
         super(TemplateForm, self).__init__(*args, **kwargs)
         self.fields['doctor'].widget = HiddenInput()
         self.fields['text'].widget = Textarea(attrs={'placeholder': _(u'Wpisz treść szablonu')})
+        data = kwargs['initial'] if 'initial' in kwargs else kwargs['data']
+
+        self.fields['tab'].queryset = self.fields['tab'].queryset.filter(doctor__user=data['user'],
+                                                                         parent__can_add_templates=True)
         self.helper = FormHelper()
         helper = self.helper
         # helper.form_class = 'form-horizontal'
         # helper.label_class = 'col-md-2'
         # helper.field_class = 'col-md-8'
-        if not 'ajax' in kwargs:
+        if 'ajax' not in data:
             helper.layout = Layout(
                 'name',
                 'key',
@@ -48,7 +52,7 @@ class TemplateForm(ModelForm):
 class TabForm(ModelForm):
     class Meta:
         model = Tab
-        fields = ['title', 'template', 'doctor', 'enabled']
+        fields = ['title', 'doctor', 'enabled']
 
     def __init__(self, *args, **kwargs):
         super(TabForm, self).__init__(*args, **kwargs)
@@ -61,8 +65,8 @@ class TabForm(ModelForm):
         # helper.field_class = 'col-md-8'
         helper.layout = Layout(
             'title',
-            'template',
             'enabled',
+            'order',
             HTML(
                 u'<hr/><div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
                 reverse('tab-delete', kwargs={'pk': self.instance.id})

@@ -27,22 +27,23 @@
             <thead>
                 <tr>
                     <th>Nazwa</th>
-                    <th>Szablon</th>
                     <th>Aktywna</th>
+                    <th>Kolejność</th>
                 </tr>
             </thead>
             <tbody>
                 {% for object in object_list %}
                     <tr>
                         <td><a href="{% url 'tab-update' object.id %}">{{ object.title }}</a></td>
-                        <td>{{ object.template }}</td>
                         <td>
                             <div class="column-center checkbox checkbox-only">
                                 <input data-id="{{ object.id }}" type="checkbox"
+                                        {% if object.tab.obligatory %} disabled="disabled" {% endif %}
                                    class="form-control tab-enable" {% if object.enabled %}checked{% endif %}>
                                 <label></label>
                             </div>
                         </td>
+                        <td>{{ object.order }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

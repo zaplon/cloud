@@ -42,7 +42,7 @@ var ready = function () {
         },
         saveProfile: function () {
             $.ajax({
-                data: {data: $('#profile form').serialize(), class: $('input[name="form_class"]').val(), module: 'user_profile.forms', user: true},
+                data: {data: gabinet.fixData($('#profile form').serializeArray()), class: $('input[name="form_class"]').val(), module: 'user_profile.forms', user: true},
                 url: '/get-form/',
                 type: 'POST',
                 success: function (res) {

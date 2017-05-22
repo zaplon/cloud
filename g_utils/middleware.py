@@ -8,10 +8,12 @@ def setup_middleware(get_response):
     def middleware(request):
 
         if request.user.is_authenticated():
+            if request.path.startswith('/admin/'):
+                return get_response(request)
             if request.path.find('/setup/') == -1 and not request.method == 'POST':
                 if hasattr(request.user, 'doctor'):
                     d = request.user.doctor
-                    if len(d.pwz) == 0:
+                    if len(d.pwz) == 0 or len(d.user.last_name) == 0:
                         return HttpResponseRedirect('/setup/1/')
                     if d.working_hours is None:
                         return HttpResponseRedirect('/setup/2/')

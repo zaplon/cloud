@@ -21,7 +21,7 @@ class SettingsView(View):
             doctor = self.request.user.doctor
             user = self.request.user
             form = DoctorForm(initial={'first_name': user.first_name, 'last_name': user.last_name, 'pwz': doctor.pwz,
-                        'email': user.email, 'mobile': doctor.mobile})
+                        'email': user.email, 'mobile': doctor.mobile, 'title': doctor.title, 'doctor': doctor})
             return form
         else:
             user = self.request.user
@@ -106,7 +106,10 @@ def add_recipes(request):
         try:
             xml = minidom.parseString(source)
         except:
-            xml = minidom.parse(source)
+            try:
+                xml = minidom.parse(source)
+            except:
+                return HttpResponse(status=400)
             xml = False
         if xml:
             #node = xml.getElementsByTagName('lekarz')

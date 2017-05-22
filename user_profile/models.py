@@ -22,6 +22,15 @@ def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
 
+class Specialization(models.Model):
+    name = models.CharField(max_length=50)
+    code = models.CharField(max_length=10)
+    code_misal = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.name
+
+
 class Doctor(models.Model):
     pwz = models.CharField(max_length=7)
     mobile = models.IntegerField(blank=True, null=True)
@@ -32,6 +41,12 @@ class Doctor(models.Model):
     terms_start = models.TimeField(default='09:00')
     terms_end = models.TimeField(default='17:00')
     misal_id = models.CharField(blank=True, null=True, max_length=10)
+    title = models.CharField(default='', verbose_name=u'Tytuł', max_length=50)
+    specializations = models.ManyToManyField(Specialization, related_name='doctors')
+
+    @property
+    def name(self):
+        return '%s %s %s' % (self.title, self.user.first_name, self.user.last_name)
 
     def get_working_hours(self):
         if not self.working_hours:
@@ -42,7 +57,26 @@ class Doctor(models.Model):
         return self.__unicode__()
 
     def __unicode__(self):
-        return '%s %s' % (self.user.first_name, self.user.last_name)
+        return self.name
+
+
+@receiver(post_save, sender=Doctor)
+def create_doctor_tabs(sender, instance, created, **kwargs):
+    from visit.models import Tab, TabParent
+    if created:
+        print instance.user.username
+        # zestaw zakładek
+        default = TabParent.objects.get(name='default')
+        icd10 = TabParent.objects.get(name='icd10')
+        medicines = TabParent.objects.get(name='medicines')
+        notes = TabParent.objects.get(name='notes')
+        services = TabParent.objects.get(name='services')
+        Tab.objects.create(doctor=instance, title='Wywiad', parent=default, order=0)
+        Tab.objects.create(doctor=instance, title='Rozpoznanie', parent=icd10, order=1)
+        Tab.objects.create(doctor=instance, title='Zalecenia', parent=default, order=2)
+        Tab.objects.create(doctor=instance, title='Leki', parent=medicines, order=3)
+        Tab.objects.create(doctor=instance, title='Badania dodatkowe', parent=services, order=4)
+        Tab.objects.create(doctor=instance, title='Notatki', parent=notes, order=5)
 
 
 class Patient(models.Model):
@@ -74,12 +108,6 @@ class Recipe(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='recipes')
     nr = models.CharField(max_length=30)
     was_used = models.BooleanField(blank=False, default=False)
-
-
-class Specialization(models.Model):
-    name = models.CharField(max_length=50)
-    code = models.CharField(max_length=10)
-    code_misal = models.CharField(max_length=100)
 
 
 class Code(models.Model):

@@ -41,7 +41,7 @@
                         {% for tab in tabs %}
                             <li class="nav-item">
                                 <a class="nav-link tab-link {% if tab.is_active %} active {% endif %}"
-                                   href="#{{ tab.title }}" role="tab" data-toggle="tab"
+                                   href="#{{ tab.name }}" role="tab" data-toggle="tab"
                                         {% if tab.is_active %} aria-expanded="true" {% endif %}>
                                             <span class="nav-link-in">
                                                 {{ tab.title }}
@@ -57,13 +57,13 @@
                 {% for tab in tabs %}
                     <script>
                         {% if tab.json %}
-                            tabs.push({data: {{ tab.json|safe }}, title: "{{ tab.title }}", id: {{ tab.id }}});
+                            tabs.push({data: {{ tab.json|safe }}, title: "{{ tab.title }}", name: "{{ tab.name }}", id: {{ tab.id }}});
                         {% else %}
-                            tabs.push({data: null, title: "{{ tab.title }}", id: {{ tab.id }}});
+                            tabs.push({data: null, title: "{{ tab.title }}", name: "{{ tab.name }}", id: {{ tab.id }}});
                         {% endif %}
                     </script>
                     <div role="tabpanel" class="tab-pane visit-tab fade {% if tab.is_active %} active {% endif %} in"
-                         id="{{ tab.title }}"  {% if tab.is_active %} aria-expanded="true" {% endif %}>
+                         id="{{ tab.name }}"  {% if tab.is_active %} aria-expanded="true" {% endif %}>
                         <div class="p2">
                             {{ tab.body|safe }}
                         </div>
@@ -138,9 +138,9 @@
                 </div>
                 <div class="control-item-content">
                     <ul class="control-item-lists templates-list" data-bind="foreach: templates,
-                    visible: templates().filter(function(t){return t.tab_title==visit.currentTab}).length > 0">
+                    visible: templates().filter(function(t){return t.tab_name==visit.currentTab}).length > 0">
                         <li data-bind="click: $parent.putTemplate,
-                        visible: tab_title == $parent.currentTab">
+                        visible: tab_name == $parent.currentTab">
                             <a href="#" data-bind="attr: {title: text}">
                                 <h6 data-bind="text: name"></h6>
 
@@ -150,7 +150,7 @@
                         </li>
                     </ul>
                     <ul class="control-item-lists templates-list"
-                        data-bind="visible: templates().filter(function(t){return t.tab_title==visit.currentTab}).length == 0">
+                        data-bind="visible: templates().filter(function(t){return t.tab_name==visit.currentTab}).length == 0">
                         <li>
                             <div class="control-item-content-text">
                                 Brak szablonów dla zakładki

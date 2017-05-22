@@ -4,10 +4,12 @@ from __future__ import unicode_literals
 import os
 
 from django.db import models
+from django.db.models.signals import pre_save
 from django.urls import reverse
-
+from django.utils.text import slugify
 from gabinet.settings import VISIT_TABS_DIR
 from user_profile.models import Doctor
+from django.dispatch import receiver
 import json
 
 keys_choices = (('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2'), ('CTRL+F3', 'ctrl+f3'), ('CTRL+F4', 'ctrl+f4'),
@@ -17,15 +19,27 @@ keys_choices = (('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2'), ('CTRL+F3', 'ctr
                  ('alt+f7', 'ALT+F7'),  ('alt+f8', 'ALT+F8'),  ('alt+f9', 'ALT+F9'),  ('alt+f10', 'ALT+F10'))
 
 
+class TabParent(models.Model):
+    name = models.CharField(max_length=100)
+    template = models.CharField(max_length=100, default='default.html', verbose_name=u'Szablon')
+    obligatory = models.BooleanField(default=False)
+    can_add_templates = models.BooleanField(default=False)
+
+
 class Tab(models.Model):
     title = models.CharField(max_length=100, verbose_name=u'Tytuł')
-    template = models.CharField(max_length=100, default='default.html', verbose_name=u'Szablon')
     doctor = models.ForeignKey(Doctor, related_name='tabs')
-    order = models.IntegerField(unique=True, null=True, blank=True)
+    order = models.IntegerField(null=True, blank=True)
     enabled = models.BooleanField(default=True, verbose_name=u'Włączona')
+    parent = models.ForeignKey(TabParent, related_name='children')
+
+    @property
+    def name(self):
+        return slugify(self.title)
 
     class Meta:
         ordering = ['order']
+        unique_together = ('doctor', 'order',)
 
     def get_absolute_url(self):
         return reverse('tabs')
@@ -34,11 +48,17 @@ class Tab(models.Model):
         return self.title
 
 
+@receiver(pre_save, sender=Tab)
+def slugify_name(sender, instance, **kwargs):
+    instance.name = slugify(instance.title)
+
+
 class VisitTab(models.Model):
     title = models.CharField(max_length=100)
     body = models.TextField(default='')
     json = models.TextField(default='null')
-    order = models.IntegerField(unique=True, null=True, blank=True)
+    order = models.IntegerField(null=True, blank=True)
+    name = models.CharField(max_length=100)
 
     @property
     def data(self):
@@ -62,10 +82,10 @@ class Visit(models.Model):
         tabs = self.term.doctor.tabs.all()
         visit_tabs = []
         for tab in tabs:
-            f = open(os.path.join(VISIT_TABS_DIR, tab.template), 'r')
+            f = open(os.path.join(VISIT_TABS_DIR, tab.parent.template), 'r')
             body = f.read()
             f.close()
-            visit_tab = VisitTab.objects.create(title=tab.title, body=body, order=tab.order)
+            visit_tab = VisitTab.objects.create(title=tab.title, body=body, order=tab.order, name=tab.name)
             visit_tabs.append(visit_tab)
         return visit_tabs
 

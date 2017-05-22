@@ -124,17 +124,22 @@ class LoginForm(forms.Form):
 
 
 class MobileForm(forms.Form):
-    set_mobile = forms.CharField(label='Telefon',
+    set_mobile = forms.IntegerField(label='Telefon',
                              help_text=u'Numer wykorzysytwany jest jedynie do przesyłania kodów do logowania')
     username = forms.CharField(widget=HiddenInput())
+
+    def clean_set_mobile(self):
+        mobile = self.cleaned_data['set_mobile']
+        return mobile
 
     def save(self):
         u = User.objects.get(username=self.cleaned_data['username'])
         if hasattr(u, 'doctor'):
             u.doctor.mobile = self.cleaned_data['set_mobile']
+            u.doctor.save()
         if hasattr(u, 'profile'):
             u.profile.mobile = self.cleaned_data['set_mobile']
-        u.save()
+            u.save()
 
 
 class LoginUsernameForm(LoginForm):

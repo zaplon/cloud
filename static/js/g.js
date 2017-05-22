@@ -15,6 +15,24 @@ var Gabinet = (function () {
         return { total: res.count, rows: res.results };
     };
     ;
+    Gabinet.prototype.fixData = function (data) {
+        newData = [];
+        for (d in data) {
+            if (data[d].name.startsWith('factory_') && !($.isArray(data[d].value)))
+                data[d].value = [data[d].value];
+            var hits = newData.filter(function (n) { return n.name == data[d].name; });
+            if (hits.length == 0)
+                newData.push(data[d]);
+            else {
+                if ($.isArray(hits[0].value))
+                    hits[0].value.push(data[d].value[0]);
+                else
+                    hits[0].value = [hits[0].value, data[d].value[0]];
+            }
+        }
+        return JSON.stringify(newData);
+    };
+    ;
     Gabinet.prototype.settings = function () {
         $.get('/profile/settings/', function (res) {
             $('#settings-modal').remove();
@@ -72,9 +90,9 @@ var Gabinet = (function () {
         }
         else {
             if (typeof (params) == "undefined")
-                var url = "/static/forms/" + form;
+                var url = ("/static/forms/" + form) + new Date();
             else
-                var url = "/static/forms/" + form + "/" + params_str;
+                var url = ("/static/forms/" + form + "/" + params_str) + new Date();
             this.showPdf(url);
         }
     };
@@ -93,7 +111,7 @@ var Gabinet = (function () {
             form_data.append('file', file_data);
             $.ajax({
                 // Your server script to process the upload
-                url: 'profile/add_recipes/',
+                url: '/profile/add_recipes/',
                 type: 'POST',
                 // Form data
                 data: form_data,
@@ -109,6 +127,9 @@ var Gabinet = (function () {
                     else {
                         $('.modal #recipe-errors').html(res.errors);
                     }
+                },
+                fail: function (res) {
+                    $('.modal #recipe-errors').html('plik jest niepoprawny lub wystąpił błąd');
                 },
                 // Custom XMLHttpRequest
                 xhr: function () {

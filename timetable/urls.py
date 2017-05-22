@@ -3,5 +3,6 @@ from django.conf.urls import url
 from .views import *
 
 urlpatterns = [
-    url(r'^calendar/', CalendarView.as_view(), name='profile-settings')
+    url(r'^calendar/', CalendarView.as_view(), name='profile-settings'),
+    url(r'^cancel/', term_cancel_view, name='cancel-term')
 ]

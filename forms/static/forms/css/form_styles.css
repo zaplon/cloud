@@ -1,7 +1,23 @@
+html {
+  background-color: darkgray; }
+
+body {
+  margin: 0 auto; }
+
+.crossable {
+  cursor: pointer;
+  background-color: #dcdcfa; }
+
+.cross-out {
+  text-decoration: line-through; }
+
 input[type='text'] {
   border: none;
   border-bottom: 1px dotted black;
   background-color: #dcdcfa; }
+
+.whole_line {
+  width: 100% !important; }
 
 .text-center {
   text-align: center; }

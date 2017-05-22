@@ -19,5 +19,5 @@ def utils(request):
                 'user_data': json.dumps(UserSerializer(instance=request.user).data),
                 'doctor_data': json.dumps(DoctorSerializer(instance=doctor).data)})
 
-    ctx.update({'MODULES': settings.MODULES})
+    ctx.update({'MODULES': settings.MODULES, 'APP_URL': settings.APP_URL})
     return ctx

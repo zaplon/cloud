@@ -1,8 +1,14 @@
 <div id="services">
     <div class="row">
         <div class="col-md-12">
-            <input data-bind='textInput: inputValue' type="text" class="form-control"
-                   id="icd-search" placeholder="Nazwa lub typ badania"/>
+            <form class="form-inline">
+                <input data-bind='textInput: inputValue' type="text" class="form-control mr-1"
+                       id="services-search" placeholder="Nazwa lub typ badania"/>
+                <label class="form-check-label">
+                    <input class="form-check-input" id="print-services-icd" type="checkbox"> Drukuj rozpoznanie
+                </label>
+                <button class="ml-1 btn btn-primary" data-bind="click: print">Drukuj</button>
+            </form>
         </div>
     </div>
 
@@ -18,7 +24,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- ko foreach: icd10 -->
+                <!-- ko foreach: services -->
                 <tr class="table-info">
                     <td data-bind="text: name"></td>
                     <td data-bind="text: group"></td>
@@ -30,7 +36,7 @@
                 <!-- ko foreach: suggestions -->
                 <tr>
                     <td data-bind="text: name"></td>
-                    <td data-bind="text: grup"></td>
+                    <td data-bind="text: group"></td>
                     <td>
                         <btn class="btn btn-success" data-bind="click: $parent.addService">Dodaj</btn>
                     </td>

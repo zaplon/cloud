@@ -10,7 +10,7 @@ import json
 class IcdSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Icd10
-        fields = ('code', 'desc')
+        fields = ('id', 'code', 'desc')
 
 
 # ViewSets define the view behavior.
@@ -29,10 +29,10 @@ class IcdViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TemplateSerializer(serializers.ModelSerializer):
-    tab_title = CharField(source='tab.title')
+    tab_name = CharField(source='tab.name')
     class Meta:
         model = Template
-        fields = ('text', 'tab', 'key', 'name', 'tab_title')
+        fields = ('text', 'tab', 'key', 'name', 'tab_name')
 
 
 class TemplateViewSet(viewsets.ReadOnlyModelViewSet):

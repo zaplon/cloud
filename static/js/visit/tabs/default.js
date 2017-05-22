@@ -3,6 +3,6 @@ tabs[tabs.length-1].model = {
   parse: function(data){ this.text(data); },
   save: function(){ return  this.text(); }
 };
-ko.applyBindings(tabs[tabs.length-1].model, $("#"+tabs[tabs.length-1].title)[0]);
+ko.applyBindings(tabs[tabs.length-1].model, $("#"+tabs[tabs.length-1].name)[0]);
 
 
