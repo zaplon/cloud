@@ -57,7 +57,7 @@ var Gabinet = (function () {
             var pdf = "<embed data=\"data:application/pdf;base64," + url + "\" type=\"application/pdf\" width=\"" + width + "\" height=\"" + height + "\">\n            </embed>";
         if (!title)
             title = 'Dokument';
-        this.showModal(title, pdf, save, 'modal-lg', true);
+        this.showModal(title, pdf, save, 'modal-lg');
     };
     ;
     Gabinet.prototype.showModal = function (title, body, save, size, hideFooter) {
@@ -86,7 +86,7 @@ var Gabinet = (function () {
             params.height = $(window).height() - 60 < 400 ? 400 : $(window).height() - 60;
             var url = "/forms/edit_form/";
             $.get(url, params, function (res) {
-                me.showModal(form, res, '', 'modal-form');
+                me.showModal(form, res, '', 'modal-form', true);
                 formViewModel.name = name;
                 ko.applyBindings(formViewModel, $('#form-editor')[0]);
             });

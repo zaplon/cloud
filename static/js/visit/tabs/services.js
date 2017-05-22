@@ -22,7 +22,13 @@ function ServicesModel() {
                 console.log(res);
             }).fail(function (res) {
                 var text = res.responseText;
-                text = JSON.parse(text.replace("\\",''));
+                try {
+                    text = JSON.parse(text.replace("\\",''));
+                }
+                catch(error) {
+                    text = [];
+                    return;
+                }
                 var id = 1;
                 for (var group in text) {
                     text[group].forEach(function (item) {

@@ -2,7 +2,7 @@ var medicine = function (data) {
     var record =  {
         id: false, name: '', composition: ko.observable(), dose: ko.observable(), children: ko.observableArray(),
         nfz: ko.observableArray(), selection: ko.observable(), size: ko.observable(), refundation: ko.observable(),
-        dosage: ko.observable()
+        dosage: ko.observable(), amount: ko.observable()
     };
     record.selection.subscribe(function(newValue){
         $.getJSON('/rest/medicines?limit=10', {parent: newValue.id}, function(res){
@@ -27,7 +27,7 @@ var medicine = function (data) {
 };
 var medicinesModel = {
     medicines: ko.observableArray([medicine()]),
-    realisationDate: ko.observable(),
+    realisationDate: ko.observable(new Date()),
     nfz: ko.observable(7),
     permissions: ko.observable('X'),
     getMedicines: function (searchTerm, callback) {

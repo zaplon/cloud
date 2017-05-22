@@ -35,6 +35,6 @@ formViewModel = {
         });
     },
     close: function(){
-        $('#form-editor-container').remove();
+        $('button.close').click();
     }
 };

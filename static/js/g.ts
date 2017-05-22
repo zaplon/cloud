@@ -55,7 +55,7 @@ class Gabinet {
             </embed>`;
         if (!title)
             title = 'Dokument';
-        this.showModal(title, pdf, save, 'modal-lg', true);
+        this.showModal(title, pdf, save, 'modal-lg');
     };
     showModal(title, body, save, size='', hideFooter=false){
         var modal = `<div id='pdf-modal' class="modal fade">
@@ -97,7 +97,7 @@ class Gabinet {
             params.height = $(window).height() - 60 < 400 ? 400 : $(window).height() - 60;
                 var url = `/forms/edit_form/`;
             $.get(url, params, function(res){
-                me.showModal(form, res, '', 'modal-form');
+                me.showModal(form, res, '', 'modal-form', true);
                 formViewModel.name = name;
                 ko.applyBindings(formViewModel, $('#form-editor')[0]);
             });
