@@ -23,15 +23,36 @@ pdfmetrics.registerFont(TTFont('Arialb', 'ArialBold.ttf'))
 def print_recipe(request):
     file_name = datetime.datetime.now().strftime("%s") + '.pdf'
     recipe_file = os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', 'recipes', file_name)
-    medicines = json.loads(request.POST.get('medicines', "[]"))
+    if 'medicines' in request.POST and len(request.POST['medicines']) > 0:
+        medicines = json.loads(request.POST.get('medicines', "[]"))
+    else:
+        medicines = []
     patient = json.loads(request.POST.get('patient', "{}"))
     realisation_date = request.POST.get('realisation_date', "")
     c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
-    c = recipe_lines(c)
-    c = recipe_es(c, patient, realisation_date)
-    c = recipe_texts(request, c, request.user)
+    for page in range(0, int(len(medicines)/5)+1):
+        c = recipe_lines(c)
+        c = recipe_es(c, patient, realisation_date)
+        c = recipe_texts(request, c, request.user)
+        c = recipe_medicines(c, medicines)
+        c.showPage()
     c.save()
     return HttpResponse(json.dumps({'url': '/media/tmp/pdf/recipes/' + file_name}), content_type='application/json')
+
+
+def recipe_medicines(c, medicines):
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='style', fontName='Arial', fontSize=7))
+    c.setFont("Arialb", 9)
+    offset = 1.65*cm
+    top = 21.5*cm
+    for m in medicines:
+        txt = "%s %s %s" % (m['selection']['name'], m['dose'], m['dosage'])
+        par = Paragraph(txt, styles['style'])
+        par.wrapOn(c, 7.0 * cm, 3 * cm)
+        par.drawOn(c, 0.5*cm, top)
+        top -= offset
+    return c
 
 
 def recipe_lines(c, tab1=0.3):

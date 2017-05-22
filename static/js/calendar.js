@@ -33,6 +33,8 @@ $(document).ready(function () {
         nextVisits: ko.observableArray(),
         formatDate: function (date) {
             var d = new Date(date);
+            //FIXME mało eleganckie
+            d.setHours(d.getHours()-2);
             return d.toLocaleString();
         }
     };

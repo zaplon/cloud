@@ -103,7 +103,7 @@ var visit = {
             if (this == window)
                 return;
             this.subMenu.forms([
-                {title: 'Skierowanie do szpitala', name: 'hospital.pdf'},
+                {title: 'Skierowanie do szpitala', name: 'skierowanie_do_szpitala.html'},
                 {title: 'Skierowanie do poradni specjalistycznej', name: 'poradnia_specjalistyczna.pdf'}
             ]);
             if (this.subMenuName() == 'skierowania') {
@@ -200,7 +200,7 @@ var visit = {
             visit.templates(data);
             visit.templates().forEach(function(t){
                 key(t.key.toLowerCase(), function(){
-                    var tab = tabs.filter(function(t){ return t.title == visit.currentTab })[0];
+                    var tab = tabs.filter(function(t){ return t.name == visit.currentTab })[0];
                     tab.model.parse(t.text);
                 });
             });
@@ -243,7 +243,7 @@ var visit = {
     showForm: function (form) {
         params = {};
         params.pesel = this.patient().pesel;
-        gabinet.showForm(form, params);
+        gabinet.showForm(form, params, true);
     },
     printVisit: function () {
         this.saveVisit(true, function(){

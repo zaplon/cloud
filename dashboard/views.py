@@ -15,8 +15,12 @@ from user_profile.rest import DoctorSerializer
 @login_required
 def index_view(request):
     for m in settings.MODULES:
-        if m[0] is True or request.user.has_perms(m[0]):
-            return render(request, 'dashboard/%s.html' % m[1])
+        if type(m[0]) == list:
+            if request.user.has_perms(m[0][0]) or request.user.has_perms(m[0][1]):
+                return render(request, 'dashboard/%s.html' % m[1])
+        else:
+            if m[0] is True or request.user.has_perms(m[0]):
+                return render(request, 'dashboard/%s.html' % m[1])
 
 
 @login_required

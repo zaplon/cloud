@@ -57,12 +57,15 @@ var Gabinet = (function () {
             var pdf = "<embed data=\"data:application/pdf;base64," + url + "\" type=\"application/pdf\" width=\"" + width + "\" height=\"" + height + "\">\n            </embed>";
         if (!title)
             title = 'Dokument';
-        this.showModal(title, pdf, save, 'modal-lg');
+        this.showModal(title, pdf, save, 'modal-lg', true);
     };
     ;
-    Gabinet.prototype.showModal = function (title, body, save, size) {
+    Gabinet.prototype.showModal = function (title, body, save, size, hideFooter) {
         if (size === void 0) { size = ''; }
-        var modal = "<div id='pdf-modal' class=\"modal fade\">\n          <div class=\"modal-dialog " + size + "\" role=\"document\">\n            <div class=\"modal-content\">\n              <div class=\"modal-header\">\n                <h5 class=\"modal-title\">" + title + "</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                  <span aria-hidden=\"true\">&times;</span>\n                </button>\n              </div>\n              <div class=\"modal-body\">\n                " + body + "\n              </div>\n              <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Zamknij</button>\n                " + save + "\n              </div>\n            </div>\n          </div>\n        </div>";
+        if (hideFooter === void 0) { hideFooter = false; }
+        var modal = ("<div id='pdf-modal' class=\"modal fade\">\n          <div class=\"modal-dialog " + size + "\" role=\"document\">\n            <div class=\"modal-content\">\n              <div class=\"modal-header\">\n                <h5 class=\"modal-title\">" + title + "</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                  <span aria-hidden=\"true\">&times;</span>\n                </button>\n              </div>\n              <div class=\"modal-body\">\n                " + body + "\n              </div>\n              ") + (hideFooter ? '' :
+            "<div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Zamknij</button>\n                " + save + "\n              </div>") +
+            "</div>\n          </div>\n        </div>";
         $('#hidden').html(modal);
         $('#pdf-modal').modal({ show: true, keyboard: true });
     };

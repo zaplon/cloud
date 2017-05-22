@@ -27,7 +27,7 @@ class Term(models.Model):
             return self.doctor.__unicode__() + ' wolny ' + self.datetime.strftime('%Y-%m-%d %H:%M')
 
     def get_end(self):
-        return self.datetime + datetime.timedelta(minutes=self.duration)
+        return self.datetime + timezone.timedelta(minutes=self.duration)
 
     def get_title(self):
         if self.patient:

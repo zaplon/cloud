@@ -55,9 +55,9 @@ class Gabinet {
             </embed>`;
         if (!title)
             title = 'Dokument';
-        this.showModal(title, pdf, save, 'modal-lg');
+        this.showModal(title, pdf, save, 'modal-lg', true);
     };
-    showModal(title, body, save, size=''){
+    showModal(title, body, save, size='', hideFooter=false){
         var modal = `<div id='pdf-modal' class="modal fade">
           <div class="modal-dialog ${size}" role="document">
             <div class="modal-content">
@@ -70,11 +70,12 @@ class Gabinet {
               <div class="modal-body">
                 ${body}
               </div>
-              <div class="modal-footer">
+              ` + ( hideFooter ? '' :
+              `<div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
                 ${save}
-              </div>
-            </div>
+              </div>`) +
+            `</div>
           </div>
         </div>`;
         $('#hidden').html(modal);

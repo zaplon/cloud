@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http.response import HttpResponseBadRequest
+from django.utils import timezone
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
 from .models import Term
@@ -28,10 +29,10 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         if 'next_visits' in self.request.GET:
             if hasattr(self.request.user, 'doctor'):
-                return super(TermViewSet, self).get_queryset().filter(datetime__gte=datetime.datetime.now(),
+                return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
                                                                       doctor=self.request.user.doctor, status='PENDING').order_by('datetime')[0:5]
             elif 'doctor' in self.request.GET:
-                return super(TermViewSet, self).get_queryset().filter(datetime__gte=datetime.datetime.now(),
+                return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
                                                                       doctor__id=self.request.GET['doctor'], status='PENDING').order_by('datetime')[0:5]
             else:
                 return HttpResponseBadRequest()

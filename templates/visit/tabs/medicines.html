@@ -3,13 +3,15 @@
     <div class="mb-2">
         <div class="form-inline">
             <label class="mr-1" for="division">Oddział NFZ</label>
-            <input maxlength="2" data-bind="value: nfz" class="mr-2 form-control" type="text" id="division" value="11" style="width:50px;"/>
+            <input maxlength="2" data-bind="value: nfz" class="mr-1 form-control" type="text" id="division" value="11" style="width:50px;"/>
             <label class="mr-1" for="special">Uprawnienia specjalne</label>
-            <input type="text" data-bind="value: permissions" id="special" class="form-control mr-2" maxlength="2" style="width:50px;"/>
+            <input type="text" data-bind="value: permissions" id="special" class="form-control mr-1" maxlength="2" style="width:50px;"/>
+            <label class="mr-1" for="realization_date">Data realizacji</label>
+            <input type="text" data-bind="value: realization_date" id="realization_date" class="form-control mr-1" style="width:100px;"/>
             <label for="use-number">Numer recepty</label>
             <input title="Decyduje czy na recepcie ma być nadrukowany numer recepty"
                    id="use-number" type="checkbox" class="form-control" name="use-number" />
-            <button class="btn btn-primary ml-2" data-bind="click: printRecipe">Drukuj receptę</button>
+            <button class="btn btn-primary ml-1" data-bind="click: printRecipe" title="Drukuj receptę">Drukuj</button>
         </div>
     </div>
 
@@ -21,7 +23,8 @@
                     <th>Nazwa</th>
                     <th>Skład</th>
                     <th>Dawka</th>
-                    <th style="width:300px">Opakowanie</th>
+                    <th style="width:100px">Dawkowanie</th>
+                    <th style="width:200px">Opakowanie</th>
                     <th style="width:100px;">Refundacja</th>
                     <th></th>
                 </tr>
@@ -38,6 +41,7 @@
                     </td>
                     <td data-bind="text: composition"></td>
                     <td data-bind="text: dose"></td>
+                    <td><input type="text" class="form-control" data-bind="value: dosage"/></td>
                     <td>
                         <select class="form-control" style="width:300px"
                                 data-bind="options: children, optionsText: 'size', value: size,
@@ -50,12 +54,12 @@
                     <td>
                         <!-- ko if: (parseInt($index())==$parent.medicines().length-1) -->
                         <button data-bind="{disable: children().length==0, click: $parent.addMedicine}"
-                             class="btn btn-success">Dodaj
+                             class="btn btn-success btn-sm">Dodaj
                         </button>
                         <!-- /ko -->
                         <!-- ko if: $parent.medicines().length-1>parseInt($index()) -->
                         <button data-bind="{click: $parent.removeMedicine}"
-                             class="btn btn-danger">Usuń
+                             class="btn btn-danger btn-sm">Usuń
                         </button>
                         <!-- /ko -->
                     </td>

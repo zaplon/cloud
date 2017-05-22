@@ -1,7 +1,8 @@
 var medicine = function (data) {
     var record =  {
         id: false, name: '', composition: ko.observable(), dose: ko.observable(), children: ko.observableArray(),
-        nfz: ko.observableArray(), selection: ko.observable(), size: ko.observable(), refundation: ko.observable()
+        nfz: ko.observableArray(), selection: ko.observable(), size: ko.observable(), refundation: ko.observable(),
+        dosage: ko.observable()
     };
     record.selection.subscribe(function(newValue){
         $.getJSON('/rest/medicines?limit=10', {parent: newValue.id}, function(res){
@@ -63,7 +64,7 @@ var medicinesModel = {
         medicines.forEach(function(medicine, i){
             var m = ko.toJS(medicine);
             if (i < medicines.length-1)
-                data.push({id: m.id, name: m.name, composition: m.composition, dose: m.dose, size: m.size,
+                data.push({id: m.id, name: m.name, composition: m.composition, dose: m.dose, size: m.size, dosage: m.dosage,
                 refundation: m.refundation, selection: m.selection});
         });
         if (data.length == 0)
