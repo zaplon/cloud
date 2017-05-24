@@ -26,7 +26,10 @@ class Command(BaseCommand):
                 doc.user.groups.add(doctor_group)
                 if 'specialization' in d:
                     for s in d['specialization']:
-                        doc.specializations.add(Specialization.objects.get(code=d['code']))
+                        try:
+                            doc.specializations.add(Specialization.objects.get(code=d['code']))
+                        except:
+                            continue
                 print 'utworzono %s' % d
 
 
