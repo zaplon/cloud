@@ -64,7 +64,6 @@ class Doctor(models.Model):
 def create_doctor_tabs(sender, instance, created, **kwargs):
     from visit.models import Tab, TabParent
     if created:
-        print instance.user.username
         # zestaw zakładek
         default = TabParent.objects.get(name='default')
         icd10 = TabParent.objects.get(name='icd10')
