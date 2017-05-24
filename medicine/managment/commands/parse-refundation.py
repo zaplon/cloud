@@ -1,7 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from xml.dom import minidom
-from portal.models import Refundation, Medicine
-from urlparse import urlparse
+from medicine.models import Refundation, Medicine
 import xlrd, math
 
 
