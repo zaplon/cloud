@@ -48,9 +48,9 @@ class Tab(models.Model):
         return self.title
 
 
-@receiver(pre_save, sender=Tab)
-def slugify_name(sender, instance, **kwargs):
-    instance.name = slugify(instance.title)
+#@receiver(pre_save, sender=Tab)
+#def slugify_name(sender, instance, **kwargs):
+#    instance.name = slugify(instance.title)
 
 
 class VisitTab(models.Model):
