@@ -131,7 +131,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 TIME_ZONE = 'Europe/Warsaw'
 
 LOGIN_URL = '/account/login/'
@@ -185,8 +185,8 @@ MODULES = [
     (True, 'archive', u'Archiwum'),
     (True, 'medicines', u'Lista leków'),
     (True, 'icd10', u'Kody ICD-10'),
-    ('visit.change_visit', 'templates', u'Szablony'),
-    ('visit.change_tab', 'tabs', u'Zakładki'),
+    ('user_profile.edit_template', 'templates', u'Szablony'),
+    ('user_profile.edit_tab', 'tabs', u'Zakładki'),
 
 ]
 

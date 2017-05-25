@@ -76,17 +76,18 @@ class TemplateCreate(CreateView):
     model = Template
     form_class = TemplateForm
 
+    def get_initial(self):
+        if self.request.user.is_authenticated():
+            return {'doctor': self.request.user.doctor, 'user': self.request.user}
+
     def get_context_data(self, **kwargs):
         context = super(TemplateCreate, self).get_context_data(**kwargs)
-        tabs = Tab.objects.filter(doctor=self.request.user.doctor)
+        tabs = Tab.objects.filter(doctor=self.request.user.doctor, parent__can_add_templates=True)
         if len(tabs) == 0:
             self.template_name = 'dashboard/section_error.html'
             context['message'] = u'Musisz najpierw dodać zakładę!'
             context['section'] = 'templates'
             return context
-        context['form'].fields['tab'].queryset = tabs
-        if self.request.user.is_authenticated():
-            context['form'].fields['doctor'].initial = self.request.user.doctor
         return context
 
 

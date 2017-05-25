@@ -121,7 +121,7 @@ var visit = {
             this.subMenu.forms([
                 {title: 'Karta badania profilaktycznego', name: 'profilactic.pdf'},
                 {title: 'Karta badania lekarskiego', name: 'doctor.pdf'},
-                {title: 'Karta badania Prawo Jazdy', name: 'driver.pdf'}
+                {title: 'Karta badania Prawo Jazdy', name: 'kierowca.pdf'}
             ]);
             if (this.subMenuName() == 'medycyna_pracy') {
                 this.subMenuName('');

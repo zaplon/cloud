@@ -101,7 +101,6 @@ class Template(models.Model):
     def get_absolute_url(self):
         return reverse('templates')
 
-
 class Icd10(models.Model):
     code = models.CharField(max_length=5)
     desc = models.CharField(max_length=200)

@@ -7,7 +7,7 @@ var calendar = {
             dr = dr[dr.length-2];
             data = [{name: 'status', value: calEvent.status}, {name: 'doctor', value: dr}];
         }
-        data.push({name: 'datetime', value: calEvent.start._i.substr(0, calEvent.start._i.length - 9)});
+        //data.push({name: 'datetime', value: calEvent.start._i.substr(0, calEvent.start._i.length - 9)});
         data.push({name: 'id', value: calEvent.id});
         $.post('/get-form/', {
             module: 'timetable.forms', class: 'TermForm',
@@ -34,7 +34,7 @@ $(document).ready(function () {
         formatDate: function (date) {
             var d = new Date(date);
             //FIXME mało eleganckie
-            d.setHours(d.getHours()-2);
+            //d.setHours(d.getHours()-2);
             return d.toLocaleString();
         }
     };

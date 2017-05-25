@@ -1,6 +1,6 @@
 import json
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.template.context_processors import csrf
@@ -17,10 +17,10 @@ def index_view(request):
     for m in settings.MODULES:
         if type(m[0]) == list:
             if request.user.has_perms(m[0][0]) or request.user.has_perms(m[0][1]):
-                return render(request, 'dashboard/%s.html' % m[1])
+                return redirect('/' + m[1] + '/')
         else:
             if m[0] is True or request.user.has_perms(m[0]):
-                return render(request, 'dashboard/%s.html' % m[1])
+                return redirect('/' + m[1] + '/')
 
 
 @login_required

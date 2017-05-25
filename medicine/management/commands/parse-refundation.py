@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from medicine.models import Refundation, Medicine
+from medicine.models import Refundation, Medicine, MedicineParent
 import xlrd, math
 
 
@@ -69,7 +69,6 @@ class Command(BaseCommand):
                     else:
                         setattr(r, o, row[xls_cols[i][o]])
                     # r.o =  row[xls_cols[i][o]]
-                    r.save()
 
                 # czy to nowy lek
                 m = Medicine.objects.filter(ean=r.ean)
@@ -80,9 +79,10 @@ class Command(BaseCommand):
                 else:
                     dose = r.name.split(',')
                     dose = dose[-1]
-                    m = Medicine(ean=r.ean, name=r.name, size=r.size, in_use=1, refundation=1)
-                    m.save()
-                m.refundations.add(r)
+                    p = MedicineParent.objects.create(name=r.name)
+                    m = Medicine.objects.create(ean=r.ean, parent=p, size=r.size, in_use=1, refundation=1)
+                r.medicine = m
+                r.save()
             i += 1
 
             # for m in Medicine.objects.all():

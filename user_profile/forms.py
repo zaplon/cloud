@@ -5,7 +5,7 @@ from django import forms
 from django.forms.fields import TimeField
 from django.forms.widgets import HiddenInput
 
-from user_profile.models import Patient, Specialization
+from user_profile.models import Patient, Specialization, SystemSettings
 from localflavor.pl.forms import PLPESELField
 
 
@@ -146,3 +146,9 @@ class PatientModelForm(forms.ModelForm):
     class Meta:
         model = Patient
         fields = ['first_name', 'last_name', 'pesel', 'email']
+
+
+class SystemForm(forms.ModelForm):
+    class Meta:
+        model = SystemSettings
+        fields = ['logo']

@@ -27,7 +27,8 @@ var medicine = function (data) {
 };
 var medicinesModel = {
     medicines: ko.observableArray([medicine()]),
-    realisationDate: ko.observable(new Date()),
+    realisationDate: ko.observable(moment().format('YYYY-MM-DD')),
+    //getFormattedDate: function(){ return moment(this.realisationDate(), 'YYYY-MM-DD').format('MM/DD/YYYY') },
     nfz: ko.observable(7),
     permissions: ko.observable('X'),
     getMedicines: function (searchTerm, callback) {

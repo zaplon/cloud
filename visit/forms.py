@@ -14,13 +14,17 @@ class TemplateForm(ModelForm):
         model = Template
         fields = ['name', 'key', 'text', 'tab', 'doctor']
 
+    def clean_tab(self):
+        tab = self.cleaned_data['tab']
+        return tab
+
     def __init__(self, *args, **kwargs):
         super(TemplateForm, self).__init__(*args, **kwargs)
         self.fields['doctor'].widget = HiddenInput()
         self.fields['text'].widget = Textarea(attrs={'placeholder': _(u'Wpisz treść szablonu')})
         data = kwargs['initial'] if 'initial' in kwargs else kwargs['data']
 
-        self.fields['tab'].queryset = self.fields['tab'].queryset.filter(doctor__user=data['user'],
+        self.fields['tab'].queryset = Tab.objects.all().filter(doctor__user=data['user'],
                                                                          parent__can_add_templates=True)
         self.helper = FormHelper()
         helper = self.helper

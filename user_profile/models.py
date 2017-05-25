@@ -13,6 +13,16 @@ class Profile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     mobile = models.IntegerField(blank=True, null=True)
 
+    # class Meta:
+    #     permissions = (
+    #         ("edit_term", u"Może edytować terminy"),
+    #         ("view_system_settings", u"Może edytować ustawienia systemu"),
+    #         ("edit_tab", u"Może edytować zakładki"),
+    #         ("edit_visit", u"Może edytować wizyty"),
+    #         ("edit_template", u"Może edytować szablony"),
+    #         ("View_term", u'Może wyświetlić kalendarz')
+    #     )
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -113,3 +123,7 @@ class Code(models.Model):
     code = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='codes')
+
+
+class SystemSettings(models.Model):
+    logo = models.ImageField(verbose_name='Logo')

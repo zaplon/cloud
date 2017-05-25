@@ -37,6 +37,10 @@ class TermForm(ModelForm):
             'status': HiddenInput()
         }
 
+    def __init__(self, *args, **kwargs):
+        #kwargs['instance'].datetime.replace(tzinfo=None)
+        super(TermForm, self).__init__(*args, **kwargs)
+
     def save(self, commit=True):
         if self.data['patient'] and self.instance.status == 'FREE':
             self.instance.status = u'PENDING'
