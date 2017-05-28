@@ -74,8 +74,12 @@ var medicinesModel = {
     },
     printRecipe: function(){
         $.post('/visit/recipe/', {medicines: this.save(), nfz: this.nfz(), permissions: this.permissions(),
-        patient: JSON.stringify(visit.patient()), realisationDate: this.realisationDate()}, function(res){
-            gabinet.showPdf(res.url);
+        patient: JSON.stringify(visit.patient()), realisationDate: this.realisationDate(),
+            number: $('#use-number').is(':checked')}, function(res){
+            if (!res.success)
+                notie.alert(3, res.message);
+            else
+                gabinet.showPdf(res.url);
         });
     }
 };

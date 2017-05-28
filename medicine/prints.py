@@ -15,6 +15,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph
 
 from g_utils.views import get_client_location_code
+from user_profile.models import Recipe
 
 pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 pdfmetrics.registerFont(TTFont('Arialb', 'ArialBold.ttf'))
@@ -38,7 +39,7 @@ def print_recipe(request):
         c = recipe_medicines(c, medicines)
         c.showPage()
     c.save()
-    return HttpResponse(json.dumps({'url': '/media/tmp/pdf/recipes/' + file_name}), content_type='application/json')
+    return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}), content_type='application/json')
 
 
 def recipe_medicines(c, medicines):
@@ -141,13 +142,17 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
 
 
 def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0000000000'):
-    useNr = False
+    useNr = request.POST.get('number', False)
     p.setFont("Arial", 9)
 
     x = 0.25
     y = 29.2
     p.drawString((x + 0) * cm, (y - 0.4) * cm, 'Recepta')
-    if useNr and recNr:
+    if useNr:
+        recNr = Recipe.objects.filter(was_used=False, doctor=request.user.doctor)
+        if len(recNr) == 0:
+            return HttpResponse(json.dumps({'success': False, 'message': 'Brak numeru recepty do wykorzystania'}))
+        recNr = recNr[0]
         p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr)
     p.setFont("Arialb", 8)
     code = get_client_location_code(request)

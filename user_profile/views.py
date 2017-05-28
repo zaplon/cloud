@@ -32,7 +32,7 @@ class SettingsView(View):
     def get(self, request, *args, **kwargs):
         if not hasattr(self.request.user, 'doctor'):
             self.template_name = 'user_profile/default/settings.html'
-        return render(request, self.template_name, {'profile_form': self.get_form()},
+        return render(request, self.template_name, {'profile_form': self.get_form(), 'system_form': SystemForm()},
                       content_type='text/html; charset=utf-8')
 
     def post(self, request):
@@ -70,7 +70,9 @@ class SettingsView(View):
                 return HttpResponse(json.dumps({'success': False, 'errors': errors}), status=200, content_type='application/json')
         if tab == '2':
             res = ajax_form_validate(request.POST['data'], DoctorForm)
-            return HttpResponse(res, status=200, content_type='application/json')
+        if tab == '3':
+            res = ajax_form_validate(request.POST['data'], SystemForm)
+        return HttpResponse(res, status=200, content_type='application/json')
 
 
 class PatientCreateView(CreateView):
