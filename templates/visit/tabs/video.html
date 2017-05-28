@@ -1,134 +1,99 @@
-{% load staticfiles %}
-<div id="tabs-{{ num }}">
-        <div id="pictures-slider" style="display:none; position:relative; width:640px; height:680px; float:left;">
-            <div style="z-index:1000" id='arrow-left' class='arrow slide-control'>Poprzednie</div>
-            <div style="z-index:1000" id='arrow-right' class='arrow slide-control'>Następne</div>
-            {% if slides.count > 0 %}
-                <div style="z-index:1000" data-number="1" id='slide-number' class="slide-control">1</div>
-            {% else %}
-                <div style="z-index:1000" data-number="0" id='slide-number' class="slide-control">0</div>
-            {% endif %}
-            <div style="position:absolute; z-index:0; text-align:center; width: 640px; font-size:24px;
-            padding-top:200px;">
-                Brak zdjęć
+<div id="video-container">
+    <div class="text-center">
+        <div style="width: 720px; margin: 0 auto;">
+            <div class="arrows" data-bind="visible: slidesShow() || videosShow()">
+                <i class="fa fa-chevron-left fa-4" aria-hidden="true"></i>
             </div>
-            {% for slide in slides %}
-                <div data-id="{{ slide.id }}" class="endoscope-slide" style="position:absolute;
-                z-index:{{ forloop.counter|add:"0" }}" id="slide{{forloop.counter|add:"0"}}">
-                    <div style="z-index:{{ forloop.counter|add:"0" }}" slide="{{ forloop.counter|add:"0" }}"
-                         {% if slide.is_marked %} class="slide-control thick thick-selected" {% else %} class="thick" {% endif %}>
-                        V
-                    </div>
-                    <div style="z-index:{{ forloop.counter|add:"0" }}" slide="{{ forloop.counter|add:"0" }}"
-                         class="slide-control delete-slide">X</div>
-                    <img src="{{ slide.url }}" width="640" height="480"/>
-                    <textarea type="ENDOSCOPE" id="slide-desc{{ forloop.counter|add:"0" }}" class="picture-desc tab-textarea" data-id="{{ slide.id }}" style="width:630px; height:200px;">{{ slide.description }}</textarea>
-                </div>
-            {% endfor %}
-
+            <video id="video-window" width="640" height="480" autoplay="true"></video>
+            <div id="slider"></div>
+            <canvas style="display:none;" id="effects-canvas"></canvas>
+            <div class="arrows" data-bind="visible: slidesShow() || videosShow()">
+                <i class="fa fa-chevron-right fa-4" aria-hidden="true"></i>
+            </div>
+            <div class="clearfix"></div>
         </div>
-        <video width="640" height="480" autoplay="true" id="endoscope-video" style="float:left; ">
-        </video>
-        <div id='video-sign' style='display:none;'></div>
-        <div style="width:640px; height:480px; float:left; display:none;" id="recorded-video">
-         <div onclick='endoscope.deleteVideo()' style="left:710px; z-index: 1000; font-size: 16px;" class="slide-control delete-slide">X</div>
-         <div onclick='endoscope.changeVideo(1)' style="left: 665px; z-index: 1000; font-size: 13px;" class="arrow slide-control">Następne</div>
-         <div onclick='endoscope.changeVideo(-1)' style="z-index: 1000; font-size: 13px;" class="arrow slide-control">Poprzednie</div>
-         <div style="z-index: 1000; font-size: 13px;" id="video-number" class="slide-control"></div>
-            {% for video in videos %}
-                <video class="endoscope-video" data-video-nr="{{ forloop.counter }}"
-                       data-id={{video.id}} controls autoplay src={{video.url}}></video>
-            {% endfor %}
+        <div style="width: 640px; margin: 0 auto;">
+            <div class="btn-group pull-left" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary"><span class="fa fa-camera-retro" title="Zdjęcie"></span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bind="click: recordVideo, visible: !isRecording()">
+                    <span class="fa fa-video-camera" title="Film"></span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bind="click: recordVideo, visible: isRecording()">
+                    <span class="fa fa-stop" title="Zatrzymaj nagrywanie"></span>
+                </button>
+            </div>
+            <div class="btn-group pull-right" role="group">
+                <button type="button" class="btn btn-secondary" data-bind="visible: !slidesShow(), click: showSlides">
+                    Pokaż slajdy
+                </button>
+                <button type="button" class="btn btn-secondary" data-bind="visible: slidesShow(), click:showSlides">
+                    Ukryj slajdy
+                </button>
+                <button type="button" class="btn btn-secondary" data-bind="visible: !videosShow(), click: showVideos">
+                    Pokaż filmy
+                </button>
+                <button type="button" class="btn btn-secondary" data-bind="visible: videosShow(), click: showVideos">
+                    Ukryj filmy
+                </button>
+            </div>
         </div>
-        <canvas id="canvas" style="display:none; width:640px; height:480px;">
-        </canvas>
-        <div id="video-controls" style="float:right; text-align:right;">
-            <select style="display:none;" id="video-source"></select><br/>
-            <select id="audio-source" style="display:none;"></select><br/>
-            <div id="video-section" class='video-controls' style=''>
-              <button id="capture-video" class="corners blue endoscope-button">Nagraj wideo (v)</button>
-              <button id="capture-video-stop" style='display:none;' class="corners blue endoscope-button">Zatrzymaj (v)</button>
-              <button id="show-video" style='{% if videos.count == 0 %}display:none;{% endif %}'
-                      class="corners blue endoscope-button">Pokaż wideo</button>
-              <button id="hide-video" class="corners blue endoscope-button" style='display:none;'>Ukryj wideo</button>
-              <button id="upload-video" class="corners blue endoscope-button" style='display:none;'>Prześlij wideo</button>
-
-
-            </div>
-            <div id="screen-section" class='video-controls'>
-                <button id="capture-screen" class="corners blue endoscope-button">Zdjęcie (space)</button>
-                <button id="select-pictures" class="corners blue endoscope-button">Wybierz zdjecia</button>
-                <button id="start-record" style="display:none" class="corners blue endoscope-button">Podgląd</button>
-            </div>
-            <div id="endoscope-templates" class="tab-option" style="width:200px; margin-top:400px; display:none">
-                <div class="save-template blue button corners">Zapisz jako szablon</div>
-                <div style="margin-top:10px;" class="get-templates blue button corners">Lista szablonów (F10)</div>
-            </div>
-
+        <div class="clearfix"></div>
+        <div class="counter" data-bind="visible: videosShow()">
+            <span data-bind="text: videos()[0]"></span>/<span data-bind="text: videos()[1]"></span>
         </div>
-        <div style="clear:both"></div>
-        <canvas style="display:none; position:absolute; z-index:100; width:640px; height:480px; background-color:white;
-            opacity:0;" id="effects-canvas">
-        </canvas>
-        <script type="text/javascript" src="{% static "js/utils/whammy.js" %}"></script>
-        <script type="text/javascript" src="{% static "js/visit/endoscope.js" %}"></script>
+        <div class="counter" data-bind="visible: slidesShow()">
+            <span data-bind="text: slides()[0]"></span>/<span data-bind="text: videos()[1]"></span>
+        </div>
     </div>
+</div>
+<script type="text/javascript" src="/static/js/utils/whammy.js"></script>
+<script type="text/javascript" src="/static/js/visit/tabs/video.js"></script>
 
 <style>
-.endoscope-button {
-    padding: 5px;
-    margin-top: 10px;
-}
+    video {
+        display: inline-block;
+    }
 
-.arrow {
-    padding: 10px;
-    position: absolute;
-    top: 220px;
-    background-color: white;
-    cursor: pointer;
-    border: 1px solid black;
-}
+    .arrows {
+        display: inline-block;
+        cursor: pointer;
+        font-size: 24px;
+        width: 35px;
+        text-align: center;
+    }
 
-#arrow-right {
-    left: 564px;
-}
+    #effects-canvas {
+        display: block;
+        position: relative;
+        z-index: 100;
+        width: 640px;
+        height: 480px;
+        background-color: white;
+        opacity: 0;
+        margin: 0 auto;
+        top: -480px;
+        margin-bottom: -480px;
+    }
+    #slider {
+        display: none;
+        position: relative;
+        z-index: 100;
+        width: 640px;
+        height: 480px;
+        background-color: white;
+        margin: 0 auto;
+        top: -480px;
+        margin-bottom: -480px;
+    }
 
-#video-number, #slide-number{
-    padding: 10px;
-    position: absolute;
-    top: 443px;
-    left: 601px;
-    background-color: white;
-    cursor: pointer;
-    border: 1px solid black;
-}
-#video-number{
- left: 702px;
-}
-.thick {
-    padding: 10px;
-    color: white;
-    position: absolute;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: white;
-    border: 1px solid black;
-}
-
-.delete-slide{
-    padding: 10px;
-    color: red;
-    left: 609px;
-    position: absolute;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: white;
-    border: 1px solid black;
-}
-
-.thick-selected {
-    color: green;
-}
+    .counter {
+        display: inline-block;
+        position: relative;
+        z-index: 100;
+        top: -68px;
+        background-color: white;
+        padding: 0.25rem 0.5rem;
+    }
 </style>
+

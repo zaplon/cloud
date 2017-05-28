@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django.forms import ModelForm
 from django.urls import reverse
-from .models import Template, Tab
+from .models import Template, Tab, TabParent
 from django.forms import HiddenInput, Textarea
 from django.utils.translation import ugettext as _
 
@@ -56,11 +56,13 @@ class TemplateForm(ModelForm):
 class TabForm(ModelForm):
     class Meta:
         model = Tab
-        fields = ['title', 'doctor', 'enabled']
+        fields = ['title', 'doctor', 'enabled', 'order', 'parent']
 
     def __init__(self, *args, **kwargs):
         super(TabForm, self).__init__(*args, **kwargs)
         self.fields['doctor'].widget = HiddenInput()
+        self.fields['parent'].widget = HiddenInput()
+        self.fields['parent'].initial = TabParent.objects.get(name='default')
         self.helper = FormHelper()
         helper = self.helper
         helper.field_template = 'form/field.html'
@@ -69,8 +71,9 @@ class TabForm(ModelForm):
         # helper.field_class = 'col-md-8'
         helper.layout = Layout(
             'title',
-            'enabled',
             'order',
+            'enabled',
+            'parent',
             HTML(
                 u'<hr/><div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
                 reverse('tab-delete', kwargs={'pk': self.instance.id})

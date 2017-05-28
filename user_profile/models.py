@@ -12,6 +12,7 @@ from django.urls import reverse
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     mobile = models.IntegerField(blank=True, null=True)
+    css = models.CharField(default='classic', choices=(('classic', 'Klasyczny'),), max_length=20, verbose_name='Interfejs')
 
     # class Meta:
     #     permissions = (

@@ -15,6 +15,10 @@ class Gabinet {
     transformTableResponse(res){
         return {total: res.count, rows: res.results}
     };
+    minimize(me, e){
+        var target = $(e.target).attr('data-target');
+        $('#'+target).animate({height: "toggle"});
+    };
     fixData(data){
       newData = [];
       for (d in data){
@@ -72,8 +76,8 @@ class Gabinet {
               </div>
               ` + ( hideFooter ? '' :
               `<div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
                 ${save}
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
               </div>`) +
             `</div>
           </div>

@@ -137,6 +137,7 @@ class TabCreate(CreateView):
     def get_context_data(self, **kwargs):
         context = super(TabCreate, self).get_context_data(**kwargs)
         context['form'].initial['doctor'] = self.request.user.doctor
+        context['form'].initial['order'] = self.request.user.doctor.tabs.count() + 1
         return context
 
 

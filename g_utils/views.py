@@ -37,7 +37,7 @@ class AjaxFormView(View):
         if 'id' in self.request.GET:
             form = form_class(instance=form_class._meta.model.objects.get(id=self.request.GET['id']))
         else:
-            data = self.request.GET['data'] if 'data' in self.request.GET else {}
+            data = json.loads(self.request.GET['data']) if 'data' in self.request.GET else {}
             data = self.add_data(data)
             form = form_class(initial=data)
         ctx = {}

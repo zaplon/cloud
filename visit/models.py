@@ -29,7 +29,7 @@ class TabParent(models.Model):
 class Tab(models.Model):
     title = models.CharField(max_length=100, verbose_name=u'Tytuł')
     doctor = models.ForeignKey(Doctor, related_name='tabs')
-    order = models.IntegerField(null=True, blank=True)
+    order = models.IntegerField(null=True, blank=True, verbose_name=u'Kolejność')
     enabled = models.BooleanField(default=True, verbose_name=u'Włączona')
     parent = models.ForeignKey(TabParent, related_name='children')
 

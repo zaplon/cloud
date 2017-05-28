@@ -29,7 +29,7 @@ var visit = {
             })
         },
         addDocument: function () {
-            $.get('/get-form', {module: 'result.forms', class: 'ResultForm'}, function (res) {
+            $.get('/get-form', {module: 'result.forms', class: 'ResultForm', data: JSON.stringify({visit: visit.id})}, function (res) {
                 var save = "<button id='addArchiveDocument' class='btn btn-primary'>Dodaj</button>";
                 gabinet.showModal('Dodaj plik', res.form_html, save);
                 $('#addArchiveDocument').click(function () {
@@ -78,6 +78,11 @@ var visit = {
     tabs: [],
     errors: [],
     patient: ko.observable({address: '', pesel: '', name: ''}),
+    patientDataHidden: ko.observable(false),
+    patientDataToggle: function(me, e){
+        gabinet.minimize(me, e);
+        this.patientDataHidden(!this.patientDataHidden());
+    },
     subMenuName: ko.observable(''),
     subMenu: {
         hidden: ko.observable(true),
@@ -207,6 +212,9 @@ var visit = {
         });
     },
     currentTab: $('.visit-tab:visible').attr('id'),
+    getTab: function(){
+      return tabs.filter(function(tab){ return tab.name == visit.currentTab; })[0];
+    },
     putTemplate: function (template) {
         var tab = tabs.filter(function (tab) {
             return tab.name == template.tab_name;

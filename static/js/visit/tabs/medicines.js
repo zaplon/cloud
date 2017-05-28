@@ -74,7 +74,7 @@ var medicinesModel = {
     },
     printRecipe: function(){
         $.post('/visit/recipe/', {medicines: this.save(), nfz: this.nfz(), permissions: this.permissions(),
-        patient: JSON.stringify(visit.patient())}, function(res){
+        patient: JSON.stringify(visit.patient()), realisationDate: this.realisationDate()}, function(res){
             gabinet.showPdf(res.url);
         });
     }

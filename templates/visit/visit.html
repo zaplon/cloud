@@ -21,14 +21,29 @@
 
     <div id="patient">
         <section class="box-typical box-typical-padding col-md-12">
-            <h2 class="with-border" data-bind="text: patient().first_name + ' ' + patient().last_name"></h2>
-
-            <div class="row">
-                <div data-bind="text: patient().address"></div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">Pesel</div>
-                <div class="col-md-9" data-bind="text: patient().pesel"></div>
+                    <h2 class="with-border">
+                        <span data-bind="text: patient().first_name + ' ' + patient().last_name"></span>
+                        <ul class="toolbar">
+                            <li data-bind="visible: !patientDataHidden()"
+                            data-toggle="tooltip" data-placement="bottom" title="zwiń">
+                                <i class="fa fa-window-minimize" aria-hidden="true"
+                                   data-bind="click: patientDataToggle" data-target="patient-data"></i>
+                            </li>
+                            <li data-bind="visible: patientDataHidden()"
+                            data-toggle="tooltip" data-placement="bottom" title="rozwiń">
+                                <i class="fa fa-window-maximize" aria-hidden="true"
+                                   data-bind="click: patientDataToggle" data-target="patient-data"></i>
+                            </li>
+                        </ul>
+                    </h2>
+            <div id="patient-data">
+                <div class="row">
+                    <div data-bind="text: patient().address"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Pesel</div>
+                    <div class="col-md-9" data-bind="text: patient().pesel"></div>
+                </div>
             </div>
         </section>
     </div>
@@ -57,9 +72,19 @@
                 {% for tab in tabs %}
                     <script>
                         {% if tab.json %}
-                            tabs.push({data: {{ tab.json|safe }}, title: "{{ tab.title }}", name: "{{ tab.name }}", id: {{ tab.id }}});
+                            tabs.push({
+                                data: {{ tab.json|safe }},
+                                title: "{{ tab.title }}",
+                                canAddTemplates: {% if tab.parent.can_add_templates %} true {% else %}
+                                    false {% endif %},
+                                name: "{{ tab.name }}",
+                                id: {{ tab.id }}
+                            });
                         {% else %}
-                            tabs.push({data: null, title: "{{ tab.title }}", name: "{{ tab.name }}", id: {{ tab.id }}});
+                            tabs.push({
+                                data: null, title: "{{ tab.title }}", name: "{{ tab.name }}", id: {{ tab.id }},
+                                canAddTemplates: {% if tab.parent.can_add_templates %} true {% else %} false {% endif %}
+                            });
                         {% endif %}
                     </script>
                     <div role="tabpanel" class="tab-pane visit-tab fade {% if tab.is_active %} active {% endif %} in"
@@ -127,7 +152,7 @@
                     </a>
                     <span class="text">Szablony</span>
 
-                    <div class="actions">
+                    <div class="actions" data-bind="visible: visit.getTab().canAddTemplates">
                         <a href="#">
                             <span class="fa fa-plus" data-bind="click: addTemplate"></span>
                         </a>
@@ -152,8 +177,11 @@
                     <ul class="control-item-lists templates-list"
                         data-bind="visible: templates().filter(function(t){return t.tab_name==visit.currentTab}).length == 0">
                         <li>
-                            <div class="control-item-content-text">
+                            <div class="control-item-content-text" data-bind="visible: visit.getTab().canAddTemplates">
                                 Brak szablonów dla zakładki
+                            </div>
+                            <div class="control-item-content-text" data-bind="visible: !visit.getTab().canAddTemplates">
+                                Do zakładki nie można dodać szablonu
                             </div>
                         </li>
                     </ul>
@@ -174,5 +202,6 @@
     <script>
         visit.patient({{ visit.term.patient|as_json:'id,pesel,first_name,last_name,address' }});
         visit.term = {{ visit.term|as_json:'id' }};
+        visit.id = {{ visit.id }};
     </script>
 {% endblock %}

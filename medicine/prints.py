@@ -28,7 +28,8 @@ def print_recipe(request):
     else:
         medicines = []
     patient = json.loads(request.POST.get('patient', "{}"))
-    realisation_date = request.POST.get('realisation_date', "")
+    realisation_date = request.POST.get('realisationDate', "")
+    realisation_date = datetime.datetime.strptime(realisation_date, '%Y-%m-%d').strftime('%d.%m.%Y')
     c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
     for page in range(0, int(len(medicines)/5)+1):
         c = recipe_lines(c)
@@ -92,10 +93,14 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
         patient['pesel'] = ''
 
     doct_margin_left = 1
-    doct_margin_top = 0
+    doct_margin_top = 25
     tab1 = 0
     tab2 = 8
     ab = 29.7
+    patient_margin_left = 0.3
+
+    patient['address'] = 'ul. Okrezna 87 02-033 warszawa'
+    patient['pesel'] = '88042003997'
 
     c.setFont("Arial", 9)
     styles = getSampleStyleSheet()
@@ -103,12 +108,12 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
     styles.add(ParagraphStyle(name='address', fontName='Arial', fontSize=7))
     # informacje o pacjencie
     name = patient['first_name'] + ' ' + patient['last_name']
-    c.drawString((doct_margin_left + tab1) * cm, (doct_margin_top) * cm, name.encode('utf-8'))
+    c.drawString((patient_margin_left + tab1) * cm, (doct_margin_top) * cm, name.encode('utf-8'))
     if 'address' in patient and patient['address'] and len(patient['address']) > 0:
         # p.drawString((doct_margin_left+tab1)*cm, (doct_margin_top+pat-0.5)*cm, patient['address'].encode('utf-8'))
         par = Paragraph(patient['address'].encode('utf-8'), styles['address'])
         par.wrapOn(c, 6.0 * cm, (2) * cm)
-        par.drawOn(c, (doct_margin_left + tab1) * cm, (doct_margin_top - 1) * cm)
+        par.drawOn(c, (patient_margin_left + tab1) * cm, (doct_margin_top - 0.8) * cm)
     # drukowany pesel
 
     pes = str(patient['pesel'])
@@ -119,13 +124,13 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
     if len(pes) > 8:
         b = createBarcodeDrawing('Code128', value=pes, width=5 * cm, height=0.5 * cm)
 
-    c.drawString((doct_margin_left + 1.5) * cm, (doct_margin_top - 2.1) * cm,
+    c.drawString((patient_margin_left + 1.3) * cm, (doct_margin_top - 2.1) * cm,
                  patient['pesel'].encode('utf-8'))
     if len(pes) > 8:
-        b.drawOn(c, (doct_margin_left + 0.0) * cm, (doct_margin_top - 1.7) * cm)
-    c.drawString((tab2 + doct_margin_left) * cm, (ab - 6.8 + doct_margin_top) * cm, permissions.encode('utf-8'))
+        b.drawOn(c, (patient_margin_left + 0.0) * cm, (doct_margin_top - 1.7) * cm)
+    c.drawString((tab2 + doct_margin_left) * cm, (ab - 6.8) * cm, permissions.encode('utf-8'))
 
-    c.drawString((tab2 + doct_margin_left) * cm, (ab - 5.0 + doct_margin_top) * cm, nfz.encode('utf-8'))
+    c.drawString((tab2 + doct_margin_left) * cm, (ab - 5.0) * cm, nfz.encode('utf-8'))
 
     date = datetime.date.today().strftime('%d.%m.%Y')
 
