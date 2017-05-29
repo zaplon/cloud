@@ -13,6 +13,7 @@ class ServiceToDoctor(models.Model):
     doctor = models.ForeignKey(Doctor, verbose_name=u'Lekarz')
     service = models.ForeignKey('Service', verbose_name=u'Usługa')
     price = models.FloatField(blank=True, null=True, verbose_name=u'Cena')
+    localization = models.ForeignKey('Localization', null=True, blank=True)
 
 
 class Service(models.Model):
@@ -20,10 +21,18 @@ class Service(models.Model):
     price = models.FloatField(default=0, verbose_name=u'Cena')
     doctors = models.ManyToManyField(Doctor, through=ServiceToDoctor, verbose_name=u'Lekarze')
 
+    class Meta:
+        verbose_name = u'Usługa'
+        verbose_name_plural = u'Usługi'
 
-# class Localization(models.Model):
-#     name = models.CharField(max_length=255, verbose_name=u'Nazwa')
-#     address = models.CharField(max_length=255, blank=True, null=True, verbose_name=u'Adres')
+
+class Localization(models.Model):
+    name = models.CharField(max_length=255, verbose_name=u'Nazwa')
+    address = models.CharField(max_length=255, blank=True, null=True, verbose_name=u'Adres')
+
+    class Meta:
+        verbose_name = 'Lokalizacja'
+        verbose_name_plural = 'Lokalizacje'
 
 
 class Term(models.Model):
@@ -36,7 +45,8 @@ class Term(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='terms', verbose_name=u'Lekarz')
     duration = models.IntegerField(default=15, verbose_name=u'Czas trwania (min)')
     code = models.CharField(max_length=50, null=True, blank=True)
-    service = models.ForeignKey(Service, blank=True, null=True, related_name='term')
+    service = models.ForeignKey(Service, blank=True, null=True, related_name='terms', verbose_name=u'Usługa')
+    localization = models.ForeignKey(Localization, blank=True, null=True, related_name='terms', verbose_name=u'Lokalizacja')
 
     def __unicode__(self):
         if self.patient:

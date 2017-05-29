@@ -9,6 +9,7 @@ from django.utils.safestring import mark_safe
 from administration.settings import *
 from django.utils.translation import ugettext_lazy as _
 
+from timetable.models import Service, Localization
 from user_profile.models import SystemSettings, Doctor
 
 admin.site.site_title = 'Administracja'
@@ -31,23 +32,23 @@ class UserChangeForm(UserChangeForm):
     pass
 
 
+class DoctorInline(admin.StackedInline):
+    model = Doctor
+    can_delete = False
+    verbose_name_plural = 'Profil'
+    fk_name = 'user'
+
+
 class UserAdmin(UserAdmin):
-    readonly_fields = ('doctor_link',)
+    inlines = (DoctorInline, )
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'doctor_link')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     form = UserChangeForm
-
-    def doctor_link(self, obj):
-        return mark_safe('<a href="{}">{}</a>'.format(
-            reverse("admin:user_profile_doctor_change", args=(obj.doctor.pk,)),
-            'edytuj profil lekarza'
-        ))
-    doctor_link.short_description = 'Lekarz'
 
     def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
         if not request.user.is_superuser:
@@ -81,6 +82,8 @@ class GroupAdmin(GroupAdmin):
 admin.site.unregister(User)
 admin.site.unregister(Group)
 admin.site.register(Doctor)
+admin.site.register(Service)
+admin.site.register(Localization)
 admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)
 admin.site.register(SystemSettings)
