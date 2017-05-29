@@ -1,7 +1,12 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from visit.models import Visit
 from user_profile.models import Patient
 from django.db import models
+from django.conf import settings
+
+
+RESULT_TYPES = (('IMAGE', u'Zdjęcie'), ('DOCUMENT', u'Dokument'), ('VIDEO', u'Film'))
 
 
 class Result(models.Model):
@@ -11,3 +16,13 @@ class Result(models.Model):
     description = models.CharField(max_length=1000, blank=True, null=True)
     visit = models.ForeignKey(Visit, related_name='results')
     patient = models.ForeignKey(Patient, related_name='results')
+    type = models.CharField(max_length=20, choices=RESULT_TYPES, default='DOCUMENT')
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        ext = self.name.split('.')[-1]
+        if ext in settings.EXTENSIONS['img']:
+            self.type = 'IMAGE'
+        if ext in settings.EXTENSIONS['video']:
+            self.type = 'VIDEO'
+        super(Result, self).save(force_insert=False, force_update=False, using=None, update_fields=None)

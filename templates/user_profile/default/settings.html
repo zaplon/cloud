@@ -21,13 +21,17 @@
 										Dane personalne
 									</span>
                                 </a>
-                                <a class="nav-link active" href="#system" role="tab" data-toggle="tab">
-									<span class="nav-link-in">
-										<span class="font-icon fa fa-globe"></span>
-										Globalne
-									</span>
-                                </a>
                             </li>
+                            {% if perms.user_profile.can_change_system_settings %}
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#system" role="tab" data-toggle="tab">
+                                        <span class="nav-link-in">
+                                            <i class="font-icon fa fa-globe"></i>
+                                            Globalne
+                                        </span>
+                                    </a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div><!--.tabs-section-nav-->

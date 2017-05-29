@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-
 from django.http import HttpResponse
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -13,12 +12,19 @@ import json
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph
-
 from g_utils.views import get_client_location_code
 from user_profile.models import Recipe
 
 pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 pdfmetrics.registerFont(TTFont('Arialb', 'ArialBold.ttf'))
+
+
+class RecipePrintException(Exception):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)
 
 
 def print_recipe(request):
@@ -32,27 +38,32 @@ def print_recipe(request):
     realisation_date = request.POST.get('realisationDate', "")
     realisation_date = datetime.datetime.strptime(realisation_date, '%Y-%m-%d').strftime('%d.%m.%Y')
     c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
-    for page in range(0, int(len(medicines)/5)+1):
-        c = recipe_lines(c)
-        c = recipe_es(c, patient, realisation_date)
-        c = recipe_texts(request, c, request.user)
-        c = recipe_medicines(c, medicines)
-        c.showPage()
+    for page in range(0, int(len(medicines) / 5) + 1):
+        try:
+            c = recipe_lines(c)
+            c = recipe_es(c, patient, realisation_date)
+            c = recipe_texts(request, c, request.user)
+            c = recipe_medicines(c, medicines)
+            c.showPage()
+        except RecipePrintException as e:
+            return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
+
     c.save()
-    return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}), content_type='application/json')
+    return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}),
+                        content_type='application/json')
 
 
 def recipe_medicines(c, medicines):
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='style', fontName='Arial', fontSize=7))
     c.setFont("Arialb", 9)
-    offset = 1.65*cm
-    top = 21.5*cm
+    offset = 1.65 * cm
+    top = 21.5 * cm
     for m in medicines:
         txt = "%s %s %s" % (m['selection']['name'], m['dose'], m['dosage'])
         par = Paragraph(txt, styles['style'])
         par.wrapOn(c, 7.0 * cm, 3 * cm)
-        par.drawOn(c, 0.5*cm, top)
+        par.drawOn(c, 0.5 * cm, top)
         top -= offset
     return c
 
@@ -86,7 +97,6 @@ def recipe_lines(c, tab1=0.3):
 
 
 def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
-
     if 'pesel' not in patient or not patient['pesel']:
         patient['pesel'] = ''
 
@@ -151,7 +161,7 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
     if useNr:
         recNr = Recipe.objects.filter(was_used=False, doctor=request.user.doctor)
         if len(recNr) == 0:
-            return HttpResponse(json.dumps({'success': False, 'message': 'Brak numeru recepty do wykorzystania'}))
+            raise RecipePrintException('Brak numeru recepty do wykorzystania')
         recNr = recNr[0]
         p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr)
     p.setFont("Arialb", 8)

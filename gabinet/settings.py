@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'medicine',
     'result',
     'forms',
-    'wkhtmltopdf'
+    'wkhtmltopdf',
+    'administration'
 ]
 SITE_ID = 1
 MIDDLEWARE = [
@@ -157,7 +158,8 @@ BOWER_INSTALLED_APPS = (
     'bootstrap#v4.0.0-alpha.5',
     'knockoutjs',
     'fullcalendar',
-    'jquery-ui'
+    'jquery-ui',
+    'bootstrap-select'
 )
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -198,3 +200,5 @@ USE_SMS_LOGIN = True
 SIMULATE_SMS_LOGIN = True
 
 DATABASE_ROUTERS = ['medicine.router.MedicineRouter']
+
+EXTENSIONS = {'img': ['jpg', 'png', 'bnp', 'gif'], 'video': ['mp3', 'wav']}

@@ -6,7 +6,11 @@
     <header class="site-header" style="z-index:101">
         <div class="container-fluid">
             <a href="/" class="site-logo m-r-md">
-                <img src="{% static "img/logo.jpg" %}" title="Gabinet"/>
+                {% if system_settings.logo %}
+                    <img src="{{ system_settings.logo.url }}" title="Gabinet"/>
+                {% else %}
+                    <img src="{% static "img/logo.jpg" %}" title="Gabinet"/>
+                {% endif %}
             </a>
             <div class="site-header-shown">
                         {% if request.user.doctor %}

@@ -1,0 +1,23 @@
+{% extends 'dashboard/calendar.html' %}
+{% load static %}
+
+{% block filters %}
+    <div class="box-typical" id="calendar-filters">
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="doctor">Lekarz</label>
+                <select class="selectpicker" data-live-search="true" id="doctor">
+                    {% for d in doctors %}
+                        <option value="{{ d.id }}">{{ d.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-primary">Szukaj</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ block.super }}
+    <script src="{% static "js/calendar/filters.js" %}"></script>
+{% endblock %}

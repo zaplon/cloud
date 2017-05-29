@@ -43,17 +43,17 @@ class Specialization(models.Model):
 
 
 class Doctor(models.Model):
-    pwz = models.CharField(max_length=7)
-    mobile = models.IntegerField(blank=True, null=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    working_hours = models.CharField(max_length=800, blank=True, null=True)
-    visit_duration = models.IntegerField(default=15)
+    pwz = models.CharField(max_length=7, verbose_name=u'Numer PWZ')
+    mobile = models.IntegerField(blank=True, null=True, verbose_name=u'Numer komórki')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='doctor', verbose_name=u'Lekarz')
+    working_hours = models.CharField(max_length=800, blank=True, null=True, verbose_name=u'Godziny pracy')
+    visit_duration = models.IntegerField(default=15, verbose_name=u'Czas trwania wizyty')
     terms_generated_till = models.DateField(null=True, blank=True)
     terms_start = models.TimeField(default='09:00')
     terms_end = models.TimeField(default='17:00')
     misal_id = models.CharField(blank=True, null=True, max_length=10)
     title = models.CharField(default='', verbose_name=u'Tytuł', max_length=50)
-    specializations = models.ManyToManyField(Specialization, related_name='doctors')
+    specializations = models.ManyToManyField(Specialization, related_name='doctors', verbose_name=u'Specializacje')
 
     @property
     def name(self):
@@ -97,6 +97,8 @@ class Patient(models.Model):
     pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel')
     email = models.EmailField(blank=True, null=True, verbose_name=u'Email')
     address = models.CharField(blank=True, null=True, verbose_name=u'Adres', max_length=200)
+    info = models.TextField(blank=True, null=True, verbose_name=u'Ważne informacje',
+                            help_text=u'Informacje pomocnicze o alergiach, przebytych zabiegach, etc...')
 
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.last_name)
@@ -128,3 +130,10 @@ class Code(models.Model):
 
 class SystemSettings(models.Model):
     logo = models.ImageField(verbose_name='Logo')
+
+    class Meta:
+        verbose_name = 'Ustawienia systemowe'
+        verbose_name_plural = 'Ustawienia systemowe'
+
+    def __unicode__(self):
+        return 'Ustawienia systemowe'

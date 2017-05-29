@@ -9,7 +9,7 @@
 {% block extra_scripts %}
     <script src="{% static "fullcalendar/dist/fullcalendar.min.js" %}"></script>
     <script src="{% static "fullcalendar/dist/locale/pl.js" %}"></script>
-	<script src="{% static "js/calendar.js" %}"></script>
+    <script src="{% static "js/calendar.js" %}"></script>
 {% endblock %}
 
 {% block menu %}
@@ -17,6 +17,8 @@
 {% endblock %}
 
 {% block content %}
+    {% block filters %}
+    {% endblock %}
     <div class="box-typical">
         <div class="calendar-page">
             <div class="calendar-page-content">

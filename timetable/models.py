@@ -9,6 +9,23 @@ import time
 from django.utils import timezone
 
 
+class ServiceToDoctor(models.Model):
+    doctor = models.ForeignKey(Doctor, verbose_name=u'Lekarz')
+    service = models.ForeignKey('Service', verbose_name=u'Usługa')
+    price = models.FloatField(blank=True, null=True, verbose_name=u'Cena')
+
+
+class Service(models.Model):
+    name = models.CharField(max_length=255, verbose_name=u'Nazwa')
+    price = models.FloatField(default=0, verbose_name=u'Cena')
+    doctors = models.ManyToManyField(Doctor, through=ServiceToDoctor, verbose_name=u'Lekarze')
+
+
+# class Localization(models.Model):
+#     name = models.CharField(max_length=255, verbose_name=u'Nazwa')
+#     address = models.CharField(max_length=255, blank=True, null=True, verbose_name=u'Adres')
+
+
 class Term(models.Model):
     patient = models.ForeignKey(Patient, related_name='patient', blank=True, null=True, verbose_name=u'Pacjent')
     visit = models.OneToOneField(Visit, related_name='term', blank=True, null=True)
@@ -19,6 +36,7 @@ class Term(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='terms', verbose_name=u'Lekarz')
     duration = models.IntegerField(default=15, verbose_name=u'Czas trwania (min)')
     code = models.CharField(max_length=50, null=True, blank=True)
+    service = models.ForeignKey(Service, blank=True, null=True, related_name='term')
 
     def __unicode__(self):
         if self.patient:
@@ -31,7 +49,10 @@ class Term(models.Model):
 
     def get_title(self):
         if self.patient:
-            return '%s %s' % (self.patient.first_name, self.patient.last_name)
+            text = '%s %s' % (self.patient.first_name, self.patient.last_name)
+            if self.service:
+                text += ' ' + self.service.name
+            return text
         else:
             return u'Wolny termin'
 

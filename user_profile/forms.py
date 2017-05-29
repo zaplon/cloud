@@ -145,10 +145,20 @@ class PatientModelForm(forms.ModelForm):
     pesel = PLPESELField(label=u'Pesel', required=False)
     class Meta:
         model = Patient
-        fields = ['first_name', 'last_name', 'pesel', 'email']
+        fields = ['first_name', 'last_name', 'pesel', 'email', 'info']
 
 
 class SystemForm(forms.ModelForm):
     class Meta:
         model = SystemSettings
         fields = ['logo']
+
+    def __init__(self):
+        super(SystemForm, self).__init__()
+        self.helper = FormHelper()
+        self.helper.wrapper_class = 'row'
+        self.helper.label_class = 'col-md-2'
+        self.helper.field_class = 'col-md-10'
+        self.helper.add_layout(Layout(
+            Field('logo', css_class='form-control', wrapper_class='row')
+        ))

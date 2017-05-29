@@ -272,6 +272,9 @@ $(document).ready(function () {
         visit.currentTab = $(this).attr('href');
         visit.currentTab = visit.currentTab.substr(1, visit.currentTab.length - 1);
         console.log(visit.currentTab);
+        var f = $('.tab-focus:visible');
+        if (f.length > 0)
+            $(f[0]).focus();
         visit.loadTemplates();
 
     });
