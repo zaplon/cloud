@@ -1,8 +1,11 @@
 {% load static %}
 
-<table class="table table-striped table-sm mt-1" data-bind="foreach: days">
-    {% include "user_profile/doctor/day_form.html" %}
-</table>
+<div id="working-hours">
+    <table class="table table-striped table-sm mt-1" data-bind="foreach: days">
+        {% include "user_profile/doctor/day_form.html" %}
+    </table>
+    {% block extra %}
+    {% endblock %}
+</div>
 
-
-<script src={% static "js/user_profile/days.js" %}></script>
+<script src={% static "js/user_profile/days_admin.js" %}></script>

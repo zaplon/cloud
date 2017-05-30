@@ -1,0 +1,30 @@
+dayNames = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela'];
+var day = function (dayIndex) {
+    return {
+        start: '09:00', end: '17:00', break_start: null, break_end: null, dayName: dayNames[dayIndex - 1],
+        dayIndex: dayIndex - 1, hasBreak: ko.observable(false), dayChecked: ko.observable(dayIndex > 5 ? false : true)
+    }
+};
+
+var dayError = function(){
+    return {start: false, end: false, break_start: false, break_end: false};
+};
+
+$(document).ready(function () {
+    if (window.loaded)
+        return;
+    if (window.working_hours.length > 0)
+        var days = window.working_hours;
+    else
+        var days = [day(1), day(2), day(3), day(4), day(5), day(6), day(7)];
+    var viewModel = {
+        days: ko.observableArray(days),
+        errors: ko.observableArray([dayError(1), dayError(2), dayError(3), dayError(4), dayError(5), dayError(6), dayError(7)]),
+        dayNames: dayNames
+    };
+    $('input[type="submit"]').click(function(){
+       $('input[name="doctor-0-working_hours"]').val(ko.toJSON(viewModel.days()));
+    });
+    ko.applyBindings(viewModel, $('#working-days')[0]);
+    window.loaded = true;
+});

@@ -2,8 +2,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, UserChangeForm, GroupAdmin
-from django.forms import ModelForm
-from django.urls import reverse
+from django.forms import ModelForm, Widget
+from django.template import loader
 from django.utils.safestring import mark_safe
 
 from administration.settings import *
@@ -32,11 +32,32 @@ class UserChangeForm(UserChangeForm):
     pass
 
 
+class HoursWidget(Widget):
+
+    def render(self, name, value, attrs=None):
+        if not value:
+            value = {}
+        return loader.render_to_string('user_profile/doctor/days_form_admin.html', {'value': mark_safe(value)})
+
+
+class DoctorForm(ModelForm):
+    class Meta:
+        fields = ['pwz', 'mobile', 'title', 'working_hours', 'specializations']
+
+    def __init__(self, *args, **kwargs):
+        super(DoctorForm, self).__init__(*args, **kwargs)
+        self.fields['working_hours'].widget = HoursWidget()
+
+    def clean_working_hours(self):
+        return self.cleaned_data['working_hours']
+
+
 class DoctorInline(admin.StackedInline):
     model = Doctor
     can_delete = False
     verbose_name_plural = 'Profil'
     fk_name = 'user'
+    form = DoctorForm
 
 
 class UserAdmin(UserAdmin):

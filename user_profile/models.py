@@ -46,7 +46,7 @@ class Doctor(models.Model):
     pwz = models.CharField(max_length=7, verbose_name=u'Numer PWZ')
     mobile = models.IntegerField(blank=True, null=True, verbose_name=u'Numer komórki')
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='doctor', verbose_name=u'Lekarz')
-    working_hours = models.CharField(max_length=800, blank=True, null=True, verbose_name=u'Godziny pracy')
+    working_hours = models.CharField(max_length=1000, blank=True, null=True, verbose_name=u'Godziny pracy')
     visit_duration = models.IntegerField(default=15, verbose_name=u'Czas trwania wizyty')
     terms_generated_till = models.DateField(null=True, blank=True)
     terms_start = models.TimeField(default='09:00')
