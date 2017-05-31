@@ -4,7 +4,7 @@ var calendar = {
             var data = $('#edit-form form').serializeArray();
         else {
             dr = calEvent.doctor.split('/');
-            dr = dr[dr.length-2];
+            dr = dr[dr.length - 2];
             data = [{name: 'status', value: calEvent.status}, {name: 'doctor', value: dr}];
         }
         //data.push({name: 'datetime', value: calEvent.start._i.substr(0, calEvent.start._i.length - 9)});
@@ -84,9 +84,36 @@ $(document).ready(function () {
             $('.fc-popover.click').remove();
         },
         eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
-            calendar.saveTerm(event);
+
+            $('body').append($('.confirm-move').html().replace('popoverr', 'popover'));
+            var start = moment(new Date(event.start - delta.asMilliseconds() - 3600*2000));
+            var newStart = event.start;
+            var text = 'Przesunąć ' + event.title + ' z ' + start.format('DD-MM HH:mm') + ' na ' + newStart.format('DD-MM HH:mm') + '?';
+            $('.confirm-move-text').html(text);
+            $('.fc-popover.click').css({
+                left: jsEvent.pageX,
+                top: jsEvent.pageY
+            });
+            var close = function(save){
+                $('.fc-popover.click').remove();
+                if (save)
+                    return;
+                revertFunc();
+            };
+            $('.remove-popover').click(function(){
+                close();
+            });
+            $('.fc-header button').click(function(){
+                close();
+            });
+            $('.confirm-move-ok').click(function(){
+               $.post('/timetable/move/', {id: event.id, datetime: newStart.format('YYYY-MM-DD HH:mm')}, function(){
+                    close(true);
+                }).fail(function() { notie.alert(3, 'Wystąpił błąd'); close(); });
+            });
+
         },
-        eventDragStart: function(){
+        eventDragStart: function () {
             $('.fc-popover.click').remove();
         },
         eventClick: function (calEvent, jsEvent, view) {
@@ -100,7 +127,7 @@ $(document).ready(function () {
                 $(this).addClass('event-clicked');
             }
             // Add popover
-            if (gabinet.user.can_edit_terms){
+            if (gabinet.user.can_edit_terms) {
                 $('body').append(
                     '<div class="fc-popover click">' +
                     '<div class="fc-header">' +
@@ -121,7 +148,7 @@ $(document).ready(function () {
                     '<li><a href="#" class="fc-event-action-edit">Edytuj termin</a></li>' +
                     (calEvent.status == 'PENDING' ?
                         '<li><a href="#" class="fc-event-action-remove">Anuluj termin</a></li>' : '') +
-                    (calEvent.status == 'FREE' || calEvent.status == 'PENDING'  ?
+                    (calEvent.status == 'FREE' || calEvent.status == 'PENDING' ?
                         '<li><a href="#" class="fc-event-action-remove remove-visit">Anuluj wizytę</a></li>' : '') +
                     '</ul>' +
                     '</div>' +
@@ -231,52 +258,52 @@ $(document).ready(function () {
             });
 
             // Actions link
-            $('.remove-confirmed').click(function (e){
-                $.post('/timetable/cancel/', {id: calEvent.id, cancel: calEvent.cancel}, function(){
-                  $('.fc-popover.click').remove();
-                  $('#calendar').fullCalendar('refetchEvents');
+            $('.remove-confirmed').click(function (e) {
+                $.post('/timetable/cancel/', {id: calEvent.id, cancel: calEvent.cancel}, function () {
+                    $('.fc-popover.click').remove();
+                    $('#calendar').fullCalendar('refetchEvents');
                 });
             }),
-            $('.fc-event-action-edit').click(function (e) {
-                e.preventDefault();
+                $('.fc-event-action-edit').click(function (e) {
+                    e.preventDefault();
 
-                $('.fc-popover.click .main-screen').hide();
-                $.get('/get-form', {module: 'timetable.forms', class: 'TermForm', id: calEvent.id}, function (res) {
-                    $('.fc-popover.click .edit-event #edit-form').html(res.form_html);
-                    $('.fc-popover.click .edit-event').show();
+                    $('.fc-popover.click .main-screen').hide();
+                    $.get('/get-form', {module: 'timetable.forms', class: 'TermForm', id: calEvent.id}, function (res) {
+                        $('.fc-popover.click .edit-event #edit-form').html(res.form_html);
+                        $('.fc-popover.click .edit-event').show();
 
-                    $('#save-term').click(function () {
-                        calendar.saveTerm(calEvent);
-                    });
+                        $('#save-term').click(function () {
+                            calendar.saveTerm(calEvent);
+                        });
 
-                    $('#get-add-patient-form').click(function () {
-                        $.get('/get-form/', {module: 'user_profile.forms', class: 'PatientForm'}, function (res) {
-                            $('.fc-popover.click .edit-event #edit-term').hide();
-                            $('.fc-popover.click .edit-event #edit-patient-form').html(res.form_html);
-                            $('.fc-popover.click .edit-event #edit-patient').show();
-                            $('#cancel-patient').click(function () {
-                                $('.fc-popover.click .edit-event #edit-term').show();
-                                $('.fc-popover.click .edit-event #edit-patient').hide();
-                            });
-                            $('#save-patient').click(function () {
-                                $.post('/get-form/', {
-                                    module: 'user_profile.forms', class: 'PatientForm',
-                                    data: $('#edit-patient-form form').serialize()
-                                }, function (res) {
-                                    if (res.success) {
-                                        $('.fc-popover.click .edit-event #edit-term').show();
-                                        $('.fc-popover.click .edit-event #edit-patient').hide();
-                                    }
-                                    else {
-                                        $('#edit-patient-form').html(res.form_html);
-                                    }
+                        $('#get-add-patient-form').click(function () {
+                            $.get('/get-form/', {module: 'user_profile.forms', class: 'PatientForm'}, function (res) {
+                                $('.fc-popover.click .edit-event #edit-term').hide();
+                                $('.fc-popover.click .edit-event #edit-patient-form').html(res.form_html);
+                                $('.fc-popover.click .edit-event #edit-patient').show();
+                                $('#cancel-patient').click(function () {
+                                    $('.fc-popover.click .edit-event #edit-term').show();
+                                    $('.fc-popover.click .edit-event #edit-patient').hide();
                                 });
-                                //$.post('/rest/terms/' + calEvent.id + '/', {patient})
+                                $('#save-patient').click(function () {
+                                    $.post('/get-form/', {
+                                        module: 'user_profile.forms', class: 'PatientForm',
+                                        data: $('#edit-patient-form form').serialize()
+                                    }, function (res) {
+                                        if (res.success) {
+                                            $('.fc-popover.click .edit-event #edit-term').show();
+                                            $('.fc-popover.click .edit-event #edit-patient').hide();
+                                        }
+                                        else {
+                                            $('#edit-patient-form').html(res.form_html);
+                                        }
+                                    });
+                                    //$.post('/rest/terms/' + calEvent.id + '/', {patient})
+                                });
                             });
                         });
                     });
                 });
-            });
 
             $('.fc-event-action-remove').click(function (e) {
                 e.preventDefault();
@@ -298,7 +325,7 @@ $(document).ready(function () {
         format: 'DD/MM/YYYY',
         locale: 'pl',
     });
-    $('#side-datetimepicker').on('dp.change', function(e){
+    $('#side-datetimepicker').on('dp.change', function (e) {
         $('#calendar').fullCalendar('gotoDate', e.date);
         $('#calendar').fullCalendar('refetchEvents');
     });
@@ -327,9 +354,9 @@ $(document).ready(function () {
                 }
             })
         );
-        $("#calendar-legend li").click(function(){
-           var status = $(this).attr('data-status');
-           $('#calendar').fullCalendar('refetchEvents');
+        $("#calendar-legend li").click(function () {
+            var status = $(this).attr('data-status');
+            $('#calendar').fullCalendar('refetchEvents');
         });
     });
 })(jQuery, ResponsiveBootstrapToolkit);

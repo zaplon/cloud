@@ -100,10 +100,14 @@ class GroupAdmin(GroupAdmin):
         return super(GroupAdmin, self).render_change_form(request, context, add, change, form_url, obj)
 
 
+class ServiceAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.unregister(User)
 admin.site.unregister(Group)
 admin.site.register(Doctor)
-admin.site.register(Service)
+admin.site.register(Service, ServiceAdmin)
 admin.site.register(Localization)
 admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)

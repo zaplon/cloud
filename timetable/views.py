@@ -26,3 +26,13 @@ def term_cancel_view(request):
         t.patient = None
     t.save()
     return HttpResponse(status=200)
+
+
+def term_move_view(request):
+    if not 'id' in request.POST:
+        return HttpResponse(status=400)
+    t = Term.objects.get(id=request.POST['id'])
+    t.datetime = request.POST['datetime']
+    t.save()
+    return HttpResponse(status=200)
+
