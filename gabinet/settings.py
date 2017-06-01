@@ -202,3 +202,5 @@ SIMULATE_SMS_LOGIN = True
 DATABASE_ROUTERS = ['medicine.router.MedicineRouter']
 
 EXTENSIONS = {'img': ['jpg', 'png', 'bnp', 'gif'], 'video': ['mp3', 'wav']}
+
+ELASTIC_HOST = 'localhost'
