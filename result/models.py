@@ -4,6 +4,7 @@ from visit.models import Visit
 from user_profile.models import Patient
 from django.db import models
 from django.conf import settings
+from .search import *
 
 
 RESULT_TYPES = (('IMAGE', u'Zdjęcie'), ('DOCUMENT', u'Dokument'), ('VIDEO', u'Film'))
@@ -17,6 +18,7 @@ class Result(models.Model):
     visit = models.ForeignKey(Visit, related_name='results')
     patient = models.ForeignKey(Patient, related_name='results')
     type = models.CharField(max_length=20, choices=RESULT_TYPES, default='DOCUMENT')
+    doctor = models.ForeignKey(doctor, blank=True, null=True, related_name='results')
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -26,3 +28,17 @@ class Result(models.Model):
         if ext in settings.EXTENSIONS['video']:
             self.type = 'VIDEO'
         super(Result, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
+        
+    def indexing(self):
+       obj = ResultIndex(
+          meta={'id': self.id},
+          name=self.name,
+          description=self.description,
+          uploaded=self.uploaded, 
+          # visit=None,
+          doctor={'pwz': self.doctor.pwz, 'name': self.doctor.name} if self.doctor else None 
+          type=self.type,
+          patient={'first_name': self.patient.first_name, 'last_name': self.patient.last_name, 'pesel': self.patient.pesel} 
+       )
+       obj.save()
+       return obj.to_dict(include_meta=True)
