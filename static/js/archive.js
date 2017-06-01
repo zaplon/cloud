@@ -1,7 +1,7 @@
 $(document).ready(function () {
     if ($('#archive-table').length > 0) {
         $('#archive-table').bootstrapTable({
-            url: '/rest/results/',
+            url: '/archive/search/',
             search: true,
             queryParams: function (params) {
                 params.is_table = true;
@@ -48,6 +48,10 @@ $(document).ready(function () {
             }, {
                 field: 'pesel',
                 title: 'Pesel',
+                align: 'center'
+            },  {
+                field: 'uploaded',
+                title: 'Dodano',
                 align: 'center'
             }]
         });
