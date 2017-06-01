@@ -28,6 +28,7 @@ class Result(models.Model):
         if ext in settings.EXTENSIONS['video']:
             self.type = 'VIDEO'
         super(Result, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
+        self.indexing()
         
     def indexing(self):
        obj = ResultIndex(
