@@ -101,7 +101,7 @@ class GroupAdmin(GroupAdmin):
 
 
 class ServiceAdmin(admin.ModelAdmin):
-    pass
+    fields = ['name', 'code', 'doctors']
 
 
 admin.site.unregister(User)

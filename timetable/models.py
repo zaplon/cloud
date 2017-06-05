@@ -19,20 +19,28 @@ class ServiceToDoctor(models.Model):
 class Service(models.Model):
     name = models.CharField(max_length=255, verbose_name=u'Nazwa')
     price = models.FloatField(default=0, verbose_name=u'Cena')
-    doctors = models.ManyToManyField(Doctor, through=ServiceToDoctor, verbose_name=u'Lekarze')
+    code = models.CharField(unique=True, verbose_name='Kod', max_length=10)
+    doctors = models.ManyToManyField(Doctor, verbose_name=u'Lekarze')
 
     class Meta:
         verbose_name = u'Usługa'
         verbose_name_plural = u'Usługi'
 
+    def __unicode__(self):
+        return self.name
+
 
 class Localization(models.Model):
     name = models.CharField(max_length=255, verbose_name=u'Nazwa')
     address = models.CharField(max_length=255, blank=True, null=True, verbose_name=u'Adres')
+    code = models.CharField(unique=True, verbose_name='Kod', max_length=10)
 
     class Meta:
         verbose_name = 'Lokalizacja'
         verbose_name_plural = 'Lokalizacje'
+
+    def __unicode__(self):
+        return self.name
 
 
 class Term(models.Model):
