@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from visit.models import Visit
-from user_profile.models import Patient
+from user_profile.models import Patient, Doctor
 from django.db import models
 from django.conf import settings
 from .search import *
@@ -18,7 +18,7 @@ class Result(models.Model):
     visit = models.ForeignKey(Visit, related_name='results')
     patient = models.ForeignKey(Patient, related_name='results')
     type = models.CharField(max_length=20, choices=RESULT_TYPES, default='DOCUMENT')
-    doctor = models.ForeignKey(doctor, blank=True, null=True, related_name='results')
+    doctor = models.ForeignKey(Doctor, blank=True, null=True, related_name='results')
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -37,7 +37,7 @@ class Result(models.Model):
           description=self.description,
           uploaded=self.uploaded, 
           # visit=None,
-          doctor={'pwz': self.doctor.pwz, 'name': self.doctor.name} if self.doctor else None 
+          doctor={'pwz': self.doctor.pwz, 'name': self.doctor.name} if self.doctor else None,
           type=self.type,
           patient={'first_name': self.patient.first_name, 'last_name': self.patient.last_name, 'pesel': self.patient.pesel} 
        )
