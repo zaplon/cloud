@@ -29,7 +29,7 @@ var visit = {
             })
         },
         addDocument: function () {
-            $.get('/get-form', {module: 'result.forms', class: 'ResultForm', data: JSON.stringify({visit: visit.id})}, function (res) {
+            $.get('/get-form', {module: 'result.forms', class: 'ResultForm', data: JSON.stringify({visit: visit.id, patient:  visit.patient().id})}, function (res) {
                 var save = "<button id='addArchiveDocument' class='btn btn-primary'>Dodaj</button>";
                 gabinet.showModal('Dodaj plik', res.form_html, save);
                 $('#addArchiveDocument').click(function () {

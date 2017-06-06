@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, HttpResponse
 from result.models import Result
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -12,7 +14,12 @@ class ResultCreateView(CreateView):
 
     
 def search_view(request):
-    if not 'q' in request.GET:
+    if 'search' not in request.GET:
         return HttpResponse(status=400)
-    res = search(request.GET['q'])
-    return HttpResponse(res, content_type='application/json')
+    search_results, search_suggestions = search(request.GET['search'])
+    total = search_results.hits.total
+    if total == 0:
+        return HttpResponse(json.dumps({'results': [], 'count': 0, 'suggestions': search_suggestions}), content_type='application/json')
+    res = {'results': [r.__dict__['_d_'] for r in search_results.hits][int(request.GET.get('offset', 0)):int(request.GET.get('limit', 10))],
+           'count': total, 'suggestions': search_suggestions}
+    return HttpResponse(json.dumps(res), content_type='application/json')

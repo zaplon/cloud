@@ -1,5 +1,13 @@
 $(document).ready(function () {
     if ($('#archive-table').length > 0) {
+
+        $('#search-suggestions').click(function(e){
+            e.preventDefault();
+            var value = $(e.target).html();
+            $('.search input').val(value);
+            $('#archive-table').bootstrapTable('refresh');
+        });
+
         $('#archive-table').bootstrapTable({
             url: '/archive/search/',
             search: true,
@@ -9,6 +17,12 @@ $(document).ready(function () {
                 return params;
             },
             responseHandler: function (res) {
+                if (res.suggestions.length > 0) {
+                    $('#search-suggestion-container').css('display', 'block');
+                    $('#search-suggestions').html(res.suggestions[0]);
+                }
+                else
+                    $('#search-suggestion-container').css('display', 'none');
                 var res = gabinet.transformTableResponse(res);
                 console.log(res);
                 return res;
@@ -44,16 +58,26 @@ $(document).ready(function () {
             }, {
                 field: 'patient',
                 title: 'Osoba',
-                align: 'center'
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return value.first_name + ' ' + value.last_name + ' (' + value.pesel + ')';
+                }
             }, {
-                field: 'pesel',
-                title: 'Pesel',
-                align: 'center'
-            },  {
                 field: 'uploaded',
                 title: 'Dodano',
                 align: 'center'
-            }]
+            }, {
+                field: 'url',
+                title: 'Dokument',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var klass = 'fa-file-pdf-o';
+                    if (row.type == 'VIDEO')
+                        klass = 'fa-file-video-o';
+                    return '<a href="' + value + '"<i class="fa ' + klass + '" ></a>'
+                }
+            }
+            ]
         });
 
         $('#toolbar').find('select').change(function () {
@@ -63,7 +87,7 @@ $(document).ready(function () {
         });
     }
     if ($('#archive').length > 0)
-        $('#search-results').click(function(){
+        $('#search-results').click(function () {
             archive.getArchive($('input[name="pesel"]').val());
         })
 

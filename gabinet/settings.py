@@ -195,7 +195,7 @@ MODULES = [
 # misal settings
 MISAL_SETUP = True
 GENERATE_TERMS = False
-USE_ELO = True
+USE_ELO = False
 USE_SMS_LOGIN = True
 SIMULATE_SMS_LOGIN = True
 
