@@ -29,19 +29,21 @@ $(document).ready(function () {
      Fullcalendar
      ========================================================================== */
 
-    var viewModel = {
-        nextVisits: ko.observableArray(),
-        formatDate: function (date) {
-            var d = new Date(date);
-            //FIXME mało eleganckie
-            //d.setHours(d.getHours()-2);
-            return d.toLocaleString();
-        }
-    };
-    $.getJSON("/rest/terms/?next_visits=1", function (data) {
-        viewModel.nextVisits(data);
-    });
-    ko.applyBindings(viewModel);
+    if ($('.calendar-page-side-section').length > 0) {
+        var viewModel = {
+            nextVisits: ko.observableArray(),
+            formatDate: function (date) {
+                var d = new Date(date);
+                //FIXME mało eleganckie
+                //d.setHours(d.getHours()-2);
+                return d.toLocaleString();
+            }
+        };
+        $.getJSON("/rest/terms/?next_visits=1", function (data) {
+            viewModel.nextVisits(data);
+        });
+        ko.applyBindings(viewModel);
+    }
 
     $('#calendar').fullCalendar({
         locale: 'pl',

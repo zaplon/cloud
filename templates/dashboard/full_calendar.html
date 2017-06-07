@@ -1,23 +1,115 @@
-{% extends 'dashboard/calendar.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 
-{% block filters %}
-    <div class="box-typical" id="calendar-filters">
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="doctor">Lekarz</label>
-                <select class="selectpicker" data-live-search="true" id="doctor">
-                    {% for d in doctors %}
-                        <option value="{{ d.id }}">{{ d.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button class="btn btn-primary">Szukaj</button>
-        </form>
-    </div>
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.css" %}">
+    <link rel="stylesheet" href="{% static "css/separate/pages/calendar.css" %}">
+    <style>
+        .calendar-page .calendar-page-content {
+            margin-top: -8px;
+        }
+
+        .colors-guide-list li {
+            display: inline-block !important;
+        }
+    </style>
 {% endblock %}
 
 {% block extra_scripts %}
-    {{ block.super }}
-    <script src="{% static "js/calendar/filters.js" %}"></script>
+    <script src="{% static "fullcalendar/dist/fullcalendar.min.js" %}"></script>
+    <script src="{% static "fullcalendar/dist/locale/pl.js" %}"></script>
+    <script src="{% static "js/calendar.js" %}"></script>
+    <script src="{% static "js/full_calendar.js" %}"></script>
+{% endblock %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='calendar' %}
+{% endblock %}
+
+{% block content %}
+    <div class="box-typical">
+        <div class="row m-1">
+            <form class="form-inline" id="calendar-filters">
+                <div class="form-group">
+                    <label for="specialization">Specjalizacja</label>
+                    <select class="form-control" id="specialization">
+                        <option name="chirurg">Chirurg</option>
+                    </select>
+                </div>
+                <div class="form-group ml-1">
+                    <label for="localization">Lokalizacja</label>
+                    <select class="form-control" id="localization">
+                        <option name="chirurg">Waryńskiego</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary ml-1" data-bind="click: loadDoctors">Filtruj</button>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-hover table-sm table-bordered" id="doctors-list">
+                <thead>
+                <tr>
+                    <th>Lekarz</th>
+                    <th>Termin</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-bind="foreach: doctors">
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: name"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="calendar-page col-md-9">
+            <div class="calendar-page-content">
+                <div class="calendar-page-title">Kalendarz</div>
+                <div>
+                    <div id='calendar'></div>
+                </div><!--.calendar-page-content-in-->
+            </div><!--.calendar-page-content-->
+        </div><!--.calendar-page-->
+        <ul class="colors-guide-list pull-right mr-1" id="calendar-legend">
+            <li data-status="FINISHED">
+                <div class="FINISHED legend-block">
+                    <div></div>
+                </div>
+                Wizyty zakończone
+            </li>
+            <li data-status="PENDING">
+                <div class="PENDING legend-block">
+                    <div></div>
+                </div>
+                Wizyty zaplanowane
+            </li>
+            <li data-status="CANCELLED">
+                <div class="CANCELLED legend-block">
+                    <div></div>
+                </div>
+                Wizyty anulowane
+            </li>
+            <li data-status="FREE">
+                <div class="FREE legend-block">
+                    <div></div>
+                </div>
+                Wolne terminy
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div><!--.box-typical-->
+    <div class="confirm-move" style="display:none;">
+        <div class="fc-popoverr click" style="left: 591px; top: 544px;">
+            <div class="fc-header"><span id="confirm-move-title">Potwierdź proszę</span>
+                <button type="button" class="cl"><i class="font-icon-close-2"></i></button>
+            </div>
+            <div class="fc-body main-screen">
+                <span class="confirm-move-text"></span>
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-rounded btn-sm confirm-move-ok">Ok</button>
+                    <button type="button" class="btn btn-rounded btn-sm btn-default remove-popover">Anuluj</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
