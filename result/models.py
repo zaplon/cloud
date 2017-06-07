@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+from django.urls import reverse
 
 from visit.models import Visit
 from user_profile.models import Patient, Doctor
@@ -13,14 +14,17 @@ RESULT_TYPES = (('IMAGE', u'Zdjęcie'), ('DOCUMENT', u'Dokument'), ('VIDEO', u'F
 
 
 class Result(models.Model):
-    name = models.CharField(max_length=200)
-    file = models.FileField(upload_to='results/')
+    name = models.CharField(max_length=200, verbose_name='Nazwa')
+    file = models.FileField(upload_to='results/', verbose_name='Plik')
     uploaded = models.DateTimeField()
-    description = models.CharField(max_length=1000, blank=True, null=True)
-    visit = models.ForeignKey(Visit, related_name='results')
-    patient = models.ForeignKey(Patient, related_name='results')
+    description = models.CharField(max_length=1000, blank=True, null=True, verbose_name='Opis')
+    visit = models.ForeignKey(Visit, related_name='results', null=True, blank=True)
+    patient = models.ForeignKey(Patient, related_name='results', verbose_name='Pacjent')
     type = models.CharField(max_length=20, choices=RESULT_TYPES, default='DOCUMENT')
-    doctor = models.ForeignKey(Doctor, blank=True, null=True, related_name='results')
+    doctor = models.ForeignKey(Doctor, blank=True, null=True, related_name='results', verbose_name='Doktor')
+
+    def get_absolute_url(self):
+        return reverse('archive')
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -32,7 +36,11 @@ class Result(models.Model):
         if not self.uploaded:
             self.uploaded = datetime.datetime.now()
         super(Result, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
-        self.indexing()
+        # TODO lepsza obsługa wyjątku
+        try:
+            self.indexing()
+        except:
+            pass
 
     def indexing(self):
         obj = ResultIndex(

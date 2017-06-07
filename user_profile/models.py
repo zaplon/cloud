@@ -100,6 +100,14 @@ class Patient(models.Model):
     info = models.TextField(blank=True, null=True, verbose_name=u'Ważne informacje',
                             help_text=u'Informacje pomocnicze o alergiach, przebytych zabiegach, etc...')
 
+    @property
+    def name(self):
+        return self.__unicode__()
+
+    @property
+    def name_with_pesel(self):
+        return '%s (%s)' % (self.name, self.pesel)
+
     def __unicode__(self):
         return '%s %s' % (self.first_name, self.last_name)
 

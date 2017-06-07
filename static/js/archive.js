@@ -5,7 +5,7 @@ $(document).ready(function () {
             e.preventDefault();
             var value = $(e.target).html();
             $('.search input').val(value);
-            $('#archive-table').bootstrapTable('refresh');
+            $('#archive-table').bootstrapTable('refresh', {query: {is_table: true, limit: gabinet.pageLimit, search: value}});
         });
 
         $('#archive-table').bootstrapTable({
@@ -65,7 +65,11 @@ $(document).ready(function () {
             }, {
                 field: 'uploaded',
                 title: 'Dodano',
-                align: 'center'
+                align: 'center',
+                formatter: function (value) {
+                    var d = new Date(value);
+                    return moment(d).format('DD-MM-YYYY HH:mm');
+                }
             }, {
                 field: 'url',
                 title: 'Dokument',

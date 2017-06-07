@@ -20,8 +20,8 @@
                 <div class="col-md-12">
                     <div id="toolbar">
                         <div class="bootstrap-table-header">Archiwum</div>
-                        {% if perms.result.can_add_result %}
-                            <a href="" class="btn btn-success">
+                        {% if perms.result.add_result %}
+                            <a href="/archive/new/" class="btn btn-success">
                                 <i class="font-icon font-icon-plus"></i> DODAJ
                             </a>
                         {% endif %}

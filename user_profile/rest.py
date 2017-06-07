@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from django.db.models import Q
 from rest_framework import serializers, viewsets
-from rest_framework.fields import CharField, ListField
+from rest_framework.fields import CharField, ListField, IntegerField
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
@@ -12,17 +12,39 @@ import datetime
 
 # Serializers define the API representation.
 class PatientSerializer(serializers.HyperlinkedModelSerializer):
-    #first_name = CharField(source='user.first_name')
-    #last_name = CharField(source='user.last_name')
+    # first_name = CharField(source='user.first_name')
+    # last_name = CharField(source='user.last_name')
     class Meta:
         model = Patient
         fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address')
+
+
+class PatientAutocompleteSerializer(serializers.ModelSerializer):
+    label = CharField(source='name_with_pesel')
+    value = CharField(source='name')
+
+    class Meta:
+        model = Patient
+        fields = ('label', 'value', 'id')
 
 
 # ViewSets define the view behavior.
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
+
+    def get_queryset(self):
+        q = Patient.objects.all()
+        if 'term' in self.request.GET:
+            t = self.request.GET['term']
+            q = q.filter(Q(last_name__icontains=t) | Q(first_name__icontains=t) | Q(pesel__icontains=t))
+        return q
+
+    def get_serializer_class(self):
+        if 'term' in self.request.GET:
+            return PatientAutocompleteSerializer
+        else:
+            return self.serializer_class
 
 
 # Serializers define the API representation.
