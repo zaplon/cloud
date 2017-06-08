@@ -25,6 +25,7 @@
     <script>
         fullCalendarModel.specializations(JSON.parse({{specializations}}));
         fullCalendarModel.localizations(JSON.parse({{localizations}}));
+        fullCalendarModel.services([]);
     </script>
 {% endblock %}
 
@@ -42,15 +43,21 @@
                                                                                 value: selectedSpecialization, optionsCaption: 'Wybierz...'">
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="date-from">Data od</label>
-                    <input type='date' class="form-control datepicker" id="date-from" data-bind="value: dateFrom">
+                <div class="form-group" data-bind="visible: services().length > 1">
+                    <label for="service">Usługa</label>
+                    <select class="form-control" id="service" data-bind="options: services, optionsText: name,
+                                                                                value: selectedService, optionsCaption: 'Wybierz...'">
                     </select>
                 </div>
-                <div class="form-group ml-1" data-bind="visible: localizations().length > 0">
+                <div class="form-group ml-1" data-bind="visible: localizations().length > 1">
                     <label for="localization">Lokalizacja</label>
                     <select class="form-control" id="localization" data-bind="options: localizations, optionsText: name,
                                                                               value: selectedLocalization, optionsCaption: 'Wybierz...'">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date-from">Data od</label>
+                    <input type='date' class="form-control datepicker" id="date-from" data-bind="value: dateFrom">
                     </select>
                 </div>
                 <button class="btn btn-primary ml-1" data-bind="click: loadDoctors">Filtruj</button>
