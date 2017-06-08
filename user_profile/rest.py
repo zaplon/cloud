@@ -109,6 +109,12 @@ class DoctorCalendarSerializer(serializers.ModelSerializer):
 class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
+    
+    def get_serializer_class(self):
+        if 'calendar' in self.request.GET:
+            return DoctorCalendarSerializer
+        else:
+            return self.serializer_class
 
     def get_queryset(self, *args, **kwargs):
         if self.request.user.doctor and not 'id' in kwargs:
