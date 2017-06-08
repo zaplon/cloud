@@ -1,8 +1,16 @@
 fullCalendarModel = {
     doctors: ko.observableArray([]),
+    selectedSpecialization: ko.observable(),
+    selectedLocalization: ko.observable(),
+    specializations: ko.observableArray(),
+    localizations: ko.observableArray(),
     loadDoctors: function(params){
         if (params === undefined)
             params = {};
+        if (this.selectedSpecialization())
+            params.specialization = this.selectedSpecialization().id
+        if (this.selectedLocalization())
+            params.localization = this.selectedLocalization().id
         var me = this;
         $.get('/rest/doctors/', params, function(res){
             me.doctors(res);
