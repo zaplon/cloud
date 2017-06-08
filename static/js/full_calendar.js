@@ -1,5 +1,6 @@
 fullCalendarModel = {
     doctors: ko.observableArray([]),
+    dateFrom: ko.observable(),
     selectedSpecialization: ko.observable(),
     selectedLocalization: ko.observable(),
     specializations: ko.observableArray(),
