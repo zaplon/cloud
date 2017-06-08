@@ -1,0 +1,5 @@
+{% extends 'message.html' %}
+
+{% block message %}
+    <p>Nie masz uprawnień do wyświetlenia tej strony</p>
+{% endblock %
