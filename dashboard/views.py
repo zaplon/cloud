@@ -9,7 +9,7 @@ from wkhtmltopdf.views import PDFTemplateView
 from django.conf import settings
 from user_profile.forms import DoctorForm, UserForm
 from crispy_forms.layout import Layout, Div, Submit, Field
-
+from timetable.models import Specialization, Localization
 from user_profile.models import Doctor
 from user_profile.rest import DoctorSerializer
 
@@ -31,7 +31,9 @@ def calendar_view(request):
         return render(request, 'dashboard/calendar.html')
     else:
         doctors = Doctor.objects.all()
-        return render(request, 'dashboard/full_calendar.html', {'doctors': doctors})
+        specializations = Specialization.objects.all()
+        localizations = Localization.objects.all()
+        return render(request, 'dashboard/full_calendar.html', {'doctors': doctors, 'localizations': localizations, 'specializations': specializations})
 
 @login_required
 def patients_view(request):
