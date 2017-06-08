@@ -16,6 +16,9 @@ fullCalendarModel = {
         $.get('/rest/doctors/', params, function(res){
             me.doctors(res);
         });
+    },
+    loadDoctorCalendar: function(doctor){
+        $('#calendar').fullCalendar('refetchEvents');
     }
 };
 
