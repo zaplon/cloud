@@ -63,9 +63,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr data-bind="foreach: doctors">
+                <tr data-bind="foreach: doctors, click: loadDoctorCalendar">
                     <td data-bind="text: name"></td>
-                    <td data-bind="text: name"></td>
+                    <td data-bind="text: term"></td>
                 </tr>
                 </tbody>
             </table>
