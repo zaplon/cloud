@@ -20,6 +20,10 @@
     <script src="{% static "fullcalendar/dist/locale/pl.js" %}"></script>
     <script src="{% static "js/calendar.js" %}"></script>
     <script src="{% static "js/full_calendar.js" %}"></script>
+    <script>
+        fullCalendarModel.specializations(JSON.parse({{specializations}}));
+        fullCalendarModel.localizations(JSON.parse({{localizations}}));
+    </script>
 {% endblock %}
 
 {% block menu %}
