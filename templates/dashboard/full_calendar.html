@@ -8,9 +8,11 @@
         .calendar-page .calendar-page-content {
             margin-top: -8px;
         }
-
         .colors-guide-list li {
             display: inline-block !important;
+        }
+        #doctors-list tr {
+            cursor: pointer; 
         }
     </style>
 {% endblock %}
@@ -65,7 +67,7 @@
                 <tbody>
                 <tr data-bind="foreach: doctors, click: loadDoctorCalendar">
                     <td data-bind="text: name"></td>
-                    <td data-bind="text: term"></td>
+                    <td data-bind="text: next_term"></td>
                 </tr>
                 </tbody>
             </table>
