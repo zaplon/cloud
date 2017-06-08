@@ -29,6 +29,8 @@ class VisitView(View, LoginRequiredMixin):
     def get(self, request, *args, **kwargs):
         doctor = self.request.user.doctor
         term = Term.objects.get(id=kwargs['pk'])
+        if not term.doctor == doctor:
+            return HttpResponse(status=403)
         if not term.visit:
             visit = Visit.objects.create()
             term.visit = visit
@@ -45,13 +47,14 @@ class VisitView(View, LoginRequiredMixin):
         return render(request, self.template_name, {'doctor': doctor, 'tabs': tabs, 'visit': visit})
 
     def post(self, request, *args, **kwargs):
+        term = Term.objects.get(id=kwargs['pk'])
+        visit = term.visit
+        if not term.doctor == doctor:
+            return HttpResponse(status=403)
         if request.POST.get('cancel', None):
-            visit = Term.objects.get(id=kwargs['pk']).visit
             visit.in_progress = False
             visit.save()
             return HttpResponse(status=200)
-        term = Term.objects.get(id=kwargs['pk'])
-        visit = term.visit
         data = json.loads(request.POST['data'])
         tmp = self.request.POST.get('tmp', False)
 
