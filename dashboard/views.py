@@ -31,8 +31,8 @@ def calendar_view(request):
         return render(request, 'dashboard/calendar.html')
     else:
         doctors = Doctor.objects.all()
-        specializations = Specialization.objects.all()
-        localizations = Localization.objects.all()
+        specializations = json.dumps(Specialization.objects.all().values('id', 'name'))
+        localizations = json.dumps(Localization.objects.all().values('id', 'name'))
         return render(request, 'dashboard/full_calendar.html', {'doctors': doctors, 'localizations': localizations, 'specializations': specializations})
 
 @login_required
