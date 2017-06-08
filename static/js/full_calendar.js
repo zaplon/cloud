@@ -5,6 +5,7 @@ fullCalendarModel = {
     selectedLocalization: ko.observable(),
     specializations: ko.observableArray(),
     localizations: ko.observableArray(),
+    doctor: {},
     loadDoctors: function(params){
         if (params === undefined)
             params = {};
@@ -18,6 +19,7 @@ fullCalendarModel = {
         });
     },
     loadDoctorCalendar: function(doctor){
+        this.doctor = doctor();
         $('#calendar').fullCalendar('refetchEvents');
     }
 };
