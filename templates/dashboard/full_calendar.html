@@ -32,14 +32,14 @@
             <form class="form-inline" id="calendar-filters">
                 <div class="form-group">
                     <label for="specialization">Specjalizacja</label>
-                    <select class="form-control" id="specialization">
-                        <option name="chirurg">Chirurg</option>
+                    <select class="form-control" id="specialization" data-bind="options: specializations, optionsText: name,
+                                                                                value: selectedSpecialization, optionsCaption: 'Wybierz...'">
                     </select>
                 </div>
                 <div class="form-group ml-1">
                     <label for="localization">Lokalizacja</label>
-                    <select class="form-control" id="localization">
-                        <option name="chirurg">Waryńskiego</option>
+                    <select class="form-control" id="localization" data-bind="options: localizations, optionsText: name,
+                                                                              value: selectedLocalization, optionsCaption: 'Wybierz...'">
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary ml-1" data-bind="click: loadDoctors">Filtruj</button>
