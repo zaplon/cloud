@@ -9,8 +9,8 @@ from wkhtmltopdf.views import PDFTemplateView
 from django.conf import settings
 from user_profile.forms import DoctorForm, UserForm
 from crispy_forms.layout import Layout, Div, Submit, Field
-from timetable.models import Specialization, Localization
-from user_profile.models import Doctor
+from timetable.models import Localization
+from user_profile.models import Doctor, Specialization
 from user_profile.rest import DoctorSerializer
 
 
@@ -30,10 +30,9 @@ def calendar_view(request):
     if not hasattr(request.user, 'doctor'):
         return render(request, 'dashboard/calendar.html')
     else:
-        doctors = Doctor.objects.all()
-        specializations = json.dumps(Specialization.objects.all().values('id', 'name'))
-        localizations = json.dumps(Localization.objects.all().values('id', 'name'))
-        return render(request, 'dashboard/full_calendar.html', {'doctors': doctors, 'localizations': localizations, 'specializations': specializations})
+        specializations = json.dumps(list(Specialization.objects.all().values('id', 'name')))
+        localizations = json.dumps(list(Localization.objects.all().values('id', 'name')))
+        return render(request, 'dashboard/full_calendar.html', {'localizations': localizations, 'specializations': specializations})
 
 @login_required
 def patients_view(request):

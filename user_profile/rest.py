@@ -102,7 +102,7 @@ class DoctorCalendarSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Doctor
-        fields = ('name', 'next_term')
+        fields = ('id', 'name', 'next_term')
 
 
 # ViewSets define the view behavior.

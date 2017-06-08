@@ -2,13 +2,18 @@ from django.shortcuts import HttpResponseRedirect, render
 from django.conf import settings
 
 
-def permissions_middleware():
+def permissions_middleware(get_response):
     
     def middleware(request):
         u = request.user
         for m in settings.MODULES:
-            if request.path.startswith(m[1]) and not u.has_perm(m[0])
-                return render(request, 'no_permissions.html')
+            if request.path.startswith('/' + m[1]):
+                if type(m[0]) == list:
+                    if not (u.has_perm(m[0][0]) or u.has_perm(m[0][1])):
+                        return render(request, 'no_permissions.html')
+                elif m[0] is not True and not u.has_perm(m[0]):
+                    return render(request, 'no_permissions.html')
+        response = get_response(request)
         return response
     return middleware
 

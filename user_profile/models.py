@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
 import json
+import datetime
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -62,7 +63,7 @@ class Doctor(models.Model):
     @property    
     def next_term(self):
         now = datetime.datetime.now()
-        return self.terms.filter(datetime__gt=now, status='FREE').order_by(datetime)[0].datetime.strftime('%d-%m-%Y')
+        return self.terms.filter(datetime__gt=now, status='FREE').order_by('datetime')[0].datetime.strftime('%d-%m-%Y')
     
     def get_working_hours(self):
         if not self.working_hours:

@@ -71,7 +71,7 @@ $(document).ready(function () {
             type: 'GET',
             data: function(){
                 if (fullCalendarModel)
-                    return {doctor: fullCalendarModel.doctor.id, calendar: 1};
+                    return {doctor: fullCalendarModel.doctor.id};
                 else
                     return {};
                 

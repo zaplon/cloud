@@ -23,8 +23,8 @@
     <script src="{% static "js/calendar.js" %}"></script>
     <script src="{% static "js/full_calendar.js" %}"></script>
     <script>
-        fullCalendarModel.specializations(JSON.parse({{specializations}}));
-        fullCalendarModel.localizations(JSON.parse({{localizations}}));
+        fullCalendarModel.specializations(JSON.parse('{{specializations|safe}}'));
+        fullCalendarModel.localizations(JSON.parse('{{localizations|safe}}'));
         fullCalendarModel.services([]);
     </script>
 {% endblock %}
@@ -55,9 +55,9 @@
                                                                               value: selectedLocalization, optionsCaption: 'Wybierz...'">
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group ml-1">
                     <label for="date-from">Data od</label>
-                    <input type='date' class="form-control datepicker" id="date-from" data-bind="value: dateFrom">
+                    <input type='date' class="form-control datepicker" id="date-from" data-bind="text: dateFrom">
                     </select>
                 </div>
                 <button class="btn btn-primary ml-1" data-bind="click: loadDoctors">Filtruj</button>
@@ -72,10 +72,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr data-bind="foreach: doctors, click: loadDoctorCalendar">
-                    <td data-bind="text: name"></td>
-                    <td data-bind="text: next_term"></td>
-                </tr>
+                    <!-- ko foreach: doctors -->
+                    <tr data-bind="click: $parent.loadDoctorCalendar">
+                        <td data-bind="text: name"></td>
+                        <td data-bind="text: next_term"></td>
+                    </tr>
+                    <!-- /ko -->
                 </tbody>
             </table>
         </div>

@@ -1,7 +1,8 @@
 fullCalendarModel = {
     doctors: ko.observableArray([]),
-    dateFrom: ko.observable(),
+    dateFrom: ko.observable(moment(new Date()).format('DD-MM-YYYY')),
     selectedSpecialization: ko.observable(),
+    selectedService: ko.observable(),
     selectedLocalization: ko.observable(),
     specializations: ko.observableArray(),
     localizations: ko.observableArray(),
@@ -11,16 +12,17 @@ fullCalendarModel = {
         if (params === undefined)
             params = {};
         if (this.selectedSpecialization())
-            params.specialization = this.selectedSpecialization().id
+            params.specialization = this.selectedSpecialization().id;
         if (this.selectedLocalization())
-            params.localization = this.selectedLocalization().id
+            params.localization = this.selectedLocalization().id;
         var me = this;
+        params.calendar = 1;
         $.get('/rest/doctors/', params, function(res){
             me.doctors(res);
         });
     },
     loadDoctorCalendar: function(doctor){
-        this.doctor = doctor();
+        fullCalendarModel.doctor = doctor;
         $('#calendar').fullCalendar('refetchEvents');
     }
 };
