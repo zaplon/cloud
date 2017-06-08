@@ -69,7 +69,13 @@ $(document).ready(function () {
         events: {
             url: '/rest/terms/',
             type: 'GET',
-            data: {},
+            data: function(){
+                if (fullCalendarModel)
+                    return {doctor: fullCalendarModel.doctor.id};
+                else
+                    return {};
+                
+            },
             error: function () {
                 alert('Wystąpił błąd przy pobieraniu danych!');
             }
