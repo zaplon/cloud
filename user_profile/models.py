@@ -62,7 +62,7 @@ class Doctor(models.Model):
     @property    
     def next_term(self):
         now = datetime.datetime.now()
-        return self.terms.filter(datetime__gt=now, status='FREE').order_by(datetime)[0]
+        return self.terms.filter(datetime__gt=now, status='FREE').order_by(datetime)[0].datetime.strftime('%d-%m-%Y')
     
     def get_working_hours(self):
         if not self.working_hours:
