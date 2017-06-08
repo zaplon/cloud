@@ -5,6 +5,7 @@ fullCalendarModel = {
     selectedLocalization: ko.observable(),
     specializations: ko.observableArray(),
     localizations: ko.observableArray(),
+    services: ko.observableArray(),
     doctor: {},
     loadDoctors: function(params){
         if (params === undefined)
