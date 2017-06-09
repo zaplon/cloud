@@ -34,7 +34,8 @@ $(document).ready(function(){
     $('#date-from').datepicker({
         format: 'dd-mm-yyyy',
         autoclose: true,
-        startDate: '+1d'
+        startDate: '+1d',
+        minDate: 0
 
     });
     fullCalendarModel.loadDoctors();
