@@ -8,6 +8,7 @@ fullCalendarModel = {
     localizations: ko.observableArray(),
     services: ko.observableArray(),
     doctor: {},
+    doctorFilter: ko.observable('');
     loadDoctors: function(params){
         if (params === undefined)
             params = {};
