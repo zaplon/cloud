@@ -70,10 +70,14 @@
                     <th>Lekarz</th>
                     <th>Termin</th>
                 </tr>
+                <tr>
+                    <th><input type="text" class="form-control" data-bind="value: doctorFilter"></th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody>
                     <!-- ko foreach: doctors -->
-                    <tr data-bind="click: $parent.loadDoctorCalendar">
+                    <tr data-bind="click: $parent.loadDoctorCalendar, visible: doctorFilter().length == 0 || name.search(doctorFilter()) > -1">
                         <td data-bind="text: name"></td>
                         <td data-bind="text: next_term"></td>
                     </tr>
