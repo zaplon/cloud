@@ -31,5 +31,11 @@ fullCalendarModel = {
 $(document).ready(function(){
     ko.applyBindings(fullCalendarModel, $('#doctors-list')[0]);
     ko.applyBindings(fullCalendarModel, $('#calendar-filters')[0]);
+    $('#date-from').datepicker({
+        format: 'dd-mm-yyyy',
+        autoclose: true,
+        startDate: '+1d'
+
+    });
     fullCalendarModel.loadDoctors();
 });
