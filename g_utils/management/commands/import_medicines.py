@@ -53,7 +53,10 @@ class Command(BaseCommand):
                 cats = row[7].split('\n')
                 print sizes
                 for i, ean in enumerate(row[6].split('\n')):
-                    size = sizes[i] if i < len(sizes) else ' '
+                    try:
+                        size = sizes[i]
+                    except:
+                        size = ' '
                     m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cats[i],
                                                    in_use=True)
 
@@ -68,9 +71,11 @@ class Command(BaseCommand):
 
                 sizes = row[5].split('\n')
                 cats = row[6].split('\n')
-                print sizes
                 for i, ean in enumerate(row[7].split('\n')):
-                    size = sizes[i] if i < len(sizes) else ' '
+                    try:
+                        size = sizes[i] if i < len(sizes) else ' '
+                    except:
+                        size = ' '
                     m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cats[i],
                                                    in_use=True)
 

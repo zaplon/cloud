@@ -147,7 +147,9 @@ var visit = {
             return;
         var me = this;
         tabs.forEach(function (tab) {
-            if (tab.model.dontSave)
+            if (typeof (tab.model) == 'undefined')
+                return;
+            if (typeof(tab.model.dontSave) != 'undefined' && tab.model.dontSave)
                 return;
             if (typeof(tab.model.save) == 'undefined')
                 data = null;
@@ -161,7 +163,7 @@ var visit = {
                 url: window.location.pathname,
                 data: {
                     data: JSON.stringify(visit.tabs),
-                    tmp: tmp ? true : false
+                    tmp: tmp ? 1 : 0
                 },
                 success: function (res) {
                     if (res.success) {

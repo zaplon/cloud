@@ -27,7 +27,7 @@ def index_view(request):
 
 @login_required
 def calendar_view(request):
-    if not hasattr(request.user, 'doctor'):
+    if hasattr(request.user, 'doctor'):
         return render(request, 'dashboard/calendar.html')
     else:
         specializations = json.dumps(list(Specialization.objects.all().values('id', 'name')))

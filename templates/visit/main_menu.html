@@ -21,7 +21,7 @@
             </button>
         </div>
         <div class="col-md-4 col-sm-6 text-right hidden-lg-down">
-            <button id="save-visit" class="btn btn-success" data-bind="click: saveVisit">Zakończ</button>
+            <button id="save-visit" class="btn btn-success" data-bind="click: saveVisit.bind($data, false)">Zakończ</button>
             <button id="save-temporary" class="btn btn-default" data-bind="click: saveTmp">Zapisz roboczą</button>
             <button id="cancel-visit" class="btn btn-danger" data-bind="click: cancelVisit">Powrót</button>
         </div>

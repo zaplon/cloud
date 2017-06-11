@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     'result',
     'forms',
     'wkhtmltopdf',
-    'administration'
+    'administration',
+    'pinax_theme_bootstrap',
+    'bootstrapform'
 ]
 SITE_ID = 1
 MIDDLEWARE = [
@@ -83,6 +85,7 @@ TEMPLATES = [
                 "g_utils.context_processors.utils",
                 "account.context_processors.account",
                 "g_utils.context_processors.form_helpers",
+                "pinax_theme_bootstrap.context_processors.theme"
             ],
         },
     },
@@ -174,7 +177,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
 }
 
 LANGUAGE_CODE = 'pl-pl'
@@ -197,7 +201,7 @@ MODULES = [
 MISAL_SETUP = True
 GENERATE_TERMS = False
 USE_ELO = False
-USE_SMS_LOGIN = True
+USE_SMS_LOGIN = False
 SIMULATE_SMS_LOGIN = True
 
 DATABASE_ROUTERS = ['medicine.router.MedicineRouter']
@@ -205,3 +209,4 @@ DATABASE_ROUTERS = ['medicine.router.MedicineRouter']
 EXTENSIONS = {'img': ['jpg', 'png', 'bnp', 'gif'], 'video': ['mp3', 'wav']}
 
 ELASTIC_HOST = 'localhost'
+DATE_FORMAT = '%d-%m-%Y'

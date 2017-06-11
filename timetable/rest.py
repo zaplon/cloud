@@ -3,6 +3,8 @@ from django.http.response import HttpResponseBadRequest
 from django.utils import timezone
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
+
+from user_profile.models import Doctor
 from .models import Term
 from rest_framework.permissions import IsAuthenticated
 import datetime
@@ -25,6 +27,7 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Term.objects.all()
     serializer_class = TermSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = None
 
     def get_queryset(self):
         if 'next_visits' in self.request.GET:
@@ -35,9 +38,15 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
                 return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
                                                                       doctor__id=self.request.GET['doctor'], status='PENDING').order_by('datetime')[0:5]
             else:
-                return HttpResponseBadRequest()
+                return Term.objects.none()
         end = datetime.datetime.strptime(self.request.query_params['end'], '%Y-%m-%d')
-        doctor = self.request.user.doctor
+        if hasattr(self.request.user, 'doctor'):
+            doctor = self.request.user.doctor
+        else:
+            if 'doctor' not in self.request.GET:
+                return Term.objects.none()
+            else:
+                doctor = Doctor.objects.get(id=self.request.GET['doctor'])
         if settings.GENERATE_TERMS and (not doctor.terms_generated_till or doctor.terms_generated_till < end.date()):
             Term.create_terms_for_period(doctor,
                                          datetime.datetime.strptime(self.request.query_params['start'], '%Y-%m-%d'),
@@ -45,8 +54,7 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
         q = super(TermViewSet, self).get_queryset()
         if 'start' in self.request.GET:
             q = q.filter(datetime__gte=self.request.query_params['start'], datetime__lte=self.request.query_params['end'])
-            if hasattr(self.request.user, 'doctor'):
-                q = q.filter(doctor=self.request.user.doctor)
+            q = q.filter(doctor=doctor)
         return q
 
 

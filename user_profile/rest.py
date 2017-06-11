@@ -1,11 +1,11 @@
 from django.conf.urls import url, include
-from django.db.models import Q
+from django.db.models import Q, Min
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField, ListField, IntegerField
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
-
+from django.conf import settings
 from .models import Doctor, Patient, Note
 import datetime
 
@@ -50,6 +50,7 @@ class PatientViewSet(viewsets.ModelViewSet):
 # Serializers define the API representation.
 class NoteSerializer(serializers.ModelSerializer):
     author = CharField(source='get_author', required=False)
+
     class Meta:
         model = Note
         fields = ('id', 'text', 'patient', 'doctor', 'author')
@@ -59,6 +60,7 @@ class NoteSerializer(serializers.ModelSerializer):
 class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+    pagination_class = None
 
     def get_queryset(self):
         q = super(NoteViewSet, self).get_queryset()
@@ -93,23 +95,24 @@ class UserSerializer(serializers.ModelSerializer):
 class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     name = CharField(source='get_name')
     working_hours = ListField(source='get_working_hours')
+
     class Meta:
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours')
         
         
 class DoctorCalendarSerializer(serializers.ModelSerializer):
-    
+    first_term = serializers.DateTimeField(format=settings.DATE_FORMAT)
     class Meta:
         model = Doctor
-        fields = ('id', 'name', 'next_term')
+        fields = ('id', 'name', 'first_term', 'terms_start', 'terms_end')
 
 
 # ViewSets define the view behavior.
 class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
-    
+
     def get_serializer_class(self):
         if 'calendar' in self.request.GET:
             return DoctorCalendarSerializer
@@ -117,11 +120,22 @@ class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
             return self.serializer_class
 
     def get_queryset(self, *args, **kwargs):
-        if self.request.user.doctor and not 'id' in kwargs:
+        if hasattr(self.request.user, 'doctor') and 'id' not in kwargs:
             return Doctor.objects.filter(user=self.request.user)
         else:
-            return super(DoctorViewSet, self).get_queryset()
-
-
+            get_params = self.request.GET
+            q = super(DoctorViewSet, self).get_queryset()
+            if 'dateFrom' in get_params:
+                dt = datetime.datetime.strptime(get_params['dateFrom'], '%Y-%m-%d')
+            else:
+                dt = datetime.datetime.today()
+            if 'specialization' in get_params:
+                q = q.filter(specializations__id=get_params['specialization'])
+            if 'name_like' in get_params:
+                q = q.filter(Q(user__first_name__icontains=get_params['name_like']) |
+                             Q(user__last_name__icontains=get_params['name_like']))
+            q = q.filter(terms__status='FREE', terms__datetime__gt=dt)
+            q = q.annotate(first_term=Min('terms__datetime')).order_by('-first_term')
+            return q
 
 

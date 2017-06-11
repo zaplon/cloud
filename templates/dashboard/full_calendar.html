@@ -6,13 +6,20 @@
     <link rel="stylesheet" href="{% static "css/separate/pages/calendar.css" %}">
     <style>
         .calendar-page .calendar-page-content {
-            margin-top: -8px;
+            margin-top: -9px;
         }
         .colors-guide-list li {
             display: inline-block !important;
         }
         #doctors-list tr {
             cursor: pointer; 
+        }
+        .fc-row.fc-widget-header tr{
+            height: 48px;
+        }
+        .fc-toolbar.fc-header-toolbar{
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
     </style>
 {% endblock %}
@@ -57,35 +64,38 @@
                 </div>
                 <div class="form-group ml-1">
                     <label for="date-from">Data od</label>
-                    <input type='date' class="form-control datepicker" id="date-from" data-bind="text: dateFrom">
+                    <input type='date' class="form-control" id="date-from" data-bind="value: dateFrom">
                     </select>
                 </div>
                 <button class="btn btn-primary ml-1" data-bind="click: loadDoctors">Filtruj</button>
             </form>
         </div>
-        <div class="col-md-3">
-            <table class="table table-hover table-sm table-bordered" id="doctors-list">
+        <div class="col-md-3 pl-0 pr-0">
+            <table class="table table-hover table-sm" id="doctors-list">
                 <thead>
                 <tr>
                     <th>Lekarz</th>
-                    <th>Termin</th>
+                    <th title="Najbliższy wolny termin">Termin</th>
                 </tr>
                 <tr>
-                    <th><input type="text" class="form-control" data-bind="value: doctorFilter"></th>
+                    <th><input placeholder="Nazwisko..." type="text" class="form-control form-control-sm" data-bind="value: doctorFilter"></th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                     <!-- ko foreach: doctors -->
-                    <tr data-bind="click: $parent.loadDoctorCalendar, visible: doctorFilter().length == 0 || name.search(doctorFilter()) > -1">
+                    <tr data-bind="click: $parent.loadDoctorCalendar, attr: {class: $parent.doctor().id==id ? 'table-active': ''}">
                         <td data-bind="text: name"></td>
-                        <td data-bind="text: next_term"></td>
+                        <td data-bind="text: first_term"></td>
                     </tr>
                     <!-- /ko -->
+                    <tr data-bind="visible: doctors().length==0">
+                        <td colspan="2" class="empty-row">Brak wyników</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        <div class="calendar-page col-md-9">
+        <div class="calendar-page col-md-9 pr-0 pl-0">
             <div class="calendar-page-content">
                 <div class="calendar-page-title">Kalendarz</div>
                 <div>

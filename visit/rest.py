@@ -38,6 +38,7 @@ class TemplateSerializer(serializers.ModelSerializer):
 class TemplateViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
+    pagination_class = None
 
     def get_queryset(self):
         q = super(TemplateViewSet, self).get_queryset()

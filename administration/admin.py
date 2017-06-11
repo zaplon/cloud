@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
+from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, UserChangeForm, GroupAdmin
-from django.forms import ModelForm, Widget
+from django.forms import ModelForm, Widget, ChoiceField
 from django.template import loader
 from django.utils.safestring import mark_safe
 
@@ -29,7 +30,19 @@ def translate_permissions(perms):
 
 
 class UserChangeForm(UserChangeForm):
-    pass
+
+    def __init__(self, *args, **kwargs):
+        super(UserChangeForm, self).__init__(*args, **kwargs)
+
+
+class UserCreationForm(UserCreationForm):
+    role = ChoiceField(label=_('Rola'), choices=(('DOCTOR', 'Lekarz'), ('REGISTRATION', 'Rejestracja'),
+                                                 ('ADMINISTRATION', 'Administracja')))
+
+    class Meta:
+        model = User
+        fields = ("username", "role")
+        field_classes = {'username': UsernameField}
 
 
 class HoursWidget(Widget):
@@ -61,7 +74,7 @@ class DoctorInline(admin.StackedInline):
 
 
 class UserAdmin(UserAdmin):
-    inlines = (DoctorInline, )
+    #inlines = (DoctorInline, )
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
@@ -69,7 +82,14 @@ class UserAdmin(UserAdmin):
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'role', 'password1', 'password2'),
+        }),
+    )
     form = UserChangeForm
+    add_form = UserCreationForm
 
     def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
         if not request.user.is_superuser:
@@ -79,6 +99,30 @@ class UserAdmin(UserAdmin):
             choices = translate_permissions(list(form.fields['user_permissions'].choices))
             form.fields['user_permissions'].choices = choices
         return super(UserAdmin, self).render_change_form(request, context, add, change, form_url, obj)
+
+    def get_form(self, request, obj=None, **kwargs):
+        """
+        Use special form during user creation
+        """
+        defaults = {}
+        if obj is None:
+            defaults['form'] = self.add_form
+        else:
+            if obj.groups.filter(name='Lekarze').exists():
+                self.inlines.append(DoctorInline)
+        defaults.update(kwargs)
+        return super(UserAdmin, self).get_form(request, obj, **defaults)
+
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        if 'role' in form.cleaned_data:
+            role = form.cleaned_data['role']
+            if role == 'DOCTOR':
+                obj.groups.add(Group.objects.get(name='Lekarze'))
+            if role == 'REGISTRATION':
+                obj.groups.add(Group.objects.get(name='Rejestracja'))
+            if role == 'ADMINISTRATION':
+                obj.groups.add(Group.objects.get(name='administracja'))
 
 
 class GroupForm(ModelForm):
@@ -106,7 +150,6 @@ class ServiceAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
-admin.site.register(Doctor)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Localization)
 admin.site.register(User, UserAdmin)

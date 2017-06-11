@@ -50,8 +50,8 @@ $(document).ready(function () {
         defaultView: 'agendaWeek',
         slotDuration: '00:15:00',
         displayEventTime: false,
-        minTime: gabinet.doctor.terms_start.substr(0, 5),
-        maxTime: gabinet.doctor.terms_end.substr(0, 5),
+        minTime: gabinet.doctor ? gabinet.doctor.terms_start.substr(0, 5) : '09:00:00',
+        maxTime: gabinet.doctor ? gabinet.doctor.terms_end.substr(0, 5): '17:00:00',
         header: {
             left: '',
             center: 'prev, title, next',
@@ -70,8 +70,8 @@ $(document).ready(function () {
             url: '/rest/terms/',
             type: 'GET',
             data: function(){
-                if (fullCalendarModel)
-                    return {doctor: fullCalendarModel.doctor.id};
+                if (typeof (fullCalendarModel) != "undefined")
+                    return {doctor: fullCalendarModel.doctor().id};
                 else
                     return {};
                 

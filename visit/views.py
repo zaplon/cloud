@@ -49,6 +49,7 @@ class VisitView(View, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         term = Term.objects.get(id=kwargs['pk'])
         visit = term.visit
+        doctor = self.request.user.doctor
         if not term.doctor == doctor:
             return HttpResponse(status=403)
         if request.POST.get('cancel', None):
@@ -69,7 +70,7 @@ class VisitView(View, LoginRequiredMixin):
             vt.json = json.dumps(tab['data']) if 'data' in tab else ''
             vt.save()
             visit.tabs.add(vt)
-        if not tmp:
+        if not int(tmp):
             term.status = 'finished'
             term.save()
         return HttpResponse(content=json.dumps({'success': True}), status=200, content_type='application/json')
