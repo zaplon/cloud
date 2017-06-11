@@ -36,8 +36,13 @@ class Command(BaseCommand):
                 cats = row[6].split('\n')
                 print sizes
                 for i, ean in enumerate(row[7].split('\n')):
-                    size = sizes[i] if i < len(sizes) else ' '
-                    m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cats[i],
+                    try:
+                        size = sizes[i]
+                        cat = cats[i]
+                    except:
+                        size = ' '
+                        cat = ' '
+                    m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cat,
                                                    in_use=True)
 
                 print medicine.name
