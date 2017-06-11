@@ -55,9 +55,11 @@ class Command(BaseCommand):
                 for i, ean in enumerate(row[6].split('\n')):
                     try:
                         size = sizes[i]
+                        cat = cats[i]
                     except:
                         size = ' '
-                    m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cats[i],
+                        cat = ' '
+                    m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cat,
                                                    in_use=True)
 
                 print medicine.name
