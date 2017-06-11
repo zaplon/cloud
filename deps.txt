@@ -19,3 +19,4 @@ suds==0.4
 wheel==0.24.0
 elasticsearch_dsl
 pinax-theme-bootstrap
+xlrd

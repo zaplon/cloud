@@ -55,8 +55,11 @@ class Command(BaseCommand):
         for sheet in sheets:
             for row in sheet:
                 r = Refundation()
-                if len(row[xls_cols[i]['ean']].split(',\n')) > 0:
-                    row[xls_cols[i]['ean']] = row[xls_cols[i]['ean']].split(',\n')[0]
+                try:
+                    if len(row[xls_cols[i]['ean']].split(',\n')) > 0:
+                        row[xls_cols[i]['ean']] = row[xls_cols[i]['ean']].split(',\n')[0]
+                except:
+                    continue
                 if 'recommendations' in xls_cols[i]:
                     if len(row[xls_cols[i]['recommendations']]) > 500:
                         row[xls_cols[i]['recommendations']] = row[xls_cols[i]['recommendations']][1:499]
