@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load utils_tags %}
 
 {% block body %}
     <body class="horizontal-navigation {% block body_extra_class %}{% endblock %}">
@@ -13,7 +14,7 @@
                 {% endif %}
             </a>
             <div class="site-header-shown">
-                        {% if request.user.doctor %}
+                        {% if is_doctor %}
                             <button id="show-ad-recipes" class="btn btn-nav btn-rounded btn-inline btn-default-outline">
                                 <span class="">Recept: <span>{{ recipes_available }} / {{ recipes_total }}</span></span>
                             </button>

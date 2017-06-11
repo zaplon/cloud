@@ -1,4 +1,5 @@
 from g_utils.forms import NoFormFormHelper
+from g_utils.templatetags.utils_tags import is_doctor
 from user_profile.forms import DoctorForm
 from user_profile.models import SystemSettings
 from user_profile.rest import DoctorSerializer, UserSerializer
@@ -12,7 +13,7 @@ def form_helpers(request):
 
 def utils(request):
     ctx = {}
-    if request.user.is_authenticated and hasattr(request.user, 'doctor'):
+    if request.user.is_authenticated and is_doctor(False, request.user):
         user = request.user
         doctor = user.doctor
         system_settings = SystemSettings.objects.first()

@@ -54,6 +54,7 @@ class RefundationSerializer(serializers.ModelSerializer):
 class RefundationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Refundation.objects.all()
     serializer_class = RefundationSerializer
+    pagination_class = None
 
     def get_queryset(self):
         q = super(RefundationViewSet, self).get_queryset()

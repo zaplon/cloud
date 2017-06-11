@@ -31,3 +31,12 @@ def has_perm(context, perm):
     if len(perm) > 1:
         return context['request'].user.has_perm(perm[0]) or context['request'].user.has_perm(perm[1])
     return context['request'].user.has_perm(perm)
+
+
+@register.assignment_tag(takes_context=True)
+def is_doctor(context=False, user=False):
+    if user:
+        u = user
+    else:
+        u = context['request'].user
+    return u.groups.filter(name='Lekarze').exists()

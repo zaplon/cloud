@@ -28,6 +28,9 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    if instance.groups.filter(name='Lekarze').exists():
+        if not hasattr(instance, 'doctor'):
+            Doctor.objects.create(user=instance)
     if not hasattr(instance, 'profile'):
         Profile.objects.create(user=instance)
     else:
