@@ -252,7 +252,9 @@ var visit = {
     },
     showForm: function (form) {
         params = {};
-        params.pesel = this.patient().pesel;
+        var patient = this.patient();
+        params.pesel = patient.pesel;
+        params.name = patient.name;
         gabinet.showForm(form, params, true);
     },
     printVisit: function () {

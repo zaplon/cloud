@@ -17,20 +17,6 @@ $(document).ready(function(){
             if ($('textarea[name="'+param+'"]').length > 0)
                 $('textarea[name="'+param+'"]').html(parent.SPSR.params[param]);
         };
-    $('input[type="text"],input[type="number"]').change(function(){
-        $(this).attr('value', $(this).val());
-    });
-    $('input[type="checkbox"]').change(function(){
-        if (this.checked)
-            $(this).attr('checked', '1');
-        else
-            $(this).removeAttr('checked');
-
-    });
-    $('textarea').on('input',function(e){
-        $(e.target).html(e.target.value);
-    });
-
     //orzeczeni zdolnosc do pracy
     $('.cross li').addClass('crossable');
 
@@ -39,3 +25,4 @@ $(document).ready(function(){
     });
 
 });
+

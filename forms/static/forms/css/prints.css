@@ -1,6 +1,11 @@
+body {
+  margin: 0 auto;
+  font-family: "Arial"; }
+
 input[type='text'] {
   border: none;
-  border-bottom: 1px dotted black; }
+  border-bottom: 1px dotted black;
+  padding-left: 8px; }
 
 .text-center {
   text-align: center; }
