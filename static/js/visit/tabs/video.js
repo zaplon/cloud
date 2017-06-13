@@ -39,10 +39,35 @@ var endoscope = {
     slidesShow: ko.observable(false),
     videosShow: ko.observable(false),
     isRecording: ko.observable(false),
-    slides: ko.observable([0, 0]),
-    videos: ko.observable([0, 0]),
+    slides: ko.observableArray([]),
+    slideIndex: ko.observable(0),
+    videoIndex: ko.observable(0),
+    currentSlide: ko.observable(),
+    currentVideo: ko.observable(),
+    videos: ko.observableArray([]),
     width: 640,
     height: 480,
+    changeSlide: function (dir) {
+        var index = this.slideIndex() + dir;
+        var slidesNr = this.slides().length - 1;
+        if (index < 0)
+            this.slideIndex(slidesNr);
+        if (index > slidesNr)
+            this.slideIndex(0);
+        this.slide(this.slides()[this.slideIndex]);
+    },
+    loadSlides: function () {
+        var me = this;
+        $.getJSON('/rest/results/', {type: 'ENDOSCOPE_IMAGE'}, function(data){
+            me.slides(data);
+        });
+    },
+    loadVideos: function () {
+        var me = this;
+        $.getJSON('/rest/results/', {type: 'ENDOSCOPE_VIDEO'}, function(data){
+            me.slides(data);
+        });
+    },
     blinkScreen: function () {
         $('#effects-canvas').css('z-index', endoscope.slides()[0] + 2);
         $('#effects-canvas').css('display', 'block');
