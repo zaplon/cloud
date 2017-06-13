@@ -19,6 +19,9 @@ class ResultViewSet(viewsets.ModelViewSet):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
+    def create(self, request):
+        pass
+    
     def retrieve(self, request, *args, **kwargs):
         if settings.USE_ELO:
             return getDoc(request, kwargs['pk'])
