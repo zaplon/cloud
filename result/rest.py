@@ -5,6 +5,7 @@ from rest_framework import serializers, viewsets
 from .models import Result
 from django.conf import settings
 from elo.views import getPatientData, getDoc
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 # Serializers define the API representation.
@@ -19,6 +20,7 @@ class ResultViewSet(viewsets.ModelViewSet):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
     filter_fields = ('type', 'patient', 'doctor', 'visit')
+    filter_backends = (DjangoFilterBackend,)
 
     def get_queryset(self, *args, **kwargs):
         q = super(ResultViewSet, self).get_queryset(*args, **kwargs)
@@ -41,5 +43,7 @@ class ResultViewSet(viewsets.ModelViewSet):
             if not pesel:
                 return HttpResponseBadRequest()
             return getPatientData(pesel, request, flat=('is_table' in request.GET))
+        else:
+            return super(ResultViewSet, self).list(request, *args, **kwargs)
 
 
