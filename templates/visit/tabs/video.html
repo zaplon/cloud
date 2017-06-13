@@ -6,8 +6,8 @@
             </div>
             <video id="video-window" width="640" height="480" autoplay="true"></video>
             <div id="slider">
-                <div class="slide" data-bind:"foreach: slides">
-                    <img src="file">
+                <div class="slide" data-bind="visible: slidesShow()">
+                    <img data-bind="attr: {src: slide.file}">
                 </div>
             </div>
             <canvas style="display:none;" id="effects-canvas"></canvas>
