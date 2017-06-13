@@ -18,7 +18,12 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
 class ResultViewSet(viewsets.ModelViewSet):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
+    filter_fields = ('type', 'patient', 'doctor', 'visit')
 
+    def get_queryset(self, *args, **kwargs):
+        q = super(ResultViewSet, self).get_queryset(*args, **kwargs)
+        return q
+    
     def create(self, request):
         pass
     
