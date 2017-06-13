@@ -65,7 +65,7 @@ class EditFormView(View):
             else:
                 return ''
         data = re.sub('<input[^>]+>', repl, data)
-        data = re.sub('<.*[^>]data-ignore>', '', data)
+        data = re.sub('<.*data-ignore.*[^>]>', '', data)
         f = codecs.open(os.path.join(settings.PROJECT_DIR, 'forms', 'templates', 'forms', 'tmp', file_name), 'w', 'utf8')
         f.write(data)
         f.close()
