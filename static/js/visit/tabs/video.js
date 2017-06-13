@@ -40,6 +40,7 @@ var endoscope = {
     videosShow: ko.observable(false),
     isRecording: ko.observable(false),
     slides: ko.observableArray([]),
+    videos: ko.observableArray([]),
     slideIndex: ko.observable(0),
     videoIndex: ko.observable(0),
     currentSlide: ko.observable(),
@@ -48,13 +49,24 @@ var endoscope = {
     width: 640,
     height: 480,
     changeSlide: function (dir) {
-        var index = this.slideIndex() + dir;
-        var slidesNr = this.slides().length - 1;
-        if (index < 0)
-            this.slideIndex(slidesNr);
-        if (index > slidesNr)
-            this.slideIndex(0);
-        this.slide(this.slides()[this.slideIndex]);
+        if (slidesShow()){
+            var newIndex = this.slideIndex() + dir;
+            var index = this.slideIndex();
+            var slide = this.currentSlide;
+            var slides = this.slides
+        }
+        else {
+            var newIndex = this.videoIndex() + dir;
+            var index = this.videoIndex();
+            var slide = this.currentVideo;
+            var slides = this.videos;
+        }
+        var nr = this.videos().length - 1;
+        if (newIndex < 0)
+            index(nr);
+        else if (newIndex > nr)
+            index(0);
+        slide(slides()[index()]);
     },
     loadSlides: function () {
         var me = this;
