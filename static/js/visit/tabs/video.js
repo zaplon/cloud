@@ -1,5 +1,6 @@
+var video = document.querySelector("#video-window");
+
 $(document).ready(function () {
-    var video = document.querySelector("#video-window");
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
@@ -41,6 +42,8 @@ var endoscope = {
     isRecording: ko.observable(false),
     slides: ko.observable([0, 0]),
     videos: ko.observable([0, 0]),
+    canvas: document.querySelector('canvas'),
+    ctx: document.querySelector('canvas').getContext('2d'),
     width: 640,
     height: 480,
     blinkScreen: function () {
@@ -72,7 +75,7 @@ var endoscope = {
             endoscope.ctx.drawImage(video, 0, 0, endoscope.width, endoscope.height);
             endoscope.blinkScreen();
             var image = endoscope.canvas.toDataURL('image/jpg');
-            document.querySelector('#pictures-slider #slide' + (endoscope.slideNr + 1) + ' img').src = image;
+            endoscope.slides.push({src: image});
         }
     },
     drawVideoFrame: function (time) {

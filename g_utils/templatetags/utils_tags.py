@@ -28,7 +28,7 @@ def parse_json(obj):
 def has_perm(context, perm):
     if perm is True:
         return True
-    if len(perm) > 1:
+    if isinstance(perm, list):
         return context['request'].user.has_perm(perm[0]) or context['request'].user.has_perm(perm[1])
     return context['request'].user.has_perm(perm)
 

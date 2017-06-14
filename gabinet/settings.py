@@ -192,9 +192,8 @@ MODULES = [
     (True, 'archive', u'Archiwum'),
     (True, 'medicines', u'Lista leków'),
     (True, 'icd10', u'Kody ICD-10'),
-    ('user_profile.edit_template', 'templates', u'Szablony'),
-    ('user_profile.edit_tab', 'tabs', u'Zakładki'),
-
+    ('user_profile.change_template', 'templates', u'Szablony'),
+    ('visit.change_tabparent', 'tabs', u'Zakładki'),
 ]
 
 # misal settings
