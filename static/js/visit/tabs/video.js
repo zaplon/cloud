@@ -33,7 +33,7 @@ $(document).ready(function () {
     }
 
     key.setScope('ENDOSCOPE');
-    console.log('scope');
+    endoscope.loadSlides();
 });
 
 var endoscope = {
@@ -44,42 +44,44 @@ var endoscope = {
     videos: ko.observableArray([]),
     slideIndex: ko.observable(0),
     videoIndex: ko.observable(0),
-    currentSlide: ko.observable(),
-    currentVideo: ko.observable(),
+    currentSlide: ko.observable({}),
+    currentVideo: ko.observable({}),
     videos: ko.observableArray([]),
     canvas: document.querySelector('canvas'),
     ctx: document.querySelector('canvas').getContext('2d'),
     width: 640,
     height: 480,
-    changeSlide: function (dir) {
-        if (slidesShow()){
-            var newIndex = this.slideIndex() + dir;
-            var index = this.slideIndex();
-            var slide = this.currentSlide;
-            var slides = this.slides
+    changeSlide: function (dir, me) {
+        if (me.slidesShow()){
+            var newIndex = me.slideIndex() + dir;
+            var index = me.slideIndex;
+            var slide = me.currentSlide;
+            var slides = me.slides
         }
         else {
-            var newIndex = this.videoIndex() + dir;
-            var index = this.videoIndex();
-            var slide = this.currentVideo;
-            var slides = this.videos;
+            var newIndex = me.videoIndex() + dir;
+            var index = me.videoIndex;
+            var slide = me.currentVideo;
+            var slides = me.videos;
         }
-        var nr = this.videos().length - 1;
+        var nr = me.slides().length;
         if (newIndex < 0)
             index(nr);
-        else if (newIndex > nr)
+        else if (newIndex >= nr)
             index(0);
+        else
+            index(newIndex);
         slide(slides()[index()]);
     },
     loadSlides: function () {
         var me = this;
-        $.getJSON('/rest/results/', {type: 'ENDOSCOPE_IMAGE'}, function(data){
+        $.getJSON('/rest/results/', {type: 'ENDOSCOPE_IMAGE', pesel: visit.patient().pesel, endoscope: 1}, function(data){
             me.slides(data);
         });
     },
     loadVideos: function () {
         var me = this;
-        $.getJSON('/rest/results/', {type: 'ENDOSCOPE_VIDEO'}, function(data){
+        $.getJSON('/rest/results/', {type: 'ENDOSCOPE_VIDEO', pesel: visit.patient().pesel, endoscope: 1}, function(data){
             me.slides(data);
         });
     },
@@ -112,7 +114,21 @@ var endoscope = {
             endoscope.ctx.drawImage(video, 0, 0, endoscope.width, endoscope.height);
             endoscope.blinkScreen();
             var image = endoscope.canvas.toDataURL('image/jpg');
-            endoscope.slides.push({src: image});
+            var slide = {file: image};
+            endoscope.slides.push(slide);
+            $.ajax({
+                method: 'POST',
+                data: {file: slide.file, endoscope_image: 1, visit: visit.id, patient: visit.patient().id},
+                url: '/rest/results/',
+                success: function(){
+
+                },
+                fail: function(){
+                    notie.alert('Wystąpił błąd przy zapisywaniu zdjęcia na serwerze', 3);
+                }
+            });
+            if (!endoscope.currentSlide().file)
+                endoscope.currentSlide(slide);
         }
     },
     drawVideoFrame: function (time) {
@@ -122,7 +138,6 @@ var endoscope = {
     }
 };
 ko.applyBindings(endoscope, $('#video-container')[0]);
-
 
 function xhr(url, data, callback) {
     var request = new XMLHttpRequest();

@@ -10,7 +10,8 @@ from django.db import models
 from django.conf import settings
 from .search import *
 
-RESULT_TYPES = (('IMAGE', u'Zdjęcie'), ('DOCUMENT', u'Dokument'), ('VIDEO', u'Film'))
+RESULT_TYPES = (('IMAGE', u'Zdjęcie'), ('DOCUMENT', u'Dokument'), ('VIDEO', u'Film'), ('ENDOSCOPE_VIDEO', u'Film'),
+                ('ENDOSCOPE_IMAGE', u'Zdjęcie'))
 
 
 class Result(models.Model):
