@@ -40,12 +40,49 @@ var endoscope = {
     slidesShow: ko.observable(false),
     videosShow: ko.observable(false),
     isRecording: ko.observable(false),
-    slides: ko.observable([0, 0]),
-    videos: ko.observable([0, 0]),
+    slides: ko.observableArray([]),
+    videos: ko.observableArray([]),
+    slideIndex: ko.observable(0),
+    videoIndex: ko.observable(0),
+    currentSlide: ko.observable(),
+    currentVideo: ko.observable(),
+    videos: ko.observableArray([]),
     canvas: document.querySelector('canvas'),
     ctx: document.querySelector('canvas').getContext('2d'),
     width: 640,
     height: 480,
+    changeSlide: function (dir) {
+        if (slidesShow()){
+            var newIndex = this.slideIndex() + dir;
+            var index = this.slideIndex();
+            var slide = this.currentSlide;
+            var slides = this.slides
+        }
+        else {
+            var newIndex = this.videoIndex() + dir;
+            var index = this.videoIndex();
+            var slide = this.currentVideo;
+            var slides = this.videos;
+        }
+        var nr = this.videos().length - 1;
+        if (newIndex < 0)
+            index(nr);
+        else if (newIndex > nr)
+            index(0);
+        slide(slides()[index()]);
+    },
+    loadSlides: function () {
+        var me = this;
+        $.getJSON('/rest/results/', {type: 'ENDOSCOPE_IMAGE'}, function(data){
+            me.slides(data);
+        });
+    },
+    loadVideos: function () {
+        var me = this;
+        $.getJSON('/rest/results/', {type: 'ENDOSCOPE_VIDEO'}, function(data){
+            me.slides(data);
+        });
+    },
     blinkScreen: function () {
         $('#effects-canvas').css('z-index', endoscope.slides()[0] + 2);
         $('#effects-canvas').css('display', 'block');
