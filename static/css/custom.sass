@@ -3,6 +3,10 @@
 #calendar-filters
   padding: 1rem
 
+.autocomplete-list
+  z-index: 101
+  position: relative
+
 ul.toolbar
   color: $gray-light
   float: right
@@ -29,6 +33,13 @@ ul.toolbar
 
 #visit-menu
   margin-top: 8px
+
+.visit-nav
+  left: 0!important
+  width: 100%!important
+  height: 56px!important
+  padding: 0 15px!important
+
 
 .control-panel
   .control-panel-container
@@ -88,13 +99,13 @@ ul.autocomplete-list
   top: 3px
   margin-right: 0.25rem
 
-.FREE
+.free, .FREE
   background-color: $brand-info!important
-.CANCELLED
+.cancelled, .CANCELLED
   background-color: $brand-danger!important
-.FINISHED
+.finished, .FINISHED
   background-color: $brand-success!important
-.PENDING
+.pending, .PENDING
   background-color: $brand-primary!important
 
 .button-margin

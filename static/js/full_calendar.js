@@ -38,8 +38,11 @@ fullCalendarModel = {
            maxTime: doctor.terms_end.substr(0, 5),
            defaultDate: dt //defaultDate: moment(dt)
         });
-        $('#calendar').fullCalendar('gotoDate', dt);
-        //$('#calendar').fullCalendar('refetchEvents');
+        var cd = $('#calendar').fullCalendar('getDate');
+        if ($.isArray(cd._i) || cd._i == moment(dt)._i)
+            $('#calendar').fullCalendar('refetchEvents');
+        else
+            $('#calendar').fullCalendar('gotoDate', dt);
     }
 };
 

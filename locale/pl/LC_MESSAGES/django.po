@@ -1,0 +1,100 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-18 20:41+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#: administration/admin.py:39
+msgid "Rola"
+msgstr "Rola"
+
+#: administration/admin.py:81
+msgid "Personal info"
+msgstr "Informacje osobiste"
+
+#: administration/admin.py:82
+msgid "Permissions"
+msgstr "Uprawnienia"
+
+#: administration/admin.py:84
+msgid "Important dates"
+msgstr "Ważne daty"
+
+#: templates/account/ajax/login.html:25 templates/account/login.html:25
+#: templates/account/signup.html:26
+msgid "Log in"
+msgstr "Zaloguj się"
+
+#: templates/account/ajax/login.html:26
+msgid "Forgot your password?"
+msgstr "Zapomniałeś hasła?"
+
+#: templates/account/ajax/login.html:30
+msgid "Don't have an account?"
+msgstr "Nie masz konta?"
+
+#: templates/account/ajax/login.html:30 templates/account/signup.html:7
+#: templates/account/signup.html:16 templates/account/signup.html:22
+msgid "Sign up"
+msgstr "Zaloguj się"
+
+#: templates/account/password_reset.html:7
+#: templates/account/password_reset.html:15
+msgid "Password reset"
+msgstr "Resetowanie hasła"
+
+#: templates/account/password_reset.html:16
+msgid ""
+"Forgotten your password? Enter your email address below, and we'll send you "
+"an email allowing you to reset it."
+msgstr ""
+"Zapomniałeś hasła? Wpisz poniżej swój adres email a prześlemy ci wiadomość, "
+"umożliwiającą zresetowanie hasła."
+
+#: templates/account/password_reset.html:22
+msgid "Reset my password"
+msgstr "Zresetuj moje hasło"
+
+#: templates/account/password_reset.html:29
+#, python-format
+msgid ""
+"If you have any trouble resetting your password, contact us at <a href="
+"\"mailto:%(THEME_CONTACT_EMAIL)s\">%(THEME_CONTACT_EMAIL)s</a>."
+msgstr ""
+
+#: templates/account/set_mobile.html:25
+msgid "Save"
+msgstr "Zapisz"
+
+#: templates/account/signup.html:26
+msgid "Already have an account?"
+msgstr "Masz już konto?"
+
+#: templates/timetable/www_calendar.html:29
+msgid "Lekarz"
+msgstr ""
+
+#: visit/forms.py:24
+msgid "Wpisz treść szablonu"
+msgstr ""
+
+msgid "Tools"
+msgstr "Narzędzia"
+
+msgid "permissions"
+msgstr "Uprawnienia"

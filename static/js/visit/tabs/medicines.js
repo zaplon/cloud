@@ -12,9 +12,10 @@ var medicine = function (data) {
         record.composition(newValue.composition);
     });
     record.children.subscribe(function(newValue){
-        $.getJSON('/rest/refundations?limit=10', {parent: newValue.id}, function(res){
-            record.nfz(res.results);
-        });
+        if (newValue.id)
+            $.getJSON('/rest/refundations?limit=10', {parent: newValue.id}, function(res){
+                record.nfz(res.results);
+            });
     });
     for (d in data){
         if (d in record)

@@ -13,14 +13,16 @@ def form_helpers(request):
 
 def utils(request):
     ctx = {}
+    system_settings = SystemSettings.objects.first()
+    ctx.update({
+        'system_settings': system_settings,
+        'user_data': json.dumps(UserSerializer(instance=request.user).data),
+    })
     if request.user.is_authenticated and is_doctor(False, request.user):
         user = request.user
         doctor = user.doctor
-        system_settings = SystemSettings.objects.first()
         ctx.update({'recipes_available': request.user.doctor.recipes.filter(was_used=False).count(),
                     'recipes_total': request.user.doctor.recipes.count(),
-                    'system_settings': system_settings,
-                    'user_data': json.dumps(UserSerializer(instance=request.user).data),
                     'doctor_data': json.dumps(DoctorSerializer(instance=doctor).data)})
 
     ctx.update({'MODULES': settings.MODULES, 'APP_URL': settings.APP_URL})

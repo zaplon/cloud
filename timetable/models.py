@@ -82,6 +82,9 @@ class Term(models.Model):
         Term.objects.filter(doctor=doctor, datetime__gte=start, datetime__lte=end, status__in=['PENDING', 'CANCELLED']).delete()
         start = datetime.datetime.combine(start.date(), datetime.time(0, 0))
         end = datetime.datetime.combine(end.date(), datetime.time(0, 0))
+        terms = []
+        def move_forward(start, end):
+            return start + datetime.timedelta(minutes=duration), end + datetime.timedelta(minutes=duration)
         for i in range(0, (end-start).days):
             day = start + datetime.timedelta(days=i)
             hours = days[day.weekday()]
@@ -91,19 +94,22 @@ class Term(models.Model):
             end_visit = start_hour + datetime.timedelta(minutes=duration)
             while end_visit <= end_hour:
                 if hours['break_start']:
-                    if end_visit.time() > datetime.time(*[int(h) for h in hours['break_start'].split(':')]):
-                        continue
-                    if start_visit.time() < datetime.time(*[int(h) for h in hours['break_end'].split(':')]):
+                    break_start = datetime.time(*[int(h) for h in hours['break_start'].split(':')])
+                    break_end = datetime.time(*[int(h) for h in hours['break_end'].split(':')])
+                    visit_start = start_visit.time()
+                    visit_end = end_visit.time()
+                    if break_start < visit_end < break_end or break_start < visit_start < break_end:
+                        start_visit, end_visit = move_forward(start_visit, end_visit)
                         continue
                 visit_date = datetime.datetime.combine(day.date(), start_visit.time())
                 #print visit_date
                 try:
-                    Term.objects.get(doctor=doctor, datetime=timezone.make_aware(visit_date, tmz))
+                    Term.objects.get(doctor=doctor, datetime=visit_date)
                 except:
-                    Term.objects.create(doctor=doctor, duration=duration, datetime=timezone.make_aware(visit_date, tmz),
-                                        status='FREE')
-                start_visit = start_visit + datetime.timedelta(minutes=duration)
-                end_visit = end_visit + datetime.timedelta(minutes=duration)
+                    terms.append(Term(doctor=doctor, duration=duration, datetime=visit_date,
+                                        status='FREE'))
+                start_visit, end_visit =  move_forward(start_visit, end_visit)
+        Term.objects.bulk_create(terms)
         doctor.terms_generated_till = end.date()
         doctor.save()
         return True

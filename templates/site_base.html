@@ -38,7 +38,7 @@
 </head>
 
 <div class="page-center-in" style="width:100vw; text-align: center;">
-    <section class="box-typical p-1 box-solo" style="text-align: justify;">
+    <section class="{% block section_class %}box-typical p-1 box-solo {% endblock %}" style="text-align: justify;">
         {% block body %}{% endblock %}
     </section>
 </div>

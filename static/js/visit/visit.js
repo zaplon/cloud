@@ -77,6 +77,7 @@ var visit = {
     term: {},
     tabs: [],
     errors: [],
+    formParams: {},
     patient: ko.observable({address: '', pesel: '', name: ''}),
     patientDataHidden: ko.observable(false),
     patientDataToggle: function(me, e){
@@ -140,6 +141,18 @@ var visit = {
         showOrzeczenia: function () {
             if (this == window)
                 return;
+            this.subMenu.forms([
+                {title: 'Zdolność do pracy', name: 'orzeczenie_zdolnosc_do_pracy.html'},
+                {title: 'Niezdolność do pracy', name: 'orzeczenie_niezdolnosc_do_pracy.html'}
+            ]);
+            if (this.subMenuName() == 'orzeczenia') {
+                this.subMenu.show(1);
+                this.subMenuName('');
+            }
+            else {
+                this.subMenuName('orzeczenia');
+                this.subMenu.show();
+            }
         }
     },
     saveVisit: function (tmp, handlerSuccess, handlerFailure) {
@@ -255,6 +268,7 @@ var visit = {
         var patient = this.patient();
         params.pesel = patient.pesel;
         params.name = patient.name;
+        this.formParams = params;
         gabinet.showForm(form, params, true);
     },
     printVisit: function () {

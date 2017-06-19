@@ -1,3 +1,4 @@
+import json
 import os
 
 import datetime
@@ -11,13 +12,15 @@ from .models import Result
 from django.conf import settings
 from elo.views import getPatientData, getDoc
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status
+from rest_framework.response import Response
 
 
 # Serializers define the API representation.
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Result
-        fields = ('name', 'description', 'file')
+        fields = ('id', 'name', 'description', 'file')
 
 
 # ViewSets define the view behavior.
@@ -35,7 +38,15 @@ class ResultViewSet(viewsets.ModelViewSet):
         if 'pesel' in self.request.GET:
             q = q.filter(patient__pesel=self.request.GET['pesel'])
         return q
-    
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if request.user.is_authenticated() and instance.doctor == request.user.doctor:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     def create(self, request):
         if 'endoscope_image' in request.POST or 'endoscope_video' in request.POST:
             r = Result()
@@ -54,7 +65,7 @@ class ResultViewSet(viewsets.ModelViewSet):
             f.close()
             r.file.name = os.path.join('results', file_name)
             r.save()
-            return HttpResponse(status=201)
+            return HttpResponse(json.dumps({'id': r.id}), status=200, content_type='application/json')
         else:
             super(ResultViewSet, self).create(request)
 

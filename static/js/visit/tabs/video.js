@@ -76,13 +76,36 @@ var endoscope = {
     loadSlides: function () {
         var me = this;
         $.getJSON('/rest/results/', {type: 'ENDOSCOPE_IMAGE', pesel: visit.patient().pesel, endoscope: 1}, function(data){
-            me.slides(data);
+            data.forEach(function(d){
+                me.slides.push({id: ko.observable(d.id), is_selected: ko.observable(true), file: d.file});
+            });
         });
     },
     loadVideos: function () {
         var me = this;
         $.getJSON('/rest/results/', {type: 'ENDOSCOPE_VIDEO', pesel: visit.patient().pesel, endoscope: 1}, function(data){
             me.slides(data);
+        });
+    },
+    deleteFile: function(file) {
+        if (this.slidesShow()) {
+            var slides = this.slides;
+            var index = this.slideIndex();
+        }
+        else {
+            var slides = this.videos;
+            var index = this.videoIndex();
+        }
+        var id = slides()[index].id();
+        $.ajax({
+            url: '/rest/results/' + id,
+            method: 'DELETE',
+            success: function() {
+                slides.splice(index, 1);
+            },
+            fail: function() {
+                notie.aler(3, 'Nie udało się skasować pliku');
+            }
         });
     },
     blinkScreen: function () {
@@ -109,19 +132,30 @@ var endoscope = {
     showSlides: function(){
         this.slidesShow(!this.slidesShow());
     },
+    markFile: function(){
+        if (this.slidesShow()) {
+            var slides = this.slides();
+            var file = slides[this.slideIndex()];
+        }
+        else {
+            var slides = this.videos();
+            var file = slides[this.videoIndex()];
+        }
+        file.is_selected(!file.is_selected());
+    },
     takeScreenShot: function(){
         if (endoscope.localMediaStream) {
             endoscope.ctx.drawImage(video, 0, 0, endoscope.width, endoscope.height);
             endoscope.blinkScreen();
             var image = endoscope.canvas.toDataURL('image/jpg');
-            var slide = {file: image};
+            var slide = {file: image, id: ko.observable(), is_selected: ko.observable(true)};
             endoscope.slides.push(slide);
             $.ajax({
                 method: 'POST',
                 data: {file: slide.file, endoscope_image: 1, visit: visit.id, patient: visit.patient().id},
                 url: '/rest/results/',
-                success: function(){
-
+                success: function(res){
+                    slide.id(res.id);
                 },
                 fail: function(){
                     notie.alert('Wystąpił błąd przy zapisywaniu zdjęcia na serwerze', 3);

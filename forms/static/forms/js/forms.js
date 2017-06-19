@@ -18,9 +18,11 @@ formViewModel = {
         return test && extraTest;
     },
     getData: function () {
-        var iframeDocument = $($('#form-editor iframe').contents()[0].body);
-        var inputs = iframeDocument.find('input');
-        var textareas = iframeDocument.find('textarea');
+        var html = $($('#form-editor iframe').contents()[0])[0].childNodes[0].cloneNode(true);
+        var htmlJq = $(html);
+        var inputs = htmlJq.find('input');
+        var textareas = htmlJq.find('textarea');
+        var selects = htmlJq.find('select');
         inputs.each(function (index, i) {
             if ($(i).attr('type') == 'checkbox')
                 if (i.checked)
@@ -33,7 +35,10 @@ formViewModel = {
         textareas.each(function (index, t) {
             $(t).html(t.value);
         });
-        return $('#form-editor iframe')[0].contentDocument.getElementsByTagName('html')[0].outerHTML;
+        selects.each(function (index, s) {
+            s.outerHTML = '<span>' + $(s).val() +'</span>';
+        });
+        return html.outerHTML;
     },
     makePdf: function () {
         var data = formViewModel.getData();
@@ -43,7 +48,16 @@ formViewModel = {
         });
     },
     sendToElo: function () {
+        if (!this.validate())
+            return;
         var data = formViewModel.getData();
+         $.post('/forms/edit_form/', {data: data}, function (res) {
+            $.get('/forms/show_form/', {elo: true, print: true, tmp: res.tmp, nice_name: formViewModel.niceName}, function (res) {
+                alert('dokument przesłano do archiwum');
+            }).fail(function () {
+                alert('wystąpił błąd!')
+            });
+        });
     },
     saveTemporary: function () {
         $.post('/forms/edit_form/', {

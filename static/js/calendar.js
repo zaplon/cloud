@@ -93,6 +93,12 @@ $(document).ready(function () {
         },
         eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
 
+            if (event.status == 'finished'){
+                revertFunc();
+                notie.alert(3, 'Nie można przesunąć zakończonej wizyty');
+                return;
+            }
+
             $('body').append($('.confirm-move').html().replace('popoverr', 'popover'));
             var start = moment(new Date(event.start - delta.asMilliseconds() - 3600*2000));
             var newStart = event.start;
@@ -136,6 +142,7 @@ $(document).ready(function () {
             }
             // Add popover
             if (gabinet.user.can_edit_terms) {
+                var status = calEvent.status.toUpperCase();
                 $('body').append(
                     '<div class="fc-popover click">' +
                     '<div class="fc-header">' +
@@ -152,15 +159,15 @@ $(document).ready(function () {
                     '<p class="color-blue-grey">' + calEvent.title + '</p>')
                     +
                     '<ul class="actions">' +
-                    '<li><a href="#">Szczegóły</a></li>' +
+                    '<li style="display: none;"><a href="#">Szczegóły</a></li>' +
                     '<li><a href="#" class="fc-event-action-edit">Edytuj termin</a></li>' +
-                    (calEvent.status == 'PENDING' ?
+                    (status == 'PENDING' ?
                         '<li><a href="#" class="fc-event-action-remove">Anuluj termin</a></li>' : '') +
-                    (calEvent.status == 'FREE' || calEvent.status == 'PENDING' ?
+                    (status == 'FREE' || status == 'PENDING' ?
                         '<li><a href="#" class="fc-event-action-remove remove-visit">Anuluj wizytę</a></li>' : '') +
                     '</ul>' +
                     '</div>' +
-                    (calEvent.status == 'PENDING' ?
+                    (status == 'PENDING' ?
                         ('<div class="fc-body remove-confirm">' +
                         '<p>Czy jesteś pewien, że chcesz anulować wizytę?</p>' +
                         '<div class="text-center">' +
@@ -279,7 +286,9 @@ $(document).ready(function () {
                     $.get('/get-form', {module: 'timetable.forms', class: 'TermForm', id: calEvent.id}, function (res) {
                         $('.fc-popover.click .edit-event #edit-form').html(res.form_html);
                         $('.fc-popover.click .edit-event').show();
-
+                        //$('#id_datetime').datetimepicker({
+                        //    defaultDate: $('#id_datetime').val()
+                        //});
                         $('#save-term').click(function () {
                             calendar.saveTerm(calEvent);
                         });

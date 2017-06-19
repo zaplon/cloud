@@ -85,6 +85,8 @@ class Command(BaseCommand):
                     p = MedicineParent.objects.create(name=r.name)
                     m = Medicine.objects.create(ean=r.ean, parent=p, size=r.size, in_use=1, refundation=1)
                 r.medicine = m
+                m.refundation = True
+                m.save()
                 r.save()
             i += 1
 

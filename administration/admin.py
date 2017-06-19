@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth.models import User, Group
-from django.contrib.auth.admin import UserAdmin, UserChangeForm, GroupAdmin
+from django.contrib.auth.admin import UserAdmin, UserChangeForm, GroupAdmin, csrf_protect_m
 from django.forms import ModelForm, Widget, ChoiceField
 from django.template import loader
 from django.utils.safestring import mark_safe
@@ -70,6 +70,7 @@ class DoctorInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Profil'
     fk_name = 'user'
+    extra = 0
     form = DoctorForm
 
 
@@ -95,9 +96,10 @@ class UserAdmin(UserAdmin):
         if not request.user.is_superuser:
             form = context['adminform'].form
             perms = [p[0] for p in PERMISSIONS]
-            form.fields['user_permissions'].queryset = form.fields['user_permissions'].queryset.filter(codename__in=perms)
-            choices = translate_permissions(list(form.fields['user_permissions'].choices))
-            form.fields['user_permissions'].choices = choices
+            if 'user_permissions' in form.fields:
+                form.fields['user_permissions'].queryset = form.fields['user_permissions'].queryset.filter(codename__in=perms)
+                choices = translate_permissions(list(form.fields['user_permissions'].choices))
+                form.fields['user_permissions'].choices = choices
         return super(UserAdmin, self).render_change_form(request, context, add, change, form_url, obj)
 
     def get_form(self, request, obj=None, **kwargs):
@@ -109,7 +111,9 @@ class UserAdmin(UserAdmin):
             defaults['form'] = self.add_form
         else:
             if obj.groups.filter(name='Lekarze').exists():
-                self.inlines.append(DoctorInline)
+                self.inlines = (DoctorInline,)
+            else:
+                self.inlines = []
         defaults.update(kwargs)
         return super(UserAdmin, self).get_form(request, obj, **defaults)
 
@@ -148,10 +152,17 @@ class ServiceAdmin(admin.ModelAdmin):
     fields = ['name', 'code', 'doctors']
 
 
+class SystemSettingsAdmin(admin.ModelAdmin):
+
+    @csrf_protect_m
+    def changelist_view(self, request, extra_context=None):
+        return self.changeform_view(request, '1', '', extra_context)
+
+
 admin.site.unregister(User)
 admin.site.unregister(Group)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Localization)
 admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)
-admin.site.register(SystemSettings)
+admin.site.register(SystemSettings, SystemSettingsAdmin)

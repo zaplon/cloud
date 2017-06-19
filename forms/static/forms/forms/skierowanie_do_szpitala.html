@@ -454,7 +454,7 @@
 
 <p class="c11"><span class="c1"></span></p>
 
-<p class="c3"><span class="c9">PESEL</span><span class="c1"><input name="pesel]......................................................telefon[name=phone" type="text" style="width:120.7px"></span></p>
+<p class="c3"><span class="c9">PESEL</span><span class="c1"><input name="pesel" type="text" style="width:120.7px">telefon<input name="phone" type="text" style="width:120.7px"></span></p>
 
 <p class="c7"><span class="c1">Do; szpitala, szpitala klinicznego, instytutu<input type="text" style="width: 335.35px;"></span>
 </p>
@@ -473,7 +473,7 @@
 
 <p class="c21"><span class="c8">w języku polskim</span></p>
 
-<p class="c14"><span class="c1"><input type="text" style="width:401.15px">kod(ICD 10)<input name="icd" type="text" style="width:113.6px"></span>
+<p class="c14"><span class="c1"><input type="text" name="icd_text_2" style="width:401.15px">kod(ICD 10)<input name="icd" type="text" style="width:113.6px"></span>
 </p>
 
 <p class="c4"><span class="c1"></span></p>
@@ -500,7 +500,7 @@
 
 <p class="c3"><span class="c15">pieczęć szpitala, adres, telefon</span></p>
 
-<p class="c32"><span class="c15">numer umowy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="margin-left: 331px;"><input type="text" style="width:170.4px"></span>
+<p class="c32"><span class="c15">numer umowy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="margin-left: 331px;"><input name="city&date" type="text" style="width:170.4px"></span>
 </p>
 
 <p class="c32 c38"><span class="c15">(miejscowość, data)</span></p>
@@ -521,11 +521,11 @@
 
 <p class="c13"><span class="c30 c36"></span></p>
 
-<p class="c3"><span class="c1">Pacjent<input type="text" style="width:330.15px"></span></p>
+<p class="c3"><span class="c1">Pacjent<input type="text" name="name" style="width:330.15px"></span></p>
 
 <p class="c25"><span class="c16">(imię i nazwisko)</span></p>
 
-<p class="c26"><span class="c1">Data ur. <input type="text" style="width:124.25px"></span></p>
+<p class="c26"><span class="c1">Data ur. <input type="text" name="birth" style="width:124.25px"></span></p>
 
 <p class="c4"><span class="c2"></span></p>
 
@@ -541,4 +541,9 @@
 
 <p class="c28"><span class="c8">czytelny podpis i pieczątka lekarza</span></p>
 </body>
+<script>
+    $('input[name="city"]').val('Warszawa');
+    $('input[name="date"]').val(todayStr);
+    //$('input[name="city&date"]').val('Warszawa, ' + todayStr);
+</script>
 </html>

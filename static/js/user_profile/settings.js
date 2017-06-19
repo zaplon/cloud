@@ -6,20 +6,27 @@ var day = function (dayIndex) {
     }
 };
 
-var dayError = function(){
+var dayError = function () {
     return {start: false, end: false, break_start: false, break_end: false};
 };
 
 var ready = function () {
-    if (gabinet.doctor && gabinet.doctor.working_hours.length > 0)
-        var days = gabinet.doctor.working_hours;
+    if (gabinet.doctor && gabinet.doctor.working_hours.length > 0) {
+        var days = [];
+        gabinet.doctor.working_hours.forEach(function (d) {
+            days.push({
+                start: d.start, end: d.end, break_start: d.break_start, break_end: d.break_end, dayName: d.dayName,
+                dayIndex: d.dayIndex, hasBreak: ko.observable(d.hasBreak), dayChecked: ko.observable(d.dayChecked)
+            });
+        });
+    }
     else
         var days = [day(1), day(2), day(3), day(4), day(5), day(6), day(7)];
     var settingsModel = {
         days: days,
         errors: ko.observableArray([dayError(1), dayError(2), dayError(3), dayError(4), dayError(5), dayError(6), dayError(7)]),
         dayNames: dayNames,
-        saveSettings: function (){
+        saveSettings: function () {
             if ($('#profile').is(':visible'))
                 settingsModel.saveProfile();
             else
@@ -42,7 +49,12 @@ var ready = function () {
         },
         saveProfile: function () {
             $.ajax({
-                data: {data: gabinet.fixData($('#profile form').serializeArray()), class: $('input[name="form_class"]').val(), module: 'user_profile.forms', user: true},
+                data: {
+                    data: gabinet.fixData($('#profile form').serializeArray()),
+                    class: $('input[name="form_class"]').val(),
+                    module: 'user_profile.forms',
+                    user: true
+                },
                 url: '/get-form/',
                 type: 'POST',
                 success: function (res) {

@@ -1,4 +1,5 @@
 {% load static %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="pl">
 <head lang="pl">
@@ -21,37 +22,41 @@
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-    <script src="{% static "js/lib/jquery/jquery.min.js" %}"></script>
-    <script src="{% static "jquery-ui/jquery-ui.min.js" %}"></script>
-    <script src="{% static "knockout/dist/knockout.js" %}"></script>
-    <script src="{% static "js/g.js" %}"></script>
-    <script src="{% static "js/plugins.js" %}"></script>
-    <script src="{% static "js/utils/autocomplete.js" %}"></script>
-    <script src="{% static "moment/moment.js" %}"></script>
-
-    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
-    <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="{% static "css/main.css" %}">
-    <link rel="stylesheet" href="{% static "css/custom.css" %}">
-    <link rel="stylesheet" href="{% static "bootstrap-select/dist/css/bootstrap-select.min.css" %}">
+    {% compress js %}
+        <script src="{% static "js/lib/jquery/jquery.min.js" %}"></script>
+        <script src="{% static "js/libs/jquery-ui.min.js" %}"></script>
+        <script src="{% static "knockout/dist/knockout.js" %}"></script>
+        <script src="{% static "js/g.js" %}"></script>
+        <script src="{% static "js/plugins.js" %}"></script>
+        <script src="{% static "js/utils/autocomplete.js" %}"></script>
+        <script src="{% static "moment/min/moment.min.js" %}"></script>
+    {% endcompress %}
+    {% compress css %}
+        <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+        <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
+        <link rel="stylesheet" href="{% static "css/main.css" %}">
+        <link rel="stylesheet" href="{% static "css/custom.css" %}">
+        <link rel="stylesheet" href="{% static "bootstrap-select/dist/css/bootstrap-select.min.css" %}">
+    {% endcompress %}
     {% block extra_styles %}{% endblock %}
 </head>
 
 {% block body %}{% endblock %}
 
-<script src="{% static "js/lib/eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.js" %}"></script>
-<script src="{% static "tether/dist/js/tether.js" %}"></script>
-<script src="{% static "bootstrap/dist/js/bootstrap.js" %}"></script>
-<script src="{% static "js/lib/match-height/jquery.matchHeight.js" %}"></script>
-<script src="{% static "js/lib/notie/notie.js" %}"></script>
-<script src="{% static "bootstrap-select/dist/js/bootstrap-select.min.js" %}"></script>
-<script src="{% static "js/utils/keymaster.js" %}"></script>
-<script src="{% static "forms/js/forms.js" %}"></script>
+{% compress js %}
+    <script src="{% static "js/lib/eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.js" %}"></script>
+    <script src="{% static "tether/dist/js/tether.js" %}"></script>
+    <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/lib/match-height/jquery.matchHeight.js" %}"></script>
+    <script src="{% static "js/lib/notie/notie.js" %}"></script>
+    <script src="{% static "bootstrap-select/dist/js/bootstrap-select.min.js" %}"></script>
+    <script src="{% static "js/utils/keymaster.js" %}"></script>
+    <script src="{% static "forms/js/forms.js" %}"></script>
 
-<script src="{% static "js/app.js" %}"></script>
-<script src="{% static 'js/lib/jstree/jstree.min.js' %}"></script>
-{#<script src="{% static "js/calendar/pl.js" %}"></script>#}
-
+    <script src="{% static "js/app.js" %}"></script>
+    <script src="{% static 'js/lib/jstree/jstree.min.js' %}"></script>
+    {#<script src="{% static "js/calendar/pl.js" %}"></script>#}
+{% endcompress %}
 <script>
     gabinet.doctor = '{{ doctor_data|safe }}';
     gabinet.user = '{{ user_data|safe }}';
@@ -62,5 +67,4 @@
 </script>
 
 {% block extra_scripts %}{% endblock %}
-
 </html>

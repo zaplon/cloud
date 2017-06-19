@@ -1,34 +1,42 @@
-<ul class="main-nav nav nav-inline" style="z-index: 100;">
+<ul class="main-nav nav nav-inline visit-nav" style="z-index: 100;">
     <div class="row" id="visit-menu">
         <div class="col-md-8 col-sm-6">
             <button class="btn btn-default-outline" data-bind="click: printVisit">
                 <i class="fa fa-print" aria-hidden="true"></i> Historia choroby
             </button>
-            <button class="btn btn-default-outline"
+            <button class="btn btn-default-outline hidden-lg-up" data-bind="click: printVisit">
+                <i class="fa fa-print" aria-hidden="true"></i> Pozostałe
+            </button>
+            <button class="btn btn-default-outline hidden-md-down"
                     data-bind="{click: subMenu.showSkierowania,
                      css: {'btn-default': subMenuName()=='skierowania', 'btn-default-outline': subMenuName()!='skierowania' }}">
                 <i class="fa fa-print" aria-hidden="true"></i> Skierowania
             </button>
-            <button class="btn btn-default-outline"
+            <button class="btn btn-default-outline hidden-md-down"
                     data-bind="{click: subMenu.showMedycynaPracy,
                      css: {'btn-default': subMenuName()=='medycyna_pracy', 'btn-default-outline': subMenuName()!='medycyna_pracy' }}">
                 <i class="fa fa-print" aria-hidden="true"></i> Karty badań
             </button>
-            <button class="btn btn-default-outline"
+            <button class="btn btn-default-outline hidden-md-down"
                     data-bind="{click: subMenu.showOrzeczenia,
                      css: {'btn-default': subMenuName()=='orzeczenia', 'btn-default-outline': subMenuName()!='orzeczenia' }}">
                 <i class="fa fa-print" aria-hidden="true"></i> Orzeczenia
             </button>
         </div>
-        <div class="col-md-4 col-sm-6 text-right hidden-lg-down">
-            <button id="save-visit" class="btn btn-success" data-bind="click: saveVisit.bind($data, false)">Zakończ</button>
+        <div class="col-md-4 col-sm-6 text-right hidden-md-down">
+            <button id="save-visit" class="btn btn-success" data-bind="click: saveVisit.bind($data, false)">Zakończ
+            </button>
             <button id="save-temporary" class="btn btn-default" data-bind="click: saveTmp">Zapisz roboczą</button>
             <button id="cancel-visit" class="btn btn-danger" data-bind="click: cancelVisit">Powrót</button>
         </div>
         <div class="col-md-4 col-sm-6 text-right hidden-lg-up">
-            <button id="save-visit" class="btn btn-success" data-bind="click: saveVisit">Zakończ</button>
-            <button id="save-temporary" class="btn btn-default" data-bind="click: saveTmp">Zapisz roboczą</button>
-            <button id="cancel-visit" class="btn btn-danger" data-bind="click: cancelVisit">Powrót</button>
+            <button id="save-visit" data-toggle="tooltip" title="Zakończ" class="btn btn-success"
+                    data-bind="click: saveVisit"><i class="fa fa-check"></i></button>
+            <button id="save-temporary" data-toggle="tooltip" title="Zapisz wersję roboczą"
+                    class="btn btn-default" data-bind="click: saveTmp"><i class="fa fa-hourglass-half"></i>
+            </button>
+            <button id="cancel-visit" data-toggle="tooltip" title="Powrót" class="btn btn-danger"
+                    data-bind="click: cancelVisit"><i class="fa fa-reply"></i></button>
         </div>
     </div>
 </ul>

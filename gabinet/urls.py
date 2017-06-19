@@ -45,6 +45,7 @@ router.register(r'refundations', RefundationViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    #url(r'^jet/', include('jet.urls', 'jet')),
     url(r"^account/", include("account.urls")),
     url(r"^setup/(?P<step>[0-9])", SetupView.as_view(), name='setup'),
     url(r'^$', index_view, name='index'),
@@ -66,3 +67,8 @@ urlpatterns = [
     url(r'^pdf/$', PdfView.as_view(template_name='no_pdf.html', filename='result.pdf'), name='pdf'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

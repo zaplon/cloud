@@ -24,9 +24,9 @@
                 </label>
             </div>
         </td>
-        <td><input data-bind="{enable: hasBreak && dayChecked, value: break_start}" type="time"
+        <td><input data-bind="{enable: hasBreak() && dayChecked(), value: break_start}" type="time"
                                          class="form-control" placeholder="godzina"></td>
-        <td><input data-bind="{enable: hasBreak && dayChecked, value: break_end}" type="time"
+        <td><input data-bind="{enable: hasBreak() && dayChecked(), value: break_end}" type="time"
                                        class="form-control" placeholder="godzina"></td>
     </tr>
 </form>

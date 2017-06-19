@@ -8,16 +8,20 @@
         .calendar-page .calendar-page-content {
             margin-top: -9px;
         }
+
         .colors-guide-list li {
             display: inline-block !important;
         }
+
         #doctors-list tr {
-            cursor: pointer; 
+            cursor: pointer;
         }
-        .fc-row.fc-widget-header tr{
+
+        .fc-row.fc-widget-header tr {
             height: 48px;
         }
-        .fc-toolbar.fc-header-toolbar{
+
+        .fc-toolbar.fc-header-toolbar {
             margin-bottom: 0;
             padding-bottom: 0;
         }
@@ -32,7 +36,7 @@
     <script>
         fullCalendarModel.specializations(JSON.parse('{{specializations|safe}}'));
         fullCalendarModel.localizations(JSON.parse('{{localizations|safe}}'));
-        fullCalendarModel.services([]);
+        fullCalendarModel.services(JSON.parse('{{services|safe}}'));
     </script>
 {% endblock %}
 
@@ -56,6 +60,10 @@
                                                                                 value: selectedService, optionsCaption: 'Wybierz...'">
                     </select>
                 </div>
+                <div class="form-group" data-bind="if: services().length == 1">
+                    <label for="service">Usługa</label>
+                    <input id="service" class="form-control" data-bind="value: services()[0].name" readonly></input>
+                </div>
                 <div class="form-group ml-1" data-bind="visible: localizations().length > 1">
                     <label for="localization">Lokalizacja</label>
                     <select class="form-control" id="localization" data-bind="options: localizations, optionsText: name,
@@ -78,20 +86,21 @@
                     <th title="Najbliższy wolny termin">Termin</th>
                 </tr>
                 <tr>
-                    <th><input placeholder="Nazwisko..." type="text" class="form-control form-control-sm" data-bind="value: doctorFilter"></th>
+                    <th><input placeholder="Nazwisko..." type="text" class="form-control form-control-sm"
+                               data-bind="value: doctorFilter"></th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                    <!-- ko foreach: doctors -->
-                    <tr data-bind="click: $parent.loadDoctorCalendar, attr: {class: $parent.doctor().id==id ? 'table-active': ''}">
-                        <td data-bind="text: name"></td>
-                        <td data-bind="text: first_term"></td>
-                    </tr>
-                    <!-- /ko -->
-                    <tr data-bind="visible: doctors().length==0">
-                        <td colspan="2" class="empty-row">Brak wyników</td>
-                    </tr>
+                <!-- ko foreach: doctors -->
+                <tr data-bind="click: $parent.loadDoctorCalendar, attr: {class: $parent.doctor().id==id ? 'table-active': ''}">
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: first_term"></td>
+                </tr>
+                <!-- /ko -->
+                <tr data-bind="visible: doctors().length==0">
+                    <td colspan="2" class="empty-row">Brak wyników</td>
+                </tr>
                 </tbody>
             </table>
         </div>

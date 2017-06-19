@@ -23,7 +23,7 @@ class AutocompleteWidget(TextInput):
                       minLength: %s,
                       select: function( event, ui ){ $('#id_%s').val(ui.item.id) }
                     }).data('ui-autocomplete')._renderItem = function( ul, item ) {
-                        ul.addClass('list-group');
+                        ul.addClass('list-group autocomplete-list');
                         return $( "<a class='list-group-item list-group-item-action'>" )
                           .attr( "data-value", item.value )
                           .append(item.label)

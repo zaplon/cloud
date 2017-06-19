@@ -30,6 +30,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'material.theme.indigo',
+    'material',
+    'material.admin',
+    # 'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,10 +56,13 @@ INSTALLED_APPS = [
     'wkhtmltopdf',
     'administration',
     'pinax_theme_bootstrap',
-    'bootstrapform'
+    'bootstrapform',
+    "compressor",
+    "debug_toolbar"
 ]
 SITE_ID = 1
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -153,7 +160,8 @@ BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'djangobower.finders.BowerFinder'
+    'djangobower.finders.BowerFinder',
+    'compressor.finders.CompressorFinder'
 ]
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'frontend', 'static')]
@@ -181,6 +189,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
+LOCALE_PATHS = [os.path.join(PROJECT_DIR, 'locale')]
+
 LANGUAGE_CODE = 'pl-pl'
 VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
 WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
@@ -198,7 +208,7 @@ MODULES = [
 
 # misal settings
 MISAL_SETUP = True
-GENERATE_TERMS = False
+GENERATE_TERMS = True
 USE_ELO = False
 USE_SMS_LOGIN = False
 SIMULATE_SMS_LOGIN = True
@@ -209,3 +219,6 @@ EXTENSIONS = {'img': ['jpg', 'png', 'bnp', 'gif'], 'video': ['mp3', 'wav']}
 
 ELASTIC_HOST = 'localhost'
 DATE_FORMAT = '%d-%m-%Y'
+COMPRESS_ENABLED = False
+COMPRESS_OFFLINE = True
+INTERNAL_IPS = ['127.0.0.1', 'localhost']

@@ -9,7 +9,7 @@ from wkhtmltopdf.views import PDFTemplateView
 from django.conf import settings
 from user_profile.forms import DoctorForm, UserForm
 from crispy_forms.layout import Layout, Div, Submit, Field
-from timetable.models import Localization
+from timetable.models import Localization, Service
 from user_profile.models import Doctor, Specialization
 from user_profile.rest import DoctorSerializer
 
@@ -17,11 +17,11 @@ from user_profile.rest import DoctorSerializer
 @login_required
 def index_view(request):
     for m in settings.MODULES:
-        if type(m[0]) == list:
-            if request.user.has_perms(m[0][0]) or request.user.has_perms(m[0][1]):
+        if isinstance(m[0], list):
+            if request.user.has_perm(m[0][0]) or request.user.has_perm(m[0][1]):
                 return redirect('/' + m[1] + '/')
         else:
-            if m[0] is True or request.user.has_perms(m[0]):
+            if m[0] is True or request.user.has_perm(m[0]):
                 return redirect('/' + m[1] + '/')
 
 
@@ -32,7 +32,9 @@ def calendar_view(request):
     else:
         specializations = json.dumps(list(Specialization.objects.all().values('id', 'name')))
         localizations = json.dumps(list(Localization.objects.all().values('id', 'name')))
-        return render(request, 'dashboard/full_calendar.html', {'localizations': localizations, 'specializations': specializations})
+        services = json.dumps(list(Service.objects.all().values('id', 'name')))
+        return render(request, 'dashboard/full_calendar.html', {'localizations': localizations, 'specializations': specializations,
+                                                                'services': services})
 
 @login_required
 def patients_view(request):

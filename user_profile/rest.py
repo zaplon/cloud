@@ -36,8 +36,10 @@ class PatientViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         q = Patient.objects.all()
         if 'term' in self.request.GET:
+            self.pagination_class = None
             t = self.request.GET['term']
             q = q.filter(Q(last_name__icontains=t) | Q(first_name__icontains=t) | Q(pesel__icontains=t))
+            q = q[0:20]
         return q
 
     def get_serializer_class(self):
@@ -81,10 +83,10 @@ class UserSerializer(serializers.ModelSerializer):
     can_edit_visits = serializers.SerializerMethodField('check_if_can_edit_visits')
 
     def check_if_can_edit_terms(self, instance):
-        return not instance.has_perm('timetable.change_term')
+        return instance.has_perm('timetable.change_term')
 
     def check_if_can_edit_visits(self, instance):
-        return not instance.has_perm('visit.change_visit')
+        return instance.has_perm('visit.change_visit')
 
     class Meta:
         model = User
