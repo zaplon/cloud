@@ -93,7 +93,15 @@ class FormView(PDFTemplateView):
             for c in config:
                 if c not in self.cmd_options:
                     self.cmd_options[c] = config[c]
-            return super(PDFTemplateView, self).get(request, *args, **kwargs)
+            if 'as_file' in request.GET:
+                file_name = datetime.datetime.now().strftime('%s') + '.pdf'
+                output = os.path.join(settings.MEDIA_ROOT, 'tmp', file_name)
+                self.cmd_options['output'] = output
+            res = super(PDFTemplateView, self).get(request, *args, **kwargs)
+            if 'as_file' in request.GET:
+                HttpResponse('media/tmp' + file_name)
+            else:
+                return res
         else:
             return render_to_response(self.template_name, self.get_context_data(**kwargs))
 
