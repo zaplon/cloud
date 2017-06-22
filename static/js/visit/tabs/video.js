@@ -46,7 +46,7 @@ var endoscope = {
     videoIndex: ko.observable(0),
     currentSlide: ko.observable({}),
     currentVideo: ko.observable({}),
-    videos: ko.observableArray([]),
+    frames: [],
     canvas: document.querySelector('canvas'),
     ctx: document.querySelector('canvas').getContext('2d'),
     width: 640,
@@ -123,13 +123,31 @@ var endoscope = {
         });
 
     },
-    recordVideo: function(){
+    recordVideo: function(time){
         this.isRecording(!this.isRecording());
+        if (!this.isRecording()){
+            cancelAnimationFrame(endoscope.rafId);  // Note: not using vendor prefixes
+            // 2nd param: framerate for the video file.
+            var webmBlob = Whammy.fromImageArray(endoscope.frames, 1000 / 60);
+            var src = window.URL.createObjectURL(webmBlob);
+            var slide = {file: src, id: ko.observable(), is_selected: ko.observable(true)};
+            endoscope.videos.push(slide);
+            if (!endoscope.currentVideo().file)
+                endoscope.currentVideo(slide);
+        }
+        else {
+            endoscope.drawVideoFrame(time);
+        }
+    },
+    uploadVideo: function(){
+
     },
     showVideos: function(){
+        this.slidesShow(false);
         this.videosShow(!this.videosShow());
     },
     showSlides: function(){
+        this.videosShow(false);
         this.slidesShow(!this.slidesShow());
     },
     markFile: function(){
@@ -168,9 +186,24 @@ var endoscope = {
     drawVideoFrame: function (time) {
         endoscope.rafId = requestAnimationFrame(endoscope.drawVideoFrame);
         endoscope.ctx.drawImage(video, 0, 0, endoscope.width, endoscope.height);
-        endoscope.frames.push(canvas.toDataURL('image/webp', 0.75));
+        endoscope.frames.push(endoscope.canvas.toDataURL('image/webp', 0.75));
     }
 };
+
+video.addEventListener('canplay', function (ev) {
+    var video = document.querySelector("#video-window");
+    var canvas = endoscope.canvas;
+    var streaming = endoscope.streaming;
+    if (!streaming) {
+        height = video.videoHeight / (video.videoWidth / endoscope.width);
+        video.setAttribute('width', endoscope.width);
+        video.setAttribute('height', endoscope.height);
+        canvas.setAttribute('width', endoscope.width);
+        canvas.setAttribute('height', endoscope.height);
+        streaming = true;
+    }
+}, false);
+
 ko.applyBindings(endoscope, $('#video-container')[0]);
 
 function xhr(url, data, callback) {
