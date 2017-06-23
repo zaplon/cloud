@@ -14,47 +14,58 @@
 {% endblock %}
 
 {% block content %}
-    <section class="box-typical">
-        <div class="row">
-            {% if not USE_ELO %}
-                <div class="col-md-12">
-                    <div id="toolbar">
-                        <div class="bootstrap-table-header">Archiwum</div>
-                        {% if perms.result.add_result %}
-                            <a href="/archive/new/" class="btn btn-success">
-                                <i class="font-icon font-icon-plus"></i> DODAJ
-                            </a>
-                        {% endif %}
-                        <div id="search-suggestion-container" style="display: none;">
-                            Czy chodziło Ci o <a id="search-suggestions" href="#"></a>
+    <header class="content__title">
+        <h1>Archiwum</h1>
+
+        <div class="actions"></div>
+    </header>
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                {% if perms.result.add_result %}
+                    <a href="/archive/new/" class="btn btn-success">
+                        <i class="font-icon font-icon-plus"></i> DODAJ
+                    </a>
+                {% endif %}
+            </h2>
+            <small class="card-subtitle">
+                <div id="search-suggestion-container" style="display: none;">
+                    Czy chodziło Ci o <a id="search-suggestions" href="#"></a>
+                </div>
+            </small>
+        </div>
+        <div class="card-block">
+            <div class="row">
+                {% if not USE_ELO %}
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table id="archive-table">
+                            </table>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table id="archive-table">
-                        </table>
-                    </div>
-                </div>
-            {% else %}
-                <div class="m-1">
-                    <div clas="col-md-12">
-                        <div class="ml-1 mb-1 bootstrap-table-header">Archiwum</div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 mr-2">
-                        <input type="search" class="form-control" placeholder="Wpisz pesel pacjenta" name="pesel"/>
-                    </div>
-                    <div class="pull-left">
-                        <button id="search-results" class="btn btn-primary">Szukaj</button>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div id="archive" class="m-2">
-                        <div class="col-md-12 col-sm-12 text-center">
+                {% else %}
+                    <div class="m-1">
+                        <div clas="col-md-12">
+                            <div class="ml-1 mb-1 bootstrap-table-header">Archiwum</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mr-2">
+                            <input type="search" class="form-control" placeholder="Wpisz pesel pacjenta" name="pesel"/>
+                        </div>
+                        <div class="pull-left">
+                            <button id="search-results" class="btn btn-primary">Szukaj</button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div id="archive" class="m-2">
+                            <div class="col-md-12 col-sm-12 text-center">
                         <span class="empty-row">Wyszukaj pacjenta, wpisując jego numer pesel (cały bądź część) w polu wyszukiwania i
                         klikając w przycisk "Szukaj"</span>
+                            </div>
                         </div>
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="clearfix"></div>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
-    </section><!--.box-typical-->
+
+    </div><!--.box-typical-->
 {% endblock %}

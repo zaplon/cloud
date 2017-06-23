@@ -1,11 +1,11 @@
 {% load utils_tags %}
-<ul class="main-nav nav nav-inline" style="z-index: 100;">
+<ul class="nav top-menu" style="">
 
     {% for m in MODULES %}
         {% has_perm m.0 as perm %}
         {% if perm %}
-            <li class="nav-item">
-                <a class="nav-link {% if section == m.1 %} active {% endif %}" href="/{{ m.1 }}/">{{ m.2 }}</a>
+            <li class="nav-item {% if section == m.1 %} active {% endif %}">
+                <a class="nav-link" href="/{{ m.1 }}/">{{ m.2 }}</a>
             </li>
         {% endif %}
     {% endfor %}

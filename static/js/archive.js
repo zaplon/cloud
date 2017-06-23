@@ -42,12 +42,12 @@ $(document).ready(function () {
             icons: {
                 paginationSwitchDown: 'font-icon-arrow-square-down',
                 paginationSwitchUp: 'font-icon-arrow-square-down up',
-                refresh: 'font-icon-refresh',
+                refresh: 'fa fa-repeat',
                 toggle: 'font-icon-list-square',
                 columns: 'font-icon-list-rotate',
-                export: 'font-icon-download',
-                detailOpen: 'font-icon-plus',
-                detailClose: 'font-icon-minus-1'
+                export: 'fa fa-download',
+                detailOpen: 'fa-plus-square',
+                detailClose: 'fa-minus-square'
             },
             paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
             paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',

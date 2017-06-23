@@ -20,23 +20,26 @@
 {% block content %}
 
     <div id="patient">
-        <section class="box-typical box-typical-padding col-md-12">
-                    <h2 class="with-border">
-                        <span data-bind="text: patient().first_name + ' ' + patient().last_name"></span>
-                        <ul class="toolbar">
-                            <li data-bind="visible: !patientDataHidden()"
+        <div class="card col-md-12">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span data-bind="text: patient().first_name + ' ' + patient().last_name"></span>
+                </h2>
+                    <div class="actions">
+                        <a href data-bind="visible: !patientDataHidden()" class="actions__item"
                             data-toggle="tooltip" data-placement="bottom" title="zwiń">
-                                <i class="fa fa-window-minimize" aria-hidden="true"
-                                   data-bind="click: patientDataToggle" data-target="patient-data"></i>
-                            </li>
-                            <li data-bind="visible: patientDataHidden()"
+                            <i class="fa fa-window-minimize" aria-hidden="true"
+                               data-bind="click: patientDataToggle" data-target="patient-data"></i>
+                        </a>
+                        <a href data-bind="visible: patientDataHidden()" class="actions__item"
                             data-toggle="tooltip" data-placement="bottom" title="rozwiń">
-                                <i class="fa fa-window-maximize" aria-hidden="true"
-                                   data-bind="click: patientDataToggle" data-target="patient-data"></i>
-                            </li>
-                        </ul>
-                    </h2>
-            <div id="patient-data">
+                            <i class="fa fa-window-maximize" aria-hidden="true"
+                               data-bind="click: patientDataToggle" data-target="patient-data"></i>
+                        </a>
+                    </div>
+
+            </div>
+            <div id="patient-data" class="card-block">
                 <div class="row">
                     <div data-bind="text: patient().address"></div>
                 </div>
@@ -45,61 +48,63 @@
                     <div class="col-md-9" data-bind="text: patient().pesel"></div>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 
     <div class="row">
-        <section class="tabs-section col-md-12">
-            <div class="tabs-section-nav">
-                <div class="tbl">
-                    <ul class="nav" role="tablist">
-                        {% for tab in tabs %}
-                            <li class="nav-item">
-                                <a class="nav-link tab-link {% if tab.is_active %} active {% endif %}"
-                                   href="#{{ tab.name }}" role="tab" data-toggle="tab"
-                                        {% if tab.is_active %} aria-expanded="true" {% endif %}>
-                                            <span class="nav-link-in">
-                                                {{ tab.title }}
-                                            </span>
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div><!--.tabs-section-nav-->
-            <div class="tab-content">
-                <script>var tabs = [];</script>
-                {% for tab in tabs %}
-                    <script>
-                        {% if tab.json %}
-                            tabs.push({
-                                data: {{ tab.json|safe }},
-                                title: "{{ tab.title }}",
-                                canAddTemplates: {% if tab.parent.can_add_templates %} true {% else %}
-                                    false {% endif %},
-                                name: "{{ tab.name }}",
-                                id: {{ tab.id }}
-                            });
-                        {% else %}
-                            tabs.push({
-                                data: null, title: "{{ tab.title }}", name: "{{ tab.name }}", id: {{ tab.id }},
-                                canAddTemplates: {% if tab.parent.can_add_templates %} true {% else %} false {% endif %}
-                            });
-                        {% endif %}
-                    </script>
-                    <div role="tabpanel" class="tab-pane visit-tab fade {% if tab.is_active %} active {% endif %} in"
-                         id="{{ tab.name }}"  {% if tab.is_active %} aria-expanded="true" {% endif %}>
-                        <div class="p2">
-                            {{ tab.body|safe }}
-                        </div>
+        <div class="card col-md-12">
+            <div class="card-block">
+                <div class="tabs-section-nav">
+                    <div class="tbl">
+                        <ul class="nav" role="tablist">
+                            {% for tab in tabs %}
+                                <li class="nav-item">
+                                    <a class="nav-link tab-link {% if tab.is_active %} active {% endif %}"
+                                       href="#{{ tab.name }}" role="tab" data-toggle="tab"
+                                            {% if tab.is_active %} aria-expanded="true" {% endif %}>
+                                                <span class="nav-link-in">
+                                                    {{ tab.title }}
+                                                </span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <script>
-                        if (tabs[tabs.length - 1].data)
-                            tabs[tabs.length - 1].model.parse(tabs[tabs.length - 1].data);
-                    </script>
-                {% endfor %}
-            </div><!--.tab-content-->
-        </section>
+                </div><!--.tabs-section-nav-->
+                <div class="tab-content">
+                    <script>var tabs = [];</script>
+                    {% for tab in tabs %}
+                        <script>
+                            {% if tab.json %}
+                                tabs.push({
+                                    data: {{ tab.json|safe }},
+                                    title: "{{ tab.title }}",
+                                    canAddTemplates: {% if tab.parent.can_add_templates %} true {% else %}
+                                        false {% endif %},
+                                    name: "{{ tab.name }}",
+                                    id: {{ tab.id }}
+                                });
+                            {% else %}
+                                tabs.push({
+                                    data: null, title: "{{ tab.title }}", name: "{{ tab.name }}", id: {{ tab.id }},
+                                    canAddTemplates: {% if tab.parent.can_add_templates %} true {% else %} false {% endif %}
+                                });
+                            {% endif %}
+                        </script>
+                        <div role="tabpanel" class="tab-pane visit-tab fade {% if tab.is_active %} active {% endif %} in"
+                             id="{{ tab.name }}"  {% if tab.is_active %} aria-expanded="true" {% endif %}>
+                            <div class="p2">
+                                {{ tab.body|safe }}
+                            </div>
+                        </div>
+                        <script>
+                            if (tabs[tabs.length - 1].data)
+                                tabs[tabs.length - 1].model.parse(tabs[tabs.length - 1].data);
+                        </script>
+                    {% endfor %}
+                </div><!--.tab-content-->
+            </div>
+        </div>
     </div>
 
 {% endblock %}
