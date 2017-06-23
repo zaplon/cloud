@@ -38,9 +38,9 @@
 </head>
 
 <div class="page-center-in" style="width:100vw; text-align: center;">
-    <section class="{% block section_class %}box-typical p-1 box-solo {% endblock %}" style="text-align: justify;">
+    <div class="card {% block section_class %}{% endblock %}" style="text-align: justify;">
         {% block body %}{% endblock %}
-    </section>
+    </div>
 </div>
 <script src="{% static "js/lib/eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.js" %}"></script>
 <script src="{% static "tether/dist/js/tether.js" %}"></script>
