@@ -54,9 +54,8 @@
     <div class="row">
         <div class="card col-md-12">
             <div class="card-block">
-                <div class="tabs-section-nav">
-                    <div class="tbl">
-                        <ul class="nav" role="tablist">
+                <div class="tab-container">
+                        <ul class="nav nav-tabs nav-fill" role="tablist">
                             {% for tab in tabs %}
                                 <li class="nav-item">
                                     <a class="nav-link tab-link {% if tab.is_active %} active {% endif %}"
@@ -68,8 +67,7 @@
                                     </a>
                                 </li>
                             {% endfor %}
-                        </ul>
-                    </div>
+                    </ul>
                 </div><!--.tabs-section-nav-->
                 <div class="tab-content">
                     <script>var tabs = [];</script>
