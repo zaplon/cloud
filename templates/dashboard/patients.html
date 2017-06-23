@@ -14,11 +14,15 @@
 {% endblock %}
 
 {% block content %}
-    <section class="box-typical">
-        <div class="row">
+    <header class="content__title">
+        <h1>Archiwum dokumentów</h1>
+        <small>Przeglądaj i zarządzaj dokumentacją medyczną</small>
+    </header>
+    <div class="card">
+        <div class="card-block">
+            <div class="row">
             <div class="col-md-12">
                 <div id="toolbar">
-                    <div class="bootstrap-table-header">Lista pacjentów</div>
                     <a href="/profile/patients/new/" class="btn btn-success">
                         <i class="font-icon font-icon-plus"></i> DODAJ
                     </a>
@@ -32,5 +36,6 @@
                 </div>
             </div>
         </div>
-    </section><!--.box-typical-->
+        </div>
+    </div>
 {% endblock %}
