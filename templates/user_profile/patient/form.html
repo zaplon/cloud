@@ -15,8 +15,9 @@
 {% endblock %}
 
 {% block content %}
-    <section class="box-typical box-typical-padding">
-        <form action="" method="post">
+    <div class="card">
+        <div class="card-block">
+            <form action="" method="post">
             {% crispy form NoFormFormHelper %}
             {% block form_buttons %}
                 <hr>
@@ -30,6 +31,6 @@
                 <div class="clearfix"></div>
             {% endblock %}
         </form>
-
-    </section>
+        </div>
+    </div>
 {% endblock %}
