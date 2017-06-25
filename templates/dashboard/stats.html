@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block extra_scripts %}
+    <script src="{% static "js/stats.js" %}"></script>
+{% endblock %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='stats' %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Liczba zakończonych wizyt
+                </div>
+                <div class="card-block">
+                    <canvas id="stats-visits"></canvas></div>
+                </div>
+        </div>
+        <div class="col-md-6">
+            <section class="box-typical"></section>
+        </div>
+    </div>
+{% endblock %}

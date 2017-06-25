@@ -25,6 +25,7 @@ from result.rest import ResultViewSet
 from timetable.rest import TermViewSet
 from medicine.rest import *
 from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet
+from stats.rest import *
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
 from g_utils.views import AjaxFormView
@@ -50,6 +51,7 @@ urlpatterns = [
     url(r"^setup/(?P<step>[0-9])", SetupView.as_view(), name='setup'),
     url(r'^$', index_view, name='index'),
     url(r'^patients/', patients_view, name='patients'),
+    url(r'^stats/', stats_view, name='stats'),
     url(r'^calendar/', calendar_view, name='calendar'),
     url(r'^elo/', include("elo.urls"), name='elo'),
     url(r'^archive/$', archive_view, name='archive'),
@@ -60,7 +62,10 @@ urlpatterns = [
     url(r'^templates/', TemplateListView.as_view(), name='templates'),
     url(r'^medicines/', include("medicine.urls"), name='medicines'),
     url(r'^tabs/', TabsListView.as_view(), name='tabs'),
+
+    url(r'^rest/stats/', Stats.as_view(), name='stats-rest'),
     url(r"^rest/", include(router.urls), name='rest'),
+
     url(r"^timetable/", include("timetable.urls"), name='timetable'),
     url(r"^get-form/", AjaxFormView.as_view(), name='get-form'),
     url(r"^forms/", include('forms.urls'), name='forms'),

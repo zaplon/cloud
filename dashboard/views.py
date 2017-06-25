@@ -55,6 +55,10 @@ def icd10_view(request):
 def medicines_view(request):
     return render(request, 'dashboard/medicines.html')
 
+@login_required
+def stats_view(request):
+    return render(request, 'dashboard/stats.html')
+
 
 class PdfView(PDFTemplateView):
     def get(self, request, *args, **kwargs):
@@ -108,7 +112,8 @@ class SetupView(View):
                 c = {'form': form}
                 c.update(csrf(request))
             else:
-                form = UserForm(initial={'email': request.user.email, 'mobile': request.user.profile.mobile})
+                form = UserForm(initial={'email': request.user.email, 'mobile': request.user.profile.mobile,
+                                         'first_name': request.user.first_name, 'last_name': request.user.last_name})
                 form.helper.layout = self.user_form_layout
                 c = {'form': form}
                 c.update(csrf(request))

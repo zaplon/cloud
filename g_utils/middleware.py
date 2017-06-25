@@ -35,7 +35,7 @@ def setup_middleware(get_response):
                         return HttpResponseRedirect('/setup/2/')
                 else:
                     u = request.user
-                    if not u.profile.mobile:
+                    if not u.last_name:
                         return HttpResponseRedirect('/setup/1/')
 
         response = get_response(request)
