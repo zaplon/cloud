@@ -123,7 +123,14 @@ $(document).ready(function () {
             $('.confirm-move-ok').click(function(){
                $.post('/timetable/move/', {id: event.id, datetime: newStart.format('YYYY-MM-DD HH:mm')}, function(){
                     close(true);
-                }).fail(function() { notie.alert(3, 'Wystąpił błąd'); close(); });
+                }).fail(function(res) { 
+                   if (res.message){
+                       notie.alert(3, res.message);
+                   }
+                   else {
+                       notie.alert('Wystąpił błąd', res.message);
+                   }
+                   close(); });
             });
 
         },
