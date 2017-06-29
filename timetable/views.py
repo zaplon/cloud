@@ -40,7 +40,7 @@ def term_move_view(request):
     except:
         pass
     if t2 and (t2.patient and t.patient):
-        return HttpResponse(json.dumps({'message': 'Na ten termin jest już zapisany pacjent.'}), status=400)
+        return HttpResponse(json.dumps({'message': 'Na ten termin jest już zapisany pacjent.'}), status=400, content_type='application/json')
     if t2 and not t2.patient:
         t2.patient = t.patient
         t2.save()
