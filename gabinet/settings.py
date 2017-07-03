@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'medicine',
     'result',
     'forms',
+    'misal',
     'wkhtmltopdf',
     'administration',
     'pinax_theme_bootstrap',

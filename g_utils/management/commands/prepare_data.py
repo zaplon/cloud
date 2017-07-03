@@ -17,11 +17,17 @@ class Command(BaseCommand):
                             help='Delete all before import')
 
     def handle(self, *args, **options):
+        if options['delete_all']:
+            TabParent.objects.all().delete()
+            Icd10.objects.all().delete()
+            Specialization.objects.all().delete()
+
         TabParent.objects.get_or_create(name='default', template='default.html', can_add_templates=True)
         TabParent.objects.get_or_create(name='icd10', template='icd10.html', obligatory=True)
         TabParent.objects.get_or_create(name='medicines', template='medicines.html')
         TabParent.objects.get_or_create(name='notes', template='notes.html')
         TabParent.objects.get_or_create(name='services', template='services.html')
+        TabParent.objects.get_or_create(name='video', template='video.html')
 
         with open('g_utils/initial_data/icd10.csv', 'rb') as csv_file:
             data = csv.reader(csv_file, delimiter=',', quotechar='"')

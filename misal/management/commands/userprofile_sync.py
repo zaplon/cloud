@@ -19,7 +19,9 @@ class Command(BaseCommand):
                 u = User.objects.get(username=d['code'], email=d['email'])
             except ObjectDoesNotExist:
                 try:
-                    u = User.objects.create_user(d['code'], d['email'], 'Misal123')
+                    if len(d['email']) == 0:
+                        d['email'] = datetime.datetime.now().strftime('%s') + '@misal.pl'
+                    u = User.objects.create_user(d['code'], d['email'], 'Misal123', last_name=d['name'])
                 except:
                     continue
                 doc = Doctor.objects.create(user=u, pwz=d['nr'], misal_id=d['code'])

@@ -77,7 +77,7 @@ class TabForm(ModelForm):
             HTML(
                 u'<hr/><div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
                 reverse('tab-delete', kwargs={'pk': self.instance.id})
-                if self.instance.id else ''),
+                if self.instance.id and self.instance.parent.template == 'default.html' else ''),
             HTML("""
                  <div class="pull-right"><button class="btn btn-primary mr-025" type="submit">Zapisz</button>
                  <a class="btn btn-default" href="/tabs/">Anuluj</a></div><div class='clearfix'/>"""),

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse_lazy
@@ -104,6 +104,19 @@ class TemplateDelete(DeleteView):
     model = Template
     success_url = reverse_lazy('templates')
     template_name = 'confirm_delete.html'
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Calls the delete() method on the fetched object and then
+        redirects to the success URL.
+        """
+        self.object = self.get_object()
+        if not self.object.parent.template == 'default.html':
+            return HttpResponse(status=400)
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
 
 
 class TemplateListView(ListView):
