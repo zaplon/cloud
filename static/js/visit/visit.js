@@ -143,7 +143,8 @@ var visit = {
                 return;
             this.subMenu.forms([
                 {title: 'Zdolność do pracy', name: 'orzeczenie_zdolnosc_do_pracy.html'},
-                {title: 'Niezdolność do pracy', name: 'orzeczenie_niezdolnosc_do_pracy.html'}
+                {title: 'Niezdolność do pracy', name: 'orzeczenie_niezdolnosc_do_pracy.html'},
+                {title: 'Kierowca', name: 'orzeczenie_kierowcy.html'}
             ]);
             if (this.subMenuName() == 'orzeczenia') {
                 this.subMenu.show(1);

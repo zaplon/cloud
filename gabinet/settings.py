@@ -25,7 +25,7 @@ SECRET_KEY = '9pc#_y&@a7t#z^n6y59m#x7k+4)kp4s0ob_ha(=1!8a4_72aa6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 # Application definition
 
@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'pinax_theme_bootstrap',
     'bootstrapform',
     "compressor",
-    "debug_toolbar"
+    "debug_toolbar",
+    "agreements"
 ]
 SITE_ID = 1
 MIDDLEWARE = [
@@ -74,7 +75,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "account.middleware.LocaleMiddleware",
-    "account.middleware.TimezoneMiddleware"
+    "account.middleware.TimezoneMiddleware",
+    "agreements.middleware.display_agreement_middleware"
 ]
 
 ROOT_URLCONF = 'gabinet.urls'
@@ -196,7 +198,7 @@ LOCALE_PATHS = [os.path.join(PROJECT_DIR, 'locale')]
 LANGUAGE_CODE = 'pl-pl'
 VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
 WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
-APP_URL = 'http://localhost:8001/'
+APP_URL = 'http://127.0.0.1:8001/'
 
 MODULES = [
     (True, 'stats', u'Statystyki'),

@@ -56,7 +56,7 @@ class EditFormView(View):
                 return '<span class="checkbox">X</span>'
             elif text.find('type="text"') > -1:
                 return text
-            elif text.find('type="number"') > -1:
+            elif text.find('type="number"') > -1 or text.find('type="date"') > -1:
                 value = re.search('value="(.*)"', text)
                 if value:
                     return '<span>%s</span>' % value.group(1)
@@ -65,7 +65,7 @@ class EditFormView(View):
             else:
                 return ''
         data = re.sub('<input[^>]+>', repl, data)
-        data = re.sub('<.*data-ignore.*[^>]>', '', data)
+        data = re.sub('<.[^>]*data-ignore[^>]+>', '', data)
         f = codecs.open(os.path.join(settings.PROJECT_DIR, 'forms', 'templates', 'forms', 'tmp', file_name), 'w', 'utf8')
         f.write(data)
         f.close()

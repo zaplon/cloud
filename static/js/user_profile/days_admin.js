@@ -13,14 +13,25 @@ var dayError = function(){
 $(document).ready(function () {
     if (window.loaded)
         return;
-    if (window.working_hours.length > 0)
+    if (window.working_hours && window.working_hours.length > 0)
         var days = window.working_hours;
     else
         var days = [day(1), day(2), day(3), day(4), day(5), day(6), day(7)];
     var viewModel = {
         days: ko.observableArray(days),
         errors: ko.observableArray([dayError(1), dayError(2), dayError(3), dayError(4), dayError(5), dayError(6), dayError(7)]),
-        dayNames: dayNames
+        dayNames: dayNames,
+        saveDays: function () {
+            $.post('/profile/settings/', {days: ko.toJSON(viewModel.days), tab: 1}).success(function (res) {
+                if (res.success){
+                        window.location.pathname = '/';
+                        notie.alert('success', 'Dane zapisano poprawnie', 3);
+                    }
+                    else {
+                        viewModel.errors = res.errors;
+                    }
+            });
+        }
     };
     $('input[type="submit"]').click(function(){
        $('input[name="doctor-0-working_hours"]').val(ko.toJSON(viewModel.days()));

@@ -1,0 +1,36 @@
+{% extends 'agreements/base.html' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row mt-2">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="card agreement">
+                    <div class="card-header">
+                        <h1>{{ object.title|default:'Zapoznaj się z dokumentem' }}</h1>
+                    </div>
+
+                    <div class="card-block agreement-body">
+                        <div class="card-text">
+                            {{ object.user }}
+                            {% if object.text %}
+                                {{ object.text|safe }}
+                            {% endif %}
+                            {% if object.document %}
+                                <embed style="width: 100%; height: 60vh"
+                                        type="{{ object.document.file.content_type }}"
+                                        src="{{ object.document.url }}">
+                                </embed>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" disabled class="btn btn-lg btn-success" id="agreement-confirm">
+                            Potwierdzam zapoznanie się
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
