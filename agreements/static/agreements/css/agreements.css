@@ -1,6 +1,7 @@
 .agreement {
   background-color: white; }
   .agreement .agreement-body {
-    overflow-y: auto; }
+    overflow-y: auto;
+    max-height: calc(100vh - 180px); }
 
 /*# sourceMappingURL=agreements.css.map */

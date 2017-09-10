@@ -22,4 +22,4 @@ class Agreement(models.Model):
             raise ValidationError(_(u'The file attached to the agreement should be a text document'))
 
     def __unicode__(self):
-        return self.title if self.title else self.text
+        return self.title if self.title else self.text[0:100]
