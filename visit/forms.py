@@ -23,6 +23,8 @@ class TemplateForm(ModelForm):
         self.fields['doctor'].widget = HiddenInput()
         self.fields['text'].widget = Textarea(attrs={'placeholder': _(u'Wpisz treść szablonu')})
         data = kwargs['initial'] if 'initial' in kwargs else kwargs['data']
+        if 'instance' in kwargs:
+            data['user'] = kwargs['instance'].doctor.user
 
         self.fields['tab'].queryset = Tab.objects.all().filter(doctor__user=data['user'],
                                                                          parent__can_add_templates=True)
@@ -41,8 +43,8 @@ class TemplateForm(ModelForm):
                 HTML(u'<div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
                     reverse('template-delete', kwargs={'pk': self.instance.id})
                     if self.instance.id else ''),
-                HTML('<div class="pull-right"><button class="btn btn-primary" type="submit">Zapisz</button>'),
-                HTML('<a class="btn btn-default button-margin" href="/templates/">Anuluj</a></div><div class="clearfix"></div>')
+                HTML('<div class="pull-right"><button class="btn btn-primary mr-025" type="submit">Zapisz</button>'),
+                HTML('<a class="btn btn-default" href="/templates/">Anuluj</a></div><div class="clearfix"></div>')
             )
         else:
             helper.layout = Layout(
