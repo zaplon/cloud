@@ -24,7 +24,7 @@ def setup_middleware(get_response):
     def middleware(request):
 
         if request.user.is_authenticated():
-            if request.path.startswith('/admin/'):
+            if request.path.startswith('/admin/') or request.path.startswith('/agreements/'):
                 return get_response(request)
             if request.path.find('/setup/') == -1 and not request.method == 'POST':
                 if hasattr(request.user, 'doctor'):

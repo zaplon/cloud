@@ -44,7 +44,13 @@ formViewModel = {
         var data = formViewModel.getData();
         $.post('/forms/edit_form/', {data: data}, function (res) {
             var params = {tmp: res.tmp, print: true, template_name: $('#form-editor iframe').attr('data-template')};
-            window.location.href = '/forms/show_form/?' + $.param(params);
+
+            params['as_file'] = 1;
+            $.get('/forms/show_form/?' + $.param(params)).success(function(res){
+                rp.print(res);
+            });
+
+            //window.location.href = '/forms/show_form/?' + $.param(params);
         });
     },
     sendToElo: function () {

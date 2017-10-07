@@ -138,8 +138,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'pl-pl'
-
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -195,7 +193,7 @@ REST_FRAMEWORK = {
 
 LOCALE_PATHS = [os.path.join(PROJECT_DIR, 'locale')]
 
-LANGUAGE_CODE = 'pl-pl'
+LANGUAGE_CODE = 'pl'
 VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
 WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
 APP_URL = 'http://127.0.0.1:8001/'

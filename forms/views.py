@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template.loader import render_to_string
 from django.views.generic import View
+from wkhtmltopdf import convert_to_pdf
 from wkhtmltopdf.views import PDFTemplateView
 from .settings import *
 from django.conf import settings
@@ -52,6 +53,12 @@ class EditFormView(View):
 
         def repl(m):
             text = m.group(0)
+            # width on print should be less
+            w = re.search('width:(.*)px', text)
+            if w:
+                w = w.group(0).replace(' ', '')[6:-2].strip()
+                print_w = float(w) - 20
+                text = text.replace(w, str(print_w))
             if text.find('checkbox') > -1 and text.find('checked') > -1:
                 return '<span class="checkbox">X</span>'
             elif text.find('type="text"') > -1:
@@ -84,8 +91,8 @@ class FormView(PDFTemplateView):
         if 'print' in request.GET:
             project_dir = settings.PROJECT_DIR
             css = 'file://' + os.path.join(project_dir, 'forms', 'static', 'forms', 'css', 'prints.css')
-            print css
-            self.filename = request.GET.get('filename', 'result.pdf')
+            now = datetime.datetime.now().strftime('%s')
+            self.filename = request.GET.get('filename', '%s_%s.pdf' % (template, now))
             config = FORMS.get(template, FORMS['default'])
             self.cmd_options = {'page-size': config.get('page-size', 'A4'),
                                 'orientation': config.get('orientation', 'Portrait'),
@@ -96,12 +103,14 @@ class FormView(PDFTemplateView):
             if 'as_file' in request.GET:
                 file_name = datetime.datetime.now().strftime('%s') + '.pdf'
                 output = os.path.join(settings.MEDIA_ROOT, 'tmp', file_name)
-                self.cmd_options['output'] = output
-            res = super(PDFTemplateView, self).get(request, *args, **kwargs)
-            if 'as_file' in request.GET:
-                HttpResponse('media/tmp' + file_name)
+                data = convert_to_pdf('file://' + os.path.join(settings.BASE_DIR, 'forms', 'templates',
+                                      self.template_name),
+                                      cmd_options=self.cmd_options)
+                with open(output, 'wb') as f:
+                    f.write(data)
+                return HttpResponse('/media/tmp/' + file_name)
             else:
-                return res
+                return super(PDFTemplateView, self).get(request, *args, **kwargs)
         else:
             return render_to_response(self.template_name, self.get_context_data(**kwargs))
 
