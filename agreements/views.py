@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.dispatch import receiver
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
@@ -12,8 +13,11 @@ from django.contrib.auth.signals import user_logged_in
 
 @receiver(user_logged_in)
 def redirect_to_agreement(**kwargs):
-    if Agreement.objects.all().exclude(users=kwargs['user']).exists():
-        a = Agreement.objects.all().exclude(users=kwargs['user'])[0]
+    agreements_to_show = Agreement.objects.filter(
+        Q(targeted_users__isnull=True) |
+        Q(targeted_users=kwargs['user'])).exclude(users=kwargs['user'])
+    if agreements_to_show.exists():
+        a = agreements_to_show[0]
         kwargs['request'].session['agreement_to_show'] = a.id
     else:
         if 'agreement_to_show' in kwargs['request'].session:

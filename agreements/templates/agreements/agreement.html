@@ -18,10 +18,9 @@
                                 {% endif %}
                             </p>
                             {% if object.document %}
-                                <embed style="width: 100%; height: 60vh"
-                                        type="{{ object.document.file.content_type }}"
+                                <iframe id="document-frame" style="width: 100%; height: 60vh"
                                         src="{{ object.document.url }}">
-                                </embed>
+                                </iframe>
                             {% endif %}
                         </div>
                     </div>

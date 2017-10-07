@@ -8,4 +8,7 @@ function chk_scroll(e) {
     if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) {
         $('#agreement-confirm').removeAttr('disabled');
     }
+    else {
+        $('#agreement-confirm').attr('disabled');
+    }
 }

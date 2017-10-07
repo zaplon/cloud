@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,UAAU;EACR,gBAAgB,EAAE,KAAK;EACvB,0BAAe;IACb,UAAU,EAAE,IAAI;IAChB,UAAU,EAAE,mBAAmB",
-"sources": ["agreements.sass"],
-"names": [],
-"file": "agreements.css"
-}
