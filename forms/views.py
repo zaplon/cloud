@@ -58,7 +58,8 @@ class EditFormView(View):
             if w:
                 w = w.group(0).replace(' ', '')[6:-2].strip()
                 print_w = float(w) - 20
-                text = text.replace(w, str(print_w))
+                if print_w > 100:
+                    text = text.replace(w, str(print_w))
             if text.find('checkbox') > -1 and text.find('checked') > -1:
                 return '<span class="checkbox">X</span>'
             elif text.find('type="text"') > -1:
