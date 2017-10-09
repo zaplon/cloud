@@ -27,6 +27,13 @@ $(document).ready(function () {
         crossOut(this, event);
     });
 
+    $('input[name="today-date"]').each(function(i, el){
+        $(el).val(todayStr);
+    });
+    $('input[name="city&date"]').each(function(i, el){
+        $(el).val('Warszawa, ' + todayStr);
+    });
+
     $('.group').click(function () {
         var t = $(this);
         if (t.hasClass('selected')) {
