@@ -1,6 +1,5 @@
 body {
-  margin: 0 auto;
-  font-family: "Arial"; }
+  margin: 0 auto; }
 
 .cross-out {
   text-decoration: line-through !important; }
@@ -8,7 +7,7 @@ body {
 input[type='text'] {
   border: none;
   border-bottom: 1px dotted black;
-  padding-left: 8px; }
+  padding-left: 3px; }
 
 table.no-border td {
   border: none !important; }

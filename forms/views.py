@@ -54,12 +54,12 @@ class EditFormView(View):
         def repl(m):
             text = m.group(0)
             # width on print should be less
-            w = re.search('width:(.*)px', text)
-            if w:
-                w = w.group(0).replace(' ', '')[6:-2].strip()
-                print_w = float(w) - 20
-                if print_w > 100:
-                    text = text.replace(w, str(print_w))
+            # w = re.search('width:(.*)px', text)
+            # if w:
+            #     w = w.group(0).replace(' ', '')[6:-2].strip()
+            #     print_w = float(w) - 20
+            #     if print_w > 100:
+            #         text = text.replace(w, str(print_w))
             if text.find('checkbox') > -1 and text.find('checked') > -1:
                 return '<span class="checkbox">X</span>'
             elif text.find('type="text"') > -1:

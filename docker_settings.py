@@ -1,3 +1,4 @@
 from gabinet.settings import *
 
 WKHTMLTOPDF_CMD = '/app/wkhtmltox/wkhtmltox/bin/wkhtmltopdf'
+APP_URL = 'http://127.0.0.1:8080/'

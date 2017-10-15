@@ -60,7 +60,7 @@ class AjaxFormView(View):
                 data = {d['name']: d['value'] for d in data}
             except:
                 data = {p[0]: urllib.unquote(str(p[1])).decode('utf8') for p in [par.split('=') for par in data.split('&')]}
-        data = self.add_data(data)
+        data = self.add_data(data.copy())
         if 'id' in data:
             if self.request.FILES:
                 form = form_class(data=data, files=self.request.FILES, instance=form_class._meta.model.objects.get(id=data['id']))
