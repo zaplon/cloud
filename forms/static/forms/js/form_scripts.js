@@ -11,6 +11,13 @@ function crossOut(el, event) {
         $(el).addClass('cross-out');
 };
 
+function crossOther(el, event){
+  $(el).parent().parent().find('.crossable').each(function(i, el){
+      $(el).addClass('cross-out');
+  });
+  $(el).removeClass('cross-out');
+};
+
 $(document).ready(function () {
     if (parent.visit.formParams)
         for (param in parent.visit.formParams) {
@@ -24,7 +31,7 @@ $(document).ready(function () {
     $('.cross li').addClass('crossable');
 
     $('.crossable').click(function (event) {
-        crossOut(this, event);
+        crossOther(this, event);
     });
 
     $('input[name="today-date"]').each(function(i, el){
