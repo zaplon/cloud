@@ -37,6 +37,10 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
             elif 'doctor' in self.request.GET:
                 return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
                                                                       doctor__id=self.request.GET['doctor'], status='PENDING').order_by('datetime')[0:5]
+            elif 'doctors' in self.request.GET:
+                return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
+                                                                      doctor__id__in=self.request.GET['doctors'].split(','),
+                                                                      status='PENDING').order_by('datetime')[0:5]
             else:
                 return Term.objects.none()
         end = datetime.datetime.strptime(self.request.query_params['end'], '%Y-%m-%d')

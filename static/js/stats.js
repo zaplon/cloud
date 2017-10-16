@@ -1,6 +1,7 @@
 var visitsCanvas = document.getElementById('stats-visits').getContext('2d');
 var doctorsCanvas = document.getElementById('stats-doctors').getContext('2d');
 var visitsTimeCanvas = document.getElementById('stats-visits-time').getContext('2d');
+var typesCanvas = document.getElementById('stats-types').getContext('2d');
 
 $.getJSON('/rest/stats/', {type: 'all'}, function (data) {
     var visits = new Chart(visitsCanvas, {
@@ -76,6 +77,20 @@ $.getJSON('/rest/stats/', {type: 'all'}, function (data) {
                     }
                 }]
             }
+        }
+    });
+    var visitTypes = new Chart(typesCanvas, {
+        // The type of chart we want to create
+        type: 'pie',
+        // The data for our dataset
+        data: {
+            labels: data.types.labels,
+            datasets: [{
+                label: "Liczba wizyt",
+                backgroundColor: 'rgba(0,130,198,0.8)',
+                borderColor: '#d8e2e7',
+                data: data.types.data,
+            }]
         }
     });
 });

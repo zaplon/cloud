@@ -109,3 +109,4 @@ class Icd10(models.Model):
     class Meta:
         verbose_name = 'Rozpoznanie'
         verbose_name_plural = 'Rozpoznania'
+

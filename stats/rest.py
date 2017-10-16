@@ -8,7 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 
 from timetable.models import Term
-from user_profile.models import Doctor
+from user_profile.models import Doctor, Specialization
 from visit.models import Visit
 
 
@@ -27,6 +27,7 @@ class Stats(APIView):
         type = request.GET.get('type')
         all = type == 'all'
         all_res = {}
+        from_date = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=30)
         if type == 'visits' or all:
             q = Visit.objects.annotate(month=TruncMonth('created')).values('month').annotate(c=Count('id')).values(
                 'month', 'c').order_by('month')
@@ -53,6 +54,14 @@ class Stats(APIView):
             res = {'labels': [str(r) for r in q], 'data': [r.c for r in q]}
             if all:
                 all_res['doctors'] = res
+            else:
+                return Response(res)
+        if type == 'types' or all:
+            q = Specialization.objects.filter(doctors__terms__datetime__gte=from_date).annotate(c=Count('id'))
+            q = list(q)
+            res = {'labels': [str(r) for r in q], 'data': [r.c for r in q]}
+            if all:
+                all_res['types'] = res
             else:
                 return Response(res)
 
