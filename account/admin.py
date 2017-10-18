@@ -49,9 +49,9 @@ class PasswordHistoryAdmin(admin.ModelAdmin):
     ordering = ["user__username", "-timestamp"]
 
 
-admin.site.register(Account, AccountAdmin)
-admin.site.register(SignupCode, SignupCodeAdmin)
-admin.site.register(AccountDeletion, AccountDeletionAdmin)
-admin.site.register(EmailAddress, EmailAddressAdmin)
-admin.site.register(PasswordExpiry, PasswordExpiryAdmin)
-admin.site.register(PasswordHistory, PasswordHistoryAdmin)
+# admin.site.register(Account, AccountAdmin)
+# admin.site.register(SignupCode, SignupCodeAdmin)
+# admin.site.register(AccountDeletion, AccountDeletionAdmin)
+# admin.site.register(EmailAddress, EmailAddressAdmin)
+# admin.site.register(PasswordExpiry, PasswordExpiryAdmin)
+# admin.site.register(PasswordHistory, PasswordHistoryAdmin)

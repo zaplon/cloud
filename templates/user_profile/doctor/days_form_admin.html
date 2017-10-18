@@ -1,16 +1,18 @@
 {% extends 'user_profile/doctor/day_form_single.html' %}
 {% load static %}
-
 {% block extra %}
     <input name="doctor-0-working_hours" type="hidden" data-bind="value: ko.toJSON(days)" />
-    <script>
-        if (window.working_hours == undefined) {
-            window.working_hours = JSON.parse('{{ value }}');
-            console.log(window.working_hours);
-        }
-    </script>
     <script src="{% static "js/lib/jquery/jquery.min.js" %}"></script>
     <script src="{% static "knockout/dist/knockout.js" %}"></script>
+        <script>
+        if (window.working_hours == undefined) {
+            window.working_hours = JSON.parse('{{ value }}');
+            window.working_hours.forEach(function(h){
+               h.hasBreak = ko.observable(h.hasBreak);
+               h.dayChecked = ko.observable(h.dayChecked);
+            });
+        }
+    </script>
     <style>
         #working-hours label {
             width: initial!important;

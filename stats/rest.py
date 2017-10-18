@@ -57,7 +57,8 @@ class Stats(APIView):
             else:
                 return Response(res)
         if type == 'types' or all:
-            q = Specialization.objects.filter(doctors__terms__datetime__gte=from_date).annotate(c=Count('id'))
+            q = Specialization.objects.filter(doctors__terms__datetime__gte=from_date,
+                                              doctors__terms__patient__isnull=False).annotate(c=Count('id'))
             q = list(q)
             res = {'labels': [str(r) for r in q], 'data': [r.c for r in q]}
             if all:

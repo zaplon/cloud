@@ -87,7 +87,7 @@ $.getJSON('/rest/stats/', {type: 'all'}, function (data) {
             labels: data.types.labels,
             datasets: [{
                 label: "Liczba wizyt",
-                backgroundColor: 'rgba(0,130,198,0.8)',
+                backgroundColor: ['rgba(0,130,198,0.8)', 'rgba(200,30,198,0.8)'],
                 borderColor: '#d8e2e7',
                 data: data.types.data,
             }]

@@ -3,10 +3,12 @@ from django.contrib import admin
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, UserChangeForm, GroupAdmin, csrf_protect_m
+from django.contrib.sites.models import Site
 from django.forms import ModelForm, Widget, ChoiceField
 from django.template import loader
 from django.utils.safestring import mark_safe
 
+from account.models import Account
 from administration.settings import *
 from django.utils.translation import ugettext_lazy as _
 
@@ -75,7 +77,7 @@ class DoctorInline(admin.StackedInline):
 
 
 class UserAdmin(UserAdmin):
-    #inlines = (DoctorInline, )
+    # inlines = (DoctorInline, )
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
@@ -161,6 +163,7 @@ class SystemSettingsAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
+admin.site.unregister(Site)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Localization)
 admin.site.register(User, UserAdmin)
