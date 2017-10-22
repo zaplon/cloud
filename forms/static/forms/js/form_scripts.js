@@ -1,6 +1,11 @@
 var today = new Date();
 var todayStr = today.getFullYear() + '-' + (today.getMonth() < 9 ? ('0' + (today.getMonth() + 1)) : (today.getMonth() + 1))
     + '-' + (today.getDate() < 10 ? ('0' + today.getDate()) : today.getDate());
+var todayJoin = todayStr.split('-').reverse();
+
+$("input#examination-date").change(function(e){
+    console.log($(this).val())
+});
 
 function crossOut(el, event) {
     if (event.target.type && (event.target.type.indexOf('select') > -1 || event.target.type == 'text'))

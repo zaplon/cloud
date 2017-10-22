@@ -125,7 +125,7 @@ var visit = {
             if (this == window)
                 return;
             this.subMenu.forms([
-                {title: 'Karta badania profilaktycznego', name: 'profilactic.pdf'},
+                {title: 'Karta badania profilaktycznego', name: 'karta_badania_profilaktycznego.pdf'},
                 {title: 'Karta badania lekarskiego', name: 'doctor.pdf'},
                 {title: 'Karta badania Prawo Jazdy', name: 'kierowca.pdf'}
             ]);

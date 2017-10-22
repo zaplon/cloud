@@ -24,6 +24,11 @@ formViewModel = {
         var textareas = htmlJq.find('textarea');
         var selects = htmlJq.find('select');
         inputs.each(function (index, i) {
+            if ($(i).attr('type') == 'radio')
+                if ($(i).is(':checked'))
+                    $(i).attr('checked', '1');
+                else
+                    $(i).removeAttr('checked');
             if ($(i).attr('type') == 'checkbox')
                 if (i.checked)
                     $(i).attr('checked', '1');
