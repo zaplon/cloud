@@ -14,6 +14,9 @@ input[type='text']
   border-bottom: 1px dotted black
   padding-left: 3px
 
+.dotted
+  border-bottom: 1px dotted black!important
+
 table.no-border
   td
     border: none!important
@@ -27,7 +30,12 @@ table.no-border
 footer
   page-break-after: always
 
+table.radio-center
+  td
+    text-align: center
+
 table
+  page-break-inside: avoid
   td
     border: 1px solid #aaa
     height: inherit
@@ -35,6 +43,7 @@ table
       width: 95% !important
       height: 95%
       background-color: $input-background
+      margin-left: 5px
       border: none
     input[type="checkbox"]
       width: 100%
@@ -54,8 +63,12 @@ table
 .adnotations
   width: 33%
   border-top: 1px solid black
-  margin-top: 50px
+
+.adnotations-text
+  font-size: 10px
+  page-break-after: always
 
 .new-page
   padding-top: 100px
 
+//specific

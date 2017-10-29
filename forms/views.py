@@ -60,20 +60,29 @@ class EditFormView(View):
             #     print_w = float(w) - 20
             #     if print_w > 100:
             #         text = text.replace(w, str(print_w))
-            if (text.find('checkbox') > -1 or text.find('radio') > -1) and text.find('checked') > -1:
-                return '<span class="checkbox">X</span>'
-            elif text.find('type="text"') > -1:
+            if text.find('type="text"') > -1:
                 return text
+            klass = re.search('class="([^"]+)"', text)
+            klass = klass.group(1).strip() if klass else ''
+            if (text.find('checkbox') > -1 or text.find('radio') > -1) and text.find('checked') > -1:
+                return '<span class="checkbox %s">X</span>' % klass
             elif text.find('type="number"') > -1 or text.find('type="date"') > -1:
                 value = re.search('value="(.*)"', text)
-                if value:
-                    return '<span>%s</span>' % value.group(1)
+                style = re.search('style="([^"]+)"', text)
+                if style:
+                    style = style.group(1).strip() + 'display: inline-block;'
                 else:
-                    return '<span></span>'
+                    style = ''
+                if value:
+                    return '<span style="%s" class="%s">%s</span>' % (style, klass, value.group(1))
+                else:
+                    return '<span style="%s" class="%s"></span>' % (style, klass)
             else:
                 return ''
         data = re.sub('<input[^>]+>', repl, data)
         data = re.sub('<.[^>]*data-ignore[^>]+>', '', data)
+        data = re.sub('<.[^>]*datepicker-hide[^>]+>', '', data)
+        data = re.sub('<.[^>]*datepicker-container[^>]+>', '', data)
         f = codecs.open(os.path.join(settings.PROJECT_DIR, 'forms', 'templates', 'forms', 'tmp', file_name), 'w', 'utf8')
         f.write(data)
         f.close()

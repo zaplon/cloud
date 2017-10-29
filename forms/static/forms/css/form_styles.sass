@@ -31,6 +31,10 @@ footer
 .field-error
   border: 1px solid red
 
+table.radio-center
+  td
+    text-align: center
+
 table
   td
     border: 1px solid #aaa
@@ -46,6 +50,7 @@ table
     input[type="number"], input[type="text"]
       background-color: $input-background
       border: none
+      height: 100%
     .readonly
       width: inherit
       background-color: inherit
@@ -53,4 +58,22 @@ table
 .adnotations
   width: 33%
   border-top: 1px solid black
-  margin-top: 50px
+  margin-top: 50px!important
+
+.adnotations-text
+  font-size: 10px
+  margin-bottom: 50px
+
+.calendar
+  width: 25px
+  height: 25px
+  cursor: pointer
+  background-image: url('../images/calendar.png')
+  background-size: contain
+  border: 1px solid black
+  position: relative
+  left: -25px
+  margin-right: -25px
+
+.only-print
+  display: none

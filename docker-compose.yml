@@ -13,3 +13,5 @@ services:
       LC_ALL: pl_PL.UTF-8
   mysql:
     image: "mysql"
+  wkhtmltopdf:
+    image: michaelperrin/wkhtmltopdf:latest

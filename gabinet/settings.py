@@ -195,7 +195,8 @@ LOCALE_PATHS = [os.path.join(PROJECT_DIR, 'locale')]
 
 LANGUAGE_CODE = 'pl'
 VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
-WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
+#WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
+WKHTMLTOPDF_CMD = 'docker run michaelperrin/wkhtmltopdf'
 APP_URL = 'http://127.0.0.1:8001/'
 
 MODULES = [

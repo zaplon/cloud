@@ -29,6 +29,9 @@ footer {
 .field-error {
   border: 1px solid red; }
 
+table.radio-center td {
+  text-align: center; }
+
 table td {
   border: 1px solid #aaa;
   height: inherit; }
@@ -42,7 +45,8 @@ table td {
     height: 80%; }
   table td input[type="number"], table td input[type="text"] {
     background-color: #dcdcfa;
-    border: none; }
+    border: none;
+    height: 100%; }
   table td .readonly {
     width: inherit;
     background-color: inherit; }
@@ -50,6 +54,24 @@ table td {
 .adnotations {
   width: 33%;
   border-top: 1px solid black;
-  margin-top: 50px; }
+  margin-top: 50px !important; }
+
+.adnotations-text {
+  font-size: 10px;
+  margin-bottom: 50px; }
+
+.calendar {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  background-image: url("../images/calendar.png");
+  background-size: contain;
+  border: 1px solid black;
+  position: relative;
+  left: -25px;
+  margin-right: -25px; }
+
+.only-print {
+  display: none; }
 
 /*# sourceMappingURL=form_styles.css.map */
