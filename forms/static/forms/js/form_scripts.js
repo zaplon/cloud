@@ -5,7 +5,7 @@ var todayJoin = todayStr.split('-').reverse();
 
 putPostal = function(code){
     for (var i=0;i<=5;i++){
-        $('.postal' + i).val(code[i]);
+        $('input[name=postal' + i + ']').val(code[i]);
     }
 };
 
