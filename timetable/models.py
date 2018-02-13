@@ -26,7 +26,7 @@ class Service(models.Model):
         verbose_name = u'Usługa'
         verbose_name_plural = u'Usługi'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -39,7 +39,7 @@ class Localization(models.Model):
         verbose_name = 'Lokalizacja'
         verbose_name_plural = 'Lokalizacje'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -56,11 +56,11 @@ class Term(models.Model):
     service = models.ForeignKey(Service, blank=True, null=True, related_name='terms', verbose_name=u'Usługa')
     localization = models.ForeignKey(Localization, blank=True, null=True, related_name='terms', verbose_name=u'Lokalizacja')
 
-    def __unicode__(self):
+    def __str__(self):
         if self.patient:
-            return self.doctor.__unicode__() + ' ' + self.patient.__unicode__() + ' ' + self.datetime.strftime('%Y-%m-%d %H:%M')
+            return self.doctor.__str__() + ' ' + self.patient.__str__() + ' ' + self.datetime.strftime('%Y-%m-%d %H:%M')
         else:
-            return self.doctor.__unicode__() + ' wolny ' + self.datetime.strftime('%Y-%m-%d %H:%M')
+            return self.doctor.__str__() + ' wolny ' + self.datetime.strftime('%Y-%m-%d %H:%M')
 
     def get_end(self):
         return self.datetime + timezone.timedelta(minutes=self.duration)

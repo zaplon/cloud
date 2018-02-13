@@ -3,6 +3,14 @@ $input-background: inherit
 body
   margin: 0 auto
 
+.small-page
+  width: 7cm
+  height: 21cm
+  padding: 0.25cm
+  font-size: 11px
+  h1
+    font-size: 11px
+
 .cross-out
   text-decoration: line-through!important
 
@@ -10,9 +18,11 @@ body
   display: none
 
 input[type='text']
-  border: none
-  border-bottom: 1px dotted black
+  border: none!important
+  border-bottom: 1px dotted black!important
   padding-left: 3px
+  border-radius: 0!important
+  box-shadow: none!important
 
 .dotted
   border-bottom: 1px dotted black!important
@@ -70,5 +80,10 @@ table
 
 .new-page
   padding-top: 100px
+
+.mt-2
+  margin-top: 20px
+.mb-2
+  margin-bottom: 20px
 
 //specific

@@ -81,12 +81,18 @@ class EditFormView(View):
                 return ''
         data = re.sub('<input[^>]+>', repl, data)
         data = re.sub('<.[^>]*data-ignore[^>]+>', '', data)
-        data = re.sub('<.[^>]*datepicker-hide[^>]+>', '', data)
-        data = re.sub('<.[^>]*datepicker-container[^>]+>', '', data)
+        data = re.sub('<.[^>]*datepicker-hide.*div>', '', data)
         f = codecs.open(os.path.join(settings.PROJECT_DIR, 'forms', 'templates', 'forms', 'tmp', file_name), 'w', 'utf8')
         f.write(data)
         f.close()
         return HttpResponse(json.dumps({'tmp': file_name}), content_type='application/json')
+
+
+def convert_to_pdf_phantom(path, output):
+    os.system('%s %s %s %s A4' %
+              (os.path.join(settings.PROJECT_DIR, 'bin', 'phantomjs', 'bin', 'phantomjs'),
+               os.path.join(settings.PROJECT_DIR, 'bin', 'phantomjs', 'rasterize.js'),
+               path, output))
 
 
 class FormView(PDFTemplateView):
@@ -100,7 +106,11 @@ class FormView(PDFTemplateView):
             self.template_name = 'forms/' + template + '.html'
         if 'print' in request.GET:
             project_dir = settings.PROJECT_DIR
-            css = 'file://' + os.path.join(project_dir, 'forms', 'static', 'forms', 'css', 'prints.css')
+            if template in ['ABA', 'zgoda na znieczulenie']:
+                style = 'bootstrap_print.css'
+            else:
+                style = 'prints.css'
+            css = 'file://' + os.path.join(project_dir, 'forms', 'static', 'forms', 'css', style)
             now = datetime.datetime.now().strftime('%s')
             self.filename = request.GET.get('filename', '%s_%s.pdf' % (template, now))
             config = FORMS.get(template, FORMS['default'])
@@ -118,6 +128,8 @@ class FormView(PDFTemplateView):
                                       cmd_options=self.cmd_options)
                 with open(output, 'wb') as f:
                     f.write(data)
+                # convert_to_pdf_phantom('file://' + os.path.join(settings.BASE_DIR, 'forms', 'templates',
+                #                       self.template_name), output)
                 return HttpResponse('/media/tmp/' + file_name)
             else:
                 return super(PDFTemplateView, self).get(request, *args, **kwargs)

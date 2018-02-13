@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from crispy_forms.utils import render_crispy_form
+from django.contrib.auth.mixins import AccessMixin, PermissionRequiredMixin
 from django.shortcuts import render, HttpResponse
 import importlib
 import urllib
@@ -8,7 +9,7 @@ from django.template.context_processors import csrf
 from django.views import View
 import json
 import re
-import urllib2
+import urllib
 from django.conf import settings
 
 
@@ -72,10 +73,7 @@ class AjaxFormView(View):
             else:
                 form = form_class(data=data)
         if form.is_valid():
-            if self.request.POST.get('user', None):
-                form.save(self.request.user)
-            else:
-                form.save()
+            form.save(user=self.request.user)
             return HttpResponse(json.dumps({'success': True}), content_type='application/json')
         else:
             form_html = render_crispy_form(form, context=ctx)
@@ -114,4 +112,8 @@ def send_sms_code(my_code, my_mobile, username=''):
     url_text = 'https://api1.serwersms.pl/zdalnie/index.php?login=webapi_misalgabinet&haslo=tenibag123$&akcja=wyslij_sms&nadawca=SPSR-GAB&numer=%2B48' + str(
         my_mobile) + '&wiadomosc=Haslo%20dla%20'+username+':' + str(my_code) + ''
     if settings.SMS_ON:
-        urllib2.urlopen(url_text)
+        urllib.urlopen(url_text)
+
+
+class GabinetPermissionRequiredMixin(PermissionRequiredMixin, AccessMixin):
+    raise_exception = True

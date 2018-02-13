@@ -1,0 +1,44 @@
+<html lang="pl">
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script data-ignore="1" src="/static/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/static/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/static/forms/css/form_styles.css" rel="stylesheet"/>
+</head>
+<body class="small-page">
+    <h1 style="margin-bottom: 1cm; font-weight: bold">SKIEROWANIE NA BADANIE: <br/> RTG, CT, USG</h1>
+    <form>
+      <div class="form-group">
+        <label for="name">Nazwisko i imię pacjenta</label>
+        <input type="text" name="name" class="form-control" id="name">
+      </div>
+      <div class="form-group">
+        <label for="name">Pesel</label>
+        <input type="text" name="pesel" class="form-control" id="pesel">
+      </div>
+      <div class="form-group">
+        <label for="rodzaj_badania">Rodzaj badania</label>
+        <textarea style="height: 2cm" name="rodzaj_badania" class="form-control" id="rodzaj_badania">
+        </textarea>
+      </div>
+      <div class="form-group">
+        <label for="icd_text">Rozpoznanie</label>
+          <textarea name="icd_text" class="form-control" id="icd_text"></textarea>
+      </div>
+      <div class="form-group" style="margin-top: 1cm">
+        <input type="text" name="doctor" class="form-control" id="doctor">
+        <label for="doctor">Lekarz kierujący</label>
+      </div>
+    </form>
+    <div class="pull-right" style="margin-top: 1cm">
+        <span id="date"></span>
+    </div>
+    <script>
+        if ($('#date').html().length == 0){
+            $('#date').html(todayStr);
+        }
+    </script>
+</body>
+</html>

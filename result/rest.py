@@ -10,7 +10,6 @@ from rest_framework import serializers, viewsets
 from visit.models import Visit
 from .models import Result
 from django.conf import settings
-from elo.views import getPatientData, getDoc
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.response import Response
@@ -70,22 +69,11 @@ class ResultViewSet(viewsets.ModelViewSet):
             super(ResultViewSet, self).create(request)
 
     def retrieve(self, request, *args, **kwargs):
-        if settings.USE_ELO:
-            return getDoc(request, kwargs['pk'])
+        pass
 
     def list(self, request, *args, **kwargs):
-        if settings.USE_ELO:
-            pesel = False
-            if 'search' in request.GET:
-                pesel = request.GET['search']
-            if 'pesel' in request.GET:
-                pesel = request.GET['pesel']
-            if not pesel:
-                return HttpResponseBadRequest()
-            return getPatientData(pesel, request, flat=('is_table' in request.GET))
-        else:
-            if not 'pesel' in request.GET:
-                return HttpResponseBadRequest()
-            return super(ResultViewSet, self).list(request, *args, **kwargs)
+        if not 'pesel' in request.GET:
+            return HttpResponseBadRequest()
+        return super(ResultViewSet, self).list(request, *args, **kwargs)
 
 

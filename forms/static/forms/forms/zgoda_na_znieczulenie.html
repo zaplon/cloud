@@ -1,0 +1,52 @@
+<html>
+<head>
+
+    <title>ABA</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link data-ignore="1" rel="stylesheet" media="all" href="/static/forms/css/bootstrap.css">
+
+    <script data-ignore="1" src="/static/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/static/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/static/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/static/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/static/forms/css/datepicker.css.min" rel="stylesheet"/>
+</head>
+<body class="page">
+<p style="text-align: center">
+SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW <br/>
+IM. PROF. WITOLDA ZAWADOWSKIEGO <br/>
+Ul. WARYŃSKIEGO 9 00-655 Warszawa <br/>
+tel. +48 22 625 15 90; +48 22 825 38 80 <br/>
+</p>
+<h1 class="text-center" style="margin: 2rem 0;">ZGODA NA ZNIECZULENIE</h1>
+<ul style="list-style: decimal;">
+    <li>Ja, <input type="text" style="width:300px;" name="name"> data urodzenia <input style="width:125px;" data-toggle="datepicker" type="text" name="birth_date">
+wyrażam zgodę na wykonanie u mnie znieczulenia ogólnego do zabiegu endoskopii przewodu pokarmowego </li>
+    <li>Oświadczam, że:
+        <ul>
+            <li>dr <input type="text" style="width: 200px;" name="doctor"> przeprowadził(-a) ze mną rozmowę wyjaśniającą na temat znieczulenia oraz innych czynności i procedur anestezjologicznych, które mogą być wykonywane u mnie w okresie okołozabiegowym</li>
+            <li>przedstawiono mi wady i zalety i dające się przewidzieć powikłania proponowanego mi rodzaju znieczulenia</li>
+            <li>na wszystkie pytania dotyczące mojego stanu zdrowia udzieliłem odpowiedzi wyczerpujących i zgodnych z prawdą</li>
+            <li>zrozumiałem na czym polega znieczulenie i inne procedury z nim związane, wszystkie moje wątpliwości dotyczące znieczulenia zostały mi wyjaśnione i nie mam żadnych pytań</li>
+        </ul>
+    </li>
+    <li>Wyrażam zgodę na <strong>uzasadnione medycznie, w przypadku zaistniałej konieczności:</strong>
+        <ul>
+            <li>przetoczenie krwi i preparatów krwiopochodnych</li>
+            <li>wykonanie dodatkowych wkłuć dożylnych i dotętniczych</li>
+        </ul>
+    </li>
+    <li>Oświadczam, że 6 godzin przed wykonaniem znieczulenia <strong>nic nie jadłem i nie piłem.</strong></li>
+    <li><strong>Zostałem poinformowany o zakazie prowadzenia pojazdów w dniu dzisiejszym.</strong></li>
+    <li>Tekst powyższy przeczytałem(-am)/został mi przeczytany i zrozumiałem(-am). Nie mam pytań i wątpliwości.</li>
+</ul>
+<p>DATA <input type="text" name="date" data-toggle="datepicker"></p>
+<div class="row" style="margin-top: 40px;">
+    <div class="col-md-6 text-left">Podpis lekarza <input type="text" readonly></div>
+    <div class="col-md-6 text-right">Podpis pacjenta <input type="text" readonly></div>
+</div>
+</body>
+</html>

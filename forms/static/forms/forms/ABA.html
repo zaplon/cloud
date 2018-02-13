@@ -1,0 +1,374 @@
+<html>
+<head>
+
+    <title>ABA</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/static/forms/css/bootstrap.css">
+
+    <script data-ignore="1" src="/static/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/static/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/static/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/static/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/static/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <style>
+        .aba-table .border {
+            border: 1px solid black;
+            text-align: center;
+        }
+        table.border td {
+            border: 1px solid black;
+            border-spacing: 0;
+        }
+
+        .aba-table {
+            width: 100%;
+        }
+        table.no-border td {
+            border-top: 0!important;
+        }
+    </style>
+</head>
+<body class="page" style="height: inherit">
+ <div class="">
+    <h1>Ankieta badania anestezjologicznego
+        <small>(ABA)</small>
+    </h1>
+
+    <p style="text-align: justify;">Szanowni Państwo, <br/>
+        Ankietę należy wypełnić przed konsultacją anestezjologiczną. Informacje uzyskane dzięki odpowiedziom na poniższe
+        pytania pozwolą lekarzowi anestezjologowi wybrać najbardziej odpowiedni sposób znieczulenia i zwiększą Państwa
+        bezpieczeństwo przed, w trakcie i po zabiegu. Koniecznie prosimy mieć przy sobie całą dotychczasową dokumentację
+        medyczną (karty wypisowe ze szpitali, konsultacje itp.) W trakcie konsultacji lekarz zada Państwu jeszcze dodatkowe
+        pytania i wyjaśni wątpliwości.</p>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-8">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-2" for="date">Data</label>
+                    <div class="col-md-10">
+                      <input data-toggle="datepicker" class="form-control" type="text" id="date" name="date">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-12">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-2" for="name">Imię i nazwisko</label>
+                    <div class="col-md-10">
+                        <input class="whole-line form-control" type="text" id="name" name="name">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-12">
+            <form class="form-inline">
+                <label style="padding-left: 0px;" class="col-md-2" for="birth_date">Data urodzenia</label>
+                <div class="col-md-10" style="padding-left: 0">
+                    <table class="table table-sm no-border">
+                        <tbody>
+                        <tr>
+                            <td style="padding-left: 0">
+                                <input data-toggle="datepicker" style="width: 175px" type="text" name="birth_date" class="form-control datepicker" id="birth_date">
+                            </td>
+                            <td>lat</td>
+                            <td><input class="form-control" style="width: 50px;" type="text" name="age"></td>
+                            <td>wzrost</td>
+                            <td><input class="form-control" style="width: 75px;" type="text" name="age"></td>
+                            <td>cm</td>
+                            <td>waga</td>
+                            <td><input class="form-control" style="width: 50px;" type="text" name="age"></td>
+                            <td>kg</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <span><strong>Jakie leki i w jakich dawkach przyjmuje Pani/Pan na stałe?</strong></span>
+        </div>
+        <div class="col-md-12">
+            <table style="width: 100%;" class="border">
+                <tbody>
+                    <tr>
+                        <td style="height:100px;"><textarea style="height:100px;" class="form-control whole-line" name="jakie_leki"></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <span><strong>Czy stwierdzono lub czy kiedykolwiek wystąpiły u Pani/Pana?</strong></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="aba-table">
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td class="border">TAK</td>
+                    <td class="border">NIE</td>
+                    <td></td>
+                    <td class="border">TAK</td>
+                    <td class="border">NIE</td>
+                </tr>
+                <tr>
+                    <td><strong>Choroby serca</strong></td>
+                    <td class="border"><input type="radio" name="radio1"></td>
+                    <td class="border"><input type="radio" name="radio1"></td>
+                    <td><strong>Choroby neurologiczne</strong></td>
+                    <td class="border"><input type="radio" name="radio2"></td>
+                    <td class="border"><input type="radio" name="radio2"></td>
+                </tr>
+                <tr>
+                    <td>bóle w klatce piersiowej</td>
+                    <td class="border"><input type="radio" name="radio3"></td>
+                    <td class="border"><input type="radio" name="radio3"></td>
+                    <td>utraty przytomności</td>
+                    <td class="border"><input type="radio" name="radio4"></td>
+                    <td class="border"><input type="radio" name="radio4"></td>
+                </tr>
+                <tr>
+                    <td>choroba wieńcowa</td>
+                    <td class="border"><input type="radio" name="radio5"></td>
+                    <td class="border"><input type="radio" name="radio5"></td>
+                    <td>drgawki</td>
+                    <td class="border"><input type="radio" name="radio6"></td>
+                    <td class="border"><input type="radio" name="radio6"></td>
+                </tr>
+                <tr>
+                    <td>zawał serca</td>
+                    <td class="border"><input type="radio" name="radio7"></td>
+                    <td class="border"><input type="radio" name="radio7"></td>
+                    <td>padaczka</td>
+                    <td class="border"><input type="radio" name="radio8"></td>
+                    <td class="border"><input type="radio" name="radio8"></td>
+                </tr>
+                <tr>
+                    <td>wada serca</td>
+                    <td class="border"><input type="radio" name="radio9"></td>
+                    <td class="border"><input type="radio" name="radio9"></td>
+                    <td>udar mózgu</td>
+                    <td class="border"><input type="radio" name="radio10"></td>
+                    <td class="border"><input type="radio" name="radio10"></td>
+                </tr>
+                <tr>
+                    <td>zaburzenia rytmu serca</td>
+                    <td class="border"><input type="radio" name="radio11"></td>
+                    <td class="border"><input type="radio" name="radio11"></td>
+                    <td>zaburzenia czucia</td>
+                    <td class="border"><input type="radio" name="radio12"></td>
+                    <td class="border"><input type="radio" name="radio12"></td>
+                </tr>
+                <tr>
+                    <td>niewydolność krążenia</td>
+                    <td class="border"><input type="radio" name="radio13"></td>
+                    <td class="border"><input type="radio" name="radio13"></td>
+                    <td>niedowład, porażenia</td>
+                    <td class="border"><input type="radio" name="radio14"></td>
+                    <td class="border"><input type="radio" name="radio14"></td>
+                </tr>
+                <tr>
+                    <td>nadciśnienie tętnicze</td>
+                    <td class="border"><input type="radio" name="radio15"></td>
+                    <td class="border"><input type="radio" name="radio15"></td>
+                    <td>operacje lub urazy kręgosłupa</td>
+                    <td class="border"><input type="radio" name="radio16"></td>
+                    <td class="border"><input type="radio" name="radio16"></td>
+                </tr>
+                <tr>
+                    <td>obrzęki nóg</td>
+                    <td class="border"><input type="radio" name="radio17"></td>
+                    <td class="border"><input type="radio" name="radio17"></td>
+                    <td>urazy głowy</td>
+                    <td class="border"><input type="radio" name="radio18"></td>
+                    <td class="border"><input type="radio" name="radio18"></td>
+                </tr>
+                <tr>
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td><strong>choroby płuc</strong></td>
+                    <td class="border"><input type="radio" name="radio19"></td>
+                    <td class="border"><input type="radio" name="radio19"></td>
+                    <td><strong>choroby przewodu pokarmowego</strong></td>
+                    <td class="border"><input type="radio" name="radio20"></td>
+                    <td class="border"><input type="radio" name="radio20"></td>
+                </tr>
+                <tr>
+                    <td>choroba obturacyjna płuc</td>
+                    <td class="border"><input type="radio" name="radio21"></td>
+                    <td class="border"><input type="radio" name="radio21"></td>
+                    <td>choroba wrzodowa</td>
+                    <td class="border"><input type="radio" name="radio22"></td>
+                    <td class="border"><input type="radio" name="radio22"></td>
+                </tr>
+                <tr>
+                    <td>astma</td>
+                    <td class="border"><input type="radio" name="radio23"></td>
+                    <td class="border"><input type="radio" name="radio23"></td>
+                    <td>przepuklina rozworu przełykowego</td>
+                    <td class="border"><input type="radio" name="radio24"></td>
+                    <td class="border"><input type="radio" name="radio24"></td>
+                </tr>
+                <tr>
+                    <td>duszność</td>
+                    <td class="border"><input type="radio" name="radio25"></td>
+                    <td class="border"><input type="radio" name="radio25"></td>
+                    <td>chroby wątroby</td>
+                    <td class="border"><input type="radio" name="radio26"></td>
+                    <td class="border"><input type="radio" name="radio26"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="border"></td>
+                    <td class="border"></td>
+                    <td>żółtaczka</td>
+                    <td class="border"><input type="radio" name="radio27"></td>
+                    <td class="border"><input type="radio" name="radio27"></td>
+                </tr>
+                <tr>
+                    <td><strong>choroby tarczycy</strong></td>
+                    <td class="border"><input type="radio" name="radio28"></td>
+                    <td class="border"><input type="radio" name="radio28"></td>
+                    <td></td>
+                    <td class="border"></td>
+                    <td class="border"></td>
+                </tr>
+                <tr>
+                    <td>cukrzyca</td>
+                    <td class="border"><input type="radio" name="radio29"></td>
+                    <td class="border"><input type="radio" name="radio29"></td>
+                    <td>niewydolność nerek</td>
+                    <td class="border"><input type="radio" name="radio30"></td>
+                    <td class="border"><input type="radio" name="radio30"></td>
+                </tr>
+                <tr>
+                    <td>choroby nadnerczy</td>
+                    <td class="border"><input type="radio" name="radio31"></td>
+                    <td class="border"><input type="radio" name="radio31"></td>
+                    <td></td>
+                    <td class="border"></td>
+                    <td class="border"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="border"></td>
+                    <td class="border"></td>
+                    <td>uczulenia na leki</td>
+                    <td class="border"><input type="radio" name="radio32"></td>
+                    <td class="border"><input type="radio" name="radio32"></td>
+                </tr>
+                <tr>
+                    <td>zaburzenia krzepnięcia</td>
+                    <td class="border"><input type="radio" name="radio33"></td>
+                    <td class="border"><input type="radio" name="radio33"></td>
+                    <td>uczulenia na inne substancje</td>
+                    <td class="border"><input type="radio" name="radio34"></td>
+                    <td class="border"><input type="radio" name="radio34"></td>
+                </tr>
+                <tr>
+                    <td>choroby dziedziczne</td>
+                    <td class="border"><input type="radio" name="radio35"></td>
+                    <td class="border"><input type="radio" name="radio35"></td>
+                    <td>HIV/AIDS</td>
+                    <td class="border"><input type="radio" name="radio36"></td>
+                    <td class="border"><input type="radio" name="radio36"></td>
+                </tr>
+                <tr>
+                    <td>choroby mięśni</td>
+                    <td class="border"><input type="radio" name="radio37"></td>
+                    <td class="border"><input type="radio" name="radio37"></td>
+                    <td>żylaki</td>
+                    <td class="border"><input type="radio" name="radio38"></td>
+                    <td class="border"><input type="radio" name="radio38"></td>
+                </tr>
+                <tr>
+                    <td>hipertermia złośliwa</td>
+                    <td class="border"><input type="radio" name="radio39"></td>
+                    <td class="border"><input type="radio" name="radio39"></td>
+                    <td>problemy w trakcie znieczulenia</td>
+                    <td class="border"><input type="radio" name="radio40"></td>
+                    <td class="border"><input type="radio" name="radio40"></td>
+                </tr>
+                <tr>
+                    <td>Na które piętro bez odpoczynku może Pani/Pan wejść?</td>
+                    <td colspan="2" class="border"><textarea></textarea></td>
+                    <td>Ile papierosów dziennie Pani/Pan wypala?</td>
+                    <td colspan="2" class="border"><textarea></textarea></td>
+                </tr>
+                <tr>
+                    <td>Jakie najwyższe ciśnienie tętnicze miał Pani/Pan kiedykolwiek?</td>
+                    <td colspan="2" class="border"><textarea></textarea></td>
+                    <td>Ile alkoholu tygodniowo Pani/Pan spożywa?</td>
+                    <td colspan="2" class="border"><textarea></textarea></td>
+                </tr>
+                <tr>
+                    <td>Jakie ciśnienie tętnicze ma Pani/Pan obecnie?</td>
+                    <td colspan="2" class="border"><textarea></textarea></td>
+                    <td>Czy jest PANI w ciąży?</td>
+                    <td colspan="2" class="border"><textarea></textarea></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <table style="width:100%" class="border">
+                <tbody>
+                <tr>
+                    <td>Przebyte operacje, rok i w jakim znieczuleniu:</td>
+                    <td>Inne problemy zdrowotne:</td>
+                </tr>
+                <tr>
+                    <td style="height: 100px;"><textarea style="height: 100px;"></textarea></td>
+                    <td style="height: 100px;"><textarea style="height: 100px;"></textarea></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <p class="text-right">
+                Podpis pacjenta<input type="text" readonly>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="text-center">DALEJ WYPEŁNIA KONSULTUJĄCY LEKARZ ANESTEZJOLOG</p>
+            <table style="width:100%;" class="border">
+                <tbody>
+                <tr>
+                    <td colspan="6">Uwagi, konieczne konsultacje:</td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="height: 200px;"><textarea style="height: 200px;"></textarea></td>
+                </tr>
+                <tr>
+                    <td>ASA</td>
+                    <td style="width: 3cm"><textarea></textarea></td>
+                    <td>Zakwalifikowana/y do</td>
+                    <td style="width: 3cm"><textarea></textarea></td>
+                    <td>W znieczuleniu</td>
+                    <td style="width: 3cm"><textarea></textarea></td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="text-right mt-2">Podpis i pieczątka lekarza <input type="text" readonly></p>
+        </div>
+    </div>
+ </div>
+</body>
+</html>

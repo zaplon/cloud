@@ -45,8 +45,8 @@ class Command(BaseCommand):
                     m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cat,
                                                    in_use=True)
 
-                print medicine.name
-            print '***** Medicines A imported *****'
+                print(medicine.name)
+            print ('***** Medicines A imported *****')
 
         with open('g_utils/initial_data/leki-b.csv', 'rU') as csv_file:
             data = csv.reader(csv_file, delimiter=',', quotechar='"')
@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
                 sizes = row[5].split('\n')
                 cats = row[7].split('\n')
-                print sizes
+                print(sizes)
                 for i, ean in enumerate(row[6].split('\n')):
                     try:
                         size = sizes[i]
@@ -67,8 +67,8 @@ class Command(BaseCommand):
                     m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cat,
                                                    in_use=True)
 
-                print medicine.name
-            print '***** Medicines B imported *****'
+                print(medicine.name)
+            print('***** Medicines B imported *****')
 
         with open('g_utils/initial_data/leki-c.csv', 'rU') as csv_file:
             data = csv.reader(csv_file, delimiter=',', quotechar='"')
@@ -88,8 +88,8 @@ class Command(BaseCommand):
                     m = Medicine.objects.create(parent=medicine, ean=ean, size=size, availability_cat=cat,
                                                    in_use=True)
 
-                print medicine.name
-            print '***** Medicines C imported *****'
+                print(medicine.name)
+            print('***** Medicines C imported *****')
 
 
 

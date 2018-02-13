@@ -32,7 +32,7 @@ class ResultForm(Form):
     module = CharField(max_length=30, widget=HiddenInput(), initial='result.forms')
     klass = CharField(max_length=30, widget=HiddenInput(), initial='ResultForm')
 
-    def save(self, user):
+    def save(self):
         if settings.USE_ELO:
             return HttpResponse(status=200)
         Result.objects.create(doctor=user.doctor, description=self.cleaned_data['description'], name=self.cleaned_data['name'],

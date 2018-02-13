@@ -1,6 +1,7 @@
 formViewModel = {
     name: '',
     niceName: '',
+    showArchive: true,
     validate: function () {
         var requiredFields = $('input,textarea,select').filter('[required]:visible');
         var test = true;
@@ -43,7 +44,7 @@ formViewModel = {
         selects.each(function (index, s) {
             s.outerHTML = '<span>' + $(s).val() +'</span>';
         });
-        return html.outerHTML;
+        return html.outerHTML.replace('" type="date', '');
     },
     makePdf: function () {
         var data = formViewModel.getData();

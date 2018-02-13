@@ -42,7 +42,7 @@ class Specialization(models.Model):
     code = models.CharField(max_length=10)
     code_misal = models.CharField(max_length=100)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -78,9 +78,9 @@ class Doctor(models.Model):
         return json.loads(self.working_hours)
 
     def get_name(self):
-        return self.__unicode__()
+        return self.__str__()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -115,13 +115,13 @@ class Patient(models.Model):
 
     @property
     def name(self):
-        return self.__unicode__()
+        return self.__str__()
 
     @property
     def name_with_pesel(self):
         return '%s (%s)' % (self.name, self.pesel)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)
 
     def get_absolute_url(self):
@@ -134,7 +134,7 @@ class Note(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='notes')
 
     def get_author(self):
-        return self.doctor.__unicode__()
+        return self.doctor.__str__()
 
 
 class Recipe(models.Model):
@@ -156,5 +156,5 @@ class SystemSettings(models.Model):
         verbose_name = 'Ustawienia systemowe'
         verbose_name_plural = 'Ustawienia systemowe'
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Ustawienia systemowe'

@@ -110,7 +110,8 @@ var visit = {
                 return;
             this.subMenu.forms([
                 {title: 'Skierowanie do szpitala', name: 'skierowanie_do_szpitala.html'},
-                {title: 'Skierowanie do poradni specjalistycznej', name: 'poradnia_specjalistyczna.pdf'}
+                {title: 'Skierowanie do poradni specjalistycznej', name: 'poradnia_specjalistyczna.pdf'},
+                {title: 'Skierowanie na RTG', name: 'skierowanie_rtg.pdf'}
             ]);
             if (this.subMenuName() == 'skierowania') {
                 this.subMenu.show(1);

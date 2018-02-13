@@ -53,7 +53,6 @@ urlpatterns = [
     url(r'^patients/', patients_view, name='patients'),
     url(r'^stats/', stats_view, name='stats'),
     url(r'^calendar/', calendar_view, name='calendar'),
-    url(r'^elo/', include("elo.urls"), name='elo'),
     url(r'^archive/$', archive_view, name='archive'),
     url(r'^archive/', include("result.urls"), name='archive'),
     url(r'^profile/', include("user_profile.urls")),

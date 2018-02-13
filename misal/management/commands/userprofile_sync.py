@@ -32,7 +32,7 @@ class Command(BaseCommand):
                             doc.specializations.add(Specialization.objects.get(code=d['code']))
                         except:
                             continue
-                print 'utworzono %s' % d
+                print('utworzono %s' % d)
 
 
 

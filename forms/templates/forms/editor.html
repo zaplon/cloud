@@ -3,8 +3,8 @@
         <div class="col-md-12">
             <div id="edit-buttons">
                 <button class="btn btn-sm" data-bind="click: makePdf">Drukuj</button>
-                <button data-bind="click: saveTemporary" class="btn btn-sm">Zapisz wersję tymczasową</button>
-                <button data-bind="click: sendToElo" class="btn btn-sm">Prześlij do archiwum</button>
+                <button data-bind="click: saveTemporary, visible: showArchive" class="btn btn-sm">Zapisz wersję tymczasową</button>
+                <button data-bind="click: sendToElo, visible: showArchive" class="btn btn-sm">Prześlij do archiwum</button>
                 <button data-bind="click: close" class="btn btn-default btn-sm">Zamknij</button>
                 <div class="clearfix"></div>
             </div>

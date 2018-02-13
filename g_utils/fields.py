@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.forms.widgets import TextInput
 
 
@@ -14,6 +15,7 @@ class AutocompleteWidget(TextInput):
         hidden_input = '<input type="hidden" name="%s" value="%s" id="id_%s">' % (name, value, name)
         name_autocomplete = name + '_autocomplete'
         attrs['id'] = 'id_' + name_autocomplete
+        attrs['placeholder'] = attrs.get('placeholder', u'zacznij pisać...')
         input_html = super(AutocompleteWidget, self).render(name_autocomplete, self.display if self.display else value, attrs)
         script = """
             <script>

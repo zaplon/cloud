@@ -36,7 +36,7 @@ class TermForm(ModelForm):
         #kwargs['instance'].datetime.replace(tzinfo=None)
         super(TermForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.patient:
-            self.fields['patient'].widget.display = self.instance.patient.__unicode__()
+            self.fields['patient'].widget.display = self.instance.patient.__str__()
 
     def save(self, commit=True):
         if self.data['patient'] and self.instance.status == 'FREE':

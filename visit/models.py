@@ -44,7 +44,7 @@ class Tab(models.Model):
     def get_absolute_url(self):
         return reverse('tabs')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -82,7 +82,7 @@ class Visit(models.Model):
         tabs = self.term.doctor.tabs.all()
         visit_tabs = []
         for tab in tabs:
-            f = open(os.path.join(VISIT_TABS_DIR, tab.parent.template), 'r')
+            f = open(os.path.join(VISIT_TABS_DIR, tab.parent.template), 'r', encoding='utf8')
             body = f.read()
             f.close()
             visit_tab = VisitTab.objects.create(title=tab.title, body=body, order=tab.order, name=tab.name)

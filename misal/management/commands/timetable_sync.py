@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 print v
                 t.status = 'FREE' if v['free'] else 'PENDING'
                 t.save()
-                print 'Zapisano %s' % t
+                print('Zapisano %s' % t)
 
 
 

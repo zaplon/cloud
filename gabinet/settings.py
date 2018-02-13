@@ -221,8 +221,9 @@ DATABASE_ROUTERS = ['medicine.router.MedicineRouter']
 
 EXTENSIONS = {'img': ['jpg', 'png', 'bnp', 'gif'], 'video': ['mp3', 'wav']}
 
-ELASTIC_HOST = 'localhost'
+ELASTIC_HOST = 'elasticsearch'
 DATE_FORMAT = '%d-%m-%Y'
 COMPRESS_ENABLED = False
 COMPRESS_OFFLINE = True
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
+SESSION_COOKIE_AGE = 7200

@@ -1,7 +1,7 @@
 version: '2'
 services:
   web:
-    image: "gabinet"
+    image: "zaplon/gabinet"
     ports:
      - "8080:8080"
     volumes:
@@ -13,5 +13,7 @@ services:
       LC_ALL: pl_PL.UTF-8
   mysql:
     image: "mysql"
+  elasticsearch:
+    image: elasticsearch
   wkhtmltopdf:
     image: michaelperrin/wkhtmltopdf:latest

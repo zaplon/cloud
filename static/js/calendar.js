@@ -63,7 +63,7 @@ $(document).ready(function () {
             prevYear: 'font-icon font-icon-arrow-left',
             nextYear: 'font-icon font-icon-arrow-right'
         },
-        editable: true,
+        editable: gabinet.user.can_edit_terms,
         selectable: true,
         eventLimit: true, // allow "more" link when too many events
         events: {
@@ -123,6 +123,7 @@ $(document).ready(function () {
             $('.confirm-move-ok').click(function(){
                $.post('/timetable/move/', {id: event.id, datetime: newStart.format('YYYY-MM-DD HH:mm')}, function(){
                     close(true);
+                    $('#calendar').fullCalendar('refetchEvents');
                 }).fail(function(res) { 
                    if (res.message){
                        notie.alert(3, res.message);

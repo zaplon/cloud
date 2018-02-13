@@ -20,7 +20,7 @@ class Command(BaseCommand):
                 ser = Service.objects.get(code=s['code'].replace(' ', ''))
             except ObjectDoesNotExist:
                 ser = Service(code=s['code'].replace(' ', ''))
-                print 'utworzono %s' % ser
+                print('utworzono %s' % ser)
             ser.name = s['name']
             ser.price = s['price']
             ser.save()
@@ -30,4 +30,4 @@ class Command(BaseCommand):
                     ser.doctors.add(Doctor.objects.get(misal_id=d))
                 except ObjectDoesNotExist:
                     continue
-            print 'zaktualizowano %s' % ser
+            print('zaktualizowano %s' % ser)

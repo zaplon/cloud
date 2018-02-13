@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic.base import View
@@ -30,6 +31,7 @@ def term_cancel_view(request):
     return HttpResponse(status=200)
 
 
+@permission_required('timetable.term.can_edit_terms', raise_exception=True)
 def term_move_view(request):
     if not 'id' in request.POST:
         return HttpResponse(status=400)
@@ -43,6 +45,10 @@ def term_move_view(request):
         return HttpResponse(json.dumps({'message': 'Na ten termin jest już zapisany pacjent.'}), status=400, content_type='application/json')
     if t2 and not t2.patient:
         t2.patient = t.patient
+        t2.status = 'PENDING'
+        t.patient = None
+        t.status = 'FREE'
+        t.save()
         t2.save()
     else:    
         t.datetime = request.POST['datetime']

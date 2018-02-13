@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
@@ -10,9 +11,9 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from wkhtmltopdf.views import PDFTemplateView
 
+from g_utils.views import GabinetPermissionRequiredMixin
 from timetable.models import Term
 from visit.models import Template, Tab, Visit, VisitTab
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 import datetime
 import os
@@ -23,8 +24,9 @@ from reportlab.lib.units import cm
 from django.utils.text import slugify
 
 
-class VisitView(View, LoginRequiredMixin):
+class VisitView(GabinetPermissionRequiredMixin, View):
     template_name = 'visit/visit.html'
+    permission_required = 'visit.change_visit'
 
     def get(self, request, *args, **kwargs):
         doctor = self.request.user.doctor
@@ -208,7 +210,7 @@ class GabinetPdfView(PDFTemplateView):
         if 'as_link' in request.GET:
             res = super(PDFTemplateView, self).get(request, *args, **kwargs)
             name = datetime.datetime.now().strftime('%s') + '.pdf'
-            f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'w')
+            f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'wb')
             res.render()
             f.write(res.content)
             f.close()
@@ -246,7 +248,7 @@ class PdfView(GabinetPdfView):
         visit = term.visit
         self.visit = visit
         self.template_name = 'pdf/visit.html'
-        self.filename = term.patient.__unicode__() + '.pdf'
+        self.filename = term.patient.__str__() + '.pdf'
         return super(PdfView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
