@@ -14,7 +14,7 @@ class AgreementToUser(models.Model):
         verbose_name = _('user agreement')
         verbose_name_plural = _('users agreements')
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s - %s" % (str(self.agreement), str(self.user))
 
 
@@ -24,7 +24,7 @@ class Agreement(models.Model):
     document = models.FileField(blank=True, null=True, verbose_name=_('Document'))
     title = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Title'))
     targeted_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name=_('user_agreements'),
-                                            verbose_name=_('targeted users'),
+                                            verbose_name=_('targeted users'), blank=True,
                                             help_text=_('select users which should see the agreement.'))
 
     class Meta:
@@ -35,5 +35,5 @@ class Agreement(models.Model):
         if self.document and self.document.name.split('.')[-1] not in ['pdf', 'doc', 'txt']:
             raise ValidationError(_(u'The file attached to the agreement should be a text document'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title if self.title else self.text[0:100]

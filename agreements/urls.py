@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from views import AgreementView
+from agreements.views import AgreementView
 
 
 app_name = 'agreements'
