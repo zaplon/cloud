@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+from user_profile.models import Patient, Doctor
+
 
 class MedicineParent(models.Model):
     name = models.CharField(max_length=200)
@@ -40,3 +42,17 @@ class Refundation(models.Model):
     to_pay = models.CharField(max_length=10, blank=True, null=True)
     patient_price = models.CharField(max_length=10, blank=True, null=True)
     medicine = models.ForeignKey(Medicine, related_name='refundations')
+
+
+class MedicineToPrescription(models.Model):
+    medicine = models.ForeignKey(Medicine)
+    prescription = models.ForeignKey('Prescription')
+    dosage = models.CharField(max_length=128)
+    dose = models.CharField(max_length=128)
+
+
+class Prescription(models.Model):
+    date = models.DateTimeField(auto_created=True)
+    medicines = models.ManyToManyField(Medicine, related_name='prescriptions', through='MedicineToPrescription')
+    patient = models.ForeignKey(Patient, related_name='prescriptions')
+    doctor = models.ForeignKey(Doctor, related_name='prescriptions')

@@ -13,6 +13,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph
 from g_utils.views import get_client_location_code
+from medicine.models import MedicineToPrescription, Medicine, Prescription
 from user_profile.models import Recipe
 
 pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
@@ -49,6 +50,13 @@ def print_recipe(request):
             return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
 
     c.save()
+
+    # saving recipe in db
+    r = Prescription.objects.create(doctor=request.user.doctor)
+    for m in medicines:
+        MedicineToPrescription.objects.create(recipe=r, medicine=Medicine.objects.get(id=m['size']['id']),
+                                        dose=m['dose'], dosage=m['dosage'])
+
     return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}),
                         content_type='application/json')
 
@@ -152,7 +160,7 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
 
 
 def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0000000000'):
-    useNr = request.POST.get('number', False)
+    useNr = int(request.POST.get('number', False))
     p.setFont("Arial", 9)
 
     x = 0.25

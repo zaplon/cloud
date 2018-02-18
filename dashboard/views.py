@@ -59,6 +59,10 @@ def medicines_view(request):
 def stats_view(request):
     return render(request, 'dashboard/stats.html')
 
+@login_required
+def recipes_view(request):
+    return render(request, 'dashboard/recipes.html')
+
 
 class PdfView(PDFTemplateView):
     def get(self, request, *args, **kwargs):

@@ -1,5 +1,3 @@
-/// <reference path="types/jquery.d.ts" />
-/// <reference path="types/bootstrap.d.ts" />
 var Gabinet = (function () {
     function Gabinet() {
         this.pageLimit = 10;
@@ -21,8 +19,8 @@ var Gabinet = (function () {
     };
     ;
     Gabinet.prototype.fixData = function (data) {
-        newData = [];
-        for (d in data) {
+        var newData = [];
+        for (var d in data) {
             if (data[d].name.startsWith('factory_') && !($.isArray(data[d].value)))
                 data[d].value = [data[d].value];
             var hits = newData.filter(function (n) { return n.name == data[d].name; });
@@ -68,7 +66,7 @@ var Gabinet = (function () {
     Gabinet.prototype.showModal = function (title, body, save, size, hideFooter) {
         if (size === void 0) { size = ''; }
         if (hideFooter === void 0) { hideFooter = false; }
-        var modal = ("<div id='pdf-modal' class=\"modal fade\">\n          <div class=\"modal-dialog " + size + "\" role=\"document\">\n            <div class=\"modal-content\">\n              <div class=\"modal-header\">\n                <h5 class=\"modal-title\">" + title + "</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                  <span aria-hidden=\"true\">&times;</span>\n                </button>\n              </div>\n              <div class=\"modal-body\">\n                " + body + "\n              </div>\n              ") + (hideFooter ? '' :
+        var modal = "<div id='pdf-modal' class=\"modal fade\">\n          <div class=\"modal-dialog " + size + "\" role=\"document\">\n            <div class=\"modal-content\">\n              <div class=\"modal-header\">\n                <h5 class=\"modal-title\">" + title + "</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                  <span aria-hidden=\"true\">&times;</span>\n                </button>\n              </div>\n              <div class=\"modal-body\">\n                " + body + "\n              </div>\n              " + (hideFooter ? '' :
             "<div class=\"modal-footer\">\n                " + save + "\n                <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Zamknij</button>\n              </div>") +
             "</div>\n          </div>\n        </div>";
         $('#hidden').html(modal);
@@ -78,7 +76,7 @@ var Gabinet = (function () {
     Gabinet.prototype.showForm = function (form, params, html5) {
         if (typeof (params) != "undefined") {
             var params_str = '?';
-            for (p in params)
+            for (var p in params)
                 params_str += p + '=' + params[p] + '&';
             params_str = params_str.substr(0, params_str.length - 2);
         }
@@ -89,6 +87,8 @@ var Gabinet = (function () {
             var name = form.split('.')[0];
             params.form = name;
             params.height = $(window).height() - 60 < 400 ? 400 : $(window).height() - 60;
+            params.name = visit.patient().first_name + ' ' + visit.patient().last_name;
+            params.pesel = visit.patient().pesel;
             var url = "/forms/edit_form/";
             $.get(url, params, function (res) {
                 me.showModal(form, res, '', 'modal-form', true);
@@ -98,9 +98,9 @@ var Gabinet = (function () {
         }
         else {
             if (typeof (params) == "undefined")
-                var url = ("/static/forms/" + form) + new Date();
+                var url = "/static/forms/" + form + new Date();
             else
-                var url = ("/static/forms/" + form + "/" + params_str) + new Date();
+                var url = "/static/forms/" + form + "/" + params_str + new Date();
             this.showPdf(url);
         }
     };
@@ -148,19 +148,19 @@ var Gabinet = (function () {
                             if (e.lengthComputable) {
                                 $('progress').attr({
                                     value: e.loaded,
-                                    max: e.total
+                                    max: e.total,
                                 });
                             }
                         }, false);
                     }
                     return myXhr;
-                }
+                },
             });
         });
     };
     ;
     return Gabinet;
-})();
+}());
 ;
 var gabinet = new Gabinet();
 $(document).ready(function () {
@@ -196,4 +196,3 @@ $.ajaxSetup({
         }
     }
 });
-//# sourceMappingURL=g.js.map

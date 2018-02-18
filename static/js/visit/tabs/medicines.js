@@ -54,7 +54,7 @@ var medicinesModel = {
     parse: function(data){
         var me = this;
         me.medicines([]);
-        data.forEach(function(d){
+        JSON.parse(data).forEach(function(d){
            me.medicines().push(medicine(d));
         });
         me.medicines().push(medicine());
@@ -66,7 +66,7 @@ var medicinesModel = {
         medicines.forEach(function(medicine, i){
             var m = ko.toJS(medicine);
             if (i < medicines.length-1)
-                data.push({id: m.id, name: m.name, composition: m.composition, dose: m.dose, size: m.size, dosage: m.dosage,
+                data.push({id: m.id, amount: m.amount, name: m.name, composition: m.composition, dose: m.dose, size: m.size, dosage: m.dosage,
                 refundation: m.refundation, selection: m.selection});
         });
         if (data.length == 0)

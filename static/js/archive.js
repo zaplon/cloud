@@ -60,7 +60,7 @@ $(document).ready(function () {
                 title: 'Osoba',
                 align: 'center',
                 formatter: function (value, row, index) {
-                    return value.first_name + ' ' + value.last_name + ' (' + value.pesel + ')';
+                    return value.first_name + ' ' + value.last_name + ' (' + ( value.pesel ? value.pesel : '-' ) + ')';
                 }
             }, {
                 field: 'uploaded',
@@ -78,7 +78,7 @@ $(document).ready(function () {
                     var klass = 'fa-file-pdf-o';
                     if (row.type == 'VIDEO')
                         klass = 'fa-file-video-o';
-                    return '<a href="' + value + '"<i class="fa ' + klass + '" ></a>'
+                    return '<a target="_blank" href="' + value + '"<i class="fa ' + klass + '" ></a>'
                 }
             }
             ]
@@ -94,6 +94,9 @@ $(document).ready(function () {
         $('#search-results').click(function () {
             archive.getArchive($('input[name="pesel"]').val());
         })
+    $('#search-suggestions').click(function(){
+        archive.getArchive($(this).val());
+    });
 
 });
 

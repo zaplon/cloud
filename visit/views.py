@@ -72,6 +72,10 @@ class VisitView(GabinetPermissionRequiredMixin, View):
             vt.json = json.dumps(tab['data']) if 'data' in tab else ''
             vt.save()
             visit.tabs.add(vt)
+
+            if vt.name == 'Leki':
+                pass
+
         if not int(tmp):
             term.status = 'finished'
             term.save()

@@ -1,6 +1,8 @@
 import json
 
 import re
+
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template.loader import render_to_string
@@ -16,6 +18,7 @@ import codecs
 from .models import Form
 
 
+@login_required
 def get_form(request):
     return render(request, 'forms/' + request.GET.get('form', 'no_form.html'))
 

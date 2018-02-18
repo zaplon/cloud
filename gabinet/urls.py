@@ -42,6 +42,7 @@ router.register(r'notes', NoteViewSet)
 router.register(r'medicines', MedicineViewSet)
 router.register(r'medicine_parents', MedicineParentViewSet)
 router.register(r'refundations', RefundationViewSet)
+router.register(r'prescriptions', PrescriptionViewSet)
 
 
 urlpatterns = [

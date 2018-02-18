@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from django.db.models import Q
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
-from .models import Medicine, MedicineParent, Refundation
+from .models import Medicine, MedicineParent, Refundation, Prescription
 import datetime
 
 
@@ -66,3 +66,15 @@ class RefundationViewSet(viewsets.ReadOnlyModelViewSet):
         if search:
             q = q.filter(ean=search)
         return q
+
+
+class PrescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prescription
+        fields = '__all__'
+
+
+# ViewSets define the view behavior.
+class PrescriptionViewSet(viewsets.ModelViewSet):
+    queryset = Prescription.objects.all()
+    serializer_class = PrescriptionSerializer

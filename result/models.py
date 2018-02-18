@@ -54,7 +54,8 @@ class Result(models.Model):
             doctor={'pwz': self.doctor.pwz, 'name': self.doctor.name} if self.doctor else None,
             type=self.type,
             patient={'first_name': self.patient.first_name, 'last_name': self.patient.last_name,
-                     'pesel': self.patient.pesel}
+                     'pesel': self.patient.pesel,
+                     'name': '%s %s' % (self.patient.first_name, self.patient.last_name)}
         )
         obj.save()
         return obj.to_dict(include_meta=True)
