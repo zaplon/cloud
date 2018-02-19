@@ -84,8 +84,8 @@ var medicinesModel = {
         });
     }
 };
-
-tabs[tabs.length-1].model = medicinesModel;
+if (tabs)
+  tabs[tabs.length-1].model = medicinesModel;
 
 $(document).ready(function () {
     ko.applyBindings(medicinesModel, $('#medicines')[0]);
