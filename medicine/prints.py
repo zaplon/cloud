@@ -13,8 +13,8 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph
 from g_utils.views import get_client_location_code
-from medicine.models import MedicineToPrescription, Medicine, Prescription
-from user_profile.models import Recipe
+from medicine.models import Medicine, Prescription
+from user_profile.models import Recipe, Patient
 
 pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 pdfmetrics.registerFont(TTFont('Arialb', 'ArialBold.ttf'))

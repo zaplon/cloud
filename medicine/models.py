@@ -44,7 +44,7 @@ class Refundation(models.Model):
     medicine = models.ForeignKey(Medicine, related_name='refundations')
 
 
-#class MedicineToPrescription(models.Model):
+# class MedicineToPrescription(models.Model):
 #    medicine = models.ForeignKey(Medicine)
 #    prescription = models.ForeignKey('Prescription')
 #    dosage = models.CharField(max_length=128)
