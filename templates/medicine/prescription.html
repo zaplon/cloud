@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block menu %}
+    {% include 'dashboard/main_menu.html' with section='medicines' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">Początek</a></li>
+        <li><a href="/prescriptions/">Lista recept</a></li>
+        <li class="active">{{ object.date }}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <section class="box-typical box-typical-padding">
+        <div id="medicines"></div>
+    </section>
+{% endblock %}
+
+{% block extra_scripts %}
+  {% static 'js/visit/tabs/medicines.js' %}
+  <script>
+      $(document).ready(function(){
+          medicinesModel.parse({{ object.body }});
+      });
+  </script>
+{% endblock %}

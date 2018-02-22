@@ -60,8 +60,8 @@ def stats_view(request):
     return render(request, 'dashboard/stats.html')
 
 @login_required
-def recipes_view(request):
-    return render(request, 'dashboard/recipes.html')
+def prescriptions_view(request):
+    return render(request, 'dashboard/prescriptions.html')
 
 
 class PdfView(PDFTemplateView):

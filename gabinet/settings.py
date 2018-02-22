@@ -205,6 +205,7 @@ MODULES = [
     ('user_profile.change_patient', 'patients', u'Lista pacjentów'),
     (True, 'archive', u'Archiwum'),
     (True, 'medicines', u'Lista leków'),
+    ('medicine.change_prescription', 'prescriptions', u'Lista recept'),
     (True, 'icd10', u'Kody ICD-10'),
     ('user_profile.change_template', 'templates', u'Szablony'),
     ('visit.change_tabparent', 'tabs', u'Zakładki'),
