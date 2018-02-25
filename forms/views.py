@@ -85,6 +85,8 @@ class EditFormView(View):
         data = re.sub('<input[^>]+>', repl, data)
         data = re.sub('<.[^>]*data-ignore[^>]+>', '', data)
         data = re.sub('<.[^>]*datepicker-hide.*div>', '', data)
+        print(settings.BASE_DIR + '/static')
+        data = data.replace("/static", settings.BASE_DIR + '/static')
         f = codecs.open(os.path.join(settings.PROJECT_DIR, 'forms', 'templates', 'forms', 'tmp', file_name), 'w', 'utf8')
         f.write(data)
         f.close()
