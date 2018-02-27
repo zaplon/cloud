@@ -6,4 +6,4 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'docker_settings'
 
 application = get_wsgi_application()
 
-applications = {'/': 'application'}
+#applications = {'/': 'application'}

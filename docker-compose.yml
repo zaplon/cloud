@@ -12,7 +12,7 @@ services:
     environment:
       LANG: pl_PL.UTF-8
       LC_ALL: pl_PL.UTF-8
-    command: uwsgi --http 0.0.0.0:9001 --module docker_wsgi_configuration_module
+    command: uwsgi --http 0.0.0.0:9002 --module docker_wsgi_configuration_module
   mysql:
     image: "mysql"
   elasticsearch:
