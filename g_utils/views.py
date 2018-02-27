@@ -73,7 +73,10 @@ class AjaxFormView(View):
             else:
                 form = form_class(data=data)
         if form.is_valid():
-            form.save(user=self.request.user)
+            if 'user' in form.fields:
+                form.save(user=self.request.user)
+            else:
+                form.save()
             return HttpResponse(json.dumps({'success': True}), content_type='application/json')
         else:
             form_html = render_crispy_form(form, context=ctx)
