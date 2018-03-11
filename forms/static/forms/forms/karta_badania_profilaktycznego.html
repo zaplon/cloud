@@ -6,15 +6,31 @@
     <script data-ignore="1" src="/static/forms/js/form_scripts.js"></script>
     <link data-ignore="1" href="/static/forms/css/form_styles.css" rel="stylesheet"/>
     <link data-ignore="1" href="/static/forms/css/datepicker.css.min" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css?family=Tinos" rel="stylesheet">
     <title>Karta badania profilaktycznego</title>
     <meta name="author" content="Jan Zapał"/>
     <meta name="keywords" content="()"/>
     <style>
+        @-moz-document url-prefix() {
+            #small-table {
+                margin-right: 5px!important;
+            }
+            #z_jakiego_powodu {
+                width: 211px!important;
+            }
+            #opis_skutkow_2 {
+                width: 492px!important;
+            }
+        }
     </style>
 
     <script>
         $(document).ready(function(){
+            var d = new Date();
+            if (!$('input[name="data_zalozenia_"]').val())
+                putSplittedDate({date: d, preventDefault: function(){}},'data_zalozenia_', true);
+            if (!$('input[name="data_badania_"]').val())
+                putSplittedDate({date: d, preventDefault: function(){}},'data_badania_', true);
+
             $('#examination-date').on('pick.datepicker', function (e) {
                 putSplittedDate(e, 'data_badania_');
             });
@@ -35,11 +51,15 @@
         padding: 0;
         text-indent: 0;
     }
-
+    .ch1 {
+        height: 13px!important;
+        position: relative;
+        left: -3px!important;
+        line-height: 10px;
+    }
     h2 {
         color: black;
-        font-family: "Tinos", serif;
-        font-style: normal;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -48,7 +68,7 @@
 
     .s1 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -57,7 +77,7 @@
 
     .s2 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -66,7 +86,7 @@
 
     .s3 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -75,7 +95,7 @@
 
     .s4 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -84,7 +104,7 @@
 
     h4 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -93,7 +113,7 @@
 
     .s5 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -102,7 +122,7 @@
 
     .s6 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -111,7 +131,7 @@
 
     .s7 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -120,7 +140,7 @@
 
     .p, p {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -130,7 +150,7 @@
 
     .s8 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -148,7 +168,7 @@
 
     .s11 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -157,7 +177,7 @@
 
     h3 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -166,7 +186,7 @@
 
     .s12 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -175,7 +195,7 @@
 
     .s13 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -184,7 +204,7 @@
 
     .h1 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -193,7 +213,7 @@
 
     .s14 {
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: normal;
         text-decoration: none;
@@ -213,7 +233,7 @@
         counter-increment: c1;
         content: counter(c1, upper-roman) ". ";
         color: black;
-        font-family: "Tinos", serif;
+        font-family: "Times New Roman", serif;
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
@@ -237,7 +257,9 @@
             <p class="s2" style="padding-left: 65pt;text-indent: 0pt;line-height: 9pt;text-align: left;">wstępne
                 <b>(W)</b>; okresowe <b>(O)</b>; kontrolne <b>(K)</b></p></td>
         <td style="width:18pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <span>W</span>
+            <select name="rodzaj_badania_profilaktycznego">
+                <option value="W">W</option><option value="O">O</option><option value="K">K</option>
+            </select>
 
         </td>
     </tr>
@@ -251,8 +273,10 @@
             <p class="s2" style="padding-left: 97pt;text-indent: 0pt;line-height: 9pt;text-align: left;">czynne
                 poradnictwo <b>(D)</b>; inne <b>(I)</b></p></td>
         <td style="width:18pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <span>M</span>
-
+            <select name="pozostala_dzialalnosc_profilaktyczna">
+                <option value="M">M</option><option value="C">C</option><option value="D">D</option>
+                <option value="I">I</option>
+            </select>
         </td>
     </tr>
     <tr style="height:24pt">
@@ -264,7 +288,10 @@
                 <b>(P)</b>; wykonujący pracę nakładczą <b>(N)</b>; pobierający naukę <b>(U)</b>; na własny wniosek <b>(W)</b>
             </p></td>
         <td style="width:18pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <span>P</span>
+            <select name="objety_opieka">
+                <option value="P">P</option><option value="N">N</option><option value="U">U</option>
+                <option value="W">W</option>
+            </select>
 
         </td>
     </tr>
@@ -287,7 +314,7 @@
                     <p class="s2" style="padding-left: 3pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Imię i
                         nazwisko</p></td>
                 <td style="width:304pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <textarea name="name"></textarea>
+                    <textarea name="name">Kubuś Puchatek</textarea>
                 </td>
                 <td style="width:146pt;border-left-style:solid;border-left-width:1pt" colspan="7">
                 </td>
@@ -298,7 +325,7 @@
                         Identyfikator (numer PESEL, o ile został nadany, a w przypadku jego braku – nazwa, numer
                         dokumentu potwierdzającego tożsamość i data urodzenia)</p></td>
                 <td style="width:304pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <textarea name="pesel" required=""></textarea>
+                    <textarea name="pesel" required="">88042003997</textarea>
                 </td>
                 <td style="width:93pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="4">
                 </td>
@@ -306,7 +333,7 @@
                     <p class="s5" style="padding-left: 3pt;padding-right: 8pt;text-indent: 0pt;text-align: left;">Płeć M
                         / K</p></td>
                 <td style="width:19pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <span>M</span>
+                    <span><select selected name="sex"><option value="M">M</option><option value="K">K</option></select></span>
                 </td>
             </tr>
             <tr style="height:29pt">
@@ -314,28 +341,28 @@
                     <p class="s2" style="padding-left: 3pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Adres
                         zamieszkania</p></td>
                 <td style="width:304pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <textarea name="address"></textarea>
+                    <textarea name="address">adres</textarea>
                 </td>
                 <td style="width:42pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
                     <p class="s2" style="padding-left: 3pt;padding-right: 7pt;text-indent: 0pt;text-align: left;">Kod
                         pocztowy</p></td>
                 <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <input type="text" pattern="\d" maxlength="1" class="postal1" style="width: 22px;" value="">
+                    <input type="text" pattern="\d" maxlength="1" name="postal1" style="width: 22px;" value="">
                 </td>
                 <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <input type="text" pattern="\d" maxlength="1" class="postal2" style="width: 22px;" value="">
+                    <input type="text" pattern="\d" maxlength="1" name="postal2" style="width: 22px;" value="">
                 </td>
                 <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
                     <p class="s6" style="padding-left: 3pt;text-indent: 0pt;line-height: 16pt;text-align: left;">_</p>
                 </td>
                 <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <input type="text" pattern="\d" maxlength="1" class="postal3" style="width: 22px;" value="">
+                    <input type="text" pattern="\d" maxlength="1" name="postal3" style="width: 22px;" value="">
                 </td>
                 <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <input type="text" pattern="\d" maxlength="1" class="postal4" style="width: 22px;" value="">
+                    <input type="text" pattern="\d" maxlength="1" name="postal4" style="width: 22px;" value="">
                 </td>
                 <td style="width:19pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <input type="text" pattern="\d" maxlength="1" class="postal5" style="width: 34px;" value="">
+                    <input type="text" pattern="\d" maxlength="1" name="postal5" style="width: 34px;" value="">
                 </td>
             </tr>
             <tr style="height:21pt">
@@ -374,21 +401,21 @@
             <p class="s2" style="padding-left: 3pt;padding-right: 7pt;text-indent: 0pt;text-align: left;">Kod
                 pocztowy</p></td>
         <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <input type="text" pattern="\d" maxlength="1" class="job_postal1" style="width: 22px;" value="">
+            <input type="text" pattern="\d" maxlength="1" name="job_postal1" style="width: 22px;" value="">
         </td>
         <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <input type="text" pattern="\d" maxlength="1" class="job_postal2" style="width: 23px;" value="">
+            <input type="text" pattern="\d" maxlength="1" name="job_postal2" style="width: 23px;" value="">
         </td>
         <td style="width:18pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s6" style="padding-left: 3pt;text-indent: 0pt;line-height: 16pt;text-align: left;">_</p></td>
         <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <input type="text" pattern="\d" maxlength="1" class="job_postal3" style="width: 22px;" value="">
+            <input type="text" pattern="\d" maxlength="1" name="job_postal3" style="width: 22px;" value="">
         </td>
         <td style="width:17pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <input type="text" pattern="\d" maxlength="1" class="job_postal4" style="width: 22px;" value="">
+            <input type="text" pattern="\d" maxlength="1" name="job_postal4" style="width: 22px;" value="">
         </td>
         <td style="width:18pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <input type="text" pattern="\d" maxlength="1" class="job_postal5" style="width: 24px;" value="">
+            <input type="text" pattern="\d" maxlength="1" name="job_postal5" style="width: 24px;" value="">
 
         </td>
     </tr>
@@ -456,7 +483,7 @@
     </tr>
     <tr style="height:12pt">
         <td style="width: 81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt;">
-            <p class="s2" style="padding-left: 7pt;text-indent: 0pt;line-height: 9pt;text-align: left;"><input type="date" class="calendar no-print" data-toggle="datepicker" id="data-zalozenia-karty" style="
+            <p class="s2" style="padding-left: 7pt;text-indent: 0pt;line-height: 9pt;text-align: left;"><input type="date" class="calendar" data-ignore data-toggle="datepicker" id="data-zalozenia-karty" style="
     left: -36px;
 " value="">Data założenia
                 karty</p></td>
@@ -486,7 +513,7 @@
     </tr>
     <tr style="height:12pt">
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s2" style="padding-left: 31pt;text-indent: 0pt;line-height: 9pt;text-align: left;"><input id="examination-date" data-toggle="datepicker" class="calendar no-print" style="
+            <p class="s2" style="padding-left: 31pt;text-indent: 0pt;line-height: 9pt;text-align: left;"><input type="date" id="examination-date" data-toggle="datepicker" class="calendar" data-ignore style="
     left: -68px;
 " value="">Data
                 badania</p></td>
@@ -510,7 +537,7 @@
             <input type="text" pattern="\d" maxlength="2" class="date5" name="data_badania_5" style="width:30px;" value="">
         </td>
         <td style="width:18pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <input type="text" pattern="\d" maxlength="1" class="date6" name="data_badania_6" style="width:30px;" value="">
+            <input type="text" pattern="\d" maxlength="2" class="date6" name="data_badania_6" style="width:30px;" value="">
 
         </td>
     </tr>
@@ -632,7 +659,7 @@
 <p style="text-indent: 0pt;text-align: left;"><br></p>
 <p style="text-indent: 0pt;text-align: left;"><br></p>
 
-<table class="radio-center" style="border-collapse:collapse;float: left;margin-right: 10px;" cellspacing="0">
+<table id="small-table" class="radio-center" style="border-collapse:collapse;float: left;margin-right: 10px;" cellspacing="0">
     <tbody>
     <tr style="height:14pt">
         <td style="width:162pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -714,25 +741,25 @@
     width: 150px;
 " value=""><span style="
     display: inline-block;
-">z jakiego powodu ?</span> <input type="text" style="
-    width: 210px;
+">z jakiego powodu ?</span> <input id="z_jakiego_powodu" type="text" style="
+    width: 204px;
 " value=""><br> kiedy ? <input data-toggle="datepicker" type="text" style="
     width: 150px;
 " value=""> opis skutków zdrowotnych wypadku: <input type="text" style="
     width: 125px;
 " value=""></p>
 <p class="s8" style="/* padding-left: 230pt; *//* text-indent: 68pt; */text-align: left;"><input type="text" style="
-    width: 484px;
-" value=""><br> kiedy ?
+    width: 475px;
+" value="" id="opis_skutkow_2"><br> kiedy ?
     <input data-toggle="datepicker" type="text" style="
     width: 150px;
     margin-right: 173px;
-    " value=""> z jakiego powodu ? <select><option name="Z">Z</option><option name="W">W</option><option name="O">O</option></select></p>
+    " value=""> z jakiego powodu ? <select name="reason"><option value="Z">Z</option><option value="W">W</option><option value="O">O</option></select></p>
 <p class="s4" style="/* padding-left: 298pt; */text-indent: 0pt;text-align: left;">choroby zawodowej <b>(Z)</b>; wypadku
     w
     pracy <b>(W)</b>; ogólnego stanu zdrowia <b>(O)</b></p>
 <p style="text-indent: 0pt;text-align: left;"><br></p>
-<p class="s8" style="/* padding-left: 230pt; */text-indent: 0pt;text-align: left;/* margin-right: 20px; */">kiedy ? <input class="dotted" type="date" style="width: 150px!important;" data-toggle="datepicker" value=""><span style="margin-left: 30px;"> stopień, przyczyna (symbol
+<p class="s8" style="/* padding-left: 230pt; */text-indent: 0pt;text-align: left;/* margin-right: 20px; */">kiedy ? <input class="dotted" type="text" style="width: 150px!important;" data-toggle="datepicker" value=""><span style="margin-left: 30px;"> stopień, przyczyna (symbol
     niepełnosprawności)</span><input type="text" style="
     width: 43px;
 " value=""></p>
@@ -765,16 +792,14 @@
 <p></p><h4 style="padding-top: 1cm; text-indent: 0pt;text-align: left;">Imię i nazwisko osoby badanej:
     <span class="s1"><input type="text" name="name" style="
     width: 611px;
-" value=""></span></h4><h4 style="padding-top: 4pt;padding-left: 4pt;text-indent: 0pt;line-height: 11pt;text-align: center;">
+" value="Kubuś Puchatek"></span></h4><h4 style="padding-top: 4pt;padding-left: 4pt;text-indent: 0pt;line-height: 11pt;text-align: center;">
     BADANIE
     PODMIOTOWE</h4>
 <p class="s7" style="/* padding-left: 4pt; */text-indent: 0pt;line-height: 10pt;/* text-align: center; */">Skargi badanego(ej):
     <span class="p"><input type="text" style="
-    width: 680px;
+    width: 679px;
 " value=""></span></p>
-<p style="/* padding-left: 87pt; */text-indent: 0pt;text-align: left;padding-left: 111px;"><input type="text" class="" value="" style="
-    width: 680px;
-"></p>
+<p style="/* padding-left: 87pt; */text-indent: 0pt;text-align: left;padding-left: 111px;"><input type="text" class="" style="width: 679px;" value=""></p>
 <p style="text-indent: 0pt;text-align: left;"><br></p>
 <table class="radio-center" style="border-collapse:collapse;/* margin-left:5.16pt */width: 100%;" cellspacing="0">
     <tbody>
@@ -1177,7 +1202,7 @@
 </p>
 <h4 style="padding-top: 1cm;text-indent: 0pt;text-align: center;">Imię i nazwisko osoby badanej:
     <span class="s1" style="
-"><input type="text" style="
+"><input type="text" name="name" style="
     width: 611px;
 " value=""></span></h4>
 <h4 style="padding-top: 4pt;padding-left: 5pt;text-indent: 0pt;text-align: center;">BADANIE
@@ -1189,7 +1214,7 @@
         <td style="width:69pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 2pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Wzrost</p></td>
         <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <input type="text" name="height" style="
+            <input type="text" name="person_height" style="
     width: 92px;
 " value="">
         </td>
@@ -1218,17 +1243,17 @@
         <td style="width:69pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 2pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Wzrok</p></td>
         <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s2" style="padding-left: 3pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Oko prawe <input type="checkbox" style="
-    width: 15px;
+            <p class="s2" style="padding-left: 3pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Oko prawe <input type="text" style="
+    width: 40px;
     height: 15px;
-    display: inline;
+    display: inline; font-size: 10px;
 "></p>
         </td>
         <td style="width:69pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s2" style="padding-left: 3pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Oko lewe <input type="checkbox" style="
-    width: 15px;
+            <p class="s2" style="padding-left: 3pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Oko lewe <input type="text" style="
+    width: 40px;
     height: 15px;
-    display: inline;
+    display: inline; font-size: 10px;
 "></p>
         </td>
         <td style="width:69pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1504,7 +1529,7 @@
             <p class="s3" style="/* padding-left: 38pt; *//* text-indent: 0pt; */line-height: 9pt;text-align: center;">Rodzaj
                 badania</p></td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 8pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Data
+            <p class="s3" style="padding-left: 8pt;text-indent: 0pt;line-height: 9pt;text-align: center;">Data
                 skierowania</p></td>
         <td style="width: 78pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt;">
             <p class="s3" style="/* padding-left: 24pt; *//* padding-right: 10pt; *//* text-indent: -14pt; */text-align: center;">Data
@@ -1521,10 +1546,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1539,10 +1564,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker">
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker">
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1557,10 +1582,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker">
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker">
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1575,10 +1600,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker">
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker">
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1593,10 +1618,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker">
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker">
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1616,7 +1641,7 @@
             <p class="s3" style="/* padding-left: 48pt; *//* padding-right: 39pt; */text-indent: -8pt;text-align: center;">Skierowanie
                 do specjalisty</p></td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 8pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Data
+            <p class="s3" style="padding-left: 8pt;text-indent: 0pt;line-height: 9pt;text-align: center;">Data
                 skierowania</p></td>
         <td style="width: 86pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt;">
             <p class="s3" style="/* padding-left: 9pt; *//* text-indent: 0pt; */line-height: 9pt;text-align: center;">Data
@@ -1632,10 +1657,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:76pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1649,10 +1674,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:76pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1666,10 +1691,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:76pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1683,10 +1708,10 @@
             <textarea></textarea>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:76pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <textarea></textarea>
+            <input type="text" data-toggle="datepicker" >
         </td>
         <td style="width:236pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <textarea></textarea>
@@ -1791,40 +1816,40 @@
 </p>
 <p style="text-indent: 0pt;text-align: left;"><br></p><h4 style="text-indent: 0pt;text-align: center;">WYDANO
     ORZECZENIE O:</h4>
-<p class="s14" style="padding-top: 4pt;padding-left: 5pt;text-indent: 0pt;text-align: left;">1 <span class="p">- braku przeciwwskazań zdrowotnych do pracy na stanowisku <input type="text" name="job_position" style="
+<p class="s14" style="padding-top: 4pt;padding-left: 5pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">- braku przeciwwskazań zdrowotnych do pracy na stanowisku <input type="text" name="job_position" style="
     width: 455px;
 " value=""></span>
 </p>
-<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;">1 <span class="p">- braku przeciwwskazań zdrowotnych do podjęcia lub kontynuowania nauki, studiów lub studiów doktoranckich</span>
+<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">- braku przeciwwskazań zdrowotnych do podjęcia lub kontynuowania nauki, studiów lub studiów doktoranckich</span>
 </p>
-<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;">1 <span class="p">- przeciwwskazaniach zdrowotnych do pracy na stanowisku <input type="text" name="job_position" style="
+<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">- przeciwwskazaniach zdrowotnych do pracy na stanowisku <input type="text" name="job_position" style="
     width: 467px;
 " value=""></span>
 </p>
-<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;">1 <span class="p">- przeciwwskazaniach zdrowotnych do podjęcia lub kontynuowania nauki, studiów lub studiów doktoranckich</span>
+<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">- przeciwwskazaniach zdrowotnych do podjęcia lub kontynuowania nauki, studiów lub studiów doktoranckich</span>
 </p>
-<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;">1 <span class="p">- utracie zdolności do wykonywania dotychczasowej pracy</span>
+<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">- utracie zdolności do wykonywania dotychczasowej pracy</span>
 </p>
-<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;">1 <span class="p">- przeciwwskazaniach zdrowotnych do wykonywania dotychczasowej pracy przez pracownicę w ciąży lub karmiącą dziecko piersią uzasadniających:</span>
+<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">- przeciwwskazaniach zdrowotnych do wykonywania dotychczasowej pracy przez pracownicę w ciąży lub karmiącą dziecko piersią uzasadniających:</span>
 </p>
-<p class="s14" style="padding-left: 31pt;text-indent: 0pt;text-align: left;">1 <span class="p">a) przeniesienie pracownicy do innej pracy, a jeżeli jest to niemożliwe, zwolnienie jej na czas niezbędny z obowiązku świadczenia pracy</span>
+<p class="s14" style="padding-left: 31pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">a) przeniesienie pracownicy do innej pracy, a jeżeli jest to niemożliwe, zwolnienie jej na czas niezbędny z obowiązku świadczenia pracy</span>
 </p>
-<p class="s14" style="padding-left: 54pt;text-indent: -22pt;text-align: left;">1 <span class="p">b) zmianę warunków pracy na dotychczas zajmowanym stanowisku pracy lub skrócenie czasu pracy lub przeniesienie pracownicy do innej pracy, a jeżeli to niemożliwe, zwolnienie jej na czas niezbędny z obowiązku świadczenia pracy</span>
+<p class="s14" style="padding-left: 54pt;text-indent: -22pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">b) zmianę warunków pracy na dotychczas zajmowanym stanowisku pracy lub skrócenie czasu pracy lub przeniesienie pracownicy do innej pracy, a jeżeli to niemożliwe, zwolnienie jej na czas niezbędny z obowiązku świadczenia pracy</span>
 </p>
-<p class="s14" style="padding-left: 5pt;text-indent: 0pt;line-height: 14pt;text-align: left;">1 <span class="p">- niezdolności badanego(ej) do wykonywania dotychczasowej pracy i konieczności przeniesienia na inne stanowisko ze względu na:</span>
+<p class="s14" style="padding-left: 5pt;text-indent: 0pt;line-height: 14pt;text-align: left;"><input type="checkbox" class="ch1"><span class="p">- niezdolności badanego(ej) do wykonywania dotychczasowej pracy i konieczności przeniesienia na inne stanowisko ze względu na:</span>
 </p>
-<p class="s14" style="padding-left: 31pt;text-indent: 0pt;text-align: left;">1 <span class="p">szkodliwy wpływ wykonywanej pracy na zdrowie</span>
+<p class="s14" style="padding-left: 31pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">szkodliwy wpływ wykonywanej pracy na zdrowie</span>
 </p>
-<p class="s14" style="padding-left: 31pt;text-indent: 0pt;line-height: 14pt;text-align: left;">1 <span class="p">zagrożenie, jakie stwarza wykonywana praca dla zdrowia młodocianego</span>
+<p class="s14" style="padding-left: 31pt;text-indent: 0pt;line-height: 14pt;text-align: left;"><input type="checkbox" class="ch1"><span class="p">zagrożenie, jakie stwarza wykonywana praca dla zdrowia młodocianego</span>
 </p>
-<p class="s14" style="padding-left: 31pt;text-indent: 0pt;line-height: 14pt;text-align: left;">1 <span class="p">podejrzenie powstania choroby zawodowej</span>
+<p class="s14" style="padding-left: 31pt;text-indent: 0pt;line-height: 14pt;text-align: left;"><input type="checkbox" class="ch1"><span class="p">podejrzenie powstania choroby zawodowej</span>
 </p>
-<p class="s14" style="padding-left: 31pt;text-indent: 0pt;text-align: left;">1 <span class="p">niezdolność do wykonywania dotychczasowej pracy ze względu na stwierdzoną chorobę zawodową lub skutki wypadku przy pracy</span>
+<p class="s14" style="padding-left: 31pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">niezdolność do wykonywania dotychczasowej pracy ze względu na stwierdzoną chorobę zawodową lub skutki wypadku przy pracy</span>
 </p>
-<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;">1 <span class="p">- potrzebie stosowania okularów korygujących wzrok podczas pracy przy obsłudze monitora ekranowego</span>
+<p class="s14" style="padding-left: 5pt;text-indent: 0pt;text-align: left;"><input class="ch1" type="checkbox"><span class="p">- potrzebie stosowania okularów korygujących wzrok podczas pracy przy obsłudze monitora ekranowego</span>
 </p>
-<p class="s14" style="padding-left: 5pt;text-indent: 0pt;line-height: 135%;text-align: left;">1 <span class="p">- inne <input type="text" style="
-    width: 743px;
+<p class="s14" style="padding-left: 5pt;text-indent: 0pt;line-height: 135%;text-align: left;"><input type="checkbox" class="ch1"><span class="p">- inne <input type="text" style="
+    width: 742px;
 " value=""> UWAGI: <input type="text" style="
     width: 735px;
 " value=""></span>
@@ -1847,7 +1872,7 @@
     </tr>
     <tr style="height:12pt">
         <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s2" style="padding-left: 10pt;text-indent: 0pt;line-height: 9pt;text-align: left;"><input type="date" class="calendar no-print" data-toggle="datepicker" id="data-wydania-orzeczenia" style="
+            <p class="s2" style="padding-left: 10pt;text-indent: 0pt;line-height: 9pt;text-align: left;"><input type="date" class="calendar" data-ignore data-toggle="datepicker" id="data-wydania-orzeczenia" style="
     left: -40px;
 " value="">Data wydania
                 orzeczenia</p></td>
@@ -1877,7 +1902,7 @@
     </tr>
     <tr style="height:12pt">
         <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s2" style="padding-left: 11pt;text-indent: 0pt;line-height: 9pt;text-align: left;"><input type="date" class="calendar no-print" data-toggle="datepicker" id="data-nastepnego-badania" style="
+            <p class="s2" style="padding-left: 11pt;text-indent: 0pt;line-height: 9pt;text-align: left;"><input type="date" class="calendar" data-ignore data-toggle="datepicker" id="data-nastepnego-badania" style="
     left: -42px;
 " value="">Data następnego
                 badania</p></td>
@@ -1909,18 +1934,16 @@
 </table>
 <p style="padding-top: 2pt;text-indent: 0pt;text-align: right;">pieczątka i podpis lekarza</p>
 <p style="text-indent: 0pt;text-align: left;"><br></p>
-<p class="s14" style="padding-top: 3pt;text-indent: 0pt;/* text-align: right; */">1 <span class="p">- Badany(a) / podmiot kierujący na badanie* odwołuje się od treści orzeczenia lekarskiego do <input type="text" style="
+<p class="s14" style="padding-top: 3pt;text-indent: 0pt;/* text-align: right; */"><input class="bordered" type="checkbox"><span class="p">- Badany(a) / podmiot kierujący na badanie* odwołuje się od treści orzeczenia lekarskiego do <input type="text" style="
     width: 293px;
-    margin-left: 11px;
+    float: right;
 " value=""></span>
 </p>
-<p class="s14" style="padding-top: 4pt;padding-left: 605px;text-indent: 0pt;/* text-align: right; */font-size: 9pt;">w dniu <input class="dotted" type="date" style="
+<p class="s14" style="padding-top: 4pt;padding-left: 605px;text-indent: 0pt;/* text-align: right; */font-size: 9pt;">w dniu <input class="dotted" data-toggle="datepicker" type="text" style="
     width: 150px;
     /* margin-left: 605px; */
 " value=""></p>
-<p class="s14" style="padding-top: 4pt;text-indent: 0pt;/* text-align: right; */">1 <span class="p" style="
-    /* float: left; */
-">- Dokumentację medyczną wydano osobie badanej / przesłano do jednostki odwoławczej*<span> <span style="margin-left: 133px;">w dniu</span> <input class="dotted" type="date" style="
+<p class="s14" style="padding-top: 4pt;text-indent: 0pt;/* text-align: right; */"><input class="bordered" type="checkbox"><span class="p" style="">- Dokumentację medyczną wydano osobie badanej / przesłano do jednostki odwoławczej*<span style="float: right;"> <span style="">w dniu</span> <input class="dotted" type="text" data-toggle="datepicker" style="
     width: 150px;
 " value=""></span></span>
 </p>
@@ -1928,9 +1951,9 @@
 <p style="text-indent: 0pt;text-align: left;"><br></p>
 <p style="padding-left: 5pt;text-indent: 0pt;line-height: 1pt;text-align: left;"><span></span>
 </p>
-<div class="only-print" style="margin-top: 210px;!important"></div>
+<div class="only-print" style="margin-top: 172px;!important"></div>
     <div class="adnotations"></div>
-    <p class="adnotations-text">
+    <p class="last-page" style="page-break-after: avoid!important;">
         * Niepotrzebne skreślić.
     </p>
 

@@ -41,27 +41,29 @@
         input {
             position: relative;
         }
-        #name {
+        #karta-name {
             position: relative;
             top: 19px;
             left: 367px;
             width: 300px;
             height: 26px;
         }
-        #birth{
+        #karta-birth{
             top: 13px;
             width: 110px;
             left: 536px;
         }
+        .karta-znieczulenia {
+            width: 29.7cm;
+        }
     </style>
 </head>
 <body>
-    <div style="width: 29.7cm">
-        <div id="page1"></div>
-        <div id="page2"></div>
-        <div id="karta-znieczulenia-rel" style="position: absolute; left: 0; top: 0;">
-            <textarea name="name" id="name"></textarea>
-            <input type="text" name="birth" id="birth">
-        </div>
+    <div id="page1" class="karta-znieczulenia"></div>
+    <footer></footer>
+    <div id="page2" class="karta-znieczulenia"></div>
+    <div id="karta-znieczulenia-rel" style="position: absolute; left: 0; top: 0;">
+        <textarea name="name" id="karta-name"></textarea>
+        <input type="text" name="birth" id="karta-birth">
     </div>
 </body>

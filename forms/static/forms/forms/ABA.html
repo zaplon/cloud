@@ -28,11 +28,11 @@
             width: 100%;
         }
         table.no-border td {
-            border-top: 0!important;
+            border: 0!important;
         }
     </style>
 </head>
-<body class="page" style="height: inherit">
+<body class="page" style="height: inherit; padding: 0.5cm;">
  <div class="">
     <h1>Ankieta badania anestezjologicznego
         <small>(ABA)</small>
@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <label class="col-md-2" for="date">Data</label>
                     <div class="col-md-10">
-                      <input data-toggle="datepicker" class="form-control" type="text" id="date" name="date">
+                      <input data-toggle="datepicker" class="form-control" type="text" id="date" name="today-date">
                     </div>
                 </div>
             </form>
@@ -67,21 +67,21 @@
         </div>
         <div class="col-md-12">
             <form class="form-inline">
-                <label style="padding-left: 0px;" class="col-md-2" for="birth_date">Data urodzenia</label>
+                <label style="padding-left: 0px;" class="col-md-2" for="birth">Data urodzenia</label>
                 <div class="col-md-10" style="padding-left: 0">
                     <table class="table table-sm no-border">
                         <tbody>
                         <tr>
                             <td style="padding-left: 0">
-                                <input data-toggle="datepicker" style="width: 175px" type="text" name="birth_date" class="form-control datepicker" id="birth_date">
+                                <input data-toggle="datepicker" style="width: 175px" type="text" name="birth" class="form-control datepicker" id="birth">
                             </td>
                             <td>lat</td>
                             <td><input class="form-control" style="width: 50px;" type="text" name="age"></td>
                             <td>wzrost</td>
-                            <td><input class="form-control" style="width: 75px;" type="text" name="age"></td>
+                            <td><input class="form-control" style="width: 75px;" type="text" name="person_height"></td>
                             <td>cm</td>
                             <td>waga</td>
-                            <td><input class="form-control" style="width: 50px;" type="text" name="age"></td>
+                            <td><input class="form-control" style="width: 50px;" type="text" name="weight"></td>
                             <td>kg</td>
                         </tr>
                         </tbody>
@@ -95,7 +95,7 @@
             <span><strong>Jakie leki i w jakich dawkach przyjmuje Pani/Pan na stałe?</strong></span>
         </div>
         <div class="col-md-12">
-            <table style="width: 100%;" class="border">
+            <table style="width: 100%;" class="">
                 <tbody>
                     <tr>
                         <td style="height:100px;"><textarea style="height:100px;" class="form-control whole-line" name="jakie_leki"></textarea></td>
@@ -324,11 +324,11 @@
     </div>
     <div class="row mt-2">
         <div class="col-md-12">
-            <table style="width:100%" class="border">
+            <table style="width:100%" class="">
                 <tbody>
                 <tr>
                     <td>Przebyte operacje, rok i w jakim znieczuleniu:</td>
-                    <td>Inne problemy zdrowotne:</td>
+                    <td style="width: 50%;">Inne problemy zdrowotne:</td>
                 </tr>
                 <tr>
                     <td style="height: 100px;"><textarea style="height: 100px;"></textarea></td>
@@ -338,7 +338,7 @@
             </table>
         </div>
     </div>
-    <div class="row mt-2">
+    <div class="row mt-2 mb-2">
         <div class="col-md-12">
             <p class="text-right">
                 Podpis pacjenta<input type="text" readonly>
