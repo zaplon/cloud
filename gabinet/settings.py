@@ -165,7 +165,8 @@ STATICFILES_FINDERS = [
     'compressor.finders.CompressorFinder'
 ]
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'frontend', 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'frontend', 'static'),
+                    os.path.join(BASE_DIR, 'components')]
 
 BOWER_INSTALLED_APPS = (
     'bootstrap#v4.0.0-alpha.5',

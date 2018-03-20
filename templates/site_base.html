@@ -29,11 +29,13 @@
     <script src="{% static "js/utils/autocomplete.js" %}"></script>
     <script src="{% static "moment/moment.js" %}"></script>
 
-    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
-    <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="{% static "css/main.css" %}">
-    <link rel="stylesheet" href="{% static "css/custom.css" %}">
-    <link rel="stylesheet" href="{% static "bootstrap-select/dist/css/bootstrap-select.min.css" %}">
+    {% compress css %}
+        <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+        <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
+        <link rel="stylesheet" href="{% static "css/main.css" %}">
+        <link rel="stylesheet" href="{% static "css/custom.css" %}">
+        <link rel="stylesheet" href="{% static "bootstrap-select/dist/css/bootstrap-select.min.css" %}">
+    {% compress %}
     {% block extra_styles %}{% endblock %}
 </head>
 

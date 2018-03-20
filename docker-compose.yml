@@ -1,6 +1,10 @@
 version: '2'
 services:
   web:
+    environment:
+      DJANGO_SETTINGS_MODULE: docker_settings
+      LANG: "pl_PL.UTF-8"
+      LANGUAGE: "pl_PL"
     image: "docker.io/zaplon/gabinet"
     working_dir: /app/
     ports:
@@ -12,7 +16,7 @@ services:
     environment:
       LANG: pl_PL.UTF-8
       LC_ALL: pl_PL.UTF-8
-    command: uwsgi --http 0.0.0.0:9002 --module docker_wsgi_configuration_module
+    command: uwsgi --http 0.0.0.0:9001 --module docker_wsgi_configuration_module
   mysql:
     image: "mysql"
   elasticsearch:
@@ -32,6 +36,7 @@ services:
       - ./docker/nginx/sites-available/:/etc/nginx/sites-available/
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./public/static/:/static/
+      - ./public/media/:/media/
     ports:
       - "80:80"
       - "443:443"
