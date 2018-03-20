@@ -1,7 +1,7 @@
 server {
 
     listen 80;
-    server_name localhost gabinet;
+    server_name localhost gabinet doktor.misal.pl;
     charset utf-8;
 
     location /static/ {
