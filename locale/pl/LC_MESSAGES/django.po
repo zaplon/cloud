@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-18 19:22+0000\n"
+"POT-Creation-Date: 2018-03-29 15:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,6 +34,58 @@ msgstr "Uprawnienia"
 #: administration/admin.py:86
 msgid "Important dates"
 msgstr "Ważne daty"
+
+#: agreements/models.py:9
+msgid "Added date"
+msgstr "Data dodania"
+
+#: agreements/models.py:10
+msgid "User"
+msgstr "Użytkownik"
+
+#: agreements/models.py:11
+msgid "Agreement"
+msgstr "Zgoda"
+
+#: agreements/models.py:14
+msgid "user agreement"
+msgstr "zgoda użytkownika"
+
+#: agreements/models.py:15
+msgid "users agreements"
+msgstr "zgody użytkowników"
+
+#: agreements/models.py:23
+msgid "Text"
+msgstr "Tekst"
+
+#: agreements/models.py:24
+msgid "Document"
+msgstr "Dokument"
+
+#: agreements/models.py:25
+msgid "Title"
+msgstr "Tytuł"
+
+#: agreements/models.py:27
+msgid "targeted users"
+msgstr "wybrani użytkownicy"
+
+#: agreements/models.py:28
+msgid "select users which should see the agreement."
+msgstr "wybierz użytkowników, którzy powinni zobaczyć zgodę"
+
+#: agreements/models.py:31
+msgid "agreement"
+msgstr "zgoda"
+
+#: agreements/models.py:32
+msgid "agreements"
+msgstr "zgody"
+
+#: agreements/models.py:36
+msgid "The file attached to the agreement should be a text document"
+msgstr "Plik dodany do zgody powinien być dokumentem tekstowym"
 
 #: templates/account/ajax/login.html:25 templates/account/login.html:25
 #: templates/account/signup.html:26
@@ -95,36 +147,6 @@ msgstr ""
 
 #~ msgid "User agreements"
 #~ msgstr "Zgody użytkowników"
-
-#~ msgid "Added date"
-#~ msgstr "Data dodania"
-
-#~ msgid "User"
-#~ msgstr "Użytkownik"
-
-#~ msgid "Agreement"
-#~ msgstr "Zgoda"
-
-#~ msgid "user agreement"
-#~ msgstr "zgoda użytkownika"
-
-#~ msgid "users agreements"
-#~ msgstr "zgody użytkowników"
-
-#~ msgid "targeted users"
-#~ msgstr "wybrani użytkownicy"
-
-#~ msgid "select users which should see the agreement."
-#~ msgstr "wybierz użytkowników, którzy powinni zobaczyć zgodę"
-
-#~ msgid "agreement"
-#~ msgstr "zgoda"
-
-#~ msgid "agreements"
-#~ msgstr "zgody"
-
-#~ msgid "The file attached to the agreement should be a text document"
-#~ msgstr "Plik dodany do zgody powinien być dokumentem tekstowym"
 
 #~ msgid "Tools"
 #~ msgstr "Narzędzia"

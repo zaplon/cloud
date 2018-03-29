@@ -19,6 +19,9 @@ services:
     command: uwsgi --http 0.0.0.0:9001 --module docker_wsgi_configuration_module
   mysql:
     image: "mysql"
+    volumes:
+     - ./docker/dbs/:/var/lib/mysql
+     - ./docker/mysql/:/docker-entrypoint-initdb.d/
   elasticsearch:
     image: elasticsearch
   wkhtmltopdf:
