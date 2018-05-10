@@ -60,7 +60,7 @@ class AjaxFormView(View):
                 data = json.loads(data)
                 data = {d['name']: d['value'] for d in data}
             except:
-                data = {p[0]: urllib.unquote(str(p[1])).decode('utf8') for p in [par.split('=') for par in data.split('&')]}
+                data = {p[0]: urllib.parse.unquote(str(p[1])) for p in [par.split('=') for par in data.split('&')]}
         data = self.add_data(data.copy())
         if 'id' in data:
             if self.request.FILES:

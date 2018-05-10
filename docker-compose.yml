@@ -13,15 +13,17 @@ services:
      - ./:/app/:Z
     links:
      - mysql
+     - memcached
     environment:
-      LANG: pl_PL.UTF-8
-      LC_ALL: pl_PL.UTF-8
+      LANG: "pl_PL.UTF-8"
+      LANGUAGE: "pl_PL"
+      QT_QPA_PLATFORM: "offscreen"
     command: uwsgi --http 0.0.0.0:9001 --module docker_wsgi_configuration_module
   mysql:
     image: "mysql"
     volumes:
-     - ./docker/dbs/:/var/lib/mysql
-     - ./docker/mysql/:/docker-entrypoint-initdb.d/
+     - ./gabinet_docker/dbs/:/var/lib/mysql
+     - ./gabinet_docker/mysql/:/docker-entrypoint-initdb.d/
   elasticsearch:
     image: elasticsearch
   wkhtmltopdf:
@@ -35,11 +37,13 @@ services:
     depends_on:
       - web
     volumes:
-      - ./docker/nginx/sites-enabled/:/etc/nginx/sites-enabled/
-      - ./docker/nginx/sites-available/:/etc/nginx/sites-available/
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./gabinet_docker/nginx/sites-enabled/:/etc/nginx/sites-enabled/
+      - ./gabinet_docker/nginx/sites-available/:/etc/nginx/sites-available/
+      - ./gabinet_docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./public/static/:/static/
       - ./public/media/:/media/
     ports:
       - "80:80"
       - "443:443"
+  memcached:
+    image: memcached

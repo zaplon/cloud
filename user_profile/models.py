@@ -45,6 +45,9 @@ class Specialization(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Specjalizacja'
+        verbose_name_plural = 'Specjalizacje'
 
 class Doctor(models.Model):
     pwz = models.CharField(max_length=7, verbose_name=u'Numer PWZ')

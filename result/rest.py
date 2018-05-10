@@ -5,10 +5,11 @@ import datetime
 from django.conf.urls import url, include
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest
+from elasticsearch_dsl import Search
 from rest_framework import serializers, viewsets
 
 from visit.models import Visit
-from .models import Result
+from .models import Result, ResultIndex
 from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -19,7 +20,7 @@ from rest_framework.response import Response
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Result
-        fields = ('id', 'name', 'description', 'file')
+        fields = ('id', 'name', 'description', 'file', 'uploaded')
 
 
 # ViewSets define the view behavior.
@@ -69,7 +70,8 @@ class ResultViewSet(viewsets.ModelViewSet):
             super(ResultViewSet, self).create(request)
 
     def retrieve(self, request, *args, **kwargs):
-        pass
+        doc = ResultIndex.get(id=kwargs['pk'])
+        return Response({'url': doc.url})
 
     def list(self, request, *args, **kwargs):
         if not 'pesel' in request.GET:

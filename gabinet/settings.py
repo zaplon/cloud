@@ -26,7 +26,7 @@ SECRET_KEY = '9pc#_y&@a7t#z^n6y59m#x7k+4)kp4s0ob_ha(=1!8a4_72aa6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 
 # Application definition
 
@@ -229,3 +229,10 @@ COMPRESS_ENABLED = False
 COMPRESS_OFFLINE = True
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
 SESSION_COOKIE_AGE = 7200
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'memcached:11211',
+    }
+}

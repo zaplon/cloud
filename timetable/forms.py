@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.forms.utils import flatatt
 from django.utils.html import format_html
@@ -31,6 +32,12 @@ class TermForm(ModelForm):
             'datetime': DateTimeInput(format='%Y-%m-%d %H:%M'),
             'status': HiddenInput()
         }
+
+    def clean_patient(self):
+        if self.data['status'] == 'FREE' and not 'patient' in self.data:
+            raise ValidationError(u'Wybierz pacjenta')
+        else:
+            return self.cleaned_data['patient']
 
     def __init__(self, *args, **kwargs):
         #kwargs['instance'].datetime.replace(tzinfo=None)

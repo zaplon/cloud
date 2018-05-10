@@ -9,6 +9,10 @@ var calendar = {
         }
         //data.push({name: 'datetime', value: calEvent.start._i.substr(0, calEvent.start._i.length - 9)});
         data.push({name: 'id', value: calEvent.id});
+        for (d in data){
+            if (data[d].value == 'None')
+                data.splice(d, 1);
+        };
         $.post('/get-form/', {
             module: 'timetable.forms', class: 'TermForm',
             data: JSON.stringify(data)
@@ -70,8 +74,8 @@ $(document).ready(function () {
             url: '/rest/terms/',
             type: 'GET',
             data: function(){
-                if (typeof (fullCalendarModel) != "undefined")
-                    return {doctor: fullCalendarModel.doctor().id};
+                if (typeof (fullCalendarView) != "undefined")
+                    return {doctor: fullCalendarView.doctor.id};
                 else
                     return {};
                 
