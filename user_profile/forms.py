@@ -20,6 +20,8 @@ class HoursForm(forms.Form):
 
 
 class UserForm(forms.Form):
+    save_with_user = True
+
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
     email = forms.EmailField(label=u'Adres email')
@@ -27,6 +29,10 @@ class UserForm(forms.Form):
     form_class = forms.CharField(max_length=50, initial='UserForm', widget=HiddenInput(), required=False)
 
     def __init__(self, *args, **kwargs):
+        if 'user' in kwargs.get('initial', {}):
+            u = kwargs['initial'].pop('user')
+            kwargs['initial'] = {'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email,
+                                 'mobile': u.profile.mobile}
         super(UserForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.wrapper_class = 'row'
@@ -54,6 +60,8 @@ class UserForm(forms.Form):
 
 
 class DoctorForm(forms.Form):
+    save_with_user = True
+
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
     email = forms.EmailField(label=u'Adres email')
@@ -65,10 +73,14 @@ class DoctorForm(forms.Form):
                                                         help_text=u'Zaznacz kilka pozycji trzymając wciśnięty klawisz CTRL')
 
     def __init__(self, *args, **kwargs):
+        if 'user' in kwargs.get('initial', {}):
+            u = kwargs['initial'].pop('user')
+            kwargs['initial'] = {'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email,
+                                 'mobile': u.profile.mobile, 'pwz': u.doctor.pwz, 'title': u.doctor.title}
         super(DoctorForm, self).__init__(*args, **kwargs)
         self.fields['factory_specializations'].choices = [(s.id, s.name) for s in Specialization.objects.all()]
-        if 'doctor' in self.initial:
-            specs = list(Specialization.objects.filter(doctors=self.initial['doctor']).values_list('id', flat=True))
+        if 'initial' in kwargs:
+            specs = list(Specialization.objects.filter(doctors=u.doctor).values_list('id', flat=True))
             self.fields['factory_specializations'].initial = specs
         self.helper = FormHelper()
         self.helper.wrapper_class = 'row'
@@ -129,6 +141,7 @@ class FullPatientForm(forms.Form):
         ))
 
 
+
 class PatientForm(forms.Form):
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
@@ -145,7 +158,7 @@ class PatientModelForm(forms.ModelForm):
     pesel = PLPESELField(label=u'Pesel', required=False)
     class Meta:
         model = Patient
-        fields = ['first_name', 'last_name', 'pesel', 'email', 'info']
+        fields = ['first_name', 'last_name', 'pesel', 'address', 'email', 'mobile', 'info']
 
 
 class SystemForm(forms.ModelForm):

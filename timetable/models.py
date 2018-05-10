@@ -83,26 +83,26 @@ class Term(models.Model):
         start = datetime.datetime.combine(start.date(), datetime.time(0, 0))
         end = datetime.datetime.combine(end.date(), datetime.time(0, 0))
         terms = []
+
         def move_forward(start, end):
             return start + datetime.timedelta(minutes=duration), end + datetime.timedelta(minutes=duration)
         for i in range(0, (end-start).days):
             day = start + datetime.timedelta(days=i)
             hours = days[day.weekday()]
-            start_hour = datetime.datetime.combine(day.date(), datetime.time(*[int(h) for h in hours['start'].split(':')]))
-            end_hour = datetime.datetime.combine(day.date(), datetime.time(*[int(h) for h in hours['end'].split(':')]))
+            start_hour = datetime.datetime.combine(day.date(), datetime.time(*[int(h) for h in hours['value'][0].split(':')]))
+            end_hour = datetime.datetime.combine(day.date(), datetime.time(*[int(h) for h in hours['value'][1].split(':')]))
             start_visit = start_hour
             end_visit = start_hour + datetime.timedelta(minutes=duration)
             while end_visit <= end_hour:
-                if hours['break_start']:
-                    break_start = datetime.time(*[int(h) for h in hours['break_start'].split(':')])
-                    break_end = datetime.time(*[int(h) for h in hours['break_end'].split(':')])
+                if hours.get('break', False):
+                    break_start = datetime.time(*[int(h) for h in hours['break'][0].split(':')])
+                    break_end = datetime.time(*[int(h) for h in hours['break'][1].split(':')])
                     visit_start = start_visit.time()
                     visit_end = end_visit.time()
                     if break_start < visit_end < break_end or break_start < visit_start < break_end:
                         start_visit, end_visit = move_forward(start_visit, end_visit)
                         continue
                 visit_date = datetime.datetime.combine(day.date(), start_visit.time())
-                #print visit_date
                 try:
                     Term.objects.get(doctor=doctor, datetime=visit_date)
                 except:

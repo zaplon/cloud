@@ -6,14 +6,15 @@ import importlib
 import urllib
 
 from django.template.context_processors import csrf
-from django.views import View
 import json
 import re
 import urllib
 from django.conf import settings
+from rest_framework.views import APIView
 
 
-class AjaxFormView(View):
+class AjaxFormView(APIView):
+    permission_classes = []
 
     def add_data(self, data):
         if self.request.user.is_authenticated():
@@ -47,20 +48,13 @@ class AjaxFormView(View):
         return HttpResponse(json.dumps({'success': True, 'form_html': form_html}), content_type='application/json')
 
     def post(self, *args, **kwargs):
-        form_class = self.get_form(self.request.POST)
+        post_data = json.loads(self.request.body)
+        form_class = self.get_form(post_data)
         if not form_class:
             return HttpResponse(json.dumps({'success': False}), content_type='application/json')
         ctx = {}
         ctx.update(csrf(self.request))
-        if not 'data' in self.request.POST:
-            data = self.request.POST
-        else:
-            data = self.request.POST['data']
-            try:
-                data = json.loads(data)
-                data = {d['name']: d['value'] for d in data}
-            except:
-                data = {p[0]: urllib.unquote(str(p[1])).decode('utf8') for p in [par.split('=') for par in data.split('&')]}
+        data = post_data['data']
         data = self.add_data(data.copy())
         if 'id' in data:
             if self.request.FILES:
@@ -73,7 +67,7 @@ class AjaxFormView(View):
             else:
                 form = form_class(data=data)
         if form.is_valid():
-            if 'user' in form.fields:
+            if 'user' in form.fields or getattr(form_class, 'save_with_user', False):
                 form.save(user=self.request.user)
             else:
                 form.save()

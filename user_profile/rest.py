@@ -1,17 +1,22 @@
+import json
+
 from django.conf.urls import url, include
 from django.db.models import Q, Min
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField, ListField, IntegerField
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from django.conf import settings
+
+from g_utils.rest import SearchMixin
 from .models import Doctor, Patient, Note
 import datetime
 
 
 # Serializers define the API representation.
-class PatientSerializer(serializers.HyperlinkedModelSerializer):
+class PatientSerializer(serializers.ModelSerializer):
     # first_name = CharField(source='user.first_name')
     # last_name = CharField(source='user.last_name')
     class Meta:
@@ -29,18 +34,10 @@ class PatientAutocompleteSerializer(serializers.ModelSerializer):
 
 
 # ViewSets define the view behavior.
-class PatientViewSet(viewsets.ModelViewSet):
+class PatientViewSet(viewsets.ModelViewSet, SearchMixin):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
-
-    def get_queryset(self):
-        q = Patient.objects.all()
-        if 'term' in self.request.GET:
-            self.pagination_class = None
-            t = self.request.GET['term']
-            q = q.filter(Q(last_name__icontains=t) | Q(first_name__icontains=t) | Q(pesel__icontains=t))
-            q = q[0:20]
-        return q
+    search_filters = ['last_name__icontains', 'first_name__icontains', 'pesel__icontains']
 
     def get_serializer_class(self):
         if 'term' in self.request.GET:
@@ -78,19 +75,17 @@ class NoteViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class UserSerializer(serializers.ModelSerializer):
-    can_edit_terms = serializers.SerializerMethodField('check_if_can_edit_terms')
-    can_edit_visits = serializers.SerializerMethodField('check_if_can_edit_visits')
-
-    def check_if_can_edit_terms(self, instance):
-        return instance.has_perm('timetable.change_term')
-
-    def check_if_can_edit_visits(self, instance):
-        return instance.has_perm('visit.change_visit')
+class WorkingHoursSerializer(serializers.ModelSerializer):
+    working_hours = ListField(source='get_working_hours')
 
     class Meta:
-        model = User
-        fields = ('username', 'email', 'can_edit_terms', 'can_edit_visits')
+        model = Doctor
+        fields = ['id', 'working_hours']
+
+    def save(self, **kwargs):
+        self.instance.working_hours = json.dumps(self._kwargs['data']['days'])
+        self.instance.save()
+        return self.instance
 
 
 # Serializers define the API representation.
@@ -105,19 +100,22 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
         
 class DoctorCalendarSerializer(serializers.ModelSerializer):
     first_term = serializers.DateTimeField(format=settings.DATE_FORMAT)
+
     class Meta:
         model = Doctor
         fields = ('id', 'name', 'first_term', 'terms_start', 'terms_end')
 
 
 # ViewSets define the view behavior.
-class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
+class DoctorViewSet(viewsets.ModelViewSet, SearchMixin):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
 
     def get_serializer_class(self):
         if 'calendar' in self.request.GET:
             return DoctorCalendarSerializer
+        elif 'only_hours' in self.request.GET or 'only_hours' in self.request.data:
+            return WorkingHoursSerializer
         else:
             return self.serializer_class
 
@@ -141,3 +139,57 @@ class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
             return q
 
 
+class UserSerializer(serializers.ModelSerializer):
+    can_edit_terms = serializers.SerializerMethodField('check_if_can_edit_terms')
+    can_edit_visits = serializers.SerializerMethodField('check_if_can_edit_visits')
+    setup_needed = serializers.SerializerMethodField('check_if_setup_needed')
+    modules = serializers.SerializerMethodField('get_user_modules')
+    type = serializers.SerializerMethodField('get_user_type')
+    doctor = DoctorSerializer()
+
+    def get_user_type(self, instance):
+        try:
+            instance.doctor
+            return 'doctor'
+        except:
+            return 'user'
+
+    def get_user_modules(self, instance):
+        modules = []
+        for module in settings.MODULES:
+            if module[0] is True or instance.has_perm(module[0]):
+                modules.append(module[1])
+        return modules
+
+    def check_if_setup_needed(self, instance):
+        if hasattr(instance, 'doctor'):
+            d = instance.doctor
+            if len(d.pwz) == 0 or len(d.user.last_name) == 0:
+                return 1
+            if d.working_hours is None:
+                return 2
+        else:
+            u = instance
+            if not u.last_name:
+                return 1
+        return 0
+
+    def check_if_can_edit_terms(self, instance):
+        return instance.has_perm('timetable.change_term')
+
+    def check_if_can_edit_visits(self, instance):
+        return instance.has_perm('visit.change_visit')
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'can_edit_terms', 'can_edit_visits', 'setup_needed', 'modules', 'type', 'doctor')
+
+
+class UserDetailsView(APIView):
+
+    queryset = User.objects.none()
+
+    def get(self, request):
+        if not request.user.is_authenticated():
+            return Response(status=403)
+        return Response(UserSerializer(instance=request.user).data)

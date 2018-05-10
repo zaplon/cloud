@@ -4,8 +4,10 @@ from django.utils import timezone
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
 
+from g_utils.rest import SearchMixin
 from user_profile.models import Doctor
-from .models import Term
+from user_profile.rest import PatientSerializer, DoctorSerializer
+from .models import Term, Service
 from rest_framework.permissions import IsAuthenticated
 import datetime
 
@@ -22,14 +24,44 @@ class TermSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('patient', 'duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id')
 
 
-# ViewSets define the view behavior.
+class ServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Service
+        fields = ('id', 'name')
+
+
+class ServiceViewSet(viewsets.ModelViewSet, SearchMixin):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+    pagination_class = None
+
+
+class TermDetailSerializer(serializers.ModelSerializer):
+    patient = PatientSerializer()
+    service = ServiceSerializer()
+    doctor = DoctorSerializer()
+
+    class Meta:
+        model = Term
+        fields = ['patient', 'doctor', 'service', 'datetime', 'duration', 'id', 'status']
+
+
 class TermViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Term.objects.all()
     serializer_class = TermSerializer
     permission_classes = (IsAuthenticated,)
     pagination_class = None
 
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return TermDetailSerializer
+        else:
+            return self.serializer_class
+
     def get_queryset(self):
+        if 'end' not in self.request.query_params:
+            return super(TermViewSet, self).get_queryset()
         if 'next_visits' in self.request.GET:
             if hasattr(self.request.user, 'doctor'):
                 return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
@@ -60,6 +92,4 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
             q = q.filter(datetime__gte=self.request.query_params['start'], datetime__lte=self.request.query_params['end'])
             q = q.filter(doctor=doctor)
         return q
-
-
 

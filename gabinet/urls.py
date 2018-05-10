@@ -13,18 +13,17 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.decorators.csrf import csrf_exempt
 from wkhtmltopdf.views import PDFTemplateView
 
-from django.conf import settings
 from dashboard.views import *
 from visit.rest import IcdViewSet, TemplateViewSet
 from result.rest import ResultViewSet
-from timetable.rest import TermViewSet
+from timetable.rest import TermViewSet, ServiceViewSet
 from medicine.rest import *
-from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet
+from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDetailsView
 from stats.rest import *
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
@@ -35,6 +34,7 @@ router = routers.DefaultRouter()
 router.register(r'icd', IcdViewSet)
 router.register(r'results', ResultViewSet)
 router.register(r'terms', TermViewSet)
+router.register(r'services', ServiceViewSet)
 router.register(r'patients', PatientViewSet)
 router.register(r'doctors', DoctorViewSet)
 router.register(r'templates', TemplateViewSet)
@@ -65,6 +65,7 @@ urlpatterns = [
     url(r'^tabs/', TabsListView.as_view(), name='tabs'),
 
     url(r'^rest/stats/', Stats.as_view(), name='stats-rest'),
+    url(r'^rest/user/', UserDetailsView.as_view(), name='user-details'),
     url(r"^rest/", include(router.urls), name='rest'),
 
     url(r"^timetable/", include("timetable.urls"), name='timetable'),
@@ -72,6 +73,7 @@ urlpatterns = [
     url(r"^forms/", include('forms.urls'), name='forms'),
     url(r"^agreements/", include('agreements.urls'), name='agreements'),
     url(r'^pdf/$', PdfView.as_view(template_name='no_pdf.html', filename='result.pdf'), name='pdf'),
+    url(r'^rest-auth/', include('rest_auth.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

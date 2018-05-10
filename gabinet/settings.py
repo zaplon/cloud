@@ -26,7 +26,7 @@ SECRET_KEY = '9pc#_y&@a7t#z^n6y59m#x7k+4)kp4s0ob_ha(=1!8a4_72aa6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 # Application definition
 
@@ -43,13 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'account',
-    'djangobower',
     'crispy_forms',
     'g_utils',
     'user_profile',
     'visit',
     'dashboard',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
     'timetable',
     'medicine',
     'result',
@@ -61,17 +62,19 @@ INSTALLED_APPS = [
     'bootstrapform',
     "compressor",
     "debug_toolbar",
-    "agreements"
+    "agreements",
+    'corsheaders'
 ]
 SITE_ID = 1
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'g_utils.middleware.setup_middleware',
+    #'g_utils.middleware.setup_middleware',
     'g_utils.middleware.permissions_middleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -93,7 +96,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                "g_utils.context_processors.utils",
+                # "g_utils.context_processors.utils",
                 "account.context_processors.account",
                 "g_utils.context_processors.form_helpers",
                 "pinax_theme_bootstrap.context_processors.theme"
@@ -157,12 +160,9 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/account/login/'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
 
-BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
-
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'djangobower.finders.BowerFinder',
     'compressor.finders.CompressorFinder'
 ]
 
@@ -189,6 +189,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10
 }
@@ -229,3 +233,7 @@ COMPRESS_ENABLED = False
 COMPRESS_OFFLINE = True
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
 SESSION_COOKIE_AGE = 7200
+CSRF_COOKIE_SECURE = False
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8081'
+)
