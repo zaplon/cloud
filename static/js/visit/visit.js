@@ -1,9 +1,9 @@
 var visit = {
     archive: {
         documents: ko.observableArray(),
-        getDocument: function (id, title) {
-            $.get('/rest/results/' + id, {}, function (res) {
-                gabinet.showPdf(res, title);
+        getDocument: function (obj) {
+            $.get('/rest/results/' + obj.id, {}, function (res) {
+                gabinet.showPdf(res.url, obj.name);
             });
         },
         getArchive: function () {
@@ -16,16 +16,18 @@ var visit = {
                         adjust(n);
                        });
                    }
-                   else
-                       node.icon = 'fa fa-file-pdf-o';
+                   else {
+                        node.icon = 'fa fa-file-pdf-o';
+                        node.text = node.name;
+                    }
                 }
                 res.forEach(function(r){
                    adjust(r);
                 });
                 me.documents(res);
-                $('#archive').on('changed.jstree', function (e, data) {
-                    me.getDocument(data.selected[0], data.node.text);
-                }).jstree({core: {data: res, multiple: false}});
+                // $('#archive').on('changed.jstree', function (e, data) {
+                //     me.getDocument(data.selected[0], data.node.text);
+                // }).jstree({core: {data: res, multiple: false}});
             })
         },
         addDocument: function () {

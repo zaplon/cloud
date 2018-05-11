@@ -21,3 +21,4 @@ ELASTIC_HOST = 'elastic1'
 ALLOWED_HOSTS = ['doktor.misal.pl', 'localhost', 'gabinet']
 DEBUG = True
 COMPRESS_ENABLED = True
+WKHTMLTOPDF_CMD = 'docker-compose run --rm wkhtmltopdf'

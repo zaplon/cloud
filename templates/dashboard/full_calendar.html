@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.css" %}">
     <link rel="stylesheet" href="{% static "css/separate/pages/calendar.css" %}">
     <style>
+        #specialization {
+            max-width: 200px;
+        }
         .calendar-page .calendar-page-content {
             margin-top: -9px;
         }
@@ -33,10 +36,13 @@
     <script src="{% static "fullcalendar/dist/locale/pl.js" %}"></script>
     <script src="{% static "js/calendar.js" %}"></script>
     <script src="{% static "js/full_calendar.js" %}"></script>
+{% endblock %}
+{% block content_scripts %}
     <script>
-        fullCalendarModel.specializations(JSON.parse('{{specializations|safe}}'));
-        fullCalendarModel.localizations(JSON.parse('{{localizations|safe}}'));
-        fullCalendarModel.services(JSON.parse('{{services|safe}}'));
+        fullCalendarView.specializations = JSON.parse('{{specializations|safe}}');
+        fullCalendarView.localizations = JSON.parse('{{localizations|safe}}');
+        fullCalendarView.services = JSON.parse('{{services|safe}}');
+        fullCalendarView.service = fullCalendarView.services[0].name;
     </script>
 {% endblock %}
 
@@ -45,37 +51,46 @@
 {% endblock %}
 
 {% block content %}
-    <div class="box-typical">
+    <div class="box-typical" id="calendar-controls">
         <div class="row m-1">
             <form class="form-inline" id="calendar-filters">
                 <div class="form-group">
                     <label for="specialization">Specjalizacja</label>
-                    <select class="form-control" id="specialization" data-bind="options: specializations, optionsText: name,
-                                                                                value: selectedSpecialization, optionsCaption: 'Wybierz...'">
+                    <select class="form-control" id="specialization" v-model="selectedSpecialization">
+                      <option value="">Wybierz...</option>
+                      <option v-for="option in specializations" v-bind:value="option.id">
+                          {% verbatim %}{{option.name}}{% endverbatim %}
+                      </option>
                     </select>
                 </div>
-                <div class="form-group" data-bind="visible: services().length > 1">
+                <div class="form-group" v-if="services.length > 1">
                     <label for="service">Usługa</label>
-                    <select class="form-control" id="service" data-bind="options: services, optionsText: name,
-                                                                                value: selectedService, optionsCaption: 'Wybierz...'">
+                    <select class="form-control" id="service" v-model="selectedService">
+                      <option value="">Wybierz...</option>
+                      <option v-for="option in services" v-bind:value="option.id">
+                          {% verbatim %}{{option.name}}{% endverbatim %}
+                      </option>
                     </select>
                 </div>
-                <div class="form-group" data-bind="if: services().length == 1">
+                <div class="form-group ml-1" data-if="services.length == 1">
                     <label for="service">Usługa</label>
-                    <input id="service" class="form-control" data-bind="value: services()[0].name" readonly></input>
+                    <input id="service" class="form-control" v-model="service" readonly />
                 </div>
-                <div class="form-group ml-1" data-bind="visible: localizations().length > 1">
+                <div class="form-group ml-1" v-if="localizations.length > 1">
                     <label for="localization">Lokalizacja</label>
-                    <select class="form-control" id="localization" data-bind="options: localizations, optionsText: name,
-                                                                              value: selectedLocalization, optionsCaption: 'Wybierz...'">
+                    <select class="form-control" id="localization" v-model="selectedLocalization">
+                      <option value="">Wybierz...</option>
+                      <option v-for="option in localizations" v-bind:value="option.id">
+                          {% verbatim %}{{option.name}}{% endverbatim %}
+                      </option>
                     </select>
                 </div>
                 <div class="form-group ml-1">
                     <label for="date-from">Data od</label>
-                    <input type='date' class="form-control" id="date-from" data-bind="value: dateFrom">
+                    <input type='date' class="form-control" id="date-from" v-bind:value="dateFrom">
                     </select>
                 </div>
-                <button class="btn btn-primary ml-1" data-bind="click: loadDoctors">Filtruj</button>
+                <button type="button" class="btn btn-primary ml-1" @click="loadDoctors">Filtruj</button>
             </form>
         </div>
         <div class="col-md-3 pl-0 pr-0">
@@ -87,18 +102,18 @@
                 </tr>
                 <tr>
                     <th><input placeholder="Nazwisko..." type="text" class="form-control form-control-sm"
-                               data-bind="value: doctorFilter"></th>
+                               v-model="doctorFilter"></th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <!-- ko foreach: doctors -->
-                <tr data-bind="click: $parent.loadDoctorCalendar, attr: {class: $parent.doctor().id==id ? 'table-active': ''}">
-                    <td data-bind="text: name"></td>
-                    <td data-bind="text: first_term"></td>
-                </tr>
-                <!-- /ko -->
-                <tr data-bind="visible: doctors().length==0">
+                <template v-for="d in doctors">
+                    <tr @click="loadDoctorCalendar(d)" v-bind:class="[doctor.id==d.id ? 'table-active': '']">
+                        <td>{% verbatim %}{{ d.name }}{% endverbatim %}</td>
+                        <td>{% verbatim %}{{ d.first_term }}{% endverbatim %}</td>
+                    </tr>
+                </template>
+                <tr v-if="doctors.length==0">
                     <td colspan="2" class="empty-row">Brak wyników</td>
                 </tr>
                 </tbody>

@@ -130,14 +130,17 @@
                 <div class="control-item-content">
                     <div class="control-item-content-text" data-bind="visible: archive.documents().length > 0">
                         <div id="archive"></div>
-                        {#                        <ul class="control-item-lists archive-list" data-bind="foreach: archive.documents">#}
-                        {#                            <li data-bind="click: $parent.getDocument">#}
-                        {#                                <a href="#" data-bind="attr: {title: text}">#}
-                        {#                                    <h6 data-bind="text: name"></h6>#}
-                        {#                                    <div data-bind="text: text"></div>#}
-                        {#                                </a>#}
-                        {#                            </li>#}
-                        {#                        </ul>#}
+                        <input style="width: calc(100% - 1.5rem);" type="search" class="form-control mb-1" name="result-search"
+                               placeholder="szukaj..." />
+                        <ul class="control-item-lists archive-list" data-bind="foreach: archive.documents">
+                            <li data-bind="click: visit.archive.getDocument">
+                                <i data-bind="attr: {class: icon}"></i>
+                                <a data-bind="attr: {title: description}">
+                                    <h6 data-bind="text: name"></h6>
+                                    <div><small data-bind="text: moment(uploaded).format('YYYY-MM-DD')"></small></div>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                     <div class="control-item-content-text" data-bind="visible: archive.documents().length == 0">
                         Brak dokumentów w archiwum
@@ -199,6 +202,8 @@
 
 {% block extra_scripts %}
     <script src="{% static 'js/visit/visit.js' %}"></script>
+{% endblock %}
+{% block content_scripts %}
     <script>
         visit.patient({{ visit.term.patient|as_json:'id,pesel,first_name,last_name,address' }});
         visit.term = {{ visit.term|as_json:'id' }};

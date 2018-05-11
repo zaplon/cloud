@@ -35,8 +35,9 @@ class ResultForm(Form):
     def save(self):
         if settings.USE_ELO:
             return HttpResponse(status=200)
-        Result.objects.create(doctor=user.doctor, description=self.cleaned_data['description'], name=self.cleaned_data['name'],
+        v = Visit.objects.get(id=self.cleaned_data['visit'])
+        Result.objects.create(doctor=v.term.doctor, description=self.cleaned_data['description'], name=self.cleaned_data['name'],
                               patient=Patient.objects.get(id=self.cleaned_data['patient']),
-                              visit=Visit.objects.get(id=self.cleaned_data['visit']), file=self.cleaned_data['file'])
-
+                              visit=v, file=self.cleaned_data['file'])
+        return HttpResponse(status=200)
 

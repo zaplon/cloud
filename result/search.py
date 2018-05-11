@@ -25,8 +25,7 @@ def search(term):
     response = s.execute()
     if response.hits.total == 0:
         suggestions = Search(index='gabinet').suggest('suggestion', term, term={'field': '_all'}).execute()
-        suggestions = ['%s %s' % (s.patient.first_name, s.patient.last_name) for s in suggestions]
-        #suggestions = [o.text for o in suggestions['suggestion'][0]['options']]
+        suggestions = [o['text'] for o in suggestions.suggest['suggestion'][0]['options']]
     else:
         suggestions = []
     return response, suggestions

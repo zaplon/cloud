@@ -20,7 +20,6 @@ class Command(BaseCommand):
         MedicineParent.objects.all().delete()
         Medicine.objects.all().delete()
 
-
         with open('g_utils/initial_data/leki-a.csv', 'rU') as csv_file:
             data = csv.reader(csv_file, delimiter=',', quotechar='"')
             j = 0
@@ -34,7 +33,7 @@ class Command(BaseCommand):
 
                 sizes = row[5].split('\n')
                 cats = row[6].split('\n')
-                print sizes
+                print(sizes)
                 for i, ean in enumerate(row[7].split('\n')):
                     try:
                         size = sizes[i]
