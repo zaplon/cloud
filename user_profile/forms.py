@@ -141,7 +141,6 @@ class FullPatientForm(forms.Form):
         ))
 
 
-
 class PatientForm(forms.Form):
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')

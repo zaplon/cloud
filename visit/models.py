@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+from enum import Enum
 
 from django.db import models
 from django.db.models.signals import pre_save
@@ -9,7 +10,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from gabinet.settings import VISIT_TABS_DIR
 from user_profile.models import Doctor
-from django.dispatch import receiver
+from g_utils.fields import ChoicesEnum
 import json
 
 keys_choices = (('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2'), ('CTRL+F3', 'ctrl+f3'), ('CTRL+F4', 'ctrl+f4'),
@@ -19,11 +20,25 @@ keys_choices = (('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2'), ('CTRL+F3', 'ctr
                  ('alt+f7', 'ALT+F7'),  ('alt+f8', 'ALT+F8'),  ('alt+f9', 'ALT+F9'),  ('alt+f10', 'ALT+F10'))
 
 
+class TabTypes(Enum):
+    DEFAULT = 'Pole tekstowe'
+    ICD10 = 'Rozpoznanie'
+    MEDICINES = 'Leki'
+    NOTES = 'Notatki'
+    SERVICES = 'Skierowania'
+    VIDEO = 'Nagranie wideo'
+
+
 class TabParent(models.Model):
+
     name = models.CharField(max_length=100)
-    template = models.CharField(max_length=100, default='default.html', verbose_name=u'Szablon')
+    type = models.CharField(max_length=16, choices=[(tag, tag.value) for tag in TabTypes],
+                            default=TabTypes.DEFAULT, verbose_name=u'Typ')
     obligatory = models.BooleanField(default=False)
     can_add_templates = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Tab(models.Model):
@@ -55,10 +70,10 @@ class Tab(models.Model):
 
 class VisitTab(models.Model):
     title = models.CharField(max_length=100)
-    body = models.TextField(default='')
     json = models.TextField(default='null')
     order = models.IntegerField(null=True, blank=True)
-    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=12)
+    visit = models.ForeignKey('Visit', related_name='tabs')
 
     @property
     def data(self):
@@ -75,17 +90,13 @@ class Visit(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     visit_pdf = models.FileField(upload_to='visits/', null=True, blank=True)
-    tabs = models.ManyToManyField(VisitTab, related_name='tabs')
     in_progress = models.BooleanField(default=False)
 
     def create_tabs(self):
         tabs = self.term.doctor.tabs.all()
         visit_tabs = []
         for tab in tabs:
-            f = open(os.path.join(VISIT_TABS_DIR, tab.parent.template), 'r', encoding='utf8')
-            body = f.read()
-            f.close()
-            visit_tab = VisitTab.objects.create(title=tab.title, body=body, order=tab.order, name=tab.name)
+            visit_tab = VisitTab.objects.create(title=tab.title, order=tab.order, type=tab.parent.type, visit=self)
             visit_tabs.append(visit_tab)
         return visit_tabs
 

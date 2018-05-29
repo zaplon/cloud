@@ -14,3 +14,8 @@ class SearchMixin(object):
             q = q[0:20]
         return q
 
+
+class OnlyDoctorRecords(object):
+
+    def get_queryset(self):
+        return super(OnlyDoctorRecords, self).get_queryset().filter(doctor=self.request.user.doctor)

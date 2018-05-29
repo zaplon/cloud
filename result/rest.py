@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework import serializers, viewsets
 
+from user_profile.models import Patient
 from visit.models import Visit
 from .models import Result
 from django.conf import settings
@@ -17,9 +18,10 @@ from rest_framework.response import Response
 
 # Serializers define the API representation.
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
+    patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())
     class Meta:
         model = Result
-        fields = ('id', 'name', 'description', 'file')
+        fields = ('id', 'name', 'description', 'file', 'patient')
 
 
 # ViewSets define the view behavior.
@@ -28,7 +30,7 @@ class ResultViewSet(viewsets.ModelViewSet):
     serializer_class = ResultSerializer
     filter_fields = ('type', 'patient', 'doctor', 'visit')
     filter_backends = (DjangoFilterBackend,)
-    pagination_class = None
+    # pagination_class = None
 
     def get_queryset(self, *args, **kwargs):
         q = super(ResultViewSet, self).get_queryset(*args, **kwargs)
@@ -66,14 +68,14 @@ class ResultViewSet(viewsets.ModelViewSet):
             r.save()
             return HttpResponse(json.dumps({'id': r.id}), status=200, content_type='application/json')
         else:
-            super(ResultViewSet, self).create(request)
+            return super(ResultViewSet, self).create(request)
 
     def retrieve(self, request, *args, **kwargs):
         pass
 
     def list(self, request, *args, **kwargs):
-        if not 'pesel' in request.GET:
-            return HttpResponseBadRequest()
+        #if not 'pesel' in request.GET:
+        #    return HttpResponseBadRequest()
         return super(ResultViewSet, self).list(request, *args, **kwargs)
 
 

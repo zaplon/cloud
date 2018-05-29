@@ -132,6 +132,7 @@ class Note(models.Model):
     text = models.CharField(max_length=1024)
     patient = models.ForeignKey(Patient, related_name='notes')
     doctor = models.ForeignKey(Doctor, related_name='notes')
+    private = models.BooleanField(default=False)
 
     def get_author(self):
         return self.doctor.__str__()

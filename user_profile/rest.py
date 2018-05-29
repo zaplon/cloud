@@ -21,7 +21,7 @@ class PatientSerializer(serializers.ModelSerializer):
     # last_name = CharField(source='user.last_name')
     class Meta:
         model = Patient
-        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address')
+        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address', 'name_with_pesel')
 
 
 class PatientAutocompleteSerializer(serializers.ModelSerializer):
@@ -52,7 +52,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
-        fields = ('id', 'text', 'patient', 'doctor', 'author')
+        fields = ('id', 'text', 'patient', 'doctor', 'author', 'private')
 
 
 # ViewSets define the view behavior.

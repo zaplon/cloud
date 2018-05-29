@@ -1,5 +1,5 @@
 from elasticsearch_dsl.connections import connections
-from elasticsearch_dsl import DocType, Text, Date, Search, Nested, Integer, Q
+from elasticsearch_dsl import DocType, Text, Date, Search, Nested, Integer, Q, Keyword
 from django.conf import settings
 
 connections.create_connection(hosts=[settings.ELASTIC_HOST])
@@ -11,6 +11,7 @@ class ResultIndex(DocType):
     description = Text()
     url = Text()
     doctor = Nested(properties={'name': Text(), 'pwz': Integer()})
+    categories = Keyword()
     uploaded = Date()
     patient = Nested(properties={'name': Text(), 'first_name': Text(),
                                  'last_name': Text(), 'pesel': Text()})

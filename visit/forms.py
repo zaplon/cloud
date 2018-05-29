@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django.forms import ModelForm
 from django.urls import reverse
-from .models import Template, Tab, TabParent
+from .models import Template, Tab, TabParent, TabTypes
 from django.forms import HiddenInput, Textarea
 from django.utils.translation import ugettext as _
 
@@ -56,15 +56,21 @@ class TemplateForm(ModelForm):
 
 
 class TabForm(ModelForm):
+    save_with_user = True
+
     class Meta:
         model = Tab
-        fields = ['title', 'doctor', 'enabled', 'order', 'parent']
+        fields = ['title', 'enabled', 'order', 'parent']
+
+    def save(self, user=False, commit=True):
+        self.instance.doctor = user.doctor
+        super(TabForm, self).save(commit)
 
     def __init__(self, *args, **kwargs):
         super(TabForm, self).__init__(*args, **kwargs)
-        self.fields['doctor'].widget = HiddenInput()
-        self.fields['parent'].widget = HiddenInput()
-        self.fields['parent'].initial = TabParent.objects.get(name='default')
+        # self.fields['parent'].widget = HiddenInput()
+        self.fields['parent'].initial = TabParent.objects.get(type=TabTypes.DEFAULT)
+        self.fields['parent'].label = 'Typ'
         self.helper = FormHelper()
         helper = self.helper
         helper.field_template = 'form/field.html'
@@ -76,11 +82,11 @@ class TabForm(ModelForm):
             'order',
             'enabled',
             'parent',
-            HTML(
-                u'<hr/><div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
-                reverse('tab-delete', kwargs={'pk': self.instance.id})
-                if self.instance.id and self.instance.parent.template == 'default.html' else ''),
-            HTML("""
-                 <div class="pull-right"><button class="btn btn-primary mr-025" type="submit">Zapisz</button>
-                 <a class="btn btn-default" href="/tabs/">Anuluj</a></div><div class='clearfix'/>"""),
+            # HTML(
+            #     u'<hr/><div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
+            #     reverse('tab-delete', kwargs={'pk': self.instance.id})
+            #     if self.instance.id and self.instance.parent.template == 'default.html' else ''),
+            # HTML("""
+            #      <div class="pull-right"><button class="btn btn-primary mr-025" type="submit">Zapisz</button>
+            #      <a class="btn btn-default" href="/tabs/">Anuluj</a></div><div class='clearfix'/>"""),
         )

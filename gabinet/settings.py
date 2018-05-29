@@ -15,8 +15,8 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
-BASE_DIR = PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# BASE_DIR = PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = '/app/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -26,7 +26,7 @@ SECRET_KEY = '9pc#_y&@a7t#z^n6y59m#x7k+4)kp4s0ob_ha(=1!8a4_72aa6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -96,7 +96,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # "g_utils.context_processors.utils",
+                "g_utils.context_processors.utils",
                 "account.context_processors.account",
                 "g_utils.context_processors.form_helpers",
                 "pinax_theme_bootstrap.context_processors.theme"
@@ -197,11 +197,9 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-LOCALE_PATHS = [os.path.join(PROJECT_DIR, 'locale')]
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 LANGUAGE_CODE = 'pl'
 VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
-#WKHTMLTOPDF_CMD = '/home/jan/wkhtmltox/bin/wkhtmltopdf'
-WKHTMLTOPDF_CMD = 'docker run michaelperrin/wkhtmltopdf'
 APP_URL = 'http://127.0.0.1:8001/'
 
 MODULES = [

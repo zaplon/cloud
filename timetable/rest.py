@@ -5,15 +5,14 @@ from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
 
 from g_utils.rest import SearchMixin
-from user_profile.models import Doctor
+from user_profile.models import Doctor, Patient
 from user_profile.rest import PatientSerializer, DoctorSerializer
 from .models import Term, Service
 from rest_framework.permissions import IsAuthenticated
 import datetime
 
 
-# Serializers define the API representation.
-class TermSerializer(serializers.HyperlinkedModelSerializer):
+class TermSerializer(serializers.ModelSerializer):
     start = CharField(source='datetime')
     end = CharField(source='get_end')
     title = CharField(source='get_title')
@@ -21,7 +20,24 @@ class TermSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Term
-        fields = ('patient', 'duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id')
+        fields = ('duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id')
+
+
+class TermUpdateSerializer(serializers.ModelSerializer):
+    doctor = serializers.PrimaryKeyRelatedField(queryset=Doctor.objects.all())
+    service = serializers.PrimaryKeyRelatedField(queryset=Service.objects.all())
+    patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())
+
+    class Meta:
+        model = Term
+        fields = ('doctor', 'service', 'patient', 'status', 'duration')
+
+    def save(self, **kwargs):
+        if self.instance.status == 'FREE' and self.instance.patient:
+            self.instance.status = 'PENDING'
+        if self.instance.status == 'PENDING' and not self.instance.patient:
+            self.instance.status = 'FREE'
+        super(TermUpdateSerializer, self).save(**kwargs)
 
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -47,21 +63,20 @@ class TermDetailSerializer(serializers.ModelSerializer):
         fields = ['patient', 'doctor', 'service', 'datetime', 'duration', 'id', 'status']
 
 
-class TermViewSet(viewsets.ReadOnlyModelViewSet):
+class TermViewSet(viewsets.ModelViewSet):
     queryset = Term.objects.all()
     serializer_class = TermSerializer
-    permission_classes = (IsAuthenticated,)
     pagination_class = None
 
     def get_serializer_class(self):
-        if self.action == 'retrieve':
+        if self.action == 'partial_update':
+            return TermUpdateSerializer
+        elif self.action == 'retrieve':
             return TermDetailSerializer
         else:
             return self.serializer_class
 
     def get_queryset(self):
-        if 'end' not in self.request.query_params:
-            return super(TermViewSet, self).get_queryset()
         if 'next_visits' in self.request.GET:
             if hasattr(self.request.user, 'doctor'):
                 return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
@@ -75,6 +90,8 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
                                                                       status='PENDING').order_by('datetime')[0:5]
             else:
                 return Term.objects.none()
+        if 'end' not in self.request.query_params:
+            return super(TermViewSet, self).get_queryset()
         end = datetime.datetime.strptime(self.request.query_params['end'], '%Y-%m-%d')
         if hasattr(self.request.user, 'doctor'):
             doctor = self.request.user.doctor

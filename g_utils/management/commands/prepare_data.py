@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand, CommandError
-from visit.models import Icd10, TabParent
+from visit.models import Icd10, TabParent, TabTypes
 from user_profile.models import Specialization
 from medicine.models import Medicine, MedicineParent
 from django.core.management import call_command
@@ -22,12 +22,12 @@ class Command(BaseCommand):
             Icd10.objects.all().delete()
             Specialization.objects.all().delete()
 
-        TabParent.objects.get_or_create(name='default', template='default.html', can_add_templates=True)
-        TabParent.objects.get_or_create(name='icd10', template='icd10.html', obligatory=True)
-        TabParent.objects.get_or_create(name='medicines', template='medicines.html')
-        TabParent.objects.get_or_create(name='notes', template='notes.html')
-        TabParent.objects.get_or_create(name='services', template='services.html')
-        TabParent.objects.get_or_create(name='video', template='video.html')
+            TabParent.objects.get_or_create(name='default', type=TabTypes.DEFAULT, can_add_templates=True)
+            TabParent.objects.get_or_create(name='icd10', type=TabTypes.ICD10, obligatory=True)
+            TabParent.objects.get_or_create(name='medicines', type=TabTypes.MEDICINES)
+            TabParent.objects.get_or_create(name='notes', type=TabTypes.NOTES)
+            TabParent.objects.get_or_create(name='services', type=TabTypes.VIDEO)
+            TabParent.objects.get_or_create(name='video', type=TabTypes.SERVICES)
 
         with open('g_utils/initial_data/icd10.csv', 'r', encoding='utf8') as csv_file:
             data = csv.reader(csv_file, delimiter=',', quotechar='"')

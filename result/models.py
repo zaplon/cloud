@@ -44,6 +44,9 @@ class Result(models.Model):
             pass
 
     def indexing(self):
+        categories = []
+        if self.doctor:
+            categories = self.doctor.specializations.all().values_list('name', flat=True)
         obj = ResultIndex(
             meta={'id': self.id},
             name=self.name,
@@ -52,6 +55,7 @@ class Result(models.Model):
             # visit=None,
             url=self.file.url,
             doctor={'pwz': self.doctor.pwz, 'name': self.doctor.name} if self.doctor else None,
+            categories=categories,
             type=self.type,
             patient={'first_name': self.patient.first_name, 'last_name': self.patient.last_name,
                      'pesel': self.patient.pesel,
