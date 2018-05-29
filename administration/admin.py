@@ -13,7 +13,7 @@ from administration.settings import *
 from django.utils.translation import ugettext_lazy as _
 
 from timetable.models import Service, Localization
-from user_profile.models import SystemSettings, Doctor
+from user_profile.models import SystemSettings, Doctor, Specialization
 
 admin.site.site_title = 'Administracja'
 admin.site.site_header = 'Administracja'
@@ -166,6 +166,7 @@ admin.site.unregister(Group)
 admin.site.unregister(Site)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Localization)
+admin.site.register(Specialization)
 admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)
 admin.site.register(SystemSettings, SystemSettingsAdmin)

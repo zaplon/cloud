@@ -1,5 +1,6 @@
 {% load static %}
 {% load compress %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="pl">
 <head lang="pl">
@@ -15,7 +16,6 @@
     <link href="/img/favicon.57x57.png" rel="apple-touch-icon" type="image/png">
     <link href="/img/favicon.png" rel="icon" type="image/png">
     <link href="/img/favicon.ico" rel="shortcut icon">
-    <link rel="stylesheet" href="{% static "css/lib/jstree/style.min.css" %}">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -26,13 +26,16 @@
         <script src="{% static "js/lib/jquery/jquery.min.js" %}"></script>
         <script src="{% static "js/libs/jquery-ui.min.js" %}"></script>
         <script src="{% static "knockout/dist/knockout.js" %}"></script>
+        <script src="{% static "js/libs/vue_dev.js" %}"></script>
         <script src="{% static "js/g.js" %}"></script>
         <script src="{% static "js/plugins.js" %}"></script>
+        <script src="{% static "js/libs/debounce.js" %}"></script>
         <script src="{% static "js/utils/autocomplete.js" %}"></script>
         <script src="{% static "moment/min/moment.min.js" %}"></script>
         <script src="{% static "chart.js/dist/Chart.min.js" %}"></script>
     {% endcompress %}
     {% compress css %}
+{#        <link rel="stylesheet" href="{% static "js/lib/jstree/style.min.css" %}">#}
         <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
         <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "css/main.css" %}">
@@ -76,5 +79,8 @@
         gabinet.doctor = JSON.parse(gabinet.doctor);
 </script>
 
-{% block extra_scripts %}{% endblock %}
+{% compress js %}
+    {% block extra_scripts %}{% endblock %}
+{% endcompress %}
+{% block content_scripts %}{% endblock %}
 </html>
