@@ -3,9 +3,10 @@ from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
 from rest_framework.response import Response
 
-from g_utils.rest import OnlyDoctorRecords
+from g_utils.rest import OnlyDoctorRecords, SearchMixin
 from timetable.models import Term
-from .models import Icd10, Template, Visit, VisitTab, Tab, TabParent, TabTypes
+from timetable.rest import TermDetailSerializer
+from .models import Icd10, Template, Visit, VisitTab, Tab, TabTypes
 import json
 
 
@@ -38,10 +39,10 @@ class TemplateSerializer(serializers.ModelSerializer):
         fields = ('text', 'tab', 'key', 'name', 'tab_name')
 
 
-class TemplateViewSet(viewsets.ReadOnlyModelViewSet):
+class TemplateViewSet(SearchMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
-    # pagination_class = None
+    search_filters = ['name', 'text']
 
     def get_queryset(self):
         q = super(TemplateViewSet, self).get_queryset()
@@ -52,7 +53,7 @@ class TemplateViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TabSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(source='parent.type')
+    type = serializers.CharField(source='type_name')
 
     class Meta:
         model = Tab
@@ -75,9 +76,10 @@ class VisitTabSerializer(serializers.ModelSerializer):
 
 class VisitSerializer(serializers.ModelSerializer):
     tabs = VisitTabSerializer(many=True)
+    term = TermDetailSerializer()
     class Meta:
         model = Visit
-        fields = ['id', 'tabs', 'in_progress']
+        fields = ['id', 'tabs', 'in_progress', 'term']
 
 
 class VisitViewSet(viewsets.ModelViewSet):
@@ -119,7 +121,7 @@ class VisitViewSet(viewsets.ModelViewSet):
         tmp = request.data.get('tmp', False)
 
         if not tmp:
-            rozpoznanie = filter(lambda d: d['type'] == TabParent.Types.ICD10, data)
+            rozpoznanie = filter(lambda d: d['type'] == TabTypes.ICD10, data)
             if len(rozpoznanie) == 0 or len(rozpoznanie[0]['data']) == 0:
                 return Response(
                     json.dumps({'success': False, 'errors': {'rozpoznanie': u'Musisz podać rozpoznanie'}}),

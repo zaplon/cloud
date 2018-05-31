@@ -3,29 +3,29 @@ var todayStr = today.getFullYear() + '-' + (today.getMonth() < 9 ? ('0' + (today
     + '-' + (today.getDate() < 10 ? ('0' + today.getDate()) : today.getDate());
 var todayJoin = todayStr.split('-').reverse();
 
-putPostal = function(code){
+putPostal = function (code) {
     var code = code.replace('-', '');
-    for (var i=0;i<=5;i++){
+    for (var i = 0; i <= 5; i++) {
         $('input[name=postal' + (i + 1) + ']').val(code[(i + 1)]);
     }
 };
 
-putSplittedDate = function(e, inputPrefix){
-            if (e.date < new Date()) {
-                e.preventDefault(); // Prevent to pick the date
-            }
-            else {
-                var day = "" + e.date.getDate();
-                var month = "" + (e.date.getMonth() < 10 ? '0' + (e.date.getMonth() + 1) : e.date.getMonth());
-                var year = "" + e.date.getFullYear();
-                $('input[name="' + inputPrefix + 1 +'"]').val(day[0]);
-                $('input[name="' + inputPrefix + 2 +'"]').val(day[1]);
-                $('input[name="' + inputPrefix + 3 +'"]').val(month[0]);
-                $('input[name="' + inputPrefix + 4 +'"]').val(month[1]);
-                $('input[name="' + inputPrefix + 5 +'"]').val(year.substr(0, 2));
-                $('input[name="' + inputPrefix + 6 +'"]').val(year.substr(2, 4));
-            }
-        };
+putSplittedDate = function (e, inputPrefix) {
+    if (e.date < new Date()) {
+        e.preventDefault(); // Prevent to pick the date
+    }
+    else {
+        var day = "" + e.date.getDate();
+        var month = "" + (e.date.getMonth() < 10 ? '0' + (e.date.getMonth() + 1) : e.date.getMonth());
+        var year = "" + e.date.getFullYear();
+        $('input[name="' + inputPrefix + 1 + '"]').val(day[0]);
+        $('input[name="' + inputPrefix + 2 + '"]').val(day[1]);
+        $('input[name="' + inputPrefix + 3 + '"]').val(month[0]);
+        $('input[name="' + inputPrefix + 4 + '"]').val(month[1]);
+        $('input[name="' + inputPrefix + 5 + '"]').val(year.substr(0, 2));
+        $('input[name="' + inputPrefix + 6 + '"]').val(year.substr(2, 4));
+    }
+};
 
 function crossOut(el, event) {
     if (event.target.type && (event.target.type.indexOf('select') > -1 || event.target.type == 'text'))
@@ -36,32 +36,32 @@ function crossOut(el, event) {
         $(el).addClass('cross-out');
 };
 
-function crossOther(el, event){
-  if ($(el).attr('data-target')){
-      $('#'+$(el).attr('data-target')).addClass('cross-out');
-      $(el).removeClass('cross-out');
-      return;
-  }
-  $(el).parent().parent().find('.crossable').each(function(i, el){
-      $(el).addClass('cross-out');
-  });
-  $(el).removeClass('cross-out');
+function crossOther(el, event) {
+    if ($(el).attr('data-target')) {
+        $('#' + $(el).attr('data-target')).addClass('cross-out');
+        $(el).removeClass('cross-out');
+        return;
+    }
+    $(el).parent().parent().find('.crossable').each(function (i, el) {
+        $(el).addClass('cross-out');
+    });
+    $(el).removeClass('cross-out');
 };
 
 $(document).ready(function () {
     try {
-     $('[data-toggle="datepicker"]').datepicker({language: 'pl-PL', format: 'yyyy-MM-dd'});
+        $('[data-toggle="datepicker"]').datepicker({language: 'pl-PL', format: 'yyyy-MM-dd'});
     }
-    catch(err){
+    catch (err) {
     }
 
-    if (parent.visit.formParams)
-        for (param in parent.visit.formParams) {
-            if ($('input[name="' + param + '"]').length > 0)
-                $('input[name="' + param + '"]').val(parent.visit.formParams[param]);
-            if ($('textarea[name="' + param + '"]').length > 0)
-                $('textarea[name="' + param + '"]').html(parent.visit.formParams[param]);
-        }
+    // if (parent.visit.formParams)
+    //     for (param in parent.visit.formParams) {
+    //         if ($('input[name="' + param + '"]').length > 0)
+    //             $('input[name="' + param + '"]').val(parent.visit.formParams[param]);
+    //         if ($('textarea[name="' + param + '"]').length > 0)
+    //             $('textarea[name="' + param + '"]').html(parent.visit.formParams[param]);
+    //     }
     ;
     //orzeczeni zdolnosc do pracy
     $('.cross li').addClass('crossable');
@@ -70,10 +70,10 @@ $(document).ready(function () {
         crossOther(this, event);
     });
 
-    $('input[name="today-date"]').each(function(i, el){
+    $('input[name="today-date"]').each(function (i, el) {
         $(el).val(todayStr);
     });
-    $('input[name="city&date"]').each(function(i, el){
+    $('input[name="city&date"]').each(function (i, el) {
         $(el).val('Warszawa, ' + todayStr);
     });
 
@@ -93,3 +93,52 @@ $(document).ready(function () {
 
 });
 
+function getData() {
+    var html = this.document.documentElement.cloneNode(true);
+    var htmlJq = $(html);
+    var inputs = htmlJq.find('input');
+    var textareas = htmlJq.find('textarea');
+    var selects = htmlJq.find('select');
+    inputs.each(function (index, i) {
+        if ($(i).attr('type') == 'radio')
+            if ($(i).is(':checked'))
+                $(i).attr('checked', '1');
+            else
+                $(i).removeAttr('checked');
+        if ($(i).attr('type') == 'checkbox')
+            if (i.checked)
+                $(i).attr('checked', '1');
+            else
+                $(i).removeAttr('checked');
+        else
+            $(i).attr('value', $(i).val());
+    });
+    textareas.each(function (index, t) {
+        $(t).html(t.value);
+    });
+    selects.each(function (index, s) {
+        s.outerHTML = '<span>' + $(s).val() + '</span>';
+    });
+    return html.outerHTML.replace('" type="date', '');
+}
+
+function makePdf(event) {
+    $.post('/forms/edit_form/', {data: getData()}, function (res) {
+        var params = {tmp: res.tmp, print: true, template_name: event.data.name};
+        params['as_file'] = 1;
+        $.get('/forms/show_form/?' + $.param(params), function (res) {
+            event.source.postMessage(res, event.origin);
+        });
+
+    });
+}
+
+
+function receiveMessage(event) {
+    // Do we trust the sender of this message?
+    //if (event.origin !== "http://example.com:8080")
+    //  return;
+    makePdf(event)
+}
+
+window.addEventListener("message", receiveMessage, false);

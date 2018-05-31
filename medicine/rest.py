@@ -41,6 +41,7 @@ class MedicineSerializer(serializers.ModelSerializer):
 class MedicineViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
+    filter_fields = ('parent', )
 
 
 # Serializers define the API representation.

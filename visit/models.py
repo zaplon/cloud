@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import os
 from enum import Enum
 
 from django.db import models
 from django.db.models.signals import pre_save
 from django.urls import reverse
 from django.utils.text import slugify
-from gabinet.settings import VISIT_TABS_DIR
-from user_profile.models import Doctor
-from g_utils.fields import ChoicesEnum
 import json
 
 keys_choices = (('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2'), ('CTRL+F3', 'ctrl+f3'), ('CTRL+F4', 'ctrl+f4'),
@@ -29,28 +25,21 @@ class TabTypes(Enum):
     VIDEO = 'Nagranie wideo'
 
 
-class TabParent(models.Model):
-
-    name = models.CharField(max_length=100)
-    type = models.CharField(max_length=16, choices=[(tag, tag.value) for tag in TabTypes],
-                            default=TabTypes.DEFAULT, verbose_name=u'Typ')
-    obligatory = models.BooleanField(default=False)
-    can_add_templates = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
-
-
 class Tab(models.Model):
     title = models.CharField(max_length=100, verbose_name=u'Tytuł')
-    doctor = models.ForeignKey(Doctor, related_name='tabs')
+    doctor = models.ForeignKey('user_profile.Doctor', related_name='tabs')
     order = models.IntegerField(null=True, blank=True, verbose_name=u'Kolejność')
     enabled = models.BooleanField(default=True, verbose_name=u'Włączona')
-    parent = models.ForeignKey(TabParent, related_name='children')
+    type = models.CharField(max_length=16, choices=[(tag, tag.value) for tag in TabTypes],
+                            default=TabTypes.DEFAULT, verbose_name=u'Typ')
 
     @property
     def name(self):
         return slugify(self.title)
+
+    @property
+    def type_name(self):
+        return TabTypes[self.type.split('.')[1]].value
 
     class Meta:
         ordering = ['order']
@@ -107,7 +96,7 @@ class Template(models.Model):
     text = models.CharField(max_length=1000, verbose_name=u'Tekst')
     key = models.CharField(max_length=8, blank=True, null=True, verbose_name=u'Skrót',
                            choices=keys_choices)
-    doctor = models.ForeignKey(Doctor, related_name='templates', null=True, blank=True)
+    doctor = models.ForeignKey('user_profile.Doctor', related_name='templates', null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('templates')

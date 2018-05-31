@@ -2,7 +2,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
 from timetable.models import Term, Service, Localization
-from visit.models import Icd10, TabParent, Visit
+from visit.models import Icd10, Visit
 from user_profile.models import Specialization, Doctor
 from medicine.models import Medicine, MedicineParent
 from django.core.management import call_command

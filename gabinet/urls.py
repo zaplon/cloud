@@ -40,11 +40,11 @@ router.register(r'doctors', DoctorViewSet)
 router.register(r'templates', TemplateViewSet)
 router.register(r'tabs', TabViewSet)
 router.register(r'notes', NoteViewSet)
-router.register(r'medicines', MedicineViewSet)
-router.register(r'medicine_parents', MedicineParentViewSet)
+router.register(r'medicines', MedicineViewSet, base_name='medicines')
+router.register(r'medicine_parents', MedicineParentViewSet, base_name='medicine_parents')
 router.register(r'refundations', RefundationViewSet)
 router.register(r'prescriptions', PrescriptionViewSet)
-router.register(r'visits', VisitViewSet)
+router.register(r'visits', VisitViewSet, base_name='visits')
 
 
 urlpatterns = [
@@ -68,7 +68,7 @@ urlpatterns = [
 
     url(r'^rest/stats/', Stats.as_view(), name='stats-rest'),
     url(r'^rest/user/', UserDetailsView.as_view(), name='user-details'),
-    url(r"^rest/", include(router.urls), name='rest'),
+    url(r"^rest/", include(router.urls, namespace='rest')),
 
     url(r"^timetable/", include("timetable.urls"), name='timetable'),
     url(r"^get-form/", AjaxFormView.as_view(), name='get-form'),

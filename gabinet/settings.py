@@ -16,7 +16,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 # BASE_DIR = PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = '/app/'
+BASE_DIR =  PROJECT_DIR = '/app/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -201,6 +201,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'PAGE_SIZE': 10
 }
 
@@ -218,7 +219,7 @@ MODULES = [
     ('medicine.change_prescription', 'prescriptions', u'Lista recept'),
     (True, 'icd10', u'Kody ICD-10'),
     ('user_profile.change_template', 'templates', u'Szablony'),
-    ('visit.change_tabparent', 'tabs', u'Zakładki'),
+    ('visit.change_tab', 'tabs', u'Zakładki'),
 ]
 
 # misal settings

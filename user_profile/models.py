@@ -9,6 +9,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
 
+from visit.models import TabTypes
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
@@ -48,6 +50,7 @@ class Specialization(models.Model):
     class Meta:
         verbose_name = 'Specjalizacja'
         verbose_name_plural = 'Specjalizacje'
+
 
 class Doctor(models.Model):
     pwz = models.CharField(max_length=7, verbose_name=u'Numer PWZ')
@@ -89,20 +92,10 @@ class Doctor(models.Model):
 
 @receiver(post_save, sender=Doctor)
 def create_doctor_tabs(sender, instance, created, **kwargs):
-    from visit.models import Tab, TabParent
+    from visit.models import Tab
     if created:
-        # zestaw zakładek
-        default = TabParent.objects.get(name='default')
-        icd10 = TabParent.objects.get(name='icd10')
-        medicines = TabParent.objects.get(name='medicines')
-        notes = TabParent.objects.get(name='notes')
-        services = TabParent.objects.get(name='services')
-        Tab.objects.create(doctor=instance, title='Wywiad', parent=default, order=0)
-        Tab.objects.create(doctor=instance, title='Rozpoznanie', parent=icd10, order=1)
-        Tab.objects.create(doctor=instance, title='Zalecenia', parent=default, order=2)
-        Tab.objects.create(doctor=instance, title='Leki', parent=medicines, order=3)
-        Tab.objects.create(doctor=instance, title='Badania dodatkowe', parent=services, order=4)
-        Tab.objects.create(doctor=instance, title='Notatki', parent=notes, order=5)
+        for i, type in enumerate(TabTypes):
+            Tab.objects.create(doctor=instance, title='Wywiad', type=type, order=i)
 
 
 class Patient(models.Model):
