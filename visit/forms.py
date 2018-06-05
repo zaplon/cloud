@@ -26,8 +26,7 @@ class TemplateForm(ModelForm):
         if 'instance' in kwargs:
             data['user'] = kwargs['instance'].doctor.user
 
-        self.fields['tab'].queryset = Tab.objects.all().filter(doctor__user=data['user'],
-                                                                         parent__can_add_templates=True)
+        self.fields['tab'].queryset = Tab.objects.all().filter(doctor__user=data['user'], type=TabTypes.DEFAULT.name)
         self.helper = FormHelper()
         helper = self.helper
         # helper.form_class = 'form-horizontal'
@@ -60,7 +59,7 @@ class TabForm(ModelForm):
 
     class Meta:
         model = Tab
-        fields = ['title', 'enabled', 'order', 'type']
+        fields = ['id', 'title', 'enabled', 'order', 'type']
 
     def save(self, user=False, commit=True):
         self.instance.doctor = user.doctor
@@ -69,7 +68,7 @@ class TabForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(TabForm, self).__init__(*args, **kwargs)
         # self.fields['parent'].widget = HiddenInput()
-        self.fields['type'].initial = TabTypes.DEFAULT
+        self.fields['type'].initial = TabTypes.DEFAULT.name
         self.helper = FormHelper()
         helper = self.helper
         helper.field_template = 'form/field.html'

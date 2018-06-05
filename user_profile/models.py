@@ -95,7 +95,7 @@ def create_doctor_tabs(sender, instance, created, **kwargs):
     from visit.models import Tab
     if created:
         for i, type in enumerate(TabTypes):
-            Tab.objects.create(doctor=instance, title='Wywiad', type=type, order=i)
+            Tab.objects.create(doctor=instance, title=type.value, type=type.name, order=i)
 
 
 class Patient(models.Model):

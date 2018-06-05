@@ -14,7 +14,7 @@ class VisitTestCase(TestCase):
         self.user = User.objects.create(username='test', email='test@test.pl')
         self.user.set_password('123456')
         self.user.save()
-        doctor = G(Doctor, user=self.user)
+        doctor = G(Doctor, user=self.user, working_hours=[])
         service = G(Service, doctor=doctor)
         self.term = G(Term, service=service, patient=self.patient, doctor=doctor)
         self.visit = G(Visit, term=self.term)

@@ -30,8 +30,8 @@ class Tab(models.Model):
     doctor = models.ForeignKey('user_profile.Doctor', related_name='tabs')
     order = models.IntegerField(null=True, blank=True, verbose_name=u'Kolejność')
     enabled = models.BooleanField(default=True, verbose_name=u'Włączona')
-    type = models.CharField(max_length=16, choices=[(tag, tag.value) for tag in TabTypes],
-                            default=TabTypes.DEFAULT, verbose_name=u'Typ')
+    type = models.CharField(max_length=16, choices=[(tag.name, tag.value) for tag in TabTypes],
+                            default=TabTypes.DEFAULT.name, verbose_name=u'Typ')
 
     @property
     def name(self):
@@ -39,7 +39,11 @@ class Tab(models.Model):
 
     @property
     def type_name(self):
-        return TabTypes[self.type.split('.')[1]].value
+        print(self.type)
+        try:
+            return TabTypes[self.type.split('.')[1]].value
+        except:
+            return TabTypes[self.type].value
 
     class Meta:
         ordering = ['order']
@@ -85,7 +89,7 @@ class Visit(models.Model):
         tabs = self.term.doctor.tabs.all()
         visit_tabs = []
         for tab in tabs:
-            visit_tab = VisitTab.objects.create(title=tab.title, order=tab.order, type=tab.parent.type, visit=self)
+            visit_tab = VisitTab.objects.create(title=tab.title, order=tab.order, type=tab.type, visit=self)
             visit_tabs.append(visit_tab)
         return visit_tabs
 

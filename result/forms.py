@@ -13,7 +13,7 @@ from g_utils.fields import AutocompleteWidget
 class ResultModelForm(ModelForm):
     class Meta:
         model = Result
-        fields = ['name', 'file', 'description', 'patient', 'doctor']
+        fields = ['name', 'file', 'description', 'patient', 'specialization']
 
     def __init__(self, *args, **kwargs):
         super(ResultModelForm, self).__init__(*args, **kwargs)

@@ -19,10 +19,6 @@ class Migration(migrations.Migration):
             name='template',
         ),
         migrations.RemoveField(
-            model_name='visit',
-            name='tabs',
-        ),
-        migrations.RemoveField(
             model_name='visittab',
             name='body',
         ),

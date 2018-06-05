@@ -66,7 +66,7 @@ class Command(BaseCommand):
                     if len(row[xls_cols[i]['other_recommendations']]) > 500:
                         row[xls_cols[i]['other_recommendations']] = row[xls_cols[i]['other_recommendations']][1:500]
                 for o in xls_cols[i]:
-                    print row[xls_cols[i][o]]
+                    print (row[xls_cols[i][o]])
                     if type(row[xls_cols[i][o]]) is str:
                         setattr(r, o, row[xls_cols[i][o]].encode('utf8'))
                     else:
@@ -80,8 +80,6 @@ class Command(BaseCommand):
                     m.in_use = True
                     m.save()
                 else:
-                    dose = r.name.split(',')
-                    dose = dose[-1]
                     p = MedicineParent.objects.create(name=r.name)
                     m = Medicine.objects.create(ean=r.ean, parent=p, size=r.size, in_use=1, refundation=1)
                 r.medicine = m

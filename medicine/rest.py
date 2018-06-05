@@ -72,10 +72,24 @@ class RefundationViewSet(viewsets.ReadOnlyModelViewSet):
 class PrescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prescription
-        fields = '__all__'
+        fields = ['number', 'date', 'patient']
+
+
+class PrescriptionListSerializer(serializers.ModelSerializer):
+    patient = serializers.CharField(source='patient.__str__')
+    doctor = serializers.CharField(source='doctor.__str__')
+
+    class Meta:
+        model = Prescription
+        fields = ['number', 'date', 'patient', 'doctor']
 
 
 # ViewSets define the view behavior.
 class PrescriptionViewSet(viewsets.ModelViewSet):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return PrescriptionListSerializer
+        return self.serializer_class

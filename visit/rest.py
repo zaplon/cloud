@@ -34,9 +34,10 @@ class IcdViewSet(viewsets.ReadOnlyModelViewSet):
 
 class TemplateSerializer(serializers.ModelSerializer):
     tab_name = CharField(source='tab.name')
+    tab_title = CharField(source='tab.title')
     class Meta:
         model = Template
-        fields = ('text', 'tab', 'key', 'name', 'tab_name')
+        fields = ('text', 'tab', 'key', 'name', 'tab_title', 'tab_name', 'id')
 
 
 class TemplateViewSet(SearchMixin, viewsets.ReadOnlyModelViewSet):
@@ -121,7 +122,7 @@ class VisitViewSet(viewsets.ModelViewSet):
         tmp = request.data.get('tmp', False)
 
         if not tmp:
-            rozpoznanie = filter(lambda d: d['type'] == TabTypes.ICD10, data)
+            rozpoznanie = filter(lambda d: d['type'] == TabTypes.ICD10.name, data)
             if len(rozpoznanie) == 0 or len(rozpoznanie[0]['data']) == 0:
                 return Response(
                     json.dumps({'success': False, 'errors': {'rozpoznanie': u'Musisz podać rozpoznanie'}}),
@@ -133,7 +134,7 @@ class VisitViewSet(viewsets.ModelViewSet):
             vt.save()
             visit.tabs.add(vt)
 
-            if vt.type == TabTypes.MEDICINES:
+            if vt.type == TabTypes.MEDICINES.name:
                 pass
 
         if not int(tmp):

@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 from g_utils.rest import SearchMixin
-from .models import Doctor, Patient, Note
+from .models import Doctor, Patient, Note, Specialization
 import datetime
 
 
@@ -193,3 +193,15 @@ class UserDetailsView(APIView):
         if not request.user.is_authenticated():
             return Response(status=403)
         return Response(UserSerializer(instance=request.user).data)
+
+
+class SpecializationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Specialization
+        fields = '__all__'
+
+
+class SpecializationViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = SpecializationSerializer
+    queryset = Specialization.objects.all()

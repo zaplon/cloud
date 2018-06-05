@@ -20,7 +20,7 @@ class Command(BaseCommand):
         MedicineParent.objects.all().delete()
         Medicine.objects.all().delete()
 
-        with open('g_utils/initial_data/leki-a.csv', 'rU') as csv_file:
+        with open('g_utils/initial_data/leki-a.csv', 'r', encoding='utf8') as csv_file:
             data = csv.reader(csv_file, delimiter=',', quotechar='"')
             j = 0
             for row in data:
@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 print(medicine.name)
             print ('***** Medicines A imported *****')
 
-        with open('g_utils/initial_data/leki-b.csv', 'rU') as csv_file:
+        with open('g_utils/initial_data/leki-b.csv', 'r', encoding='utf8') as csv_file:
             data = csv.reader(csv_file, delimiter=',', quotechar='"')
             for row in data:
                 medicine, _ = MedicineParent.objects.get_or_create(name=row[1], composition=row[2], form=row[3],
@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 print(medicine.name)
             print('***** Medicines B imported *****')
 
-        with open('g_utils/initial_data/leki-c.csv', 'rU') as csv_file:
+        with open('g_utils/initial_data/leki-c.csv', encoding='utf8') as csv_file:
             data = csv.reader(csv_file, delimiter=',', quotechar='"')
             for row in data:
                 medicine, _ = MedicineParent.objects.get_or_create(name=row[1], form=row[3], manufacturer_country=row[11],

@@ -3,12 +3,13 @@ import os
 
 import datetime
 from django.conf.urls import url, include
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.http import HttpResponse, HttpResponseBadRequest
 from elasticsearch_dsl import Search
 from rest_framework import serializers, viewsets
 
-from user_profile.models import Patient
+from g_utils.rest import SearchMixin
+from user_profile.models import Patient, Doctor, Specialization
 from visit.models import Visit
 from .models import Result, ResultIndex
 from django.conf import settings
@@ -20,18 +21,36 @@ from rest_framework.response import Response
 # Serializers define the API representation.
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())
+    specialization = serializers.PrimaryKeyRelatedField(queryset=Specialization.objects.all())
+
     class Meta:
         model = Result
-        fields = ('id', 'name', 'description', 'file', 'patient')
+        fields = ('id', 'name', 'description', 'file', 'patient', 'specialization', 'uploaded')
+
+
+class ResultTableSerializer(serializers.HyperlinkedModelSerializer):
+    patient = serializers.CharField(source='patient.__str__')
+    specialization = serializers.CharField(source='specialization.__str__')
+    pesel = serializers.CharField(source='patient.pesel')
+
+    class Meta:
+        model = Result
+        fields = ('id', 'name', 'description', 'file', 'uploaded', 'patient', 'specialization', 'pesel')
 
 
 # ViewSets define the view behavior.
-class ResultViewSet(viewsets.ModelViewSet):
+class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
     filter_fields = ('type', 'patient', 'doctor', 'visit')
     filter_backends = (DjangoFilterBackend,)
+    search_filters = ['patient__pesel', 'name', 'patient__last_name', 'patient__first_name']
     # pagination_class = None
+
+    def get_serializer_class(self):
+        if 'table' in self.request.GET:
+            return ResultTableSerializer
+        return self.serializer_class
 
     def get_queryset(self, *args, **kwargs):
         q = super(ResultViewSet, self).get_queryset(*args, **kwargs)
@@ -39,6 +58,8 @@ class ResultViewSet(viewsets.ModelViewSet):
             q = q.exclude(name='')
         if 'pesel' in self.request.GET:
             q = q.filter(patient__pesel=self.request.GET['pesel'])
+        if 'category' in self.request.GET:
+            q = q.filter(doctor__specializations__name=self.request.GET['category'])
         return q
 
     def destroy(self, request, *args, **kwargs):
@@ -75,9 +96,19 @@ class ResultViewSet(viewsets.ModelViewSet):
         doc = ResultIndex.get(id=kwargs['pk'])
         return Response({'url': doc.url})
 
+    def categories_list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        result = queryset.values('specialization__name').order_by('specialization__name')\
+            .annotate(results_sum=Sum('specialization'))
+        categories = [{'name': category['specialization__name'],
+                       'count': category['results_sum']} for category in result]
+        return Response(categories)
+
     def list(self, request, *args, **kwargs):
         #if not 'pesel' in request.GET:
         #    return HttpResponseBadRequest()
+        if 'as_categories' in request.GET:
+            return self.categories_list(request, *args, **kwargs)
         return super(ResultViewSet, self).list(request, *args, **kwargs)
 
 
