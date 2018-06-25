@@ -12,8 +12,10 @@ import json
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph
+from rest_framework.views import APIView
+
 from g_utils.views import get_client_location_code
-from medicine.models import Medicine, Prescription
+from medicine.models import Medicine, Prescription, MedicineToPrescription
 from user_profile.models import Recipe, Patient
 
 pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
@@ -28,38 +30,41 @@ class RecipePrintException(Exception):
         return repr(self.value)
 
 
-def print_recipe(request):
-    file_name = datetime.datetime.now().strftime("%s") + '.pdf'
-    recipe_file = os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', 'recipes', file_name)
-    if 'medicines' in request.POST and len(request.POST['medicines']) > 0:
-        medicines = json.loads(request.POST.get('medicines', "[]"))
-    else:
-        medicines = []
-    patient = json.loads(request.POST.get('patient', "{}"))
-    realisation_date = request.POST.get('realisationDate', "")
-    realisation_date = datetime.datetime.strptime(realisation_date, '%Y-%m-%d').strftime('%d.%m.%Y')
-    c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
-    for page in range(0, int(len(medicines) / 5) + 1):
-        try:
-            c = recipe_lines(c)
-            c = recipe_es(c, patient, realisation_date)
-            c = recipe_texts(request, c, request.user)
-            c = recipe_medicines(c, medicines)
-            c.showPage()
-        except RecipePrintException as e:
-            return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
+class PrintRecipe(APIView):
+    queryset = Prescription.objects.all()
 
-    c.save()
+    def post(self, request):
+        file_name = datetime.datetime.now().strftime("%s") + '.pdf'
+        recipe_file = os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', 'recipes', file_name)
+        data = request.data
+        if 'medicines' in data and len(data['medicines']) > 0:
+            medicines = data.get('medicines', [])
+        else:
+            medicines = []
+        patient = data.get('patient', {})
+        patient = Patient.objects.get(id=patient)
+        realisation_date = data.get('realisationDate', "")
+        c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
+        for page in range(0, int(len(medicines) / 5) + 1):
+            try:
+                c = recipe_lines(c)
+                c = recipe_es(c, patient, realisation_date)
+                c = recipe_texts(request, c, request.user)
+                c = recipe_medicines(c, medicines)
+                c.showPage()
+            except RecipePrintException as e:
+                return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
 
-    # saving recipe in db
-    r = Prescription.objects.create(doctor=request.user.doctor, body=request.POST.get('medicines', "[]"), 
-                                    patient=Patient.objects.get(id=patient['id']))
-    #for m in medicines:
-    #    MedicineToPrescription.objects.create(recipe=r, medicine=Medicine.objects.get(id=m['size']['id']),
-    #                                    dose=m['dose'], dosage=m['dosage'])
+        c.save()
 
-    return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}),
-                        content_type='application/json')
+        # saving recipe in db
+        # r = Prescription.objects.create(doctor=request.user.doctor, patient=Patient.objects.get(id=patient['id']))
+        # for m in medicines:
+        #     MedicineToPrescription.objects.create(recipe=r, medicine=Medicine.objects.get(id=m['size']['id']),
+        #                                     dose=m['dose'], dosage=m['dosage'])
+        #
+        return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}),
+                            content_type='application/json')
 
 
 def recipe_medicines(c, medicines):
@@ -69,10 +74,16 @@ def recipe_medicines(c, medicines):
     offset = 1.65 * cm
     top = 21.5 * cm
     for m in medicines:
-        txt = "%s %s %s" % (m['selection']['name'], m['dose'], m['dosage'])
+
+        txt = "%s %s %s" % (m['name'], m['dose'], m['dosage'])
         par = Paragraph(txt, styles['style'])
         par.wrapOn(c, 7.0 * cm, 3 * cm)
         par.drawOn(c, 0.5 * cm, top)
+
+        par = Paragraph(m.get('refundations', [{'to_pay': '100%'}])[0]['to_pay'], styles['style'])
+        par.wrapOn(c, 1.0 * cm, 3 * cm)
+        par.drawOn(c, 8.5 * cm, top)
+
         top -= offset
     return c
 
@@ -106,10 +117,8 @@ def recipe_lines(c, tab1=0.3):
 
 
 def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
-    if 'pesel' not in patient or not patient['pesel']:
-        patient['pesel'] = ''
 
-    if patient['pesel'][6:9] == '999':
+    if patient.pesel[6:9] == '999':
         patient['pesel'] = ''
 
     doct_margin_left = 1
@@ -119,24 +128,22 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
     ab = 29.7
     patient_margin_left = 0.3
 
-    patient['address'] = 'ul. Okrezna 87 02-033 warszawa'
-    patient['pesel'] = '88042003997'
 
     c.setFont("Arial", 9)
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='PolishS', fontName='Arial', fontSize=9))
     styles.add(ParagraphStyle(name='address', fontName='Arial', fontSize=7))
     # informacje o pacjencie
-    name = patient['first_name'] + ' ' + patient['last_name']
+    name = patient.__str__()
     c.drawString((patient_margin_left + tab1) * cm, (doct_margin_top) * cm, name.encode('utf-8'))
-    if 'address' in patient and patient['address'] and len(patient['address']) > 0:
+    if len(patient.address) > 0:
         # p.drawString((doct_margin_left+tab1)*cm, (doct_margin_top+pat-0.5)*cm, patient['address'].encode('utf-8'))
-        par = Paragraph(patient['address'].encode('utf-8'), styles['address'])
+        par = Paragraph(patient.address.encode('utf-8'), styles['address'])
         par.wrapOn(c, 6.0 * cm, (2) * cm)
         par.drawOn(c, (patient_margin_left + tab1) * cm, (doct_margin_top - 0.8) * cm)
     # drukowany pesel
 
-    pes = str(patient['pesel'])
+    pes = str(patient.pesel)
     weights = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 7, 9]
     res = sum([int(pes[i]) * weights[i] for i in range(0, len(pes))]) % 10
     pes += str(res)
@@ -145,7 +152,7 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
         b = createBarcodeDrawing('Code128', value=pes, width=5 * cm, height=0.5 * cm)
 
     c.drawString((patient_margin_left + 1.3) * cm, (doct_margin_top - 2.1) * cm,
-                 patient['pesel'].encode('utf-8'))
+                 patient.pesel.encode('utf-8'))
     if len(pes) > 8:
         b.drawOn(c, (patient_margin_left + 0.0) * cm, (doct_margin_top - 1.7) * cm)
     c.drawString((tab2 + doct_margin_left) * cm, (ab - 6.8) * cm, permissions.encode('utf-8'))
@@ -161,7 +168,7 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
 
 
 def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0000000000'):
-    useNr = int(request.POST.get('number', False))
+    useNr = int(request.data.get('number', False))
     p.setFont("Arial", 9)
 
     x = 0.25

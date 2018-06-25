@@ -66,6 +66,14 @@ class Doctor(models.Model):
     specializations = models.ManyToManyField(Specialization, related_name='doctors', verbose_name=u'Specializacje')
 
     @property
+    def available_prescriptions(self):
+        return self.recipes.filter(was_used=False).count()
+
+    @property
+    def total_prescriptions(self):
+        return self.recipes.count()
+
+    @property
     def name(self):
         return '%s %s %s' % (self.title, self.user.first_name, self.user.last_name)
 
@@ -103,7 +111,7 @@ class Patient(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True)
     first_name = models.CharField(max_length=100, default='', verbose_name=u'Imię')
     last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
-    pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel')
+    pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel', unique=True)
     email = models.EmailField(blank=True, null=True, verbose_name=u'Email')
     address = models.CharField(blank=True, null=True, verbose_name=u'Adres', max_length=200)
     info = models.TextField(blank=True, null=True, verbose_name=u'Ważne informacje',
@@ -138,6 +146,12 @@ class Recipe(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='recipes')
     nr = models.CharField(max_length=30)
     was_used = models.BooleanField(blank=False, default=False)
+
+    def available(self, doctor):
+        return Recipe.objects.filter(doctor=doctor, was_used=False).count()
+
+    def total(self, doctor):
+        return Recipe.objects.filter(doctor=doctor).count()
 
 
 class Code(models.Model):

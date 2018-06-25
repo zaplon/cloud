@@ -7,7 +7,7 @@ from rest_framework.fields import CharField, ListField, IntegerField
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.conf import settings
 
 from g_utils.rest import SearchMixin
@@ -34,10 +34,10 @@ class PatientAutocompleteSerializer(serializers.ModelSerializer):
 
 
 # ViewSets define the view behavior.
-class PatientViewSet(viewsets.ModelViewSet, SearchMixin):
+class PatientViewSet(SearchMixin, viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
-    search_filters = ['last_name__icontains', 'first_name__icontains', 'pesel__icontains']
+    search_filters = ['last_name', 'first_name', 'pesel']
 
     def get_serializer_class(self):
         if 'term' in self.request.GET:
@@ -95,7 +95,8 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Doctor
-        fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours')
+        fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
+                  'total_prescriptions')
         
         
 class DoctorCalendarSerializer(serializers.ModelSerializer):
@@ -139,6 +140,13 @@ class DoctorViewSet(viewsets.ModelViewSet, SearchMixin):
             return q
 
 
+class PermissionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Permission
+        fields = '__all__'
+
+
 class UserSerializer(serializers.ModelSerializer):
     can_edit_terms = serializers.SerializerMethodField('check_if_can_edit_terms')
     can_edit_visits = serializers.SerializerMethodField('check_if_can_edit_visits')
@@ -146,6 +154,7 @@ class UserSerializer(serializers.ModelSerializer):
     modules = serializers.SerializerMethodField('get_user_modules')
     type = serializers.SerializerMethodField('get_user_type')
     doctor = DoctorSerializer()
+    user_permissions = PermissionSerializer(many=True)
 
     def get_user_type(self, instance):
         try:
@@ -157,8 +166,13 @@ class UserSerializer(serializers.ModelSerializer):
     def get_user_modules(self, instance):
         modules = []
         for module in settings.MODULES:
-            if module[0] is True or instance.has_perm(module[0]):
-                modules.append(module[1])
+            if type(module[0]) == list:
+                for m in module[0]:
+                    if instance.has_perm(m):
+                        modules.append(module[1])
+            else:
+                if module[0] is True or instance.has_perm(module[0]):
+                    modules.append(module[1])
         return modules
 
     def check_if_setup_needed(self, instance):
@@ -182,7 +196,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'can_edit_terms', 'can_edit_visits', 'setup_needed', 'modules', 'type', 'doctor')
+        fields = ('id', 'username', 'email', 'can_edit_terms', 'can_edit_visits', 'setup_needed', 'modules', 'type',
+                  'doctor', 'user_permissions')
 
 
 class UserDetailsView(APIView):

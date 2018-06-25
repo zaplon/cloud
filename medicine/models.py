@@ -48,15 +48,19 @@ class MedicineToPrescription(models.Model):
    medicine = models.ForeignKey(Medicine)
    prescription = models.ForeignKey('Prescription')
    dosage = models.CharField(max_length=128)
-   dose = models.CharField(max_length=128)
-   notes = models.CharField(max_length=128)
+   notes = models.CharField(max_length=128, blank=True, null=True)
    refundation = models.ForeignKey(Refundation, blank=True, null=True)
 
 
 class Prescription(models.Model):
-    number = models.CharField(max_length=16)
+    number = models.CharField(max_length=16, blank=True, null=True)
     date = models.DateTimeField(auto_created=True)
     medicines = models.ManyToManyField(Medicine, related_name='prescriptions', through='MedicineToPrescription')
     patient = models.ForeignKey(Patient, related_name='prescriptions')
     doctor = models.ForeignKey(Doctor, related_name='prescriptions')
+    nfz = models.CharField(max_length=16)
+    permissions = models.CharField(max_length=16)
     # body = models.CharField(max_length=512)
+
+    def print(self):
+        pass

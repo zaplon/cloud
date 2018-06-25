@@ -5,8 +5,9 @@ class SearchMixin(object):
     def get_queryset(self):
         q = super(SearchMixin, self).get_queryset()
         filtered_q = q.model.objects.none()
-        if 'term' in self.request.GET or 'search' in self.request.GET:
-            term = self.request.GET.get('term', self.request.GET['search'])
+        params = self.request.query_params
+        if 'term' in params or 'search' in params:
+            term = params.get('term', params.get('search'))
             for field in self.search_filters:
                 query_filter = field + '__icontains'
                 filtered_q |= q.model.objects.filter(**{query_filter: term})

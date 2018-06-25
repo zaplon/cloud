@@ -108,7 +108,7 @@ class Term(models.Model):
                 except:
                     terms.append(Term(doctor=doctor, duration=duration, datetime=visit_date,
                                         status='FREE'))
-                start_visit, end_visit =  move_forward(start_visit, end_visit)
+                start_visit, end_visit = move_forward(start_visit, end_visit)
         Term.objects.bulk_create(terms)
         doctor.terms_generated_till = end.date()
         doctor.save()

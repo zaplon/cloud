@@ -54,15 +54,21 @@ $(document).ready(function () {
     }
     catch (err) {
     }
-
-    // if (parent.visit.formParams)
-    //     for (param in parent.visit.formParams) {
-    //         if ($('input[name="' + param + '"]').length > 0)
-    //             $('input[name="' + param + '"]').val(parent.visit.formParams[param]);
-    //         if ($('textarea[name="' + param + '"]').length > 0)
-    //             $('textarea[name="' + param + '"]').html(parent.visit.formParams[param]);
-    //     }
-    ;
+    console.log(window.location);
+    var params = {};
+    var paramsStr = window.location.href.split('?')[1];
+    if (paramsStr)
+        paramsStr.split('&').forEach(function(val){
+           var parts = val.split('=');
+           params[parts[0]] = decodeURIComponent(parts[1]);
+        });
+    console.log(params);
+    for (param in params) {
+        if ($('input[name="' + param + '"]').length > 0)
+            $('input[name="' + param + '"]').val(params[param]);
+        if ($('textarea[name="' + param + '"]').length > 0)
+            $('textarea[name="' + param + '"]').html(params[param]);
+    }
     //orzeczeni zdolnosc do pracy
     $('.cross li').addClass('crossable');
 

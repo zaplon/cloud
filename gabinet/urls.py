@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
@@ -21,7 +22,7 @@ from wkhtmltopdf.views import PDFTemplateView
 from dashboard.views import *
 from visit.rest import IcdViewSet, TemplateViewSet, VisitViewSet, TabViewSet
 from result.rest import ResultViewSet
-from timetable.rest import TermViewSet, ServiceViewSet
+from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet
 from medicine.rest import *
 from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDetailsView, SpecializationViewSet
 from stats.rest import *
@@ -34,6 +35,8 @@ router = routers.DefaultRouter()
 router.register(r'icd', IcdViewSet)
 router.register(r'results', ResultViewSet)
 router.register(r'terms', TermViewSet)
+router.register(r'booking', BookingViewSet)
+router.register(r'localizations', LocalizationViewSet)
 router.register(r'services', ServiceViewSet)
 router.register(r'patients', PatientViewSet)
 router.register(r'doctors', DoctorViewSet)

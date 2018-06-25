@@ -47,7 +47,7 @@ class TemplateViewSet(SearchMixin, viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         q = super(TemplateViewSet, self).get_queryset()
-        #q = q.filter(doctor__user=self.request.user)
+        q = q.filter(doctor__user=self.request.user)
         if self.request.GET.get('tab', None):
             q = q.filter(tab__id=self.request.GET['tab'])
         return q
@@ -78,9 +78,11 @@ class VisitTabSerializer(serializers.ModelSerializer):
 class VisitSerializer(serializers.ModelSerializer):
     tabs = VisitTabSerializer(many=True)
     term = TermDetailSerializer()
+    icd_codes = IcdSerializer(many=True)
+
     class Meta:
         model = Visit
-        fields = ['id', 'tabs', 'in_progress', 'term']
+        fields = ['id', 'tabs', 'in_progress', 'term', 'icd_codes']
 
 
 class VisitViewSet(viewsets.ModelViewSet):
@@ -122,23 +124,24 @@ class VisitViewSet(viewsets.ModelViewSet):
         tmp = request.data.get('tmp', False)
 
         if not tmp:
-            rozpoznanie = filter(lambda d: d['type'] == TabTypes.ICD10.name, data)
+            rozpoznanie = list(filter(lambda d: d['type'] == TabTypes.ICD10.name, data))
             if len(rozpoznanie) == 0 or len(rozpoznanie[0]['data']) == 0:
-                return Response(
-                    json.dumps({'success': False, 'errors': {'rozpoznanie': u'Musisz podać rozpoznanie'}}),
+                return Response({'success': False, 'errors': {'rozpoznanie': u'Musisz podać rozpoznanie'}},
                     content_type='application/json')
 
         for tab in data:
             vt = VisitTab.objects.get(id=tab['id'])
-            vt.json = json.dumps(tab['data']) if 'data' in tab else ''
-            vt.save()
-            visit.tabs.add(vt)
-
+            if vt.type == TabTypes.ICD10.name:
+                visit.icd_codes.add(*[Icd10.objects.get(id=d['id']) for d in tab['data']])
             if vt.type == TabTypes.MEDICINES.name:
-                pass
+                vt.json = json.dumps(tab['data']) if 'data' in tab else ''
+            else:
+                vt.json = json.dumps(tab['data']) if 'data' in tab else ''
+                vt.save()
+                visit.tabs.add(vt)
 
         if not int(tmp):
-            term.status = 'finished'
+            term.status = 'FINISHED'
             term.save()
         serializer = self.get_serializer(visit)
         return Response(serializer.data)

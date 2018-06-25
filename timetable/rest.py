@@ -7,7 +7,7 @@ from rest_framework.fields import CharField
 from g_utils.rest import SearchMixin
 from user_profile.models import Doctor, Patient
 from user_profile.rest import PatientSerializer, DoctorSerializer
-from .models import Term, Service
+from .models import Term, Service, Localization
 from rest_framework.permissions import IsAuthenticated
 import datetime
 
@@ -33,9 +33,9 @@ class TermUpdateSerializer(serializers.ModelSerializer):
         fields = ('doctor', 'service', 'patient', 'status', 'duration')
 
     def save(self, **kwargs):
-        if self.instance.status == 'FREE' and self.instance.patient:
+        if self.instance.status == 'FREE' and self.validated_data['patient']:
             self.instance.status = 'PENDING'
-        if self.instance.status == 'PENDING' and not self.instance.patient:
+        elif self.instance.status == 'PENDING' and not self.instance.patient:
             self.instance.status = 'FREE'
         super(TermUpdateSerializer, self).save(**kwargs)
 
@@ -61,6 +61,28 @@ class TermDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Term
         fields = ['patient', 'doctor', 'service', 'datetime', 'duration', 'id', 'status']
+
+
+class BookingSerializer(serializers.ModelSerializer):
+    doctor = serializers.CharField(source='doctor.__str__')
+    service = serializers.CharField(source='service.__str__')
+    localization = serializers.CharField(source='localization.__str__')
+
+    class Meta:
+        model = Term
+        fields = ['id', 'doctor', 'service', 'datetime', 'duration', 'status', 'localization']
+
+
+class BookingViewSet(viewsets.ModelViewSet):
+    queryset = Term.objects.filter(status='FREE')
+    serializer_class = BookingSerializer
+    filter_fields = ['doctor']
+
+    def get_queryset(self):
+        q = super(BookingViewSet, self).get_queryset()
+        q = q.filter(datetime__gte=self.request.GET['start'])
+        q = q.filter(doctor__service__id=self.request.GET['service'])
+        return q
 
 
 class TermViewSet(viewsets.ModelViewSet):
@@ -110,3 +132,14 @@ class TermViewSet(viewsets.ModelViewSet):
             q = q.filter(doctor=doctor)
         return q
 
+
+class LocalizationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Localization
+        fields = '__all__'
+
+
+class LocalizationViewSet(viewsets.ModelViewSet):
+    queryset = Localization.objects.all()
+    serializer_class = LocalizationSerializer
+    pagination_class = None

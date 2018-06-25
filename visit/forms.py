@@ -10,6 +10,8 @@ from django.utils.translation import ugettext as _
 
 
 class TemplateForm(ModelForm):
+    save_with_user = True
+
     class Meta:
         model = Template
         fields = ['name', 'key', 'text', 'tab', 'doctor']
@@ -22,7 +24,7 @@ class TemplateForm(ModelForm):
         super(TemplateForm, self).__init__(*args, **kwargs)
         self.fields['doctor'].widget = HiddenInput()
         self.fields['text'].widget = Textarea(attrs={'placeholder': _(u'Wpisz treść szablonu')})
-        data = kwargs['initial'] if 'initial' in kwargs else kwargs['data']
+        data = kwargs['initial'] if 'initial' in kwargs else kwargs['data'] if 'data' in kwargs else {}
         if 'instance' in kwargs:
             data['user'] = kwargs['instance'].doctor.user
 
@@ -32,26 +34,17 @@ class TemplateForm(ModelForm):
         # helper.form_class = 'form-horizontal'
         # helper.label_class = 'col-md-2'
         # helper.field_class = 'col-md-8'
-        if 'ajax' not in data:
-            helper.layout = Layout(
-                'name',
-                'key',
-                'text',
-                'tab',
-                HTML('<hr/>'),
-                HTML(u'<div class="pull-left"><a class="btn btn-danger" href="%s">Usuń</a></div>' %
-                    reverse('template-delete', kwargs={'pk': self.instance.id})
-                    if self.instance.id else ''),
-                HTML('<div class="pull-right"><button class="btn btn-primary mr-025" type="submit">Zapisz</button>'),
-                HTML('<a class="btn btn-default" href="/templates/">Anuluj</a></div><div class="clearfix"></div>')
-            )
-        else:
-            helper.layout = Layout(
-                'name',
-                'key',
-                'text',
-                'tab'
-            )
+        helper.layout = Layout(
+            'id',
+            'name',
+            'key',
+            'text',
+            'tab'
+        )
+
+    def save(self, user=False, commit=True):
+        self.instance.doctor = user.doctor
+        super(TemplateForm, self).save(commit)
 
 
 class TabForm(ModelForm):

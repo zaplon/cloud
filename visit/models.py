@@ -26,6 +26,10 @@ class TabTypes(Enum):
 
 
 class Tab(models.Model):
+
+    class Meta:
+        ordering = ['order', 'title']
+
     title = models.CharField(max_length=100, verbose_name=u'Tytuł')
     doctor = models.ForeignKey('user_profile.Doctor', related_name='tabs')
     order = models.IntegerField(null=True, blank=True, verbose_name=u'Kolejność')
@@ -109,6 +113,7 @@ class Template(models.Model):
 class Icd10(models.Model):
     code = models.CharField(max_length=5)
     desc = models.CharField(max_length=200)
+    visits = models.ManyToManyField(Visit, related_name='icd_codes')
 
     class Meta:
         verbose_name = 'Rozpoznanie'
