@@ -70,3 +70,7 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
         if self.action == 'retrieve':
             return PrescriptionRetrieveSerializer
         return self.serializer_class
+
+    def get_queryset(self):
+        q = super(PrescriptionViewSet, self).get_queryset()
+        return q.filter(doctor=self.request.user.doctor)

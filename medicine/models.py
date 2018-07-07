@@ -45,22 +45,36 @@ class Refundation(models.Model):
 
 
 class MedicineToPrescription(models.Model):
-   medicine = models.ForeignKey(Medicine)
-   prescription = models.ForeignKey('Prescription')
+   medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+   prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
    dosage = models.CharField(max_length=128)
    notes = models.CharField(max_length=128, blank=True, null=True)
    refundation = models.ForeignKey(Refundation, blank=True, null=True)
 
 
+class PrescriptionNumber(models.Model):
+    number = models.CharField(max_length=16)
+    doctor = models.ForeignKey(Doctor, related_name='prescription_numbers')
+    date_used = models.DateTimeField(blank=True, null=True)
+
+
 class Prescription(models.Model):
     number = models.CharField(max_length=16, blank=True, null=True)
     date = models.DateTimeField(auto_created=True)
-    medicines = models.ManyToManyField(Medicine, related_name='prescriptions', through='MedicineToPrescription')
+    medicines = models.ManyToManyField(Medicine, related_name='prescriptions', through=MedicineToPrescription)
     patient = models.ForeignKey(Patient, related_name='prescriptions')
     doctor = models.ForeignKey(Doctor, related_name='prescriptions')
     nfz = models.CharField(max_length=16)
     permissions = models.CharField(max_length=16)
     # body = models.CharField(max_length=512)
+
+    def get_medicines(self):
+        from medicine.serializers import MedicineToPrescriptionRetrieveSerializer
+        medicines_to_prescription = MedicineToPrescription.objects.filter(prescription_id=self.id)
+        medicines_to_prescription = [MedicineToPrescriptionRetrieveSerializer(instance=med) for med in
+                                     medicines_to_prescription]
+        # medicines_to_prescription = [med.is_valid() for med in medicines_to_prescription]
+        return [med.data for med in medicines_to_prescription]
 
     def print(self):
         pass

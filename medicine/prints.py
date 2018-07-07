@@ -57,12 +57,6 @@ class PrintRecipe(APIView):
 
         c.save()
 
-        # saving recipe in db
-        # r = Prescription.objects.create(doctor=request.user.doctor, patient=Patient.objects.get(id=patient['id']))
-        # for m in medicines:
-        #     MedicineToPrescription.objects.create(recipe=r, medicine=Medicine.objects.get(id=m['size']['id']),
-        #                                     dose=m['dose'], dosage=m['dosage'])
-        #
         return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}),
                             content_type='application/json')
 

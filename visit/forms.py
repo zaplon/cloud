@@ -23,7 +23,7 @@ class TemplateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(TemplateForm, self).__init__(*args, **kwargs)
         self.fields['doctor'].widget = HiddenInput()
-        self.fields['text'].widget = Textarea(attrs={'placeholder': _(u'Wpisz treść szablonu')})
+        self.fields['text'].widget = Textarea(attrs={'placeholder': _(u'Wpisz treść szablonu'), 'rows': 10})
         data = kwargs['initial'] if 'initial' in kwargs else kwargs['data'] if 'data' in kwargs else {}
         if 'instance' in kwargs:
             data['user'] = kwargs['instance'].doctor.user

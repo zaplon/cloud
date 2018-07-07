@@ -13,7 +13,7 @@ services:
   web:
     environment:
       DJANGO_SETTINGS_MODULE: production_settings
-    image: "docker.io/zaplon/gabinet_prod:latest"
+    image: "docker.io/zaplon/gabinet:latest"
     restart: always
   elasticsearch:
     image: elasticsearch

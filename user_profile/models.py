@@ -40,9 +40,9 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Specialization(models.Model):
-    name = models.CharField(max_length=50)
-    code = models.CharField(max_length=10)
-    code_misal = models.CharField(max_length=100)
+    name = models.CharField(max_length=50, verbose_name='Nazwa')
+    code = models.CharField(max_length=10, verbose_name='Kod')
+    code_misal = models.CharField(max_length=100, verbose_name='Kod MISAL')
 
     def __str__(self):
         return self.name

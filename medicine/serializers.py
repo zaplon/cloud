@@ -3,8 +3,17 @@ from rest_framework import serializers
 from user_profile.rest import PatientSerializer, DoctorSerializer
 
 
+class MedicineParentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MedicineParent
+        fields = '__all__'
+
+
 # Serializers define the API representation.
 class MedicineSerializer(serializers.ModelSerializer):
+    parent = MedicineParentSerializer()
+
     class Meta:
         model = Medicine
         fields = '__all__'
@@ -29,11 +38,11 @@ class MedicineToPrescriptionRetrieveSerializer(serializers.ModelSerializer):
 class PrescriptionRetrieveSerializer(serializers.ModelSerializer):
     patient = PatientSerializer()
     doctor = DoctorSerializer()
-    medicines = MedicineToPrescriptionRetrieveSerializer(many=True)
+    medicines = serializers.ListField(source='get_medicines')
 
     class Meta:
         model = Prescription
-        fields = ['number', 'date', 'patient', 'doctor', 'medicines']
+        fields = ['number', 'date', 'patient', 'doctor', 'medicines', 'permissions', 'nfz']
 
 
 class MedicineToPrescriptionSerializer(serializers.ModelSerializer):

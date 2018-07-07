@@ -32,10 +32,19 @@ class AjaxFormView(APIView):
         form_class = getattr(m, klass)
         return form_class
 
+    def check_permissions(self, form_class):
+        if hasattr(form_class, 'required_permission'):
+            if not self.request.user.has_perm(form_class.required_permission):
+                raise PermissionError('User has no permissions to use %s form' % form_class)
+
     def get(self, *args, **kwargs):
         form_class = self.get_form(self.request.GET)
         if not form_class:
             return HttpResponse(json.dumps({'success': False}), content_type='application/json')
+        try:
+            self.check_permissions(form_class)
+        except PermissionError:
+            return HttpResponse(status=403)
         if 'id' in self.request.GET:
             form = form_class(instance=form_class._meta.model.objects.get(id=self.request.GET['id']))
         else:
@@ -52,6 +61,10 @@ class AjaxFormView(APIView):
         form_class = self.get_form(post_data)
         if not form_class:
             return HttpResponse(json.dumps({'success': False}), content_type='application/json')
+        try:
+            self.check_permissions(form_class)
+        except PermissionError:
+            return HttpResponse(status=403)
         ctx = {}
         ctx.update(csrf(self.request))
         data = post_data['data']
