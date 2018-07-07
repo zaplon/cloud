@@ -1,6 +1,7 @@
 version: '2'
 services:
   mysql:
+    image: mysql
     environment:
         MYSQL_ROOT_PASSWORD: ''
         MYSQL_USER: root
@@ -27,12 +28,15 @@ services:
           - gabinet
     depends_on:
       - web
+    links:
+      - web
     volumes:
       - ./docker/nginx/sites-enabled/:/etc/nginx/sites-enabled/
       - ./docker/nginx/sites-available/:/etc/nginx/sites-available/
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./public/static/:/static/
       - ./public/media/:/media/
+      - ./frontend/:/frontend/
     ports:
       - "80:80"
       - "443:443"

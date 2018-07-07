@@ -242,5 +242,6 @@ INTERNAL_IPS = ['127.0.0.1', 'localhost']
 SESSION_COOKIE_AGE = 7200
 CSRF_COOKIE_SECURE = False
 CORS_ORIGIN_WHITELIST = (
-    'localhost:8081'
+    'localhost:8081',
+    'gabinet'
 )
