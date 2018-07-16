@@ -5,17 +5,17 @@
                 <label class="form-check-label" style="display: inline-block">
                     <input class="form-check-input select-day" type="checkbox"
                            data-bind="{checked: dayChecked}">
-                </label><span data-bind="text: dayName"></span>
+                </label><span data-bind="text: name"></span>
             </div>
         </td>
         <td>
             <label class="control-label" data-bind=""></label>
-            <input data-bind="{value: start, enable: dayChecked, class: {'form-control has-errors': 'start' in $parent.errors[dayIndex]}}"
+            <input data-bind="{value: value[0], enable: dayChecked, class: {'form-control has-errors': 'start' in $parent.errors[dayIndex]}}"
                    type="time" class="form-control" placeholder="godzina">
         </td>
         <td>
             <label class="control-label"></label>
-            <input type="time" data-bind="{value: end, enable: dayChecked()}" class="form-control" placeholder="godzina">
+            <input type="time" data-bind="{value: value[1], enable: dayChecked()}" class="form-control" placeholder="godzina">
         </td>
         <td>
             <div class="form-check">

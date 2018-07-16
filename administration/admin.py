@@ -77,7 +77,7 @@ class DoctorInline(admin.StackedInline):
 
 
 class UserAdmin(UserAdmin):
-    # inlines = (DoctorInline, )
+    inlines = []
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
@@ -114,8 +114,6 @@ class UserAdmin(UserAdmin):
         else:
             if obj.groups.filter(name='Lekarze').exists():
                 self.inlines = (DoctorInline,)
-            else:
-                self.inlines = []
         defaults.update(kwargs)
         return super(UserAdmin, self).get_form(request, obj, **defaults)
 

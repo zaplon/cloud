@@ -31,9 +31,9 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    #'material.theme.indigo',
-    #'material',
-    #'material.admin',
+    # 'material.theme.indigo',
+    # 'material',
+    # 'material.admin',
     'jet',
     'django.contrib.admin',
     'django.contrib.auth',
