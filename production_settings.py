@@ -24,5 +24,6 @@ DEBUG = True
 COMPRESS_ENABLED = True
 BASE_DIR = '/app/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
+STATIC_URL = '/assets/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
 WKHTMLTOPDF_CMD = 'docker-compose run --rm wkhtmltopdf'
