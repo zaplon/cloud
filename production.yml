@@ -1,21 +1,31 @@
 version: '2'
 services:
-  mysql:
-    image: mysql
+  web:
     environment:
-        MYSQL_ROOT_PASSWORD: ''
-        MYSQL_USER: root
-        MYSQL_PASSWORD: ''
-        MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      DJANGO_SETTINGS_MODULE: docker_settings
+      LANG: "pl_PL.UTF-8"
+      LANGUAGE: "pl_PL"
+    image: "docker.io/zaplon/gabinet"
+    working_dir: /app/
+    volumes:
+     - ./:/app/:Z
+    links:
+     - mysql
+     - memcached
+    environment:
+      LANG: "pl_PL.UTF-8"
+      LANGUAGE: "pl_PL"
+      QT_QPA_PLATFORM: "offscreen"
+    command: uwsgi --http 0.0.0.0:9001 --module docker_wsgi_configuration_module
+  mysql:
+    image: "mariadb"
     volumes:
      - ./docker/dbs/:/var/lib/mysql
      - ./docker/mysql/:/docker-entrypoint-initdb.d/
-    restart: always
-  web:
     environment:
-      DJANGO_SETTINGS_MODULE: production_settings
-    image: "docker.io/zaplon/gabinet:latest"
-    restart: always
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_USER: "root"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
   elasticsearch:
     image: elasticsearch
   wkhtmltopdf:
@@ -28,8 +38,6 @@ services:
           - gabinet
     depends_on:
       - web
-    links:
-      - web
     volumes:
       - ./docker/nginx/sites-enabled/:/etc/nginx/sites-enabled/
       - ./docker/nginx/sites-available/:/etc/nginx/sites-available/
@@ -40,3 +48,5 @@ services:
     ports:
       - "80:80"
       - "443:443"
+  memcached:
+    image: memcached

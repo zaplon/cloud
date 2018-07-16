@@ -65,6 +65,10 @@ class Doctor(models.Model):
     title = models.CharField(default='', verbose_name=u'Tytuł', max_length=50)
     specializations = models.ManyToManyField(Specialization, related_name='doctors', verbose_name=u'Specializacje')
 
+    class Meta:
+        verbose_name = 'Lekarz'
+        verbose_name_plural = 'Lekarze'
+
     @property
     def available_prescriptions(self):
         return self.recipes.filter(was_used=False).count()
