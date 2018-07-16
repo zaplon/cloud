@@ -188,6 +188,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
 MEDIA_URL = '/media/'
+STATIC_URL = '/assets/'
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

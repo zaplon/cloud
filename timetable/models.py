@@ -20,7 +20,7 @@ class Service(models.Model):
     name = models.CharField(max_length=255, verbose_name=u'Nazwa')
     price = models.FloatField(default=0, verbose_name=u'Cena')
     code = models.CharField(unique=True, verbose_name='Kod', max_length=10)
-    doctors = models.ManyToManyField(Doctor, verbose_name=u'Lekarze')
+    doctors = models.ManyToManyField(Doctor, verbose_name=u'Lekarze', blank=True)
 
     class Meta:
         verbose_name = u'Usługa'
