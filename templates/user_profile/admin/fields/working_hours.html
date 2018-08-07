@@ -1,0 +1,30 @@
+<table id="working_hours_table">
+    {% for day in days %}
+        <tr>
+            <td>{{ day.name }}</td>
+            <td><input class="vTextField" type="checkbox" name="working_hours_{{ forloop.counter0 }}_on" {% if day.on %} checked {% endif %}></td>
+            <td><input class="vTextField" type="time" name="working_hours_{{ forloop.counter0 }}_value_0" value="{{ day.value.0 }}"></td>
+            <td><input class="vTextField" type="time" name="working_hours_{{ forloop.counter0 }}_value_1" value="{{ day.value.1 }}"></td>
+        </tr>
+    {% endfor %}
+</table>
+<script>
+    $ = django.jQuery;
+    $(document).ready(function(){
+       function getWorkingHours() {
+            var days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+            var data = [];
+            for (var i=0;i<6;i++) {
+                data.push({name: days[i], value: [$('input[name="working_hours_' + i + '_value_0"]').val(),
+                $('input[name="working_hours_' + i + '_value_1"]').val()], on: true});
+            }
+            return data;
+        }
+        $('#working_hours_table input').change(function(){
+            $('#id_doctor-0-working_hours').val(JSON.stringify(getWorkingHours()));
+        });
+        $('button[type="submit"]').click(function(){
+           $('#id_doctor-0-working_hours').val(JSON.stringify(getWorkingHours()));
+        });
+    });
+</script>

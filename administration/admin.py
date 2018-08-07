@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.contrib import admin
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, UserChangeForm, GroupAdmin, csrf_protect_m
 from django.contrib.sites.models import Site
-from django.forms import ModelForm, Widget, ChoiceField
+from django.forms import ModelForm, Widget, ChoiceField, HiddenInput
 from django.template import loader
-from django.utils.safestring import mark_safe
+from django.forms.fields import CharField
+from rest_framework.authtoken.models import Token
 
-from account.models import Account
 from administration.settings import *
 from django.utils.translation import ugettext_lazy as _
 
@@ -49,22 +51,38 @@ class UserCreationForm(UserCreationForm):
 
 class HoursWidget(Widget):
 
+    def __init__(self, working_hours='', attrs=None):
+        if attrs is not None:
+            self.attrs = attrs.copy()
+        else:
+            self.attrs = {}
+        self.working_hours = working_hours
+
+
     def render(self, name, value, attrs=None):
-        if not value:
-            value = {}
-        return loader.render_to_string('user_profile/doctor/days_form_admin.html', {'value': mark_safe(value)})
+        if not self.working_hours:
+            days = [{'name': 'Poniedziałek', 'value': ['09:00', '17:00'], 'on': True},
+                    {'name': 'Wtorek', 'value': ['09:00', '17:00'], 'on': True},
+                    {'name': 'Środa', 'value': ['09:00', '17:00'], 'on': True},
+                    {'name': 'Czwartek', 'value': ['09:00', '17:00'], 'on': True},
+                    {'name': 'Piątek', 'value': ['09:00', '17:00'], 'on': True},
+                    {'name': 'Sobota', 'value': ['09:00', '17:00'], 'on': False},
+                    {'name': 'Niedziela', 'value': ['09:00', '17:00'], 'on': False}]
+        else:
+            days = json.loads(self.working_hours)
+        return loader.render_to_string('user_profile/admin/fields/working_hours.html', {'days': days})
 
 
 class DoctorForm(ModelForm):
+    working_hours_editor = CharField(max_length=1024, required=False, label='Godziny pracy')
+
     class Meta:
-        fields = ['pwz', 'mobile', 'title', 'working_hours', 'specializations']
+        fields = ['pwz', 'mobile', 'title', 'working_hours', 'working_hours_editor', 'specializations']
 
     def __init__(self, *args, **kwargs):
         super(DoctorForm, self).__init__(*args, **kwargs)
-        self.fields['working_hours'].widget = HoursWidget()
-
-    def clean_working_hours(self):
-        return self.cleaned_data['working_hours']
+        self.fields['working_hours_editor'].widget = HoursWidget(working_hours=self.instance.working_hours)
+        self.fields['working_hours'].widget = HiddenInput()
 
 
 class DoctorInline(admin.StackedInline):
@@ -156,12 +174,14 @@ class SystemSettingsAdmin(admin.ModelAdmin):
 
     @csrf_protect_m
     def changelist_view(self, request, extra_context=None):
+        SystemSettings.objects.get_or_create(pk=1)
         return self.changeform_view(request, '1', '', extra_context)
 
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
 admin.site.unregister(Site)
+admin.site.unregister(Token)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Localization)
 admin.site.register(Specialization)
