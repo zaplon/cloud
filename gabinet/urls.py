@@ -56,7 +56,6 @@ urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r"^account/", include("account.urls")),
     url(r"^setup/(?P<step>[0-9])", SetupView.as_view(), name='setup'),
-    url(r'^$', index_view, name='index'),
     url(r'^patients/', patients_view, name='patients'),
     url(r'^stats/', stats_view, name='stats'),
     url(r'^prescriptions/', prescriptions_view, name='prescriptions'),

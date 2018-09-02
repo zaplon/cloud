@@ -14,7 +14,7 @@ class TemplateForm(ModelForm):
 
     class Meta:
         model = Template
-        fields = ['name', 'key', 'text', 'tab', 'doctor']
+        fields = ['id', 'name', 'key', 'text', 'tab', 'doctor']
 
     def clean_tab(self):
         tab = self.cleaned_data['tab']
@@ -35,7 +35,6 @@ class TemplateForm(ModelForm):
         # helper.label_class = 'col-md-2'
         # helper.field_class = 'col-md-8'
         helper.layout = Layout(
-            'id',
             'name',
             'key',
             'text',
