@@ -39,7 +39,7 @@ var rp = {
                         window.open('/media/rec/'+files[ind]+'.pdf');
                     console.log('drukuj');
                     $('#printing-wait-alert').remove();
-		    //window.open('/static/rec/'+files[ind]+'.pdf');
+		    //window.open('/assets/rec/'+files[ind]+'.pdf');
                     rp.markRecipe(ind,files, pos);
                     //showMessage('Błąd', 'Wystąpił błąd podczas drukowania', 'print-error',function(){},pos);
                 }

@@ -34,7 +34,7 @@ class EditFormView(View):
         if len(fs) > 0:
             form = '/media/' + fs[0].path
         else:
-            form = ('/static/forms/forms/' + (form + '.html'))
+            form = ('/assets/forms/forms/' + (form + '.html'))
         body = render_to_string(template, {'params': params, 'form': form,
                                            'template_name': template_name})
         return HttpResponse(body, status=200)

@@ -16,8 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.decorators.csrf import csrf_exempt
-from wkhtmltopdf.views import PDFTemplateView
 
 from dashboard.views import *
 from visit.rest import IcdViewSet, TemplateViewSet, VisitViewSet, TabViewSet
