@@ -66,6 +66,7 @@ class Prescription(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='prescriptions')
     nfz = models.CharField(max_length=16)
     permissions = models.CharField(max_length=16)
+    number_of_medicines = models.IntegerField(default=0)
     # body = models.CharField(max_length=512)
 
     def get_medicines(self):

@@ -61,6 +61,8 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             medicine_to_prescription = MedicineToPrescriptionSerializer(data=medicine)
             if medicine_to_prescription.is_valid():
                 medicine_to_prescription.save()
+        instance.number_of_medicines = instance.medicines.count()
+        instance.save()
 
     class Meta:
         model = Prescription
@@ -73,4 +75,4 @@ class PrescriptionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prescription
-        fields = ['id', 'number', 'date', 'patient', 'doctor']
+        fields = ['id', 'number', 'date', 'patient', 'doctor', 'number_of_medicines']
