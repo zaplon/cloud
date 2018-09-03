@@ -56,12 +56,14 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         instance = super(PrescriptionSerializer, self).save(**kwargs)
+        number_of_medicines = 0
         for medicine in self.initial_data['medicines']:
             medicine['prescription'] = instance.id
             medicine_to_prescription = MedicineToPrescriptionSerializer(data=medicine)
             if medicine_to_prescription.is_valid():
                 medicine_to_prescription.save()
-        instance.number_of_medicines = instance.medicines.count()
+                number_of_medicines += 1
+        instance.number_of_medicines = number_of_medicines
         instance.save()
 
     class Meta:
