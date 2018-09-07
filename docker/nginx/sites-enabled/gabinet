@@ -16,11 +16,11 @@ server {
     }
 
     location /assets/ {
-        alias /public/static/;
+        alias /static/;
     }
 
     location /media/ {
-        alias /public/media/;
+        alias /media/;
     }
 
     location /backend/ {
