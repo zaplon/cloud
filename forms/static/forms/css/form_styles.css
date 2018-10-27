@@ -17,6 +17,11 @@ body {
   height: 29cm;
   padding: 0.5cm; }
 
+.page-landscape {
+  width: 29.7cm;
+  height: 21cm;
+  padding: 1cm 2cm; }
+
 .crossable {
   cursor: pointer;
   background-color: #dcdcfa; }
@@ -102,5 +107,3 @@ table.no-border td {
 
 .mb-2 {
   margin-bottom: 20px; }
-
-/*# sourceMappingURL=form_styles.css.map */

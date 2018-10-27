@@ -1,0 +1,521 @@
+<html>
+<head>
+
+    <title>ABA</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/forms/css/bootstrap.css">
+
+    <script data-ignore="1" src="/assets/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/assets/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <style>
+        table.border td {
+            border: 1px solid black;
+            border-spacing: 0;
+        }
+
+        table.no-border td {
+            border: 0 !important;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="page-landscape" style="height: inherit;">
+<div class="row">
+    <div class="col-md-6">
+        <table>
+            <tr>
+                <td><input class="whole_line" type="text" name="oznaczenie"/></td>
+            </tr>
+            <tr>
+                <td><span class="small text-center">(oznaczenie jednostki przeprowadzającej badanie)</span></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<h1 class="text-center text-uppercase">Karta badania lekarskiego</h1>
+<div class="row">
+    <div class="col-md-3 pull-right">
+        <table class="table">
+            <tr>
+                <td colspan="3">Data badania</td>
+            </tr>
+            <tr>
+                <td>dzień</td>
+                <td>miesiąc</td>
+                <td>rok</td>
+            </tr>
+            <tr>
+                <td><input type="number" class="whole_line" name="badanie_dzien" min="1" max="31"></td>
+                <td><input type="number" class="whole_line" name="badanie_miesiac" min="1" max="12"></td>
+                <td><input type="number" class="whole_line" name="badanie_rok" min="2018" max="3000"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <h2 class="text-uppercase">1. Dane identyfikujące osoby badanej</h2>
+    <table class="table">
+        <tr>
+            <td>
+                <span>Imię i nazwisko</span>
+            </td>
+            <td><textarea name="name" class="form-control whole_line"></textarea></td>
+            <td style="padding: 0" colspan="2">
+                <table class="table" style="margin-bottom: 0">
+                    <tr>
+                        <td rowspan="2">Data urodzenia</td>
+                        <td>Dzień</td>
+                        <td>Miesiąc</td>
+                        <td>Rok</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Płeć<sup>1)</sup></td>
+                        <td colspan="3">
+                            <span class="crossable">M</span>/
+                            <span class="crossable">K</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>Numer pesel <sup>2)</sup></td>
+            <td><input type="text" name="pesel" class="form-control whole_line"></td>
+            <td>Rok uzyskania uprawnienia do kierowania pojazdami</td>
+            <td><input type="date" name="rok-uprawnien" class="form-control whole_line"></td>
+        </tr>
+        <tr>
+            <td>Adres miejsca zamieszkania</td>
+            <td><input name="address" class="form-control whole_line"></td>
+            <td>Kod pocztowy</td>
+            <td style="">
+                <table style="">
+                    <tr>
+                        <td><input type="number" min="0" max="9" class="form-control" name="kod_pocztowy_1_1"></td>
+                        <td><input type="number" min="0" max="9" class="form-control" name="kod_pocztowy_1_2"></td>
+                        <td style="width:30px; text-align:center;">-</td>
+                        <td><input type="number" min="0" max="9" class="form-control" name="kod_pocztowy_1_3"></td>
+                        <td><input type="number" min="0" max="9" class="form-control" name="kod_pocztowy_1_4"></td>
+                        <td><input type="number" min="0" max="9" class="form-control" name="kod_pocztowy_1_5"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table class="table">
+        <tr>
+            <td><h2 class="text-uppercase">Podlega badaniu lekarskiemu z tytułu <sup>1)</sup></h2></td>
+            <td><strong>Kategoria prawa jazdy lub pozwolenie na kierowanie tramwajem</strong></td>
+        </tr>
+        <tr>
+            <td>ubiegania się o uzyskanie uprawnień do kierowania motorowerem, pojazdami silnikowymi lub
+                uprawnienia do kierowania tramwajem
+            </td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="2.1"></textarea></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>przedłużenia ważności prawa jazdy określonej kategorii lub pozwolenia na kierowanie tramwajem</td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="2.2"></textarea></td>
+        </tr>
+        <tr>
+            <td>ubiegania się o przywrócenie uprawnienia do kierowania pojazdem cofniętego ze względu na stan zdrowia
+            </td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="2.3"></textarea></td>
+        </tr>
+        <tr>
+            <td>kierowania motorowerem, pojazdem silnikowym lub tramwajem w stanie nietrzeźwości, w stanie po uzyciu
+                alkoholu lub
+                środka działającego podobnie do alkoholu
+            </td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="2.4"></textarea></td>
+        </tr>
+        <tr>
+            <td>uzasadnionych i poważnych zastrzeżeń co do stanu zdrowia osoby posiadającej prawo jazdy lub pozwolenie
+                na kierowanie
+                tramwajem
+            </td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="2.5"></textarea></td>
+        </tr>
+        <tr>
+            <td>występowania o zezwolenie na kierowanie pojazdem uprzywilejowanym lub przewożącym wartości pienięzne
+                albo o
+                przedłużenie ważności tego dokumentu
+            </td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="2.6"></textarea></td>
+        </tr>
+    </table>
+    <h2 class="text-uppercase">3. Badanie ogólne stanu zdrowia</h2>
+    <h3>A. Badanie podmiotowe</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Lp.</th>
+            <th>Podstawowe problemy zdrowotne</th>
+            <th>TAK</th>
+            <th>NIE</th>
+            <th>Uwagi lekarza</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1.</td>
+            <td>Dolegliwości zgłaszane przez osobę badaną</td>
+            <td><input type="radio" value="tak" name="r3.1"/></td>
+            <td><input value="nie" type="radio" name="r3.1"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.1"></textarea></td>
+        </tr>
+        <tr>
+            <td>2.</td>
+            <td>Urazy czaszki</td>
+            <td><input type="radio" value="tak" name="r3.2"/></td>
+            <td><input value="nie" type="radio" name="r3.2"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.2"></textarea></td>
+        </tr>
+        <tr>
+            <td>3.</td>
+            <td>Urazy kończyn górnych (kkg), kończyn dolnych (kkd), kręgosłupa</td>
+            <td><input type="radio" value="tak" name="r3.3"/></td>
+            <td><input value="nie" type="radio" name="r3.3"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.3"></textarea></td>
+        </tr>
+        <tr>
+            <td>4.</td>
+            <td>Incydenty nagłej utraty świadomości</td>
+            <td><input type="radio" value="tak" name="r3.4"/></td>
+            <td><input value="nie" type="radio" name="r3.4"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.4"></textarea></td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="table">
+        <tr>
+            <td>5.</td>
+            <td>Chroby układu nerwowego w tym padaczki</td>
+            <td><input type="radio" value="tak" name="r3.5"/></td>
+            <td><input value="nie" type="radio" name="r3.5"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.5"></textarea></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Choroby psychiczne</td>
+            <td><input type="radio" value="tak" name="r3.6"/></td>
+            <td><input value="nie" type="radio" name="r3.6"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.6"></textarea></td>
+        </tr>
+        <tr>
+            <td>7.</td>
+            <td>Choroby układu ruchu</td>
+            <td><input type="radio" value="tak" name="r3.7"/></td>
+            <td><input value="nie" type="radio" name="r3.7"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.7"></textarea></td>
+        </tr>
+        <tr>
+            <td>8.</td>
+            <td>Choroby układu krążenia</td>
+            <td><input type="radio" value="tak" name="r3.8"/></td>
+            <td><input value="nie" type="radio" name="r3.8"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.8"></textarea></td>
+        </tr>
+        <tr>
+            <td>9.</td>
+            <td> Cukrzyca</td>
+            <td><input type="radio" value="tak" name="r3.9"/></td>
+            <td><input value="nie" type="radio" name="r3.9"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.9"></textarea></td>
+        </tr>
+        <tr>
+            <td>10.</td>
+            <td>Choroby układu oddechowego, w tym zaburzenia oddychania podczas snu</td>
+            <td><input type="radio" value="tak" name="r3.10"/></td>
+            <td><input value="nie" type="radio" name="r3.10"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.10"></textarea></td>
+        </tr>
+        <tr>
+            <td>11.</td>
+            <td>Choroby układu pokarmowego</td>
+            <td><input type="radio" value="tak" name="r3.11"/></td>
+            <td><input value="nie" type="radio" name="r3.11"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.11"></textarea></td>
+        </tr>
+        <tr>
+            <td>12.</td>
+            <td>Choroby endokrynologiczne</td>
+            <td><input type="radio" value="tak" name="r3.12"/></td>
+            <td><input value="nie" type="radio" name="r3.12"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.12"></textarea></td>
+        </tr>
+        <tr>
+            <td>13.</td>
+            <td>Choroby układu moczowego</td>
+            <td><input type="radio" value="tak" name="r3.13"/></td>
+            <td><input value="nie" type="radio" name="r3.13"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.13"></textarea></td>
+        </tr>
+        <tr>
+            <td>14.</td>
+            <td>Przebyte hospitalizacje, w tym zabiegi operacyjne</td>
+            <td><input type="radio" value="tak" name="r3.14"/></td>
+            <td><input value="nie" type="radio" name="r3.14"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.14"></textarea></td>
+        </tr>
+        <tr>
+            <td>15.</td>
+            <td>Leczenie w poradni specialistycznej (jeżeli tak, to w jakiej? od kiedy?)</td>
+            <td><input type="radio" value="tak" name="r3.15"/></td>
+            <td><input value="nie" type="radio" name="r3.15"/></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3.15"></textarea></td>
+        </tr>
+    </table>
+    <h3>B. Badanie przedmiotowe <sup>3)</sup></h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Lp.</th>
+            <th>Narząd (układ)</th>
+            <th>Brak zmian patologicznych</th>
+            <th>Opis stwierdzonej patalogii</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1.</td>
+            <td><strong>Budowa ciała</strong></td>
+            <td><input type="checkbox" class="form-control" name="c3b1"></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3b1"></textarea></td>
+        </tr>
+        <tr>
+            <td>1.1</td>
+            <td><strong>Głowa</strong></td>
+            <td><input type="checkbox" class="form-control" name="c3b1.1"></td>
+            <td><textarea style="height:100px;" class="form-control whole-line" name="3b1.1"></textarea></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<h2 class="text-uppercase">4. Badanie narządu wzroku</h2>
+<div class="row">
+    <div class="col-md-2">
+        <span>Imię i nazwisko badanego</span>
+    </div>
+    <div class="col-md-10">
+        <input type="text" class="form-control whole_line" name="name">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <span>Numer PESEL <sup>2)</sup></span>
+    </div>
+    <div class="col-md-10">
+        <input type="text" class="form-control whole_line" name="pesel">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <span>Adres miejsca zamieszkania</span>
+    </div>
+    <div class="col-md-10">
+        <input type="text" class="form-control whole_line" name="address">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span>Podlega badaniu lekarskiemu z tytułu (wpisać na podstawie części 2 karty badania lekarskiego - tylko w przypadku badania
+    wykonywanego przez lekarza specialistę w dziedzinie okulistyki)</span>
+    </div>
+    <div class="col-md-12">
+        <input type="text" name="i4.1" class="whole_line">
+        <input type="text" name="i4.2" class="whole_line">
+    </div>
+</div>
+<div class="row">
+    <h2 class="text-uppercase col-md-12">6.Konsultacje specjalistyczne</h2>
+</div>
+<div class="row">
+    <div class="col-md-12 mb-2">
+        <span>Należy dołączyć wyniki wszystkich przeprowadzonych konsultacji specjalistycznych
+        według schematu:</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Badanie</td>
+                <td><input type="text" class="form-control" name="6.1.1"></td>
+            </tr>
+            <tr>
+                <td>Rozpoznanie</td>
+                <td><input type="text" class="form-control" name="6.1.2"></td>
+            </tr>
+            <tr>
+                <td>Opinia</td>
+                <td><input type="text" class="form-control" name="6.1.3"></td>
+            </tr>
+            <tr>
+                <td>Data</td>
+                <td><input type="date" class="form-control" name="6.1.4"></td>
+            </tr>
+            <tr>
+                <td>Podpis i pieczątka lekarza</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Badanie</td>
+                <td><input type="text" class="form-control" name="6.2.1"></td>
+            </tr>
+            <tr>
+                <td>Rozpoznanie</td>
+                <td><input type="text" class="form-control" name="6.2.2"></td>
+            </tr>
+            <tr>
+                <td>Opinia</td>
+                <td><input type="text" class="form-control" name="6.2.3"></td>
+            </tr>
+            <tr>
+                <td>Data</td>
+                <td><input type="date" class="form-control" name="6.2.4"></td>
+            </tr>
+            <tr>
+                <td>Podpis i pieczątka lekarza</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Badanie</td>
+                <td><input type="text" class="form-control" name="6.3.1"></td>
+            </tr>
+            <tr>
+                <td>Rozpoznanie</td>
+                <td><input type="text" class="form-control" name="6.3.2"></td>
+            </tr>
+            <tr>
+                <td>Opinia</td>
+                <td><input type="text" class="form-control" name="6.3.3"></td>
+            </tr>
+            <tr>
+                <td>Data</td>
+                <td><input type="date" class="form-control" name="6.3.4"></td>
+            </tr>
+            <tr>
+                <td>Podpis i pieczątka lekarza</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Badanie</td>
+                <td><input type="text" class="form-control" name="6.4.1"></td>
+            </tr>
+            <tr>
+                <td>Rozpoznanie</td>
+                <td><input type="text" class="form-control" name="6.4.2"></td>
+            </tr>
+            <tr>
+                <td>Opinia</td>
+                <td><input type="text" class="form-control" name="6.4.3"></td>
+            </tr>
+            <tr>
+                <td>Data</td>
+                <td><input type="date" class="form-control" name="6.4.4"></td>
+            </tr>
+            <tr>
+                <td>Podpis i pieczątka lekarza</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-uppercase">7.Badania pomocnicze</h2>
+        <span>Należy dołączyć wyniki badań pomocniczych</span>
+        <input type="text" name="badania_pomocnicze" class="form-control whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-uppercase">Rozpoznanie końcowe:</h2>
+    </div>
+    <div class="col-md-12">
+        <input type="text" name="rozpoznanie_koncowe_1" class="form-control whole_line">
+        <input type="text" name="rozpoznanie_koncowe_2" class="form-control whole_line">
+        <input type="text" name="rozpoznanie_koncowe_3" class="form-control whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-uppercase">Wnioski:</h2>
+    </div>
+    <div class="col-md-12">
+        <input type="text" name="wnioski_1" class="form-control whole_line">
+        <input type="text" name="wnioski_2" class="form-control whole_line">
+        <input type="text" name="wnioski_3" class="form-control whole_line">
+        <input type="text" name="wnioski_4" class="form-control whole_line">
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-md-3">
+        <input type="date" class="whole_line form-control" name="data">
+    </div>
+    <div class="col-md-4 col-md-offset-5">
+        <input type="text" class="whole_line form-control" name="podpis">
+    </div>
+    <div class="col-md-3 text-center">(data)</div>
+    <div class="col-md-4 col-md-offset-5 text-center">(podpis i pieczątka uprawnionego lekarza)</div>
+</div>
+<footer>
+    <p class="font-sm">
+    Objaśnienia <br/> <sup>1)</sup>Odpowiednie podkreślić. <br/><sup>2)</sup>W przypadku osoby, której nie
+    nadano numeru PESEL - nazwa i numer dokumentu stwierdzającego tożsamość. <br/><sup>3)</sup>W przypadku
+    prawidłowego wyniku badania postawić znak X w rubryce "Brak zmian patalogicznych", a w przypadku stwierdzonej
+    patologii - podać szczegółowy jej opis.</p>
+</footer>
+</body>
+</html>
