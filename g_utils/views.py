@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from crispy_forms.helper import FormHelper
 from crispy_forms.utils import render_crispy_form
 from django.contrib.auth.mixins import AccessMixin, PermissionRequiredMixin
 from django.shortcuts import render, HttpResponse
@@ -22,6 +23,17 @@ class AjaxFormView(APIView):
                 data['user'] = self.request.user
         data['ajax'] = True
         return data
+
+    @staticmethod
+    def render_form(form, ctx):
+        helper = FormHelper(form)
+        if ctx.get('read_only', False):
+            helper.field_template = 'form/span_field.html'
+        if getattr(form, 'horizontal', False):
+            helper.wrapper_class = 'row'
+            helper.label_class = 'col-md-2'
+            helper.field_class = 'col-md-10'
+        return render_crispy_form(form, context=ctx, helper=helper)
 
     @staticmethod
     def get_form(data):
@@ -53,7 +65,8 @@ class AjaxFormView(APIView):
             form = form_class(initial=data)
         ctx = {}
         ctx.update(csrf(self.request))
-        form_html = render_crispy_form(form, context=ctx)
+        ctx['read_only'] = self.request.GET.get('read_only')
+        form_html = self.render_form(form, ctx)
         return HttpResponse(json.dumps({'success': True, 'form_html': form_html}), content_type='application/json')
 
     def post(self, *args, **kwargs):
@@ -86,7 +99,7 @@ class AjaxFormView(APIView):
                 res = form.save()
             return HttpResponse(json.dumps({'success': True, 'result': res}), content_type='application/json')
         else:
-            form_html = render_crispy_form(form, context=ctx)
+            form_html = self.render_form(form, ctx)
             return HttpResponse(json.dumps({'success': False, 'form_html': form_html}), content_type='application/json')
 
 

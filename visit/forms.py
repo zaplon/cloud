@@ -11,6 +11,7 @@ from django.utils.translation import ugettext as _
 
 class TemplateForm(ModelForm):
     save_with_user = True
+    horizontal = True
 
     class Meta:
         model = Template

@@ -62,6 +62,7 @@ class UserForm(forms.Form):
 
 class DoctorForm(forms.Form):
     save_with_user = True
+    horizontal = True
 
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
@@ -143,6 +144,7 @@ class FullPatientForm(forms.Form):
 
 
 class PatientForm(forms.Form):
+    horizontal = True
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
     email = forms.EmailField(label=u'Adres email', required=False)
@@ -162,6 +164,7 @@ class PatientForm(forms.Form):
 
 
 class PatientModelForm(forms.ModelForm):
+    horizontal = True
     pesel = PLPESELField(label=u'Pesel', required=False)
     class Meta:
         model = Patient
