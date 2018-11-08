@@ -81,10 +81,10 @@ class AjaxFormView(APIView):
                 form = form_class(data=data)
         if form.is_valid():
             if 'user' in form.fields or getattr(form_class, 'save_with_user', False):
-                form.save(user=self.request.user)
+                res = form.save(user=self.request.user)
             else:
-                form.save()
-            return HttpResponse(json.dumps({'success': True}), content_type='application/json')
+                res = form.save()
+            return HttpResponse(json.dumps({'success': True, 'result': res}), content_type='application/json')
         else:
             form_html = render_crispy_form(form, context=ctx)
             return HttpResponse(json.dumps({'success': False, 'form_html': form_html}), content_type='application/json')

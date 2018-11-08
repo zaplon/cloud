@@ -2,6 +2,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Field, Layout, Div, HTML
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms.fields import TimeField
 from django.forms.widgets import HiddenInput
 
@@ -147,10 +148,17 @@ class PatientForm(forms.Form):
     email = forms.EmailField(label=u'Adres email', required=False)
     pesel = PLPESELField(label=u'Pesel', required=False)
 
+    def clean_pesel(self):
+        pesel = self.cleaned_data['pesel']
+        pesel = None if len(pesel) == 0 else pesel
+        if pesel and Patient.objects.filter(pesel=pesel).exists():
+            raise ValidationError('Istnieje już pacjent o tym numerze pesel')
+        return pesel
+
     def save(self):
-        Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data['email'],
+        patient = Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data['email'],
                                first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
-        return True
+        return {'id': patient.id, 'label': patient.name_with_pesel}
 
 
 class PatientModelForm(forms.ModelForm):

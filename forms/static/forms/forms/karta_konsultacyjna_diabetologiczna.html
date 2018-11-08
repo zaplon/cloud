@@ -1,0 +1,298 @@
+<html>
+<head>
+
+    <title>Karta konsultacyjna diabetologiczna</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/forms/css/bootstrap.css">
+
+    <script data-ignore="1" src="/assets/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/assets/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <style>
+        body {
+            font-size: 12px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .aba-table .border {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        table.border td {
+            border: 1px solid black;
+            border-spacing: 0;
+        }
+
+        table.no-border td {
+            border: 0 !important;
+        }
+
+        input, textarea  {
+            border: 1px solid black !important;
+            padding: 0.25cm;
+            border-bottom: 1px solid black !important;
+        }
+        .radio-div {
+            border: 1px solid black;
+            padding: 0.25cm;
+            text-align: center;
+        }
+        .row {
+            margin-top: 1rem;
+        }
+        table {
+            font-size: 12px;
+        }
+        .medium-input {
+            width: 50px;
+        }
+    </style>
+</head>
+<body class="page" style="height: inherit; padding: 1.0cm;">
+<div class="row">
+    <div class="col-md-5">
+        <textarea class="whole_line" style="height: 125px;"></textarea>
+    </div>
+    <div class="col-md-6 offset-md-4" style="margin-top: 36px;">
+        <h1 class="text-center">Karta konsultacyjna diabetologiczna</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Dane osobowe pacjenta</h2>
+    </div>
+    <div class="col-md-2">
+        <span>Imię i nazwisko badanego</span>
+    </div>
+    <div class="col-md-10">
+        <input type="text" name="name" class="whole_line">
+    </div>
+    <div class="col-md-12">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1">
+        <span>Numer PESEL</span>
+    </div>
+    <div class="col-md-6">
+        <table class="no-border">
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_2" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_3" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_4" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_5" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_6" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_7" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_8" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_9" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_10" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_11" maxlength="1"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-3">
+        <span>nazwa i numer dokumentu  stwierdzającego tożsamość osoby, której nie nadano PESEL</span>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="other_pesel" class="whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1">
+        <span>adres zamieszkania:</span>
+    </div>
+    <div class="col-md-2 text-right">
+        <span>miejscowość</span>
+    </div>
+    <div class="col-md-5">
+        <input type="text" name="miejscowosc" class="whole_line">
+    </div>
+    <div class="col-md-2 text-right">
+        <span>kod pocztowy</span>
+    </div>
+    <div class="col-md-2">
+        <input type="text" maxlength="6" name="postal" class="whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1">
+        <span>ulica</span>
+    </div>
+    <div class="col-md-5">
+        <input name="ulica" type="text" class="whole_line">
+    </div>
+    <div class="col-md-2 text-right">
+        <span>numer domu/mieszkania</span>
+    </div>
+    <div class="col-md-4">
+        <input type="text" name="numer_domu" class="whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1 radio-div">
+        <input type="radio" class="whole_line" name="typ" value="kandydat">
+    </div>
+    <div class="col-md-3">
+        <span>kandydat na kierowcę</span>
+    </div>
+    <div class="col-md-1 offset-md-1 radio-div">
+        <input type="radio" class="whole_line" name="typ" value="kierowca">
+    </div>
+    <div class="col-md-2">
+        kierowca
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="no-border table">
+        <tbody>
+            <tr>
+                <td><strong>Cukrzyca</strong></td>
+                <td><input type="text" class="whole_line" name="data_rozpoznania"></td>
+                <td><span>typ cukrzycy:</span></td>
+                <td><input type="text" name="typ_cukrzycy" class="medium-input"></td>
+                <td><span>lekarz prowadzący cukrzycę:</span></td>
+                <td><input type="text" class="whole_line" name="lekarz_prowadzacy"></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3"><span>Podmiot wykonujący działalność leczniczą</span></div>
+    <div class="col-md-4">
+        <textarea rows="3" class="whole_line" name="podmiot"></textarea>
+    </div>
+    <div class="col-md-2"><span>Poradnia diabetologiczna</span></div>
+    <div class="col-md-3"><textarea rows="3" class="whole_line" name="poradnia"></textarea></div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <span><strong>Wiedza pacjenta</strong> dotycząca jego choroby, leczenia i powikłań</span>
+    </div>
+    <div class="col-md-1 radio-div"><input type="radio" name="wiedza_pacjenta" value="wysoka"></div>
+    <div class="col-md-1">wysoka</div>
+    <div class="col-md-1 radio-div"><input type="radio" name="wiedza_pacjenta" value="dostateczna"></div>
+    <div class="col-md-1">dostateczna</div>
+    <div class="col-md-1 radio-div"><input type="radio" name="wiedza_pacjenta" value="niedostateczna"></div>
+    <div class="col-md-1"><strong>niedostateczna</strong></div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <span><strong>Umiejętność kontrolowania glikemii:</strong></span>
+    </div>
+    <div class="radio-div col-md-1"><input type="radio" name="kontrolowanie_glikemii" value="dobra"></div>
+    <div class="col-md-1"><span>dobra</span></div>
+    <div class="radio-div col-md-1"><input type="radio" name="kontrolowanie_glikemii" value="akceptowalne"></div>
+    <div class="col-md-2"><span>akceptowalna</span></div>
+    <div class="radio-div col-md-1"><input type="radio" name="kontrolowanie_glikemii" value="niska"></div>
+    <div class="col-md-1"><span><strong>niska</strong></span></div>
+</div>
+<div class="row">
+    <div class="col-md-7">
+        <span><strong>Świadomość hipoglikemii</strong>, umiejętność zapobiegania i przeciwdziałania:</span>
+    </div>
+    <div class="radio-div col-md-1"><input type="radio" name="swiadomosc_hipoglikemii" value="dobra"></div>
+    <div class="col-md-1"><span>dobra</span></div>
+    <div class="radio-div col-md-1"><input type="radio" name="swiadomosc_hipoglikemii" value="niedostateczna"></div>
+    <div class="col-md-1"><span><strong>niedostateczna</strong></span></div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <span>Występowanie objawów prodromalnych hipoglikemii</span>
+    </div>
+    <div class="radio-div col-md-1"><input type="radio" name="wystepowanie_hipoglikemii" value="tak"></div>
+    <div class="col-md-1"><span>tak</span></div>
+    <div class="radio-div col-md-1"><input type="radio" name="wystepowanie_hipoglikemii" value="nie"></div>
+    <div class="col-md-1"><span><strong>nie</strong></span></div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <span><strong>Ryzyko hipoglikemii:</strong></span>
+    </div>
+    <div class="radio-div col-md-1"><input type="radio" name="ryzyko_hipoglikemii" value="niskie"></div>
+    <div class="col-md-1"><span>niskie</span></div>
+    <div class="radio-div col-md-1"><input type="radio" name="ryzyko_hipoglikemii" value="akceptowalne"></div>
+    <div class="col-md-2"><span>akceptowalne</span></div>
+    <div class="radio-div col-md-1"><input type="radio" name="ryzyko_hipoglikemii" value="wysokie"></div>
+    <div class="col-md-1"><span><strong>wysokie</strong></span></div>
+</div>
+<div class="row">
+    <div class="col-md-1 radio-div">
+        <input type="radio" name="obecnosc_powiklan_cukrzycy">
+    </div>
+    <div class="col-md-5">
+        <strong>obecność przewlekłych powikłań cukrzycy</strong>
+    </div>
+    <div class="col-md-1 radio-div"><input type="radio" name="obecnosc_powiklan_cukrzycy"></div>
+    <div class="col-md-4">brak przewlekłych powikłań cukrzycy</div>
+</div>
+<div class="row">
+    <div class="col-md-1 radio-div">
+        <input type="radio" name="powiklania" value="wzrok">
+    </div>
+    <div class="col-md-3">
+        ze strony narządu wzroku
+    </div>
+    <div class="col-md-1 radio-div">
+        <input type="radio" name="powiklania" value="nerwy">
+    </div>
+    <div class="col-md-3">
+        ze strony układu nerwowego
+    </div>
+    <div class="col-md-1 radio-div">
+        <input type="radio" name="powiklania" value="serce">
+    </div>
+    <div class="col-md-3">
+        ze strony narządu układu sercowo-maczyniowego
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span>Uwagi dotyczące przewlekłych powikłań cukrzycy:</span>
+        <textarea class="whole_line" rows="5" name="uwagi"></textarea>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span>Ocena zdolności do prowadzenia pojazdów:</span>
+        <textarea class="whole_line" rows="3" name="ocena"></textarea>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span>Inne uwagi:</span>
+        <textarea class="whole_line" rows="5" name="inne"></textarea>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-md-3">
+        <input type="date" class="whole_line form-control" name="data">
+    </div>
+    <div class="col-md-5 col-md-offset-4">
+        <input type="text" class="whole_line form-control" name="podpis">
+    </div>
+    <div class="col-md-3 text-center">(data)</div>
+    <div class="col-md-5 col-md-offset-4 text-center">
+        (pieczątka i podpis lekarza specjalisty w dziedzinie diabetologii
+        albo innego lekarza prowadzącego leczenie cukrzycy)
+    </div>
+</div>
+</body>
+</html>

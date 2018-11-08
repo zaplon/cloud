@@ -127,7 +127,10 @@ class Patient(models.Model):
 
     @property
     def name_with_pesel(self):
-        return '%s (%s)' % (self.name, self.pesel)
+        if self.pesel:
+            return '%s (%s)' % (self.name, self.pesel)
+        else:
+            return self.name
 
     def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)

@@ -1,0 +1,339 @@
+<html>
+<head>
+
+    <title>Oświadczenie dotyczące stanu zdrowia</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/forms/css/bootstrap.css">
+
+    <script data-ignore="1" src="/assets/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/assets/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <style>
+        .aba-table .border {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        table.border td {
+            border: 1px solid black;
+            border-spacing: 0;
+        }
+
+        h1 {
+            color: white;
+            padding-bottom: 1.5cm;
+            background-color: black;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="page" style="height: inherit; padding: 2.5cm;">
+<h1 class="text-center">Oświadczenie dotyczące stanu zdrowia</h1>
+<div class="row">
+    <div class="col-md-12">
+        <h2>I. Dane osoby podlegającej badaniu lekarskiemu</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Nazwisko: <input type="text" class="form-control" name="last_name"></td>
+                <td>Imię: <input type="text" class="form-control" name="first_name"></td>
+            </tr>
+            <tr>
+                <td colspan="2">Adres zamieszkania: <input type="text" class="form-control" name="address"></td>
+            </tr>
+            <tr>
+                <td>Data urodzenia: <input type="text" class="form-control" name="birth_date"></td>
+                <td>Telefon: <input type="text" class="form-control" name="phone"></td>
+            </tr>
+            <tr>
+                <td>Kategoria prawa jazdy:</td>
+                <td>Nr PESEL, a w przypadku osoby, której nie
+                    nadano nr PESEL - nazwa i numer dokumentu
+                    stwierdzającego tożsamość <input type="text" class="form-control" name="pesel"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>II. Instrukcja wypełnienia ankiety</h2>
+        <p class="text-justify">
+            Proszę odpowiedzieć na poniższe pytania wstawiając znak X w odpowiednią rubrykę. Jeżeli pytanie jest
+            niezrozumiałe należy poprosić o pomoc uprawnionego lekarza i uzupełnić odpowiedź.
+            Oświadczenie dotyczące stanu zdrowia jest poufue i po przekazaniu uprawnionemu lekarzowi będzie
+            przechowywane w dokumentacji. medycznej.
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>III. Dane dotyczące stanu zdrowia</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td colspan="2"></td>
+                <td>TAK</td>
+                <td>NIE</td>
+            </tr>
+            <tr>
+                <td>1.</td>
+                <td></td>
+                <td><input type="radio" class="form-control" name="3.1" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.1" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>2.</td>
+                <td></td>
+                <td><input type="radio" class="form-control" name="3.1" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.1" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.</td>
+                <td></td>
+                <td><input type="radio" class="form-control" name="3.1" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.1" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.1.</td>
+                <td></td>
+                <td><input type="radio" class="form-control" name="3.1" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.1" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.2.</td>
+                <td></td>
+                <td><input type="radio" class="form-control" name="3.2" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.2" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.3.</td>
+                <td></td>
+                <td><input type="radio" class="form-control" name="3.3" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.3" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.4.</td>
+                <td></td>
+                <td><input type="radio" class="form-control" name="3.4" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.4" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.5.</td>
+                <td></td>
+                <td><input type="radio" class="form-control" name="3.5" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.5" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.6.</td>
+                <td>Nieregulame bicie serca</td>
+                <td><input type="radio" class="form-control" name="3.6" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.6" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.7.</td>
+                <td>Zaburzenia oddychania</td>
+                <td><input type="radio" class="form-control" name="3.7" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.7" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.8.</td>
+                <td>Zaburzenia funkcji nerek</td>
+                <td><input type="radio" class="form-control" name="3.8" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.8" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.9.</td>
+                <td>Cukrzyca</td>
+                <td><input type="radio" class="form-control" name="3.9" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.9" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.10.</td>
+                <td>Urazy głowy, urazy kręgosłupa</td>
+                <td><input type="radio" class="form-control" name="3.10" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.10" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.11.</td>
+                <td>Drgawki, padaczka</td>
+                <td><input type="radio" class="form-control" name="3.11" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.11" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.12.</td>
+                <td>Omdlenia</td>
+                <td><input type="radio" class="form-control" name="3.12" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.12" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.13.</td>
+                <td>Udar mózgu/wylew krwi do mózgu</td>
+                <td><input type="radio" class="form-control" name="3.13" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.13" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.14.</td>
+                <td>Nudności, zawroty głowy, problemy z utrzymaniem równowagi</td>
+                <td><input type="radio" class="form-control" name="3.14" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.14" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.15.</td>
+                <td>Utraty pamięci lub trudności z koncentracją</td>
+                <td><input type="radio" class="form-control" name="3.15" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.15" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.16.</td>
+                <td>Inne zaburzenia neurologiczne</td>
+                <td><input type="radio" class="form-control" name="3.16" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.16" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.17.</td>
+                <td>Choroby szyi, pleców lub kończyn</td>
+                <td><input type="radio" class="form-control" name="3.17" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.17" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.18.</td>
+                <td>Podwójne widzenie, kłopoty ze wzrokiem</td>
+                <td><input type="radio" class="form-control" name="3.18" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.18" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.19.</td>
+                <td>Zaburzenia rozpoznawania barw (daltonizm)</td>
+                <td><input type="radio" class="form-control" name="3.19" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.19" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.20.</td>
+                <td>Trudności w widzeniu po zmierzchu i częste uczucie oślepienia przez
+                    światła innych pojazdów
+                </td>
+                <td><input type="radio" class="form-control" name="3.20" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.20" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.21.</td>
+                <td>Ubytek słuchu lub głuchota</td>
+                <td><input type="radio" class="form-control" name="3.21" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.21" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>3.22.</td>
+                <td> Choroby psychiczne, depresję lub zaburzenia nerwicowe</td>
+                <td><input type="radio" class="form-control" name="3.22" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="3.22" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>4.</td>
+                <td>Czy kiedykolwiek miał Pan/Pani operację lub wypadek, lub był/a
+Pan/Pani w szpitalu z jakiegokolwiek powodu?
+Jeżeli tak, to proszę opisać <input type="text" name=""</td>
+                <td><input type="radio" class="form-control" name="4" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="4" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>5.</td>
+                <td>Czy używa lub kiedykolwiek używał/a PanlPani aparatu słuchowego?
+Jeże li tak, to proszę podać kiedy? <input type="text" name="3.5" class="form-control"></td>
+                <td><input type="radio" class="form-control" name="5" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="5" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>6.</td>
+                <td>Czy kiedykolwiek był/a Pan/Pani badany/a z powodu zaburzeń snu lub
+lekarz informował, że ma Pan/Pani zaburzenia snu, zespoły bezdechu
+nocnego lub narkolepsję?</td>
+                <td><input type="radio" class="form-control" name="6" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="6" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>7.</td>
+                <td>Czy ktokolwiek mówił Panu/Pani o zaobserwowanych u Pana/Pani
+epizodach zatrzymania oddechu w czasie snu?</td>
+                <td><input type="radio" class="form-control" name="7" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="7" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>8.</td>
+                <td>Czy kiedykolwiek potrzebował/a Pan/Pani pomocy lub wsparcia z powodu nadużycia alkoholu lub środków
+                    działających podobnie do
+                    alkoholu?
+                </td>
+                <td><input type="radio" class="form-control" name="8" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="8" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>9.</td>
+                <td>Czy używa Pan/Pani narkotyków lub innych substancji
+psychoaktywnych?
+Jeżeli tak, to jakich? <input type="text" name="3.9" class="form-control"></td>
+                <td><input type="radio" class="form-control" name="9" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="9" value="NIE"></td>
+            </tr>
+            <tr>
+                <td rowspan="6">10.</td>
+                <td>. Jak często pije Pan/Pani alkohol (piwo, wino, wódka i inne alkohole) <sup>*</sup></td>
+                <td><input type="radio" class="form-control" name="10.1" value="a"></td>
+            </tr>
+            <tr>
+                <td>Nigdy albo rzadziej niż raz w miesiącu</td><td><input type="radio" class="form-control" name="10.1" value="a"></td>
+                <td>Raz w miesiącu</td><td><input type="radio" class="form-control" name="10.1" value="b"></td>
+                <td>Dwa do czterech razy w miesiącu</td><td><input type="radio" class="form-control" name="10.1" value="c"></td>
+                <td>Dwa do trzech razy w tygodniu</td><td><input type="radio" class="form-control" name="10.1" value="d"></td>
+                <td>Cztery i więcej razy w tygodniu</td><td><input type="radio" class="form-control" name="10.1" value="e"></td>
+            </tr>
+            <tr>
+                <td>11.</td>
+                <td>Czy był/a Pan/Pani sprawcą/uczestnikiem wypadku drogowego od dnia
+                    zdania egzaminu na prawo jazdy?
+                </td>
+                <td><input type="radio" class="form-control" name="11" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="11" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>12.</td>
+                <td>Czy pobiera Pan/Pani rentę z tytułu niezdolności do pracy?
+                    Jeżeli tak, to z jakiego powodu?<input type="text" class="form-control" name="3.12"></td>
+                <td><input type="radio" class="form-control" name="12" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="12" value="NIE"></td>
+            </tr>
+            <tr>
+                <td>13.</td>
+                <td>Czy posiada Pan/Pani orzeczenie stwierdzające niepełnosprawność?
+                    Jeżeli tak, to jakie i z jakiej przyczyny? . <input type="text" class="form-control" name="3.13">
+                </td>
+                <td><input type="radio" class="form-control" name="13" value="TAK"></td>
+                <td><input type="radio" class="form-control" name="13" value="NIE"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

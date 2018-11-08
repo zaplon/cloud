@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.http.response import HttpResponseBadRequest
 from django.utils import timezone
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
@@ -8,7 +7,6 @@ from g_utils.rest import SearchMixin
 from user_profile.models import Doctor, Patient
 from user_profile.rest import PatientSerializer, DoctorSerializer
 from .models import Term, Service, Localization
-from rest_framework.permissions import IsAuthenticated
 import datetime
 
 
@@ -25,12 +23,12 @@ class TermSerializer(serializers.ModelSerializer):
 
 class TermUpdateSerializer(serializers.ModelSerializer):
     doctor = serializers.PrimaryKeyRelatedField(queryset=Doctor.objects.all())
-    service = serializers.PrimaryKeyRelatedField(queryset=Service.objects.all())
-    patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())
+    service = serializers.PrimaryKeyRelatedField(queryset=Service.objects.all(), allow_null=True)
+    patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), allow_null=True)
 
     class Meta:
         model = Term
-        fields = ('doctor', 'service', 'patient', 'status', 'duration')
+        fields = ('doctor', 'service', 'patient', 'status', 'duration', 'datetime')
 
     def save(self, **kwargs):
         if self.instance.status == 'FREE' and self.validated_data['patient']:
