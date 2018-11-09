@@ -21,7 +21,7 @@ class TermSerializer(serializers.ModelSerializer):
         fields = ('duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id')
 
 
-class TermUpdateSerializer(serializers.ModelSerializer):
+class TermCreateSerializer(serializers.ModelSerializer):
     doctor = serializers.PrimaryKeyRelatedField(queryset=Doctor.objects.all())
     service = serializers.PrimaryKeyRelatedField(queryset=Service.objects.all(), allow_null=True)
     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(), allow_null=True)
@@ -29,6 +29,9 @@ class TermUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Term
         fields = ('doctor', 'service', 'patient', 'status', 'duration', 'datetime')
+
+
+class TermUpdateSerializer(TermCreateSerializer):
 
     def save(self, **kwargs):
         if self.instance.status == 'FREE' and self.validated_data['patient']:
@@ -89,6 +92,8 @@ class TermViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
     def get_serializer_class(self):
+        if self.action == 'create':
+            return TermCreateSerializer
         if self.action == 'partial_update':
             return TermUpdateSerializer
         elif self.action == 'retrieve':

@@ -89,6 +89,8 @@ class Term(models.Model):
         for i in range(0, (end-start).days):
             day = start + datetime.timedelta(days=i)
             hours = days[day.weekday()]
+            if not hours['on']:
+                continue
             start_hour = datetime.datetime.combine(day.date(), datetime.time(*[int(h) for h in hours['value'][0].split(':')]))
             end_hour = datetime.datetime.combine(day.date(), datetime.time(*[int(h) for h in hours['value'][1].split(':')]))
             start_visit = start_hour
