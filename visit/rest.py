@@ -1,7 +1,9 @@
 from django.db.models import Q
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
+from rest_framework.mixins import DestroyModelMixin
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from g_utils.rest import OnlyDoctorRecords, SearchMixin
 from timetable.models import Term
@@ -40,7 +42,7 @@ class TemplateSerializer(serializers.ModelSerializer):
         fields = ('text', 'tab', 'key', 'name', 'tab_title', 'tab_name', 'id')
 
 
-class TemplateViewSet(SearchMixin, viewsets.ReadOnlyModelViewSet):
+class TemplateViewSet(SearchMixin, DestroyModelMixin, ReadOnlyModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
     search_filters = ['name', 'text']
