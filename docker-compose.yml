@@ -1,10 +1,6 @@
 version: '2'
 services:
   web:
-    environment:
-      DJANGO_SETTINGS_MODULE: docker_settings
-      LANG: "pl_PL.UTF-8"
-      LANGUAGE: "pl_PL"
     image: "docker.io/zaplon/gabinet"
     working_dir: /app/
     ports:
@@ -15,6 +11,7 @@ services:
      - mysql
      - memcached
     environment:
+      DJANGO_SETTINGS_MODULE: docker_settings
       LANG: "pl_PL.UTF-8"
       LANGUAGE: "pl_PL"
       QT_QPA_PLATFORM: "offscreen"
