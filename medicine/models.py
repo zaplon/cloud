@@ -77,5 +77,3 @@ class Prescription(models.Model):
         # medicines_to_prescription = [med.is_valid() for med in medicines_to_prescription]
         return [med.data for med in medicines_to_prescription]
 
-    def print(self):
-        pass

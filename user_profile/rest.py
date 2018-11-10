@@ -154,7 +154,14 @@ class UserSerializer(serializers.ModelSerializer):
     modules = serializers.SerializerMethodField('get_user_modules')
     type = serializers.SerializerMethodField('get_user_type')
     doctor = DoctorSerializer()
-    user_permissions = PermissionSerializer(many=True)
+    user_permissions = serializers.SerializerMethodField('get_all_permissions')
+
+    def get_all_permissions(self, instance):
+        user_permissions = instance.user_permissions.all()
+        groups_permissions = Permission.objects.filter(group__user=instance)
+        all_permissions = user_permissions | groups_permissions
+        serializer = PermissionSerializer(all_permissions, many=True)
+        return serializer.data
 
     def get_user_type(self, instance):
         try:

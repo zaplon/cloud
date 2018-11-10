@@ -23,6 +23,7 @@ class TabTypes(Enum):
     NOTES = 'Notatki'
     SERVICES = 'Skierowania'
     VIDEO = 'Nagranie wideo'
+    OCULIST = 'Okulista'
 
 
 class Tab(models.Model):

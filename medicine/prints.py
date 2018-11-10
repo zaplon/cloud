@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 import json
+import math
+from random import randint
 from django.http import HttpResponse
+from reportlab.lib import colors
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.units import cm
+from reportlab.lib.pagesizes import A5
+from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
 from reportlab.pdfgen import canvas
 import datetime
 import os
@@ -11,7 +17,6 @@ from django.conf import settings
 import json
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Paragraph
 from rest_framework.views import APIView
 
 from g_utils.views import get_client_location_code
@@ -236,3 +241,126 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
     # p.drawString((x+5.5)*cm,(y-18.3)*cm, us.name)
 
     return p
+
+class PrintGlasses(APIView):
+    queryset = Prescription.objects.all()
+
+    def post(self, request):
+        data = request.data
+        Story = []
+        code = randint(0, 10000)
+        fileNm = settings.MEDIA_ROOT + "/tmp/" + str(code) + ".pdf"
+        fileNm2 = "/media/tmp/" + str(code) + ".pdf"
+        # doc = SimpleDocTemplate(fileNm,pagesize=A4,
+        #                   rightMargin=15,leftMargin=15,
+        #                   topMargin=15,bottomMargin=15)
+
+        c = canvas.Canvas(fileNm, pagesize=A5)
+
+        w = 14.8
+        h = 21
+
+        pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+        styles = getSampleStyleSheet()
+        styles.add(ParagraphStyle(name='JustifyBold', alignment=TA_JUSTIFY, fontName='Arial-Bold', fontSize=9))
+        styles.add(ParagraphStyle(name='Heading', alignment=TA_CENTER, fontName='Arial'))
+        styles.add(ParagraphStyle(name='HeadingBold', alignment=TA_CENTER, fontName='Arial-Bold', fontSize=14))
+        styles.add(ParagraphStyle(name='Polish', fontName='Arial', fontSize=10, ))
+        styles.add(ParagraphStyle(name='TH', alignment=TA_CENTER, fontName='Arial', fontSize=12))
+        styles.add(ParagraphStyle(name='PolishC', alignment=TA_CENTER, fontName='Arial', fontSize=10))
+        styles.add(ParagraphStyle(name='PolishS', fontName='Arial', fontSize=8))
+        styleN = styles["Polish"]
+        styleH = styles["TH"]
+        styleNC = styles["PolishC"]
+        dt = [('', '', 'SFERA', 'CYLINDER', Paragraph(u'<para align="center">OŚ</para>', styleN), 'PRYZMA'),
+              (Paragraph('DO DALI', styleNC), 'O.P.', data['tabela1'][0], data['tabela1'][1],
+               data['tabela1'][2], data['tabela1'][3]),
+              ('', 'O.L.', data['tabela1'][4], data['tabela1'][5], data['tabela1'][6],
+               data['tabela1'][7]),
+              (Paragraph('DO BLIŻY', styleNC), 'O.P.', data['tabela1'][8], data['tabela1'][9],
+               data['tabela1'][10], data['tabela1'][11]),
+              ('', 'O.L.', data['tabela1'][12], data['tabela1'][13], data['tabela1'][14],
+               data['tabela1'][15])]
+        table1 = Table(dt, colWidths=[1.5 * cm, 1.5 * cm, 2.5 * cm, 2.5 * cm, 2.5 * cm, 2.5 * cm])
+        table1.setStyle(TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                    ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
+                                    ('SPAN', (0, 1), (0, 2)), ('SPAN', (0, 3), (0, 4))
+                                    ]))
+        # Story.append(table)
+
+        dt = [(Paragraph('MIEJSCE DLA WYCENY [ZŁ]', styleH), ''), (Paragraph('Oprawa', styleN), data['tabela2'][0]),
+              (Paragraph('Cena oprawy odliczona od droższej oprawy', styleN), data['tabela2'][1]),
+              (Paragraph('Prawe szkło', styleN), data['tabela2'][2]),
+              (Paragraph('Lewe szkło', styleN), data['tabela2'][3]),
+              (Paragraph('Futerał', styleN), data['tabela2'][4]),
+              (Paragraph('Suma', styleN), data['tabela2'][5]),
+              (Paragraph('Usługa', styleN), data['tabela2'][6]),
+              (Paragraph('Razem', styleN), data['tabela2'][7])
+              ]
+        table2 = Table(dt)
+        table2.setStyle(TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                    ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
+                                    ('SPAN', (0, 0), (1, 0))
+                                    ]))
+
+        glasses = settings.BASE_DIR + '/static/images/okulary.png'
+        p = Paragraph('Nazwisko pacjenta:  ' + data['name'], styleN)
+        p.wrapOn(c, 10 * cm, (2) * cm)
+        p.drawOn(c, (1) * cm, (h - 2) * cm)
+
+        # drawing = svg2rlg(glasses)
+        # drawing.drawOn(c,1*cm,(h-6.29/2-3.5)*cm)
+
+        c.drawImage(glasses, 1 * cm, (h - 2.66 * 3 / 2 - 2.5) * cm, 7.44 * 3 / 2 * cm, 2.66 * 3 / 2 * cm)
+
+        table1.wrapOn(c, 8 * cm, 3 * cm)
+        table1.drawOn(c, 1 * cm, (h - 10) * cm)
+
+        c.setFont("Arial", 10)
+
+        p = Paragraph('SZKŁA', styleN)
+        p.wrapOn(c, 4 * cm, (2) * cm)
+        p.drawOn(c, (1) * cm, (h - 11) * cm)
+        c.drawString(2.5 * cm, (h - 10.94) * cm, data['tabela1'][16])
+
+        c.drawString(5 * cm, (h - 11) * cm, 'OPRAWA  ' + data['tabela1'][17])
+        c.drawString(1 * cm, (h - 12) * cm, 'Data i podpis lekarza  _________________')
+
+        # p = Paragraph('Odl. zrenic.'+data['tabela1'][0][''], styleN)
+        # p.wrapOn(c, 4*cm, (2)*cm)
+        # p.drawOn(c,(9)*cm,(h-11)*cm)
+
+        # p = Paragraph('Odl. zrenic.'+data['tabela1'][2][''], styleN)
+        # p.wrapOn(c, 4*cm, (2)*cm)
+        # p.drawOn(c,(11)*cm,(h-11)*cm)
+
+        table2.wrapOn(c, 7 * cm, 6 * cm)
+        table2.drawOn(c, (7) * cm, (h - 20) * cm)
+
+        p = Paragraph('Pieczątka Wydziału Zdrowia zatwierdzającego receptę', styles['PolishS'])
+        p.wrapOn(c, 5 * cm, (2) * cm)
+        p.drawOn(c, (1) * cm, (h - 17) * cm)
+
+        p = Paragraph('Pieczątka z adresami sklepów', styles['PolishS'])
+        p.wrapOn(c, 6 * cm, (2) * cm)
+        p.drawOn(c, (1) * cm, (h - 20) * cm)
+
+        # c.drawString(2*cm,(h-14)*cm,('Pieczątka z adresami sklepów').encode('utf-8'))
+
+        # pozycja srodka okularow
+        px = 3.55
+        lx = px + 6
+        py = ly = h - 5
+        r = 1.5
+        ra = data['op']
+        la = data['ol']
+        if la >= 0:
+            c.line(lx * cm, ly * cm, (lx + r * math.cos(math.radians(la + 5))) * cm,
+                   (ly + r * math.sin(math.radians(la + 5))) * cm)
+            c.line(px * cm, py * cm, (px + r * math.cos(math.radians(ra + 5))) * cm,
+                   (py + r * math.sin(math.radians(ra + 5))) * cm)
+
+        c.save()
+
+        # return response
+        return HttpResponse(fileNm2)

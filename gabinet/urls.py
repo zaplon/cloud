@@ -51,7 +51,7 @@ router.register(r'visits', VisitViewSet, base_name='visits')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^jet/', include('jet.urls', 'jet')),
+    # url(r'^jet/', include('jet.urls', 'jet')),
     url(r"^account/", include("account.urls")),
     url(r"^setup/(?P<step>[0-9])", SetupView.as_view(), name='setup'),
     url(r'^patients/', patients_view, name='patients'),

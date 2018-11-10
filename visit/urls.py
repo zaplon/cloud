@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from medicine.prints import PrintRecipe
+from medicine.prints import PrintRecipe, PrintGlasses
 from .views import *
 
 urlpatterns = [
@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'tab/(?P<pk>[0-9]+)/delete/$', TabDelete.as_view(), name='tab-delete'),
     url(r'pdf/(?P<pk>[0-9]+)/', PdfView.as_view(), name='visit-pdf'),
     url(r'pdf/services/', ServicesPdfView.as_view(), name='visit-pdf'),
+    url(r'oculist_recipe/', PrintGlasses.as_view(), name='print-glasses'),
     url(r'recipe/', PrintRecipe.as_view(), name='print-recipe'),
     url(r'(?P<pk>[0-9]+)/', login_required(VisitView.as_view()), name='visit')
 ]

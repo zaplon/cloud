@@ -71,6 +71,8 @@ class DoctorForm(forms.Form):
     pwz = forms.CharField(max_length=7, label=u'Numer PWZ')
     title = forms.CharField(max_length=50, label=u'Tytuł')
     form_class = forms.CharField(max_length=50, initial='DoctorForm', widget=HiddenInput(), required=False)
+    visit_duration = forms.IntegerField(min_value=5, required=True, label='Czas trwania wizyty',
+                                        help_text='Liczba minut przypadających na jedną wizytę')
     factory_specializations = forms.MultipleChoiceField(label=u'Specjalizacje', required=False,
                                                         help_text=u'Zaznacz kilka pozycji trzymając wciśnięty klawisz CTRL')
 
@@ -78,6 +80,7 @@ class DoctorForm(forms.Form):
         if 'user' in kwargs.get('initial', {}):
             u = kwargs['initial'].pop('user')
             kwargs['initial'] = {'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email,
+                                 'visit_duration': u.doctor.visit_duration,
                                  'mobile': u.profile.mobile, 'pwz': u.doctor.pwz, 'title': u.doctor.title}
         super(DoctorForm, self).__init__(*args, **kwargs)
         self.fields['factory_specializations'].choices = [(s.id, s.name) for s in Specialization.objects.all()]
@@ -86,8 +89,8 @@ class DoctorForm(forms.Form):
             self.fields['factory_specializations'].initial = specs
         self.helper = FormHelper()
         self.helper.wrapper_class = 'row'
-        self.helper.label_class = 'col-md-2'
-        self.helper.field_class = 'col-md-10'
+        self.helper.label_class = 'col-md-3'
+        self.helper.field_class = 'col-md-9'
         self.helper.add_layout(Layout(
             Field('title', css_class='form-control', wrapper_class='row'),
             Field('first_name', css_class='form-control', wrapper_class='row'),
@@ -114,6 +117,7 @@ class DoctorForm(forms.Form):
         user.email = self.data['email']
         user.doctor.pwz = self.data['pwz']
         user.doctor.mobile = self.cleaned_data['mobile']
+        user.doctor.visit_duration = self.cleaned_data['visit_duration']
         user.save()
         user.doctor.save()
         if 'factory_specializations' in self.cleaned_data:
@@ -127,7 +131,7 @@ class FullPatientForm(forms.Form):
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
     email = forms.EmailField(label=u'Adres email')
-    mobile = forms.CharField(max_length=9, label=u'Numer telefonu', required=False)
+    mobile = forms.CharField(max_length=15, label=u'Numer telefonu', required=False)
 
     def __init__(self, *args, **kwargs):
         super(FullPatientForm, self).__init__(*args, **kwargs)
@@ -149,6 +153,8 @@ class PatientForm(forms.Form):
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
     email = forms.EmailField(label=u'Adres email', required=False)
     pesel = PLPESELField(label=u'Pesel', required=False)
+    mobile = forms.CharField(max_length=20, label=u'Numer telefonu', required=False)
+    last_name = forms.CharField(max_length=100, label=u'Nazwisko')
 
     def clean_pesel(self):
         pesel = self.cleaned_data['pesel']

@@ -111,7 +111,7 @@ def create_doctor_tabs(sender, instance, created, **kwargs):
 
 
 class Patient(models.Model):
-    mobile = models.IntegerField(blank=True, null=True, verbose_name=u'Telefon')
+    mobile = models.CharField(blank=True, null=True, verbose_name=u'Telefon', max_length=20)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True)
     first_name = models.CharField(max_length=100, default='', verbose_name=u'Imię')
     last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
