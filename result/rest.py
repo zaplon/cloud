@@ -9,7 +9,7 @@ from elasticsearch_dsl import Search
 from rest_framework import serializers, viewsets
 
 from g_utils.rest import SearchMixin
-from user_profile.models import Patient, Doctor, Specialization
+from user_profile.models import Patient, Doctor, Specialization, User
 from visit.models import Visit
 from .models import Result, ResultIndex
 from django.conf import settings
@@ -22,10 +22,11 @@ from rest_framework.response import Response
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())
     specialization = serializers.PrimaryKeyRelatedField(queryset=Specialization.objects.all())
+    uploaded_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Result
-        fields = ('id', 'name', 'description', 'file', 'patient', 'specialization', 'uploaded')
+        fields = ('id', 'name', 'description', 'file', 'patient', 'specialization', 'uploaded_by', 'uploaded')
 
 
 class ResultTableSerializer(serializers.HyperlinkedModelSerializer):
@@ -90,6 +91,7 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
             r.save()
             return HttpResponse(json.dumps({'id': r.id}), status=200, content_type='application/json')
         else:
+            request.data['uploaded_by'] = self.request.user.id
             return super(ResultViewSet, self).create(request)
 
     def retrieve(self, request, *args, **kwargs):
