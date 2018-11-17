@@ -1,11 +1,11 @@
 <html lang="pl">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script data-ignore="1" src="/static/forms/js/jquery-3.2.1.min.js"></script>
-    <script data-ignore="1" src="/static/forms/js/datepicker.js.min"></script>
-    <script data-ignore="1" src="/static/forms/js/form_scripts.js"></script>
-    <link data-ignore="1" href="/static/forms/css/form_styles.css" rel="stylesheet"/>
-    <link data-ignore="1" href="/static/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <script data-ignore="1" src="/assets/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/assets/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
     <title>Karta badania profilaktycznego</title>
     <meta name="author" content="Jan Zapał"/>
     <meta name="keywords" content="()"/>
@@ -35,10 +35,10 @@
                 putSplittedDate(e, 'data_badania_');
             });
             $('#data-zalozenia-karty').on('pick.datepicker', function (e) {
-                putSplittedDate(e, 'data_zalozenia_', true);
+                putSplittedDate(e, 'data_zalozenia_');
             });
             $('#data-wydania-orzeczenia').on('pick.datepicker', function (e) {
-                putSplittedDate(e, 'data_wydania_orzeczenia_', true);
+                putSplittedDate(e, 'data_wydania_orzeczenia_');
             });
             $('#data-nastepnego-badania').on('pick.datepicker', function (e) {
                 putSplittedDate(e, 'data_nastepnego_badania_');
@@ -239,11 +239,6 @@
         text-decoration: none;
         font-size: 10pt;
     }
-    .td-no-border {
-        border-top: none;
-        border-bottom: none;
-        border-right: 1px solid black;
-    }
     </style>
 </head>
 <body class="profilaktyczne" style="width: 21cm; background-color: white; padding: 1cm"><h2 style="padding-top: 2pt;/* padding-left: 195pt; */text-indent: 0pt;line-height: 14pt;text-align: center;">KARTA
@@ -375,7 +370,7 @@
                     <p class="s2" style="padding-left: 3pt;padding-right: 10pt;text-indent: 0pt;text-align: left;">Zawód
                         wyuczony / Zawód wykonywany</p></td>
                 <td style="width:304pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <textarea name="job_name"></textarea>
+                    <textarea name="job_position"></textarea>
                 </td>
                 <td style="width:146pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt" colspan="7">
                 </td>
@@ -828,8 +823,8 @@
             <input type="radio" name="podmotowe_1" checked="" style="
 " value="on">
         </td>
-        <td style="width:349pt;" class="td-no-border" colspan="2">
-            <input type="text" class="whole_line" name="opis-podmiotowe-1">
+        <td style="width:349pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="2" rowspan="18"><textarea></textarea>
+
         </td>
     </tr>
     <tr style="height:13pt">
@@ -842,7 +837,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_2" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-2"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -854,7 +848,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_3" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-3"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -866,7 +859,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_4" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-4"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -878,7 +870,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_5" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-5"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -890,7 +881,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_6" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-6"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -902,7 +892,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_7" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-7"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -914,7 +903,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_8" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-8"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -926,7 +914,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_9" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-9"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -938,7 +925,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_10" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-10"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -950,7 +936,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_11" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-11"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -962,7 +947,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_12" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-12"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -974,7 +958,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_13" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-13"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -986,7 +969,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_14" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-14"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -999,7 +981,6 @@
             <input checked="" type="radio" name="podmotowe_15" value="on">
 
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-15"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1012,7 +993,6 @@
             <input checked="" type="radio" name="podmotowe_16" value="on">
 
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-16"></td>
     </tr>
     <tr style="height:13pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1024,7 +1004,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_17" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-17"></td>
     </tr>
     <tr style="height:19pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1036,7 +1015,6 @@
         <td style="width:25pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input checked="" type="radio" name="podmotowe_18" value="on">
         </td>
-        <td colspan="2" class="td-no-border"><input type="text" class="whole_line" name="opis-podmiotowe-18"></td>
     </tr>
     <tr style="height:20pt">
         <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1343,8 +1321,8 @@
         <td style="width:38pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input type="radio" name="rp1" value="on">
         </td>
-        <td style="width:326pt;" class="td-no-border">
-            <input class="whole_line" type="text" name="przedmiotowe_1">
+        <td style="width:326pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" rowspan="14"><textarea></textarea>
+
         </td>
     </tr>
     <tr style="height:18pt">
@@ -1358,8 +1336,8 @@
         </td>
         <td style="width:38pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <input type="radio" name="rp2" value="on">
+
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_2" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1375,7 +1353,6 @@
             <input type="radio" name="rp3" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_3" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1390,7 +1367,6 @@
             <input type="radio" name="rp4" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_4" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1406,7 +1382,6 @@
             <input type="radio" name="rp5" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_5" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1421,7 +1396,6 @@
             <input type="radio" name="rp6" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_6" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1437,7 +1411,6 @@
             <input type="radio" name="rp7" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_7" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1452,7 +1425,6 @@
             <input type="radio" name="rp8" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_8" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1468,7 +1440,6 @@
             <input type="radio" name="rp9" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_9" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1484,7 +1455,6 @@
             <input type="radio" name="rp10" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_10" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1500,7 +1470,6 @@
             <input type="radio" name="rp11" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_11" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1516,7 +1485,6 @@
             <input type="radio" name="rp12" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_12" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1532,7 +1500,6 @@
             <input type="radio" name="rp13" value="on">
 
         </td>
-        <td class="td-no-border"><input type="text" name="przedmiotowe_13" class="whole_line"></td>
     </tr>
     <tr style="height:18pt">
         <td style="width:110pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -1548,7 +1515,6 @@
             <input type="radio" name="rp14" value="on">
 
         </td>
-        <td class="td-no-border" style="border-bottom: 1px solid black;"><input type="text" name="przedmiotowe_14" class="whole_line"></td>
     </tr>
     </tbody>
 </table>

@@ -63,6 +63,7 @@ $(document).ready(function () {
            params[parts[0]] = decodeURIComponent(parts[1]);
         });
     console.log(params);
+    window.params = params;
     for (param in params) {
         if ($('input[name="' + param + '"]').length > 0)
             $('input[name="' + param + '"]').val(params[param]);

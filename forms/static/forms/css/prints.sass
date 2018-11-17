@@ -17,7 +17,7 @@ body
 .no-print
   display: none
 
-input[type='text']
+input[type='text']:not(.not-dotted)
   border: none!important
   border-bottom: 1px dotted black!important
   padding-left: 3px
@@ -25,7 +25,11 @@ input[type='text']
   box-shadow: none!important
 
 .dotted
+  border: none
   border-bottom: 1px dotted black!important
+
+input.no-border
+  border: none
 
 table.no-border
   td
@@ -43,6 +47,14 @@ footer
 table.radio-center
   td
     text-align: center
+
+.table-splitted
+  margin-top: 0px!important
+
+.page-break
+  display: block
+  page-break-before: always
+
 
 table
   page-break-inside: avoid
@@ -69,6 +81,8 @@ table
     .checkbox
       width: 100%
       text-align: center
+    span.form-control, input[type='text'].form-control
+      border: none
 
 .adnotations
   width: 33%

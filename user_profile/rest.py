@@ -157,7 +157,10 @@ class UserSerializer(serializers.ModelSerializer):
     user_permissions = serializers.SerializerMethodField('get_all_permissions')
 
     def get_all_permissions(self, instance):
-        user_permissions = instance.user_permissions.all()
+        if instance.is_superuser:
+            user_permissions = Permission.objects.all()
+        else:
+            user_permissions = instance.user_permissions.all()
         groups_permissions = Permission.objects.filter(group__user=instance)
         all_permissions = user_permissions | groups_permissions
         serializer = PermissionSerializer(all_permissions, many=True)

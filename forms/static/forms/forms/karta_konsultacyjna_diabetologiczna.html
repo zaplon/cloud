@@ -14,6 +14,12 @@
     <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
     <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
     <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <script>
+        $(document).ready(function(){
+            var pesel = window.SPSR.params.pesel;
+            for (p in pesel){ $('input[name=pesel_' + p + ']').val(pesel[p]); }
+        })
+    </script>
     <style>
         body {
             font-size: 12px;
@@ -35,11 +41,15 @@
             border: 1px solid black;
             border-spacing: 0;
         }
-
         table.no-border td {
             border: 0 !important;
         }
-
+        table td:first-of-type {
+            padding-left: 0px!important;
+        }
+        .row .radio-div:first-of-type {
+            margin-left: 15px;
+        }
         input, textarea  {
             border: 1px solid black !important;
             padding: 0.25cm;
@@ -47,7 +57,7 @@
         }
         .radio-div {
             border: 1px solid black;
-            padding: 0.25cm;
+            padding: 0.20cm 0.25cm;
             text-align: center;
         }
         .row {
@@ -64,9 +74,9 @@
 <body class="page" style="height: inherit; padding: 1.0cm;">
 <div class="row">
     <div class="col-md-5">
-        <textarea class="whole_line" style="height: 125px;"></textarea>
+        <textarea class="whole_line" style="height: 100px;"></textarea>
     </div>
-    <div class="col-md-6 offset-md-4" style="margin-top: 36px;">
+    <div class="col-md-6 offset-md-4" style="margin-top: 25px;">
         <h1 class="text-center">Karta konsultacyjna diabetologiczna</h1>
     </div>
 </div>
@@ -92,6 +102,8 @@
             <tbody>
                 <tr>
                     <td></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_0" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_1" maxlength="1"></td>
                     <td><input class="whole_line" type="text" pattern="\d" name="pesel_2" maxlength="1"></td>
                     <td><input class="whole_line" type="text" pattern="\d" name="pesel_3" maxlength="1"></td>
                     <td><input class="whole_line" type="text" pattern="\d" name="pesel_4" maxlength="1"></td>
@@ -101,7 +113,6 @@
                     <td><input class="whole_line" type="text" pattern="\d" name="pesel_8" maxlength="1"></td>
                     <td><input class="whole_line" type="text" pattern="\d" name="pesel_9" maxlength="1"></td>
                     <td><input class="whole_line" type="text" pattern="\d" name="pesel_10" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_11" maxlength="1"></td>
                 </tr>
             </tbody>
         </table>
@@ -145,7 +156,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-1 radio-div">
+    <div class="col-md-1 radio-div" style="margin-left: 15px;">
         <input type="radio" class="whole_line" name="typ" value="kandydat">
     </div>
     <div class="col-md-3">
@@ -164,7 +175,8 @@
         <tbody>
             <tr>
                 <td><strong>Cukrzyca</strong></td>
-                <td><input type="text" class="whole_line" name="data_rozpoznania"></td>
+                <td>data rozpoznania</td>
+                <td><input type="date" class="whole_line" name="data_rozpoznania"></td>
                 <td><span>typ cukrzycy:</span></td>
                 <td><input type="text" name="typ_cukrzycy" class="medium-input"></td>
                 <td><span>lekarz prowadzący cukrzycę:</span></td>
@@ -183,26 +195,34 @@
     <div class="col-md-3"><textarea rows="3" class="whole_line" name="poradnia"></textarea></div>
 </div>
 <div class="row">
-    <div class="col-md-6">
-        <span><strong>Wiedza pacjenta</strong> dotycząca jego choroby, leczenia i powikłań</span>
+    <div class="col-md-12">
+        <table class="table no-border">
+        <tr>
+            <td><strong>Wiedza pacjenta</strong> dotycząca jego choroby, leczenia i powikłań</td>
+            <td><div class="radio-div"><input type="radio" name="wiedza_pacjenta" value="wysoka"></div></td>
+            <td>wysoka</td>
+            <td><div class="radio-div"><input type="radio" name="wiedza_pacjenta" value="dostateczna"></div></td>
+            <td>dostateczna</td>
+            <td><div class="radio-div"><input type="radio" name="wiedza_pacjenta" value="niedostateczna"></div></td>
+            <td><strong>niedostateczna</strong></td>
+        </tr>
+    </table>
     </div>
-    <div class="col-md-1 radio-div"><input type="radio" name="wiedza_pacjenta" value="wysoka"></div>
-    <div class="col-md-1">wysoka</div>
-    <div class="col-md-1 radio-div"><input type="radio" name="wiedza_pacjenta" value="dostateczna"></div>
-    <div class="col-md-1">dostateczna</div>
-    <div class="col-md-1 radio-div"><input type="radio" name="wiedza_pacjenta" value="niedostateczna"></div>
-    <div class="col-md-1"><strong>niedostateczna</strong></div>
 </div>
 <div class="row">
-    <div class="col-md-3">
-        <span><strong>Umiejętność kontrolowania glikemii:</strong></span>
+    <div class="col-md-12">
+        <table class="table no-border">
+        <tr>
+            <td><strong>Umiejętność kontrolowania glikemii:</strong></td>
+            <td><div class="radio-div"><input type="radio" name="kontrolowanie_glikemii" value="dobra"></div></td>
+            <td>dobra</td>
+            <td><div class="radio-div"><input type="radio" name="kontrolowanie_glikemii" value="akceptowalna"></div></td>
+            <td>akceptowalna</td>
+            <td><div class="radio-div"><input type="radio" name="kontrolowanie_glikemii" value="niska"></div></td>
+            <td><strong>niska</strong></td>
+        </tr>
+    </table>
     </div>
-    <div class="radio-div col-md-1"><input type="radio" name="kontrolowanie_glikemii" value="dobra"></div>
-    <div class="col-md-1"><span>dobra</span></div>
-    <div class="radio-div col-md-1"><input type="radio" name="kontrolowanie_glikemii" value="akceptowalne"></div>
-    <div class="col-md-2"><span>akceptowalna</span></div>
-    <div class="radio-div col-md-1"><input type="radio" name="kontrolowanie_glikemii" value="niska"></div>
-    <div class="col-md-1"><span><strong>niska</strong></span></div>
 </div>
 <div class="row">
     <div class="col-md-7">
@@ -244,52 +264,46 @@
     <div class="col-md-4">brak przewlekłych powikłań cukrzycy</div>
 </div>
 <div class="row">
-    <div class="col-md-1 radio-div">
-        <input type="radio" name="powiklania" value="wzrok">
-    </div>
-    <div class="col-md-3">
-        ze strony narządu wzroku
-    </div>
-    <div class="col-md-1 radio-div">
-        <input type="radio" name="powiklania" value="nerwy">
-    </div>
-    <div class="col-md-3">
-        ze strony układu nerwowego
-    </div>
-    <div class="col-md-1 radio-div">
-        <input type="radio" name="powiklania" value="serce">
-    </div>
-    <div class="col-md-3">
-        ze strony narządu układu sercowo-maczyniowego
-    </div>
+    <table class="table no-border">
+        <tr>
+            <td><div class="radio-div"><input type="radio" name="powiklania" value="wzrok"></div></td>
+            <td>ze strony narządu wzroku</td>
+            <td><div class="radio-div"><input type="radio" name="powiklania" value="nerwy"></div></td>
+            <td>ze strony układu nerwowego</td>
+            <td><div class="radio-div"><input type="radio" name="powiklania" value="serce"></div></td>
+            <td>ze strony narządu układu sercowo-maczyniowego</td>
+        </tr>
+    </table>
 </div>
 <div class="row">
     <div class="col-md-12">
         <span>Uwagi dotyczące przewlekłych powikłań cukrzycy:</span>
-        <textarea class="whole_line" rows="5" name="uwagi"></textarea>
+        <textarea class="whole_line" rows="2" name="uwagi"></textarea>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <span>Ocena zdolności do prowadzenia pojazdów:</span>
-        <textarea class="whole_line" rows="3" name="ocena"></textarea>
+        <textarea class="whole_line" rows="2" name="ocena"></textarea>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <span>Inne uwagi:</span>
-        <textarea class="whole_line" rows="5" name="inne"></textarea>
+        <textarea class="whole_line" rows="2" name="inne"></textarea>
     </div>
 </div>
 <div class="row mt-2">
     <div class="col-md-3">
-        <input type="date" class="whole_line form-control" name="data">
+        <input type="date" class="whole_line dotted" name="date">
     </div>
-    <div class="col-md-5 col-md-offset-4">
-        <input type="text" class="whole_line form-control" name="podpis">
+    <div class="col-md-6 col-md-offset-3">
+        <input type="text" class="whole_line dotted" name="podpis">
     </div>
+</div>
+<div class="row">
     <div class="col-md-3 text-center">(data)</div>
-    <div class="col-md-5 col-md-offset-4 text-center">
+    <div class="col-md-6 col-md-offset-3 text-center">
         (pieczątka i podpis lekarza specjalisty w dziedzinie diabetologii
         albo innego lekarza prowadzącego leczenie cukrzycy)
     </div>

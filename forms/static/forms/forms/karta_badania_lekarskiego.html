@@ -1,7 +1,7 @@
 <html>
 <head>
 
-    <title>ABA</title>
+    <title>Karta badania lekarskiego</title>
     <meta name="author" content="Jan Zapał"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -15,9 +15,21 @@
     <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
     <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
     <style>
-        table.border td {
-            border: 1px solid black;
+        body {
+            font-size: 12px!important;
+        }
+        table {
+            page-break-inside: auto;
+            font-size: 12px;
+        }
+        table td {
+            border: 1px solid #999999;
             border-spacing: 0;
+        }
+        table.table-splitted {
+            margin-top: -20px;
+            border-top: none;
+            page-break-before: always;
         }
 
         table.no-border td {
@@ -38,14 +50,21 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
+        table h2 {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .mt-1 {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body class="page-landscape" style="height: inherit;">
 <div class="row">
     <div class="col-md-6">
-        <table>
+        <table class="no-border">
             <tr>
-                <td><input class="whole_line" type="text" name="oznaczenie"/></td>
+                <td><input class="whole_line form-control" type="text" name="oznaczenie"/></td>
             </tr>
             <tr>
                 <td><span class="small text-center">(oznaczenie jednostki przeprowadzającej badanie)</span></td>
@@ -77,6 +96,11 @@
     <div class="col-md-12">
         <h2 class="text-uppercase">1. Dane identyfikujące osoby badanej</h2>
         <table class="table">
+            <colgroup>
+                <col style="width:25%;">
+                <col style="width:35%;">
+                <col style="width:40%;">
+            </colgroup>
             <tr>
                 <td>
                     <span>Imię i nazwisko</span>
@@ -91,11 +115,11 @@
                             <td>Rok</td>
                         </tr>
                         <tr>
-                            <td style="width: 75px;"><input class="whole_line form-control" type="text" pattern="/d"
+                            <td style="width: 75px;"><input class="whole_line form-control not-dotted" type="text" pattern="/d"
                                                             maxlength="2" name="born_day"></td>
-                            <td style="width: 75px;"><input class="whole_line form-control" type="text" pattern="/d"
+                            <td style="width: 75px;"><input class="whole_line form-control not-dotted" type="text" pattern="/d"
                                                             maxlength="2" name="born_month"></td>
-                            <td style="width: 75px;"><input class="whole_line form-control" type="text" pattern="/d"
+                            <td style="width: 75px;"><input class="whole_line form-control not-dotted" type="text" pattern="/d"
                                                             maxlength="4" name="born_year"></td>
                         </tr>
                         <tr>
@@ -110,9 +134,9 @@
             </tr>
             <tr>
                 <td>Numer pesel <sup>2)</sup></td>
-                <td><input type="text" name="pesel" class="form-control whole_line"></td>
+                <td><input type="text" name="pesel" class="form-control whole_line not-dotted"></td>
                 <td>Rok uzyskania uprawnienia do kierowania pojazdami</td>
-                <td><input type="date" name="rok-uprawnien" class="form-control whole_line"></td>
+                <td><input type="text" data-toggle="datepicker" name="rok-uprawnien" class="form-control whole_line not-dotted"></td>
             </tr>
             <tr>
                 <td>Adres miejsca zamieszkania</td>
@@ -121,12 +145,12 @@
                 <td style="padding: 0;">
                     <table style="height: 50px;">
                         <tr>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="postal1"></td>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="postal2"></td>
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="postal1"></td>
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="postal2"></td>
                             <td style="width:30px; text-align:center;">-</td>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="postal3"></td>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="postal4"></td>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="postal5"></td>
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="postal3"></td>
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="postal4"></td>
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="postal5"></td>
                         </tr>
                     </table>
                 </td>
@@ -138,16 +162,16 @@
                 <td style="padding: 0;">
                     <table style="height: 50px;">
                         <tr>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="kod_pocztowy_1_1">
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="kod_pocztowy_1_1">
                             </td>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="kod_pocztowy_1_2">
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="kod_pocztowy_1_2">
                             </td>
                             <td style="width:30px; text-align:center;">-</td>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="kod_pocztowy_1_3">
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="kod_pocztowy_1_3">
                             </td>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="kod_pocztowy_1_4">
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="kod_pocztowy_1_4">
                             </td>
-                            <td><input type="text" pattern="\d" maxlength="1" class="form-control" name="kod_pocztowy_1_5">
+                            <td><input type="text" pattern="\d" maxlength="1" class="form-control not-dotted" name="kod_pocztowy_1_5">
                             </td>
                         </tr>
                     </table>
@@ -155,8 +179,12 @@
             </tr>
         </table>
         <table class="table">
+            <colgroup>
+                <col style="width:60%;">
+                <col style="width:40%;">
+            </colgroup>
             <tr>
-                <td><h2 class="text-uppercase">Podlega badaniu lekarskiemu z tytułu <sup>1)</sup></h2></td>
+                <td><h2 class="text-uppercase">2.Podlega badaniu lekarskiemu z tytułu <sup>1)</sup></h2></td>
                 <td><strong>Kategoria prawa jazdy lub pozwolenie na kierowanie tramwajem</strong></td>
             </tr>
             <tr>
@@ -166,7 +194,15 @@
                 <td><textarea style="height:50px;" class="form-control whole-line" name="2.1"></textarea></td>
             </tr>
         </table>
-        <table class="table">
+    </div>
+</div>
+<div class="row" style="page-break-before: always!important;">
+    <div class="col-md-12">
+        <table class="table table-splitted">
+            <colgroup>
+                <col style="width:60%;">
+                <col style="width:40%;">
+            </colgroup>
             <tr>
                 <td>przedłużenia ważności prawa jazdy określonej kategorii lub pozwolenia na kierowanie tramwajem</td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="2.2"></textarea></td>
@@ -201,6 +237,13 @@
         <h2 class="text-uppercase">3. Badanie ogólne stanu zdrowia</h2>
         <h3>A. Badanie podmiotowe</h3>
         <table class="table">
+            <colgroup>
+                <col style="width:5%;">
+                <col style="width:35%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:40%;">
+            </colgroup>
             <thead>
             <tr>
                 <th>Lp.</th>
@@ -232,6 +275,21 @@
                 <td><input value="nie" type="radio" class="form-control" name="r3.3"/></td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="3.3"></textarea></td>
             </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row page-break">
+    <div class="col-md-12">
+        <table class="table table-splitted">
+            <colgroup>
+                <col style="width:5%;">
+                <col style="width:35%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:40%;">
+            </colgroup>
+            <tbody>
             <tr>
                 <td>4.</td>
                 <td>Incydenty nagłej utraty świadomości</td>
@@ -320,6 +378,12 @@
         </table>
         <h3>B. Badanie przedmiotowe <sup>3)</sup></h3>
         <table class="table">
+            <colgroup>
+                <col style="width: 5%;">
+                <col style="width: 30%;">
+                <col style="width: 25%;">
+                <col style="width: 40%;">
+            </colgroup>
             <thead>
             <tr>
                 <th>Lp.</th>
@@ -341,6 +405,20 @@
                 <td><input style="height:50px;" type="checkbox" class="form-control" name="c3b1.1"></td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="3b1.1"></textarea></td>
             </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row page-break">
+    <div class="col-md-12">
+        <table class="table table-splitted">
+            <colgroup>
+                <col style="width: 5%;">
+                <col style="width: 30%;">
+                <col style="width: 25%;">
+                <col style="width: 40%;">
+            </colgroup>
+            <tbody>
             <tr>
                 <td>1.2.</td>
                 <td>Blizny skórne i ubytki kostne czaszki</td>
@@ -431,12 +509,26 @@
                 <td><input style="height:50px;" type="checkbox" class="form-control" name="c3b5.1"></td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="3b5.1"></textarea></td>
             </tr>
-            <tr>
+            <tr style="page-break-after: always;">
                 <td>5.2.</td>
                 <td>Przepukliny</td>
                 <td><input style="height:50px;" type="checkbox" class="form-control" name="c3b5.2"></td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="3b5.2"></textarea></td>
             </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row page-break">
+    <div class="col-md-12">
+        <table class="table table-splitted">
+            <colgroup>
+                <col style="width: 5%;">
+                <col style="width: 30%;">
+                <col style="width: 25%;">
+                <col style="width: 40%;">
+            </colgroup>
+            <tbody>
             <tr>
                 <td>5.3.</td>
                 <td>Wątroba</td>
@@ -530,11 +622,25 @@
                 <td><input style="height:50px;" type="checkbox" class="form-control" name="c3b6.3a"></td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="3b6.3a"></textarea></td>
             </tr>
-            <tr>
+            <tr style="page-break-after: always;">
                 <td>b) odcinka lędźwiowego<input type="text" name="i3b6.3b" class="form-control"></td>
                 <td><input style="height:50px;" type="checkbox" class="form-control" name="c3b6.3b"></td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="3b6.3b"></textarea></td>
             </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row page-break">
+    <div class="col-md-12">
+        <table class="table table-splitted">
+            <colgroup>
+                <col style="width: 5%;">
+                <col style="width: 30%;">
+                <col style="width: 25%;">
+                <col style="width: 40%;">
+            </colgroup>
+            <tbody>
             <tr>
                 <td>6.4.</td>
                 <td><strong>Badanie chodu</strong></td>
@@ -593,6 +699,7 @@
         </table>
     </div>
 </div>
+<div class="page-break"></div>
 <h2 class="text-uppercase">4. Badanie narządu wzroku</h2>
 <div class="row">
     <div class="col-md-2">
@@ -620,8 +727,8 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <span>Podlega badaniu lekarskiemu z tytułu (wpisać na podstawie części 2 karty badania lekarskiego - tylko w przypadku badania
-    wykonywanego przez lekarza specialistę w dziedzinie okulistyki)</span>
+        <p class="mt-1">Podlega badaniu lekarskiemu z tytułu (wpisać na podstawie części 2 karty badania lekarskiego - tylko w przypadku badania
+    wykonywanego przez lekarza specialistę w dziedzinie okulistyki)</p>
     </div>
     <div class="col-md-12">
         <input type="text" name="i4.1" class="whole_line">
@@ -669,6 +776,13 @@
     <div class="col-md-12">
         <h3>Badanie przedmiotowe</h3>
         <table class="table">
+            <colgroup>
+                <col style="width:5%;">
+                <col style="width:35%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:40%;">
+            </colgroup>
             <tbody>
             <tr>
                 <td>Lp.</td>
@@ -698,6 +812,21 @@
                 <td><input type="radio" value="oko_lewe" class="form-control" name="r4.6"></td>
                 <td><textarea class="form-control whole_line" name="4.6"></textarea></td>
             </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row page-break">
+    <div class="col-md-12">
+        <table class="table table-splitted">
+            <colgroup>
+                <col style="width:5%;">
+                <col style="width:35%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:40%;">
+            </colgroup>
+            <tbody>
             <tr>
                 <td>4.</td>
                 <td>Pole widzenia</td>
@@ -760,9 +889,9 @@
         <input type="text" class="col-md-12 form-control" name="4.18">
     </div>
 </div>
-<div class="row mt-2">
+<div class="row mt-2" style="page-break-after: always;">
     <div class="col-md-3">
-        <input type="date" class="whole_line form-control" name="4.19">
+        <input type="text" data-toggle="datepicker" class="whole_line form-control" name="4.19">
     </div>
     <div class="col-md-4 col-md-offset-5">
         <input type="text" class="whole_line form-control" name="4.20">
@@ -773,7 +902,7 @@
     </div>
 </div>
 
-<section name="5">
+<section name="5" class="page-break">
     <div class="row">
         <div class="col-md-12">
             <h2 class="text-uppercase">5.Badanie narządu słuchu</h2>
@@ -805,8 +934,8 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-        <span>Podlega badaniu lekarskiemu z tytułu (wpisać na podstawie części 2 karty badania lekarskiego - tylko w przypadku badania
-    wykonywanego przez lekarza specialistę w dziedzinie laryngologii)</span>
+        <p class="mt-1">Podlega badaniu lekarskiemu z tytułu (wpisać na podstawie części 2 karty badania lekarskiego - tylko w przypadku badania
+    wykonywanego przez lekarza specialistę w dziedzinie laryngologii)</p>
         </div>
         <div class="col-md-12">
             <input type="text" name="i5.1" class="whole_line">
@@ -901,7 +1030,7 @@
     </div>
     <div class="row mt-2">
     <div class="col-md-3">
-        <input type="date" class="whole_line form-control" name="4.19">
+        <input type="text" data-toggle="datepicker" class="whole_line form-control" name="4.19">
     </div>
     <div class="col-md-4 col-md-offset-5">
         <input type="text" class="whole_line form-control" name="4.20">
@@ -923,7 +1052,7 @@
         według schematu:</span>
     </div>
 </div>
-<div class="row">
+<div class="row" style="page-break-after: always;">
     <div class="col-md-6">
         <table class="table">
             <tbody>
@@ -941,7 +1070,7 @@
             </tr>
             <tr>
                 <td>Data</td>
-                <td><input type="date" class="form-control" name="6.1.4"></td>
+                <td><input type="text" data-toggle="datepicker" class="form-control" name="6.1.4"></td>
             </tr>
             <tr>
                 <td>Podpis i pieczątka lekarza</td>
@@ -967,7 +1096,7 @@
             </tr>
             <tr>
                 <td>Data</td>
-                <td><input type="date" class="form-control" name="6.2.4"></td>
+                <td><input type="text" data-toggle="datepicker" class="form-control" name="6.2.4"></td>
             </tr>
             <tr>
                 <td>Podpis i pieczątka lekarza</td>
@@ -995,7 +1124,7 @@
             </tr>
             <tr>
                 <td>Data</td>
-                <td><input type="date" class="form-control" name="6.3.4"></td>
+                <td><input type="text" data-toggle="datepicker" class="form-control" name="6.3.4"></td>
             </tr>
             <tr>
                 <td>Podpis i pieczątka lekarza</td>
@@ -1021,7 +1150,7 @@
             </tr>
             <tr>
                 <td>Data</td>
-                <td><input type="date" class="form-control" name="6.4.4"></td>
+                <td><input type="text" data-toggle="datepicker" class="form-control" name="6.4.4"></td>
             </tr>
             <tr>
                 <td>Podpis i pieczątka lekarza</td>
@@ -1061,7 +1190,7 @@
 </div>
 <div class="row mt-2">
     <div class="col-md-3">
-        <input type="date" class="whole_line form-control" name="data">
+        <input type="text" data-toggle="datepicker" class="whole_line form-control" name="data">
     </div>
     <div class="col-md-4 col-md-offset-5">
         <input type="text" class="whole_line form-control" name="podpis">

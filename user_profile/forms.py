@@ -149,12 +149,12 @@ class FullPatientForm(forms.Form):
 
 class PatientForm(forms.Form):
     horizontal = True
+    return_result = True
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
     email = forms.EmailField(label=u'Adres email', required=False)
     pesel = PLPESELField(label=u'Pesel', required=False)
     mobile = forms.CharField(max_length=20, label=u'Numer telefonu', required=False)
-    last_name = forms.CharField(max_length=100, label=u'Nazwisko')
 
     def clean_pesel(self):
         pesel = self.cleaned_data['pesel']
@@ -165,6 +165,7 @@ class PatientForm(forms.Form):
 
     def save(self):
         patient = Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data['email'],
+                                         mobile=self.cleaned_data['mobile'],
                                first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
         return {'id': patient.id, 'label': patient.name_with_pesel}
 
@@ -186,8 +187,8 @@ class SystemForm(forms.ModelForm):
         super(SystemForm, self).__init__()
         self.helper = FormHelper()
         self.helper.wrapper_class = 'row'
-        self.helper.label_class = 'col-md-2'
-        self.helper.field_class = 'col-md-10'
+        self.helper.label_class = 'col-md-3'
+        self.helper.field_class = 'col-md-9'
         self.helper.add_layout(Layout(
             Field('logo', css_class='form-control', wrapper_class='row')
         ))

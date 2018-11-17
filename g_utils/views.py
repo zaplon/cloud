@@ -97,7 +97,10 @@ class AjaxFormView(APIView):
                 res = form.save(user=self.request.user)
             else:
                 res = form.save()
-            return HttpResponse(json.dumps({'success': True, 'result': res}), content_type='application/json')
+            if getattr(form, 'return_result', False):
+                return HttpResponse(json.dumps({'success': True, 'result': res}), content_type='application/json')
+            else:
+                return HttpResponse(json.dumps({'success': True}), content_type='application/json')
         else:
             form_html = self.render_form(form, ctx)
             return HttpResponse(json.dumps({'success': False, 'form_html': form_html}), content_type='application/json')
