@@ -31,8 +31,8 @@ class AjaxFormView(APIView):
             helper.field_template = 'form/span_field.html'
         if getattr(form, 'horizontal', False):
             helper.wrapper_class = 'row'
-            helper.label_class = 'col-md-2'
-            helper.field_class = 'col-md-10'
+            helper.label_class = 'col-md-3'
+            helper.field_class = 'col-md-9'
         return render_crispy_form(form, context=ctx, helper=helper)
 
     @staticmethod

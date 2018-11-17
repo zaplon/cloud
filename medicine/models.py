@@ -9,7 +9,7 @@ class MedicineParent(models.Model):
     name = models.CharField(max_length=200)
     composition = models.TextField(blank=True, null=True)  # sklad 1 i 2
     manufacturer = models.TextField(blank=True, null=True)  # Wytworca
-    manufacturer_country = models.CharField(max_length=3, blank=True, null=True)  # kraj wytworcy
+    manufacturer_country = models.CharField(max_length=20, blank=True, null=True)  # kraj wytworcy
     permission_nr = models.CharField(max_length=20, blank=True, null=True)  # Numer pozwolenia tylko 1 i 3
     form = models.TextField(blank=True, null=True)  # Postac farmaceutyczna
     mah = models.TextField(blank=True, null=True)  # Podmiot odpowiedzialny
