@@ -5,6 +5,7 @@ services:
       DJANGO_SETTINGS_MODULE: docker_settings
       LANG: "pl_PL.UTF-8"
       LANGUAGE: "pl_PL"
+      QT_QPA_PLATFORM: "offscreen"
     image: "docker.io/zaplon/gabinet"
     working_dir: /app/
     volumes:
@@ -12,10 +13,6 @@ services:
     links:
      - mysql
      - memcached
-    environment:
-      LANG: "pl_PL.UTF-8"
-      LANGUAGE: "pl_PL"
-      QT_QPA_PLATFORM: "offscreen"
     command: uwsgi --http 0.0.0.0:9001 --module docker_wsgi_configuration_module
   mysql:
     image: "mariadb"
