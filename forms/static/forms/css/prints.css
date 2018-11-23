@@ -32,6 +32,9 @@ input.no-border {
 table.no-border td {
   border: none !important; }
 
+table.bordered {
+  border: 1px solid #aaa; }
+
 .whole_line {
   width: 100% !important; }
 

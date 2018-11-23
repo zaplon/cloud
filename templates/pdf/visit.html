@@ -23,13 +23,13 @@
 {% block body %}
     <div class="container">
         <h1 class="text-center">Historia choroby</h1>
-        {% for tab in visit.tabs.all %}
+        {% for tab in visit.printable_tabs %}
             {% if tab.data %}
                 <div>
                     <h2>{{ tab.title }}</h2>
-                    {% if tab.title == 'Rozpoznanie' %}
+                    {% if tab.type == 'ICD10' %}
                         {% include 'pdf/tabs/icd10.html' with icds=tab.data %}
-                    {% elif tab.title == 'Leki' %}
+                    {% elif tab.type == 'MEDICINES' %}
                         {% include 'pdf/tabs/medicines.html' with medicines=tab.data %}
                     {% else %}
                         {{ tab.data }}

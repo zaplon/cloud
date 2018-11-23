@@ -5,7 +5,6 @@ from django.db import models
 from user_profile.models import Doctor, Patient
 from visit.models import Visit
 import datetime
-import time
 from django.utils import timezone
 
 

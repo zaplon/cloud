@@ -98,6 +98,10 @@ class Visit(models.Model):
             visit_tabs.append(visit_tab)
         return visit_tabs
 
+    @property
+    def printable_tabs(self):
+        return self.tabs.all().exclude(type='OCULIST')
+
 
 class Template(models.Model):
     name = models.CharField(max_length=100, verbose_name=u'Nazwa')

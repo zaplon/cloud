@@ -100,7 +100,7 @@ TEMPLATES = [
                 "g_utils.context_processors.utils",
                 "account.context_processors.account",
                 "g_utils.context_processors.form_helpers",
-                "pinax_theme_bootstrap.context_processors.theme"
+                # "pinax_theme_bootstrap.context_processors.theme"
             ],
         },
     },
@@ -195,7 +195,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',

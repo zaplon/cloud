@@ -1,10 +1,12 @@
-from django.test import TestCase, Client
+from django.test import Client
 from django.urls import reverse
+
+from g_utils.utils import GabinetTestCase
 from medicine.models import MedicineParent, Medicine
 from django_dynamic_fixture import G
 
 
-class MedicineParentTestCase(TestCase):
+class MedicineParentTestCase(GabinetTestCase):
 
     def setUp(self):
         self.medicine_parent = G(MedicineParent)

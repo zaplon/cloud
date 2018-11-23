@@ -71,7 +71,7 @@ urlpatterns = [
     url(r'^rest/user/', UserDetailsView.as_view(), name='user-details'),
     url(r"^rest/", include(router.urls, namespace='rest')),
 
-    url(r"^timetable/", include("timetable.urls"), name='timetable'),
+    url(r"^timetable/", include("timetable.urls", namespace='timetable')),
     url(r"^get-form/", AjaxFormView.as_view(), name='get-form'),
     url(r"^forms/", include('forms.urls'), name='forms'),
     url(r"^agreements/", include('agreements.urls'), name='agreements'),

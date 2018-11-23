@@ -1,0 +1,92 @@
+<html>
+<head>
+
+    <title>Zaświadczenie okulary</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/forms/css/bootstrap.css" rel="stylesheet"/>
+
+    <script data-ignore="1" src="/assets/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/assets/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <style>
+
+    </style>
+    <script>
+        $(document).ready(function(){
+            $('input[name="date"]').val(todayStr);
+            $('input[name="today"]').val(todayStr);
+        })
+    </script>
+</head>
+<body class="page" style="height: inherit; padding: 0.5cm;">
+<div class="row">
+    <div class="col-md-12">
+        <p class="text-center">
+SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW <br/>
+IM. PROF. WITOLDA ZAWADOWSKIEGO <br/>
+Ul. WARYŃSKIEGO 9 00-655 Warszawa <br/>
+tel. +48 22 625 15 90; +48 22 825 38 80 <br/>
+</p>
+    </div>
+</div>
+<div class="row" style="margin-top: 4rem;">
+    <div class="col-md-12">
+        <table class="table no-border">
+            <tr>
+                <td>Imię i nazwisko:</td>
+                <td colspan="3"><strong><input type="text" name="name" class="whole_line"></strong></td>
+            </tr>
+            <tr>
+                <td>Pracująca(y) jako:</td>
+                <td colspan="3"><strong><textarea name="job_position" rows="2" class="whole_line"></textarea></strong></td>
+            </tr>
+            <tr>
+                <td>Numer pesel:</td>
+                <td><strong><input type="text" pattern="/d" name="pesel" class="whole_line"></strong></td>
+                <td>Data urodzenia:</td>
+                <td><strong><input data-toggle="datepicker" type="text" name="birth" class="whole_line"></strong></td>
+            </tr>
+            <tr>
+                <td>Zatrudnionej/zatrudnionemu w:</td>
+                <td colspan="3"><strong><input type="text" class="whole_line" name="job_name"></strong></td>
+            </tr>
+            <tr>
+                <td>Mieszczącej się:</td>
+                <td colspan="3"><strong><input type="text" class="whole_line" name="job_address"></strong></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" style="text-align: justify;">
+        <p>Na podstawie badania okulistycznego z dnia:<input style="width: 100px; display: inline; border-bottom:none!important;" type="text" name="today" data-toggle="datepicker">
+        zaleca się badanemu stosowanie szkieł korekcyjnych przy obsłudze monitorów ekranowych
+            (Rozp. MpiPS z 1 grudnia 1988, Dz.U 148, poz 973, par. 8, ust. 1 i 2). <br/>
+            Niniejsze zaświadczenie wydaje się celem przedłożenia pracodawcy - dla realizacji zadania wynikającego
+        z wymienionego Rozporządzenia.</p>
+    </div>
+</div>
+<div class="row" style="margin-top: 8rem;">
+    <div class="col-md-4 col-sm-4">
+        <span>Warszawa,</span> <input data-toggle="datepicker"  type="text" style="width:100px; display: inline;" name="date">
+    </div>
+    <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
+        <input type="text" name="podpis" class=" dotted whole_line">
+    </div>
+</div>
+<div class="row" style="margin-top: 12rem;">
+    <div class="col-md-5 col-sm-5">
+        &nbsp;
+    </div>
+    <div class="col-md-5 col-sm-5 col-md-offset-3 col-sm-offset-3 text-center">
+        Pieczęć i podpis lekarza przeprowadzającego badanie profilaktyczne
+    </div>
+</div>
+</body>
+</html>
