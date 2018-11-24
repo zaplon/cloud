@@ -117,7 +117,7 @@ def recipe_lines(c, tab1=0.3):
 
 def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
 
-    if patient.pesel[6:9] == '999':
+    if patient.pesel and patient.pesel[6:9] == '999':
         patient['pesel'] = ''
 
     doct_margin_left = 1
