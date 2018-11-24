@@ -227,6 +227,6 @@ class SpecializationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SpecializationViewSet(viewsets.ReadOnlyModelViewSet):
+class SpecializationViewSet(viewsets.ReadOnlyModelViewSet, SearchMixin):
     serializer_class = SpecializationSerializer
     queryset = Specialization.objects.all()
