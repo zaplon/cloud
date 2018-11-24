@@ -26,3 +26,8 @@ BASE_DIR = '/app/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
 WKHTMLTOPDF_CMD = '/app/bin/wkhtmltox/bin/wkhtmltopdf'
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8081',
+    'gabinet',
+    '10.198.0.2'
+)

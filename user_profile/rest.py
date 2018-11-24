@@ -96,7 +96,7 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
-                  'total_prescriptions')
+                  'total_prescriptions', 'visit_duration')
         
         
 class DoctorCalendarSerializer(serializers.ModelSerializer):

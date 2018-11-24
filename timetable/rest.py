@@ -135,6 +135,8 @@ class TermViewSet(viewsets.ModelViewSet):
                 return Term.objects.none()
             else:
                 doctor = Doctor.objects.get(id=self.request.GET['doctor'])
+        if not doctor.working_hours:
+            return Term.objects.none()
         if settings.GENERATE_TERMS and (not doctor.terms_generated_till or doctor.terms_generated_till < end.date()):
             Term.create_terms_for_period(doctor,
                                          datetime.datetime.strptime(self.request.query_params['start'], '%Y-%m-%d'),

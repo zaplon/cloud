@@ -36,7 +36,7 @@ class ResultTableSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Result
-        fields = ('id', 'name', 'description', 'file', 'uploaded', 'patient', 'specialization', 'pesel')
+        fields = ('id', 'name', 'description', 'file', 'uploaded', 'patient', 'specialization', 'pesel', 'description')
 
 
 # ViewSets define the view behavior.
