@@ -91,6 +91,7 @@ class WorkingHoursSerializer(serializers.ModelSerializer):
         max_time = max(seq)
         self.instance.terms_start = min_time.time()
         self.instance.terms_end = max_time.time()
+        self.instance.terms_generated_till = datetime.today()
         self.instance.save()
         return self.instance
 
