@@ -18,7 +18,7 @@ DATABASES = {
 }
 
 ELASTIC_HOST = 'elastic1'
-ALLOWED_HOSTS = ['doktor.misal.pl', 'localhost', 'gabinet']
+ALLOWED_HOSTS = ['doktor.misal.pl', 'localhost', 'gabinet', '10.0.0.157', '10.198.0.2']
 APP_URL = 'http://gabinet/'
 DEBUG = True
 COMPRESS_ENABLED = True
@@ -29,5 +29,6 @@ WKHTMLTOPDF_CMD = '/app/bin/wkhtmltox/bin/wkhtmltopdf'
 CORS_ORIGIN_WHITELIST = (
     'localhost:8081',
     'gabinet',
-    '10.198.0.2'
+    '10.198.0.2',
+    '10.0.0.157'
 )

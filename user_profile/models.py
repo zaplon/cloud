@@ -169,6 +169,7 @@ class Code(models.Model):
 
 class SystemSettings(models.Model):
     logo = models.ImageField(verbose_name='Logo')
+    documents_header = models.TextField(verbose_name=u'Nagłówek dokumentów', blank=True)
 
     class Meta:
         verbose_name = 'Ustawienia systemowe'
