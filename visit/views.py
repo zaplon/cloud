@@ -124,7 +124,6 @@ class TemplateDelete(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-
 class TemplateListView(ListView):
 
     model = Template

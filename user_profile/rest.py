@@ -1,9 +1,8 @@
 import json
 
-from django.conf.urls import url, include
 from django.db.models import Q, Min
 from rest_framework import serializers, viewsets
-from rest_framework.fields import CharField, ListField, IntegerField
+from rest_framework.fields import CharField, ListField
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -12,7 +11,7 @@ from django.conf import settings
 
 from g_utils.rest import SearchMixin
 from .models import Doctor, Patient, Note, Specialization
-import datetime
+from datetime import datetime
 
 
 # Serializers define the API representation.
@@ -80,10 +79,18 @@ class WorkingHoursSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Doctor
-        fields = ['id', 'working_hours']
+        fields = ['id', 'working_hours', 'terms_start', 'terms_end']
 
     def save(self, **kwargs):
-        self.instance.working_hours = json.dumps(self._kwargs['data']['days'])
+        days = self._kwargs['data']['days']
+        self.instance.working_hours = json.dumps(days)
+        working_days = list(filter(lambda d: d['on'], days))
+        seq = [datetime.strptime(x['value'][0], '%H:%M') for x in working_days]
+        min_time = min(seq)
+        seq = [datetime.strptime(x['value'][1], '%H:%M') for x in working_days]
+        max_time = max(seq)
+        self.instance.terms_start = min_time.time()
+        self.instance.terms_end = max_time.time()
         self.instance.save()
         return self.instance
 
@@ -127,9 +134,9 @@ class DoctorViewSet(viewsets.ModelViewSet, SearchMixin):
             get_params = self.request.GET
             q = super(DoctorViewSet, self).get_queryset()
             if 'dateFrom' in get_params:
-                dt = datetime.datetime.strptime(get_params['dateFrom'], '%Y-%m-%d')
+                dt = datetime.strptime(get_params['dateFrom'], '%Y-%m-%d')
             else:
-                dt = datetime.datetime.today()
+                dt = datetime.today()
             if 'specialization' in get_params:
                 q = q.filter(specializations__id=get_params['specialization'])
             if 'name_like' in get_params:
