@@ -52,12 +52,6 @@ class MedicineToPrescription(models.Model):
    refundation = models.ForeignKey(Refundation, blank=True, null=True)
 
 
-class PrescriptionNumber(models.Model):
-    number = models.CharField(max_length=16)
-    doctor = models.ForeignKey(Doctor, related_name='prescription_numbers')
-    date_used = models.DateTimeField(blank=True, null=True)
-
-
 class Prescription(models.Model):
     number = models.CharField(max_length=16, blank=True, null=True)
     date = models.DateTimeField(auto_created=True)

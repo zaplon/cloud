@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'medicine',
     'result',
     'forms',
+    'examination',
     'misal',
     'wkhtmltopdf',
     'administration',

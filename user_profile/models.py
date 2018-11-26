@@ -71,7 +71,7 @@ class Doctor(models.Model):
 
     @property
     def available_prescriptions(self):
-        return self.recipes.filter(was_used=False).count()
+        return self.recipes.filter(date_used__isnull=True).count()
 
     @property
     def total_prescriptions(self):
@@ -149,16 +149,18 @@ class Note(models.Model):
         return self.doctor.__str__()
 
 
-class Recipe(models.Model):
+class PrescriptionNumber(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='recipes')
     nr = models.CharField(max_length=30)
-    was_used = models.BooleanField(blank=False, default=False)
+    date_used = models.DateTimeField(null=True)
 
-    def available(self, doctor):
-        return Recipe.objects.filter(doctor=doctor, was_used=False).count()
+    @staticmethod
+    def available(doctor):
+        return PrescriptionNumber.objects.filter(doctor=doctor, date_used__isnull=True).count()
 
-    def total(self, doctor):
-        return Recipe.objects.filter(doctor=doctor).count()
+    @staticmethod
+    def total(doctor):
+        return PrescriptionNumber.objects.filter(doctor=doctor).count()
 
 
 class Code(models.Model):

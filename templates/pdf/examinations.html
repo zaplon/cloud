@@ -3,7 +3,8 @@
 
 {% block header %}
     <img class="mb-2" src="{{ APP_URL }}assets/img/logo.jpg"/>
-    <table class="table">
+    <p>{{ header|linebreaks }}</p>
+    <table class="table" style="margin-top: 4rem; margin-bottom: 2rem;">
         <tbody>
         <tr>
             <td>Nazwisko</td>
@@ -15,11 +16,11 @@
         </tr>
         <tr>
             <td>Data</td>
-            <td>{{ date }}</td>
+            <td>{% now "Y-m-d" %}</td>
         </tr>
         </tbody>
     </table>
-    <h3 class="text-center" style="text-align:center;">Skierowanie na badania</h3>
+    <h3 class="text-center mt-2" style="text-align:center;">Skierowanie na badania</h3>
     {% if icd %}
         <p>Rozpoznanie:</p>
         {% for i in icd %}
@@ -31,10 +32,10 @@
 {% block body %}
     <table class="table table-striped">
         <body>
-        {% for service in services %}
+        {% for examination in examinations %}
             <tr>
-                <td>{{ service.name }}</td>
-                <td>{{ service.group }}</td>
+                <td>{{ examination.name }}</td>
+                <td>{{ examination.category }}</td>
             </tr>
         {% endfor %}
         </body>
@@ -42,8 +43,8 @@
 {% endblock %}
 
 {% block footer %}
-    <p style="text-align: right;">
-        {{ doctor.title }} {{ doctor.user.first_name }} {{ doctor.user.last_name }} <br/>
-        numer pwz: {{ doctor.pwz }}
+    <p style="text-align: right; margin-top: 4rem;">
+        {{ user.doctor.title }} {{ user.doctor.user.first_name }} {{ user.doctor.user.last_name }} <br/>
+        numer pwz: {{ user.doctor.pwz }}
     </p>
 {% endblock %}

@@ -4,7 +4,10 @@
 {% block header %}
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+                {{ header|linebreaks }}
+            </div>
+            <div class="col-md-6">
                 <div style="display: inline-block; width: 250px; float: right;"><img src="{{ barcode }}"/></div>
             </div>
         </div>
@@ -22,6 +25,8 @@
                         {% include 'pdf/tabs/icd10.html' with icds=tab.data %}
                     {% elif tab.type == 'MEDICINES' %}
                         {% include 'pdf/tabs/medicines.html' with medicines=tab.data %}
+                    {% elif tab.type == 'EXAMINATIONS' %}
+                        {% include 'pdf/tabs/examinations.html' with examinations=tab.data %}
                     {% else %}
                         {{ tab.data }}
                     {% endif %}

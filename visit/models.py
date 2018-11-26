@@ -21,9 +21,11 @@ class TabTypes(Enum):
     ICD10 = 'Rozpoznanie'
     MEDICINES = 'Leki'
     NOTES = 'Notatki'
-    SERVICES = 'Skierowania'
     VIDEO = 'Nagranie wideo'
     OCULIST = 'Okulista'
+    EXAMINATIONS = 'Badania dodatkowe'
+    EXAMINATIONS2 = 'Skierowania'
+
 
 
 class Tab(models.Model):

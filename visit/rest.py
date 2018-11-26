@@ -29,8 +29,8 @@ class IcdViewSet(viewsets.ReadOnlyModelViewSet):
         if 'search' in self.request.GET:
             term = self.request.GET['search']
             q = q.filter(Q(desc__icontains=term) | Q(code__icontains=term))
-        if 'exclude' in self.request.GET:
-            q = q.exclude(id__in=json.loads(self.request.GET['exclude']))
+        if 'exclude' in self.request.GET and self.request.GET['exclude']:
+            q = q.exclude(id__in=self.request.GET['exclude'].split(','))
         return q
 
 

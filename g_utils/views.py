@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import datetime
+import os
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.utils import render_crispy_form
 from django.contrib.auth.mixins import AccessMixin, PermissionRequiredMixin
 from django.shortcuts import render, HttpResponse
 import importlib
-import urllib
 
 from django.template.context_processors import csrf
 import json
@@ -12,6 +14,9 @@ import re
 import urllib
 from django.conf import settings
 from rest_framework.views import APIView
+from wkhtmltopdf.views import PDFTemplateView
+
+from user_profile.models import SystemSettings
 
 
 class AjaxFormView(APIView):
@@ -143,3 +148,24 @@ def send_sms_code(my_code, my_mobile, username=''):
 
 class GabinetPermissionRequiredMixin(PermissionRequiredMixin, AccessMixin):
     raise_exception = True
+
+
+class PDFView(APIView, PDFTemplateView):
+    data = {}
+
+    def post(self, request, *args, **kwargs):
+        self.data = json.loads(self.request.body)
+        self.template_name = 'pdf/%s.html' % self.data['template_name']
+        res = super(PDFView, self).get(request, *args, **kwargs)
+        name = datetime.datetime.now().strftime('%s') + '.pdf'
+        f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'wb')
+        res.render()
+        f.write(res.content)
+        f.close()
+        return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
+
+    def get_context_data(self, **kwargs):
+        context = self.data
+        context['user'] = self.request.user
+        context['header'] = SystemSettings.objects.first().documents_header
+        return context
