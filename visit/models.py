@@ -24,7 +24,6 @@ class TabTypes(Enum):
     VIDEO = 'Nagranie wideo'
     OCULIST = 'Okulista'
     EXAMINATIONS = 'Badania dodatkowe'
-    EXAMINATIONS2 = 'Skierowania'
 
 
 class Tab(models.Model):
