@@ -1,0 +1,13 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nazwa</th><th>Kategoria</th>
+        </tr>
+        {% for examination in examinations %}
+            <tr>
+                <td>{{ examination.name }}</td>
+                <td>{{ examination.category }}</td>
+            </tr>
+        {% endfor %}
+    </thead>
+</table>
