@@ -27,7 +27,6 @@ class TabTypes(Enum):
     EXAMINATIONS2 = 'Skierowania'
 
 
-
 class Tab(models.Model):
 
     class Meta:
@@ -72,7 +71,7 @@ class VisitTab(models.Model):
     title = models.CharField(max_length=100)
     json = models.TextField(default='null')
     order = models.IntegerField(null=True, blank=True)
-    type = models.CharField(max_length=12)
+    type = models.CharField(max_length=32)
     visit = models.ForeignKey('Visit', related_name='tabs')
 
     @property
