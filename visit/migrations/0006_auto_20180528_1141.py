@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='tabparent',
             name='type',
-            field=models.CharField(choices=[(visit.models.TabTypes('Pole tekstowe'), 'Pole tekstowe'), (visit.models.TabTypes('Rozpoznanie'), 'Rozpoznanie'), (visit.models.TabTypes('Leki'), 'Leki'), (visit.models.TabTypes('Notatki'), 'Notatki'), (visit.models.TabTypes('Skierowania'), 'Skierowania'), (visit.models.TabTypes('Nagranie wideo'), 'Nagranie wideo')], default=visit.models.TabTypes('Pole tekstowe'), max_length=16, verbose_name='Typ'),
+            field=models.CharField(choices=[(visit.models.TabTypes('Pole tekstowe'), 'Pole tekstowe'), (visit.models.TabTypes('Rozpoznanie'), 'Rozpoznanie'), (visit.models.TabTypes('Leki'), 'Leki'), (visit.models.TabTypes('Notatki'), 'Notatki'), (visit.models.TabTypes('Nagranie wideo'), 'Nagranie wideo')], default=visit.models.TabTypes('Pole tekstowe'), max_length=16, verbose_name='Typ'),
         ),
         migrations.AddField(
             model_name='visittab',
