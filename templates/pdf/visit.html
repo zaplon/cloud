@@ -16,6 +16,9 @@
 
 {% block body %}
     <div class="container">
+        <span>Imię i nazwisko: <strong>{{ patient.first_name }} {{ patient.last_name }}</strong></span><br/>
+        <span>Adres: <strong>{{ pesel.address|default:'-' }}</strong></span><br/>
+        <span>Pesel: <strong>{{ patient.pesel|default:'-' }}</strong></span>
         <h1 class="text-center">Historia choroby</h1>
         {% for tab in visit.printable_tabs %}
             {% if tab.data %}

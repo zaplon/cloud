@@ -21,6 +21,7 @@ from rest_framework.views import APIView
 
 from g_utils.views import get_client_location_code
 from medicine.models import Medicine, Prescription, MedicineToPrescription
+from result.utils import save_document
 from user_profile.models import PrescriptionNumber, Patient
 
 pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
@@ -47,6 +48,7 @@ class PrintRecipe(APIView):
         else:
             medicines = []
         patient = data.get('patient', {})
+        patient_id = patient
         patient = Patient.objects.get(id=patient)
         realisation_date = data.get('realisationDate', "")
         c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
@@ -61,7 +63,7 @@ class PrintRecipe(APIView):
                 return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
 
         c.save()
-
+        save_document('Recepta', patient_id, recipe_file, request.user)
         return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}),
                             content_type='application/json')
 
@@ -346,6 +348,8 @@ class PrintGlasses(APIView):
                    (py + r * math.sin(math.radians(ra + 5))) * cm)
 
         c.save()
+
+        save_document('Recepta okulistyczna', data['patientId'], fileNm, request.user)
 
         # return response
         return HttpResponse(fileNm2)

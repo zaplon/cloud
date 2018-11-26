@@ -158,10 +158,12 @@ class PDFView(APIView, PDFTemplateView):
         self.template_name = 'pdf/%s.html' % self.data['template_name']
         res = super(PDFView, self).get(request, *args, **kwargs)
         name = datetime.datetime.now().strftime('%s') + '.pdf'
-        f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'wb')
+        file_name = os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name)
+        f = open(file_name, 'wb')
         res.render()
         f.write(res.content)
         f.close()
+        # save_document('Recepta okulistyczna', data['patientId'], fileNm, request.user)
         return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
 
     def get_context_data(self, **kwargs):

@@ -64,6 +64,12 @@ class Term(models.Model):
     def get_end(self):
         return self.datetime + timezone.timedelta(minutes=self.duration)
 
+    def get_patient(self):
+        if self.patient:
+            return '%s %s' % (self.patient.first_name, self.patient.last_name)
+        else:
+            return ''
+
     def get_title(self):
         if self.patient:
             text = '%s %s' % (self.patient.first_name, self.patient.last_name)

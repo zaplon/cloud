@@ -250,4 +250,5 @@ class PdfView(GabinetPdfView):
         self.visit.tabs = self.visit.tabs.all()
         header = SystemSettings.objects.first().documents_header
         return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'header': header,
+                'patient': self.visit.term.patient,
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}

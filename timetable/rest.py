@@ -15,11 +15,12 @@ class TermSerializer(serializers.ModelSerializer):
     start = CharField(source='datetime')
     end = CharField(source='get_end')
     title = CharField(source='get_title')
+    patient = CharField(source='get_patient')
     className = CharField(source='status')
 
     class Meta:
         model = Term
-        fields = ('duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id')
+        fields = ('duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id', 'patient')
 
 
 class TermCreateSerializer(serializers.ModelSerializer):
