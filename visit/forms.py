@@ -2,8 +2,11 @@
 from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 from django.urls import reverse
+
+from visit.rest import TemplateSerializer
 from .models import Template, Tab, TabTypes
 from django.forms import HiddenInput, Textarea
 from django.utils.translation import ugettext as _
@@ -44,7 +47,13 @@ class TemplateForm(ModelForm):
 
     def save(self, user=False, commit=True):
         self.instance.doctor = user.doctor
-        super(TemplateForm, self).save(commit)
+        try:
+            template_for_key = Template.objects.get(doctor=self.instance.doctor, tab=self.instance.tab, key=self.instance.key)
+            self.instance.id = template_for_key.id
+        except ObjectDoesNotExist:
+            pass
+        return super(TemplateForm, self).save(commit)
+
 
 
 class TabForm(ModelForm):
