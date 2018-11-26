@@ -9,11 +9,8 @@ DATABASES = {
         'PASSWORD': ''
     },
     'medicines': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'medicines',
-        'USER': 'root',
-        'HOST': 'mysql',
-        'PASSWORD': ''
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'medicines.sqlite3')
     }
 }
 
