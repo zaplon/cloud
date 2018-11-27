@@ -10,6 +10,7 @@ from django.contrib.auth.models import User, Permission
 from django.conf import settings
 
 from g_utils.rest import SearchMixin
+from timetable.models import Service
 from .models import Doctor, Patient, Note, Specialization
 from datetime import datetime
 
@@ -100,12 +101,19 @@ class WorkingHoursSerializer(serializers.ModelSerializer):
 class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     name = CharField(source='get_name')
     working_hours = ListField(source='get_working_hours')
+    default_service = serializers.SerializerMethodField()
 
     class Meta:
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
-                  'total_prescriptions', 'visit_duration')
-        
+                  'total_prescriptions', 'visit_duration', 'default_service')
+
+    def get_default_service(self, obj):
+        doctor_services = Service.objects.filter(doctors__in=[obj])
+        if doctor_services.count() == 1:
+            s = doctor_services.first()
+            return {'id': s.id, 'name': s.name}
+
         
 class DoctorCalendarSerializer(serializers.ModelSerializer):
     first_term = serializers.DateTimeField(format=settings.DATE_FORMAT)

@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils import timezone
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
@@ -30,16 +30,20 @@ class TermCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Term
-        fields = ('doctor', 'service', 'patient', 'status', 'duration', 'datetime')
+        fields = ('doctor', 'service', 'patient', 'status', 'duration', 'datetime', 'id')
 
     def create(self, validated_data):
         try:
             instance = Term.objects.get(datetime=validated_data['datetime'], doctor=validated_data['doctor'],
-                                             status='FREE')
+                                        status='FREE')
             validated_data['status'] = 'PENDING'
             return self.update(instance, validated_data)
         except ObjectDoesNotExist:
             return super(TermCreateSerializer, self).create(validated_data)
+        except MultipleObjectsReturned:
+            instance = Term.objects.filter(datetime=validated_data['datetime'], doctor=validated_data['doctor'],
+                                           status='FREE').first()
+            return self.update(instance, validated_data)
 
 
 class TermUpdateSerializer(TermCreateSerializer):
