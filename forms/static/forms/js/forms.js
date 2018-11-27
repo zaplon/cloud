@@ -48,23 +48,23 @@ formViewModel = {
     },
     makePdf: function () {
         var data = formViewModel.getData();
-        $.post('/forms/edit_form/', {data: data}, function (res) {
+        $.post('/backend/forms/edit_form/', {data: data}, function (res) {
             var params = {tmp: res.tmp, print: true, template_name: $('#form-editor iframe').attr('data-template')};
 
             params['as_file'] = 1;
-            $.get('/forms/show_form/?' + $.param(params)).success(function(res){
+            $.get('/backend/forms/show_form/?' + $.param(params)).success(function(res){
                 rp.print(res);
             });
 
-            //window.location.href = '/forms/show_form/?' + $.param(params);
+            //window.location.href = '/backend/forms/show_form/?' + $.param(params);
         });
     },
     sendToElo: function () {
         if (!this.validate())
             return;
         var data = formViewModel.getData();
-         $.post('/forms/edit_form/', {data: data}, function (res) {
-            $.get('/forms/show_form/', {elo: true, print: true, tmp: res.tmp, nice_name: formViewModel.niceName}, function (res) {
+         $.post('/backend/forms/edit_form/', {data: data}, function (res) {
+            $.get('/backend/forms/show_form/', {elo: true, print: true, tmp: res.tmp, nice_name: formViewModel.niceName}, function (res) {
                 alert('dokument przesłano do archiwum');
             }).fail(function () {
                 alert('wystąpił błąd!')
@@ -72,7 +72,7 @@ formViewModel = {
         });
     },
     saveTemporary: function () {
-        $.post('/forms/edit_form/', {
+        $.post('/backend/forms/edit_form/', {
             data: formViewModel.getData(),
             tmp: true,
             name: formViewModel.name,
