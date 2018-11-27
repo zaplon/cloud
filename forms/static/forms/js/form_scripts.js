@@ -133,7 +133,7 @@ function makePdf(event) {
     $.post('/backend/forms/edit_form/', {data: getData()}, function (res) {
         var params = {tmp: res.tmp, print: true, template_name: event.data.name};
         params['as_file'] = 1;
-        $.get('/forms/show_form/?' + $.param(params), function (res) {
+        $.get('/backend/forms/show_form/?' + $.param(params), function (res) {
             event.source.postMessage(res, event.origin);
         });
 
