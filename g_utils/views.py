@@ -16,6 +16,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 from wkhtmltopdf.views import PDFTemplateView
 
+from result.utils import save_document
 from user_profile.models import SystemSettings
 
 
@@ -163,7 +164,7 @@ class PDFView(APIView, PDFTemplateView):
         res.render()
         f.write(res.content)
         f.close()
-        # save_document('Recepta okulistyczna', data['patientId'], fileNm, request.user)
+        save_document('Skierowanie', self.data['patient']['id'], file_name, request.user)
         return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
 
     def get_context_data(self, **kwargs):

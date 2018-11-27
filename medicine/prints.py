@@ -187,7 +187,7 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
     p.drawString((x + 0) * cm, (y - 1.2) * cm, '05-152 Czosnów ul. Krótka 3')
     p.drawString((x + 0) * cm, (y - 1.5) * cm, 'REGON: 011604270')
     p.drawString((x + 0) * cm, (y - 1.8) * cm, 'NIP:531-100-77-45')
-    p.drawString((x + 0) * cm, (y - 2.1) * cm, 'TEL. 775 44 66')
+    p.drawString((x + 0) * cm, (y - 2.1) * cm, 'TEL. 22 775 44 66')
 
     p.setFont("Arial", 9)
 
