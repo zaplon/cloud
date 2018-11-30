@@ -15,6 +15,10 @@ RESULT_TYPES = (('IMAGE', u'Zdjęcie'), ('DOCUMENT', u'Dokument'), ('VIDEO', u'F
 
 
 class Result(models.Model):
+
+    class Meta:
+        ordering = ('-uploaded', 'name')
+
     name = models.CharField(max_length=200, verbose_name='Nazwa')
     file = models.FileField(upload_to='results/', verbose_name='Plik')
     uploaded = models.DateTimeField(auto_now_add=True)

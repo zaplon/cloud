@@ -27,7 +27,7 @@
                     {% if tab.type == 'ICD10' %}
                         {% include 'pdf/tabs/icd10.html' with icds=tab.data %}
                     {% elif tab.type == 'MEDICINES' %}
-                        {% include 'pdf/tabs/medicines.html' with medicines=tab.data %}
+                        {% include 'pdf/tabs/medicines.html' with medicines=tab.data.selections %}
                     {% elif tab.type == 'EXAMINATIONS' %}
                         {% include 'pdf/tabs/examinations.html' with examinations=tab.data %}
                     {% else %}

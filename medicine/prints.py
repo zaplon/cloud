@@ -180,6 +180,7 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
         if len(recNr) == 0:
             raise RecipePrintException('Brak numeru recepty do wykorzystania')
         recNr = recNr[0].nr
+        recNr_instance = recNr
         p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr)
     p.setFont("Arialb", 8)
 
@@ -191,8 +192,8 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
 
     p.setFont("Arial", 9)
 
-    b = createBarcodeDrawing('Code128', value="20008409410000", width=5 * cm, height=0.6 * cm)
-    p.drawString((x + 6.7) * cm, (y - 3.1) * cm, "20008409410000")
+    b = createBarcodeDrawing('Code128', value="20116042700009", width=5 * cm, height=0.6 * cm)
+    p.drawString((x + 6.7) * cm, (y - 3.1) * cm, "20116042700009")
     b.drawOn(p, (x + 5.4) * cm, (y - 2.75) * cm)
 
     p.drawString((x + 0) * cm, (y - 3.15) * cm, 'Świadczeniodawca')
@@ -225,7 +226,8 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
 
     # p.drawString((x+5.5)*cm,(y-17.8)*cm, title)
     # p.drawString((x+5.5)*cm,(y-18.3)*cm, us.name)
-
+    recNr_instance.date_used = datetime.datetime.now()
+    recNr_instance.save()
     return p
 
 

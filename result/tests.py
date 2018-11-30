@@ -39,3 +39,4 @@ class ResultsTestCase(GabinetTestCase):
         response = self.client.get('/rest/results/', {'pesel': 88042003997, 'category': 'ortopeda'})
         data = json.loads(response.content)
         self.assertEqual(len(data['results']), 1)
+

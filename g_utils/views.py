@@ -164,7 +164,7 @@ class PDFView(APIView, PDFTemplateView):
         res.render()
         f.write(res.content)
         f.close()
-        save_document('Skierowanie', self.data['patient']['id'], file_name, request.user)
+        save_document(self.data['name'], self.data['patient']['id'], file_name, request.user)
         return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
 
     def get_context_data(self, **kwargs):
