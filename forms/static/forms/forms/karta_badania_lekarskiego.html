@@ -16,9 +16,14 @@
         $(document).ready(function(){
             if (params.postal)
                 putPostal('postal', params.postal);
-            $('input[name="badanie_dzien"]').val(today.getDate());
-            $('input[name="badanie_miesiac"]').val(today.getMonth() + 1);
+            $('input[name="badanie_dzien"]').val(today.getDate() > 9 ? today.getDate() : '0' + today.getDate() );
+            $('input[name="badanie_miesiac"]').val((today.getMonth() + 1 > 9) ? today.getMonth() + 1 : '0' + (today.getMonth() + 1)  );
             $('input[name="badanie_rok"]').val(today.getFullYear());
+            if (params.sex == 'M')
+                $('#sex-f').addClass('cross-out');
+            if (params.sex == 'F')
+                $('#sex-m').addClass('cross-out');
+
         })
     </script>
     <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
@@ -97,7 +102,7 @@
         </table>
     </div>
 </div>
-<h1 class="text-center text-uppercase">Karta badania lekarskiego</h1>
+<h1 style="margin-bottom: 4rem;" class="text-center text-uppercase">Karta badania lekarskiego</h1>
 <div class="row">
     <div class="col-md-4 pull-right">
         <table class="table">
@@ -142,17 +147,17 @@
                         </tr>
                         <tr>
                             <td style="width: 75px;"><input class="whole_line form-control not-dotted" type="text" pattern="/d"
-                                                            maxlength="2" name="born_day"></td>
+                                                            maxlength="2" name="birth_day"></td>
                             <td style="width: 75px;"><input class="whole_line form-control not-dotted" type="text" pattern="/d"
-                                                            maxlength="2" name="born_month"></td>
+                                                            maxlength="2" name="birth_month"></td>
                             <td style="width: 75px;"><input class="whole_line form-control not-dotted" type="text" pattern="/d"
-                                                            maxlength="4" name="born_year"></td>
+                                                            maxlength="4" name="birth_year"></td>
                         </tr>
                         <tr>
                             <td>Płeć<sup>1)</sup></td>
                             <td colspan="3">
-                                <span class="crossable">M</span>/
-                                <span class="crossable">K</span>
+                                <span id="sex-m" class="crossable">M</span>/
+                                <span id="sex-f" class="crossable">K</span>
                             </td>
                         </tr>
                     </table>
@@ -1233,7 +1238,7 @@
     <div class="col-md-4 col-md-offset-5 text-center">(podpis i pieczątka uprawnionego lekarza)</div>
 </div>
 <footer style="page-break-after: avoid;">
-    <p class="font-sm mt-2">
+    <p class="font-sm mt-2" style="margin-top: 4rem;">
         Objaśnienia <br/> <sup>1)</sup>Odpowiednie podkreślić. <br/><sup>2)</sup>W przypadku osoby, której nie
         nadano numeru PESEL - nazwa i numer dokumentu stwierdzającego tożsamość. <br/><sup>3)</sup>W przypadku
         prawidłowego wyniku badania postawić znak X w rubryce "Brak zmian patalogicznych", a w przypadku stwierdzonej

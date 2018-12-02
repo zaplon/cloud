@@ -247,3 +247,5 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:8081',
     'gabinet'
 )
+
+OLD_PASSWORD_FIELD_ENABLED = True
