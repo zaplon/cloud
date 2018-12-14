@@ -179,9 +179,9 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
         recNr = PrescriptionNumber.objects.filter(date_used__isnull=True, doctor=request.user.doctor)
         if len(recNr) == 0:
             raise RecipePrintException('Brak numeru recepty do wykorzystania')
-        recNr = recNr[0].nr
+        recNr = recNr[0]
         recNr_instance = recNr
-        p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr)
+        p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr.nr)
     p.setFont("Arialb", 8)
 
     p.drawString((x + 0) * cm, (y - 0.9) * cm, 'Gabinet Okulistyczny Tomasz Dominik')
@@ -211,8 +211,8 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
 
     p.drawString((x + 4.6) * cm, (y - 19.8) * cm, 'Wydruk własny')
     if useNr:
-        b = createBarcodeDrawing('Code128', value=str(recNr), width=6 * cm, height=0.6 * cm)
-        p.drawString((x + 2.7) * cm, (y - 16.4) * cm, str(recNr))
+        b = createBarcodeDrawing('Code128', value=str(recNr.nr), width=6 * cm, height=0.6 * cm)
+        p.drawString((x + 2.7) * cm, (y - 16.4) * cm, str(recNr.nr))
         b.drawOn(p, (x + 1.6) * cm, (y - 16.05) * cm)
 
     styles = getSampleStyleSheet()
@@ -226,8 +226,9 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
 
     # p.drawString((x+5.5)*cm,(y-17.8)*cm, title)
     # p.drawString((x+5.5)*cm,(y-18.3)*cm, us.name)
-    recNr_instance.date_used = datetime.datetime.now()
-    recNr_instance.save()
+    if useNr:
+        recNr_instance.date_used = datetime.datetime.now()
+        recNr_instance.save()
     return p
 
 

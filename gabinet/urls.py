@@ -78,6 +78,7 @@ urlpatterns = [
     url(r"^timetable/", include("timetable.urls", namespace='timetable')),
     url(r"^get-form/", AjaxFormView.as_view(), name='get-form'),
     url(r"^forms/", include('forms.urls'), name='forms'),
+    url(r"^backend/forms/", include('forms.urls'), name='forms'),
     url(r"^agreements/", include('agreements.urls'), name='agreements'),
     url(r'^pdf/$', PdfView.as_view(template_name='no_pdf.html', filename='result.pdf'), name='pdf'),
     url(r'^rest-auth/', include('rest_auth.urls'))
