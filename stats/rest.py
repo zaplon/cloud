@@ -29,7 +29,7 @@ class Stats(APIView):
         all_res = {}
         from_date = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=30)
         if type == 'visits' or all:
-            q = Visit.objects.annotate(month=TruncMonth('created')).values('month').annotate(c=Count('id')).values(
+            q = Visit.objects.filter(term__status__in=['FINISHED', 'PENDING']).annotate(month=TruncMonth('created')).values('month').annotate(c=Count('id')).values(
                 'month', 'c').order_by('month')
             q = list(q)
             res = {'labels': [r['month'].strftime('%m-%Y') for r in q], 'data': [r['c'] for r in q]}
@@ -38,7 +38,7 @@ class Stats(APIView):
             else:
                 return Response(res)
         if type == 'visits_time' or all:
-            q = Term.objects.annotate(hour=ExtractHour('datetime')).values('hour').annotate(c=Count('id')).values(
+            q = Term.objects.filter(status__in=['FINISHED', 'PENDING']).annotate(hour=ExtractHour('datetime')).values('hour').annotate(c=Count('id')).values(
                 'hour', 'c')
             q = list(q)
             res = {'labels': [r['hour'] for r in q], 'data': [r['c'] for r in q]}
