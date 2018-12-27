@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from django.views.generic import View
 from wkhtmltopdf import convert_to_pdf
 from wkhtmltopdf.views import PDFTemplateView
+
+from user_profile.models import SystemSettings
 from .settings import *
 from django.conf import settings
 import os
@@ -29,6 +31,7 @@ class EditFormView(View):
         form = request.GET.get('form', 'no_form.html')
         template_name = form
         params = request.GET
+        params['header'] = SystemSettings.objects.first().documents_header,
         template = 'forms/editor.html'
         fs = Form.objects.filter(name=template_name, user=request.user).order_by('-created')
         if len(fs) > 0:

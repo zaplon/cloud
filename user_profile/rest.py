@@ -11,7 +11,7 @@ from django.conf import settings
 
 from g_utils.rest import SearchMixin
 from timetable.models import Service
-from .models import Doctor, Patient, Note, Specialization
+from .models import Doctor, Patient, Note, Specialization, SystemSettings
 from datetime import datetime
 
 
@@ -171,6 +171,11 @@ class UserSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField('get_user_type')
     doctor = DoctorSerializer()
     user_permissions = serializers.SerializerMethodField('get_all_permissions')
+    system_settings = serializers.SerializerMethodField()
+
+    def get_system_settings(self, instance):
+        settings = SystemSettings.objects.first()
+        return {'documents_header': settings.documents_header, 'logo': settings.logo.url}
 
     def get_all_permissions(self, instance):
         if instance.is_superuser:
@@ -223,7 +228,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'can_edit_terms', 'can_edit_visits', 'setup_needed', 'modules', 'type',
-                  'doctor', 'user_permissions')
+                  'doctor', 'user_permissions', 'system_settings')
 
 
 class UserDetailsView(APIView):

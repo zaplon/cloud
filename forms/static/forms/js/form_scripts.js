@@ -70,6 +70,9 @@ $(document).ready(function () {
         if ($('textarea[name="' + param + '"]').length > 0)
             $('textarea[name="' + param + '"]').html(params[param]);
     }
+    if (params.header) {
+        $('.document-header').html(params.header);
+    }
     //orzeczeni zdolnosc do pracy
     $('.cross li').addClass('crossable');
 
