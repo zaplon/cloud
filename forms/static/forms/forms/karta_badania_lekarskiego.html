@@ -94,10 +94,10 @@
     <div class="col-md-6">
         <table class="no-border">
             <tr>
-                <td><input class="whole_line form-control" type="text" name="oznaczenie"/></td>
+                <td><input style="display: none;" class="whole_line form-control" type="text" name="oznaczenie"/></td>
             </tr>
             <tr>
-                <td><span class="small text-center">(oznaczenie jednostki przeprowadzającej badanie)</span></td>
+                <td><span class="small text-center" id="document-header-left">(oznaczenie jednostki przeprowadzającej badanie)</span></td>
             </tr>
         </table>
     </div>
@@ -233,13 +233,6 @@
                 </td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="2.3"></textarea></td>
             </tr>
-            <tr>
-                <td>kierowania motorowerem, pojazdem silnikowym lub tramwajem w stanie nietrzeźwości, w stanie po uzyciu
-                    alkoholu lub
-                    środka działającego podobnie do alkoholu
-                </td>
-                <td><textarea style="height:50px;" class="form-control whole-line" name="2.4"></textarea></td>
-            </tr>
             </table>
     </div>
 </div>
@@ -250,6 +243,13 @@
                 <col style="width:60%;">
                 <col style="width:40%;">
             </colgroup>
+            <tr>
+                <td>kierowania motorowerem, pojazdem silnikowym lub tramwajem w stanie nietrzeźwości, w stanie po uzyciu
+                    alkoholu lub
+                    środka działającego podobnie do alkoholu
+                </td>
+                <td><textarea style="height:50px;" class="form-control whole-line" name="2.4"></textarea></td>
+            </tr>
             <tr>
                 <td>uzasadnionych i poważnych zastrzeżeń co do stanu zdrowia osoby posiadającej prawo jazdy lub pozwolenie
                     na kierowanie
@@ -348,13 +348,6 @@
                 <td><input value="nie" checked="checked" type="radio" class="form-control" name="r3.9"/></td>
                 <td><textarea style="height:50px;" class="form-control whole-line" name="3.9"></textarea></td>
             </tr>
-            <tr>
-                <td>10.</td>
-                <td>Choroby układu oddechowego, w tym zaburzenia oddychania podczas snu</td>
-                <td><input type="radio" class="form-control" value="tak" name="r3.10"/></td>
-                <td><input value="nie" checked="checked" type="radio" class="form-control" name="r3.10"/></td>
-                <td><textarea style="height:50px;" class="form-control whole-line" name="3.10"></textarea></td>
-            </tr>
             </tbody>
         </table>
     </div>
@@ -370,6 +363,13 @@
                 <col style="width:40%;">
             </colgroup>
             <tbody>
+             <tr>
+                <td>10.</td>
+                <td>Choroby układu oddechowego, w tym zaburzenia oddychania podczas snu</td>
+                <td><input type="radio" class="form-control" value="tak" name="r3.10"/></td>
+                <td><input value="nie" checked="checked" type="radio" class="form-control" name="r3.10"/></td>
+                <td><textarea style="height:50px;" class="form-control whole-line" name="3.10"></textarea></td>
+            </tr>
             <tr>
                 <td>11.</td>
                 <td>Choroby układu pokarmowego</td>
