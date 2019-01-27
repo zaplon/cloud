@@ -175,7 +175,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_system_settings(self, instance):
         settings = SystemSettings.objects.first()
-        return {'documents_header': settings.documents_header, 'logo': settings.logo.url}
+        return {'documents_header_left': settings.documents_header_left, 'logo': settings.logo.url,
+                'documents_header_right': settings.documents_header_right}
 
     def get_all_permissions(self, instance):
         if instance.is_superuser:

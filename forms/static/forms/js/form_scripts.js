@@ -70,8 +70,11 @@ $(document).ready(function () {
         if ($('textarea[name="' + param + '"]').length > 0)
             $('textarea[name="' + param + '"]').html(params[param]);
     }
-    if (params.header) {
-        $('.document-header').html(params.header);
+    if (params.header_left) {
+        $('#document-header-left').html(params.header_left);
+    }
+    if (params.header_right) {
+        $('#document-header-right').html(params.header_right);
     }
     //orzeczeni zdolnosc do pracy
     $('.cross li').addClass('crossable');

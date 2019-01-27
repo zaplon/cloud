@@ -248,7 +248,9 @@ class PdfView(GabinetPdfView):
         file_name = datetime.datetime.now().strftime('%s')
         barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
         self.visit.tabs = self.visit.tabs.all()
-        header = SystemSettings.objects.first().documents_header
-        return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'header': header,
-                'patient': self.visit.term.patient,
+        settings = SystemSettings.objects.first()
+        header_left = settings.documents_header_left
+        header_right = settings.documents_header_right
+        return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'header_left': header_left,
+                'patient': self.visit.term.patient, 'header_right': header_right,
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}

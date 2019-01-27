@@ -31,7 +31,9 @@ class EditFormView(View):
         form = request.GET.get('form', 'no_form.html')
         template_name = form
         params = request.GET
-        params['header'] = SystemSettings.objects.first().documents_header,
+        settings = SystemSettings.objects.first()
+        params['header_left'] = settings.documents_header_left,
+        params['header_right'] = settings.documents_header_right,
         template = 'forms/editor.html'
         fs = Form.objects.filter(name=template_name, user=request.user).order_by('-created')
         if len(fs) > 0:

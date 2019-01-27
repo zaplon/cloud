@@ -109,4 +109,16 @@ table.no-border td {
   margin-bottom: 20px; }
 
 .document-header {
+  white-space: pre;
+  display: flex; }
+
+.document-header-left-container {
+  width: 50%;
+  text-align: left; }
+
+.document-header-right-container {
+  width: 50%;
+  text-align: right; }
+
+#document-header-left, #document-header-right {
   white-space: pre; }
