@@ -29,8 +29,8 @@ class IcdViewSet(viewsets.ReadOnlyModelViewSet):
         if 'search' in self.request.GET:
             term = self.request.GET['search']
             q = q.filter(Q(desc__icontains=term) | Q(code__icontains=term))
-        if 'exclude' in self.request.GET:
-            q = q.exclude(id__in=json.loads(self.request.GET['exclude']))
+        if 'exclude' in self.request.GET and self.request.GET['exclude']:
+            q = q.exclude(id__in=self.request.GET['exclude'].split(','))
         return q
 
 
@@ -135,8 +135,6 @@ class VisitViewSet(viewsets.ModelViewSet):
             vt = VisitTab.objects.get(id=tab['id'])
             if vt.type == TabTypes.ICD10.name:
                 visit.icd_codes.add(*[Icd10.objects.get(id=d['id']) for d in tab['data']])
-            if vt.type == TabTypes.MEDICINES.name:
-                vt.json = json.dumps(tab['data']) if 'data' in tab else ''
             else:
                 vt.json = json.dumps(tab['data']) if 'data' in tab else ''
                 vt.save()

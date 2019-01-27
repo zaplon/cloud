@@ -1,0 +1,17 @@
+version: '2'
+services:
+  mysql:
+    environment:
+        MYSQL_ROOT_PASSWORD: ''
+        MYSQL_USER: root
+        MYSQL_PASSWORD: ''
+        MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+     - ./docker/dbs/:/var/lib/mysql
+     - ./docker/mysql/:/docker-entrypoint-initdb.d/
+    restart: always
+  web:
+    environment:
+      DJANGO_SETTINGS_MODULE: production_settings
+    image: "docker.io/zaplon/gabinet_prod:latest"
+    restart: always

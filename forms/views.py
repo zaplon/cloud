@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from django.views.generic import View
 from wkhtmltopdf import convert_to_pdf
 from wkhtmltopdf.views import PDFTemplateView
+
+from user_profile.models import SystemSettings
 from .settings import *
 from django.conf import settings
 import os
@@ -29,6 +31,9 @@ class EditFormView(View):
         form = request.GET.get('form', 'no_form.html')
         template_name = form
         params = request.GET
+        settings = SystemSettings.objects.first()
+        params['header_left'] = settings.documents_header_left,
+        params['header_right'] = settings.documents_header_right,
         template = 'forms/editor.html'
         fs = Form.objects.filter(name=template_name, user=request.user).order_by('-created')
         if len(fs) > 0:
@@ -111,7 +116,7 @@ class FormView(PDFTemplateView):
             self.template_name = 'forms/' + template + '.html'
         if 'print' in request.GET:
             project_dir = settings.PROJECT_DIR
-            if template in ['ABA', 'zgoda na znieczulenie', 'karta_badania_lekarskiego']:
+            if template in ['ABA', 'zgoda na znieczulenie', 'karta_badania_lekarskiego', 'zaswiadczenie_okulary']:
                 style = 'bootstrap_print.css'
             else:
                 style = 'prints.css'

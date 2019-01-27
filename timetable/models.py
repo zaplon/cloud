@@ -5,7 +5,6 @@ from django.db import models
 from user_profile.models import Doctor, Patient
 from visit.models import Visit
 import datetime
-import time
 from django.utils import timezone
 
 
@@ -65,6 +64,12 @@ class Term(models.Model):
     def get_end(self):
         return self.datetime + timezone.timedelta(minutes=self.duration)
 
+    def get_patient(self):
+        if self.patient:
+            return '%s %s' % (self.patient.first_name, self.patient.last_name)
+        else:
+            return ''
+
     def get_title(self):
         if self.patient:
             text = '%s %s' % (self.patient.first_name, self.patient.last_name)
@@ -79,7 +84,7 @@ class Term(models.Model):
         tmz = timezone.get_current_timezone()
         days = doctor.get_working_hours()
         duration = doctor.visit_duration
-        Term.objects.filter(doctor=doctor, datetime__gte=start, datetime__lte=end, status__in=['PENDING', 'CANCELLED']).delete()
+        Term.objects.filter(doctor=doctor, datetime__gte=start, datetime__lte=end, status__in=['FREE']).delete()
         start = datetime.datetime.combine(start.date(), datetime.time(0, 0))
         end = datetime.datetime.combine(end.date(), datetime.time(0, 0))
         terms = []
@@ -95,6 +100,8 @@ class Term(models.Model):
             end_hour = datetime.datetime.combine(day.date(), datetime.time(*[int(h) for h in hours['value'][1].split(':')]))
             start_visit = start_hour
             end_visit = start_hour + datetime.timedelta(minutes=duration)
+            already_filled_dates = Term.objects.filter(doctor=doctor, datetime__gte=start,
+                                                       datetime__lte=end).values_list('datetime', flat=True)
             while end_visit <= end_hour:
                 if hours.get('break', False):
                     break_start = datetime.time(*[int(h) for h in hours['break'][0].split(':')])
@@ -105,9 +112,7 @@ class Term(models.Model):
                         start_visit, end_visit = move_forward(start_visit, end_visit)
                         continue
                 visit_date = datetime.datetime.combine(day.date(), start_visit.time())
-                try:
-                    Term.objects.get(doctor=doctor, datetime=visit_date)
-                except:
+                if visit_date not in already_filled_dates:
                     terms.append(Term(doctor=doctor, duration=duration, datetime=visit_date,
                                         status='FREE'))
                 start_visit, end_visit = move_forward(start_visit, end_visit)

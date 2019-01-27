@@ -1,10 +1,26 @@
-<table class="table table-striped">
-    <tbody>
-    {% for medicine in medicines %}
-        <tr>
-            <td>{{ medicine.name }}</td>
-            <td>{{ medicine.dosage }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% if medicines %}
+    <table class="table table-striped">
+        <tbody>
+            <thead>
+                <tr>
+                    <th>Nazwa leku</th>
+                    <th>Opakowanie</th>
+                    <th>Postać</th>
+                    <th>Dawka</th>
+                    <th>Dawkowanie</th>
+                </tr>
+            </thead>
+        {% for medicine in medicines %}
+            <tr>
+                <td>{{ medicine.name }}</td>
+                <td>{{ medicine.child.size }}</td>
+                <td>{{ medicine.form }}</td>
+                <td>{{ medicine.dose }}</td>
+                <td>{{ medicine.dosage }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    Brak przepisanych leków
+{% endif %}

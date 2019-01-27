@@ -2,7 +2,7 @@ version: '2'
 services:
   web:
     environment:
-      DJANGO_SETTINGS_MODULE: docker_settings
+      DJANGO_SETTINGS_MODULE: production_settings
       LANG: "pl_PL.UTF-8"
       LANGUAGE: "pl_PL"
       QT_QPA_PLATFORM: "offscreen"
@@ -24,7 +24,7 @@ services:
       MYSQL_USER: "root"
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
   elasticsearch:
-    image: elasticsearch
+    image: elasticsearch:6.5.1
   wkhtmltopdf:
     image: michaelperrin/wkhtmltopdf:latest
   nginx:

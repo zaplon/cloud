@@ -3,7 +3,7 @@ import os
 
 import datetime
 from django.conf.urls import url, include
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 from django.http import HttpResponse, HttpResponseBadRequest
 from elasticsearch_dsl import Search
 from rest_framework import serializers, viewsets
@@ -36,7 +36,7 @@ class ResultTableSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Result
-        fields = ('id', 'name', 'description', 'file', 'uploaded', 'patient', 'specialization', 'pesel')
+        fields = ('id', 'name', 'description', 'file', 'uploaded', 'patient', 'specialization', 'pesel', 'description')
 
 
 # ViewSets define the view behavior.
@@ -60,7 +60,7 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
         if 'pesel' in self.request.GET:
             q = q.filter(patient__pesel=self.request.GET['pesel'])
         if 'category' in self.request.GET:
-            q = q.filter(doctor__specializations__name=self.request.GET['category'])
+            q = q.filter(specialization__name=self.request.GET['category'])
         return q
 
     def destroy(self, request, *args, **kwargs):
@@ -101,9 +101,9 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
     def categories_list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         result = queryset.values('specialization__name').order_by('specialization__name')\
-            .annotate(results_sum=Sum('specialization'))
+            .annotate(results_count=Count('specialization'))
         categories = [{'name': category['specialization__name'],
-                       'count': category['results_sum']} for category in result]
+                       'count': category['results_count']} for category in result]
         return Response(categories)
 
     def list(self, request, *args, **kwargs):

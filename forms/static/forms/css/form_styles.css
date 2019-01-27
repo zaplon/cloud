@@ -20,7 +20,7 @@ body {
 .page-landscape {
   width: 29.7cm;
   height: 21cm;
-  padding: 1cm 2cm; }
+  padding: 2.5cm; }
 
 .crossable {
   cursor: pointer;
@@ -32,7 +32,7 @@ body {
 textarea {
   background-color: #dcdcfa !important; }
 
-input[type='text'],input[type='date'] {
+input[type='text'], input[type='date'] {
   border: none;
   border-bottom: 1px dotted black;
   background-color: #dcdcfa;
@@ -89,14 +89,14 @@ table.no-border td {
   margin-bottom: 50px; }
 
 .calendar {
-  width: 25px;
+  width: 20px;
   height: 25px;
   cursor: pointer;
   background-image: url("../images/calendar.png");
   background-size: contain;
   border: 1px solid black;
   position: relative;
-  left: -25px;
+  left: -20px;
   margin-right: -25px; }
 
 .only-print {
@@ -107,3 +107,18 @@ table.no-border td {
 
 .mb-2 {
   margin-bottom: 20px; }
+
+.document-header {
+  white-space: pre;
+  display: flex; }
+
+.document-header-left-container {
+  width: 50%;
+  text-align: left; }
+
+.document-header-right-container {
+  width: 50%;
+  text-align: right; }
+
+#document-header-left, #document-header-right {
+  white-space: pre; }

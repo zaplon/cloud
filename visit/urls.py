@@ -12,7 +12,6 @@ urlpatterns = [
     url(r'tab/(?P<pk>[0-9]+)/$', TabUpdate.as_view(), name='tab-update'),
     url(r'tab/(?P<pk>[0-9]+)/delete/$', TabDelete.as_view(), name='tab-delete'),
     url(r'pdf/(?P<pk>[0-9]+)/', PdfView.as_view(), name='visit-pdf'),
-    url(r'pdf/services/', ServicesPdfView.as_view(), name='visit-pdf'),
     url(r'oculist_recipe/', PrintGlasses.as_view(), name='print-glasses'),
     url(r'recipe/', PrintRecipe.as_view(), name='print-recipe'),
     url(r'(?P<pk>[0-9]+)/', login_required(VisitView.as_view()), name='visit')

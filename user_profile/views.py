@@ -5,11 +5,14 @@ from xml.dom import minidom
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .forms import *
 from g_utils.forms import ajax_form_validate
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 import json
-from .models import Doctor, Recipe
+from .models import Doctor, PrescriptionNumber
 from django.contrib.auth.models import User
 
 
@@ -53,7 +56,7 @@ class SettingsView(View):
                         errors = {}
                     errors[day['dayIndex']] = f.errors
                 else:
-                    if 'dayChecked' in day and day['dayChecked']:
+                    if 'dayChecked' in day and day['on']:
                         change_range = True
                         if day['end'] > maximum:
                             maximum = day['end']
@@ -93,40 +96,36 @@ class PatientDeleteView(DeleteView):
     template_name = 'confirm_delete.html'
 
 
-def add_recipes(request):
-    if request.method == 'POST':
-        try:
-            f = request.FILES['file']
-        except:
-            return HttpResponse(400)
-        if f.name.find('.xmz') > 0:
-            source = zipfile.ZipFile(f.read()).read(f.name[0:-3] + 'xml')
+class AddPrescriptionNumbersView(APIView):
+    queryset = PrescriptionNumber.objects.all()
+
+    def post(self, request):
+        if request.FILES['file'].name.find('.xmz') > 0:
+            source = zipfile.ZipFile(request.FILES['file']).read(request.FILES['file'].name[0:-3] + 'xml')
         else:
-            source = f.read()
-        #return HttpResponse(content=source, status_code=200)
-        dr = Doctor.objects.get(user=request.user)
+            source = request.FILES['file'].read()
         try:
             xml = minidom.parseString(source)
         except:
+            return Response(status=400, data=u'Błąd przetwarzania pliku.')
+
+        # node = xml.getElementsByTagName('lekarz')
+        doctor = self.request.user.doctor
+        ns = xml.getElementsByTagName('n')
+        if not ns:
+            ns = xml.getElementsByTagName('recepta')
+        if not ns:
+            return Response(status=400, data=u'Brak numerów recept do zaimportowania.')
+        for n in ns:
             try:
-                xml = minidom.parse(source)
-            except:
-                return HttpResponse(status=400)
-            xml = False
-        if xml:
-            #node = xml.getElementsByTagName('lekarz')
-            ns = xml.getElementsByTagName('n')
-            for n in ns:
                 val = n.childNodes[0].nodeValue
-                try:
-                    Recipe.objects.get(nr=val)
-                except:
-                    r = Recipe(doctor=dr, nr=val, was_used=False)
-                    r.save()
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=500)
-    else:
-        return HttpResponse(status=500)
-
-
+            except:
+                val = n.attributes['numer'].value
+            try:
+                PrescriptionNumber.objects.get(nr=val)
+            except:
+                r = PrescriptionNumber(doctor=doctor, nr=val)
+                r.save()
+        return Response(status=200, data={
+            'available': PrescriptionNumber.available(doctor),
+            'total': PrescriptionNumber.total(doctor)}, content_type='application/json')

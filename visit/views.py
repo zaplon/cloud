@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
 
+from django.core.files.base import ContentFile
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.template import RequestContext
+from rest_framework.views import APIView
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.list import ListView
@@ -12,7 +13,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from wkhtmltopdf.views import PDFTemplateView
 
 from g_utils.views import GabinetPermissionRequiredMixin
+from result.models import Result
 from timetable.models import Term
+from user_profile.models import SystemSettings
 from visit.models import Template, Tab, Visit, VisitTab
 from .forms import *
 import datetime
@@ -21,7 +24,7 @@ import json
 from django.conf import settings
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib.units import cm
-from django.utils.text import slugify
+
 
 
 class VisitView(GabinetPermissionRequiredMixin, View):
@@ -124,7 +127,6 @@ class TemplateDelete(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-
 class TemplateListView(ListView):
 
     model = Template
@@ -209,40 +211,25 @@ class TabsListView(ListView):
         return context
 
 
-class GabinetPdfView(PDFTemplateView):
+class GabinetPdfView(APIView, PDFTemplateView):
     def get(self, request, *args, **kwargs):
-        if 'as_link' in request.GET:
+        if 'as_link' in request.GET or 'to_archive' in request.GET:
             res = super(PDFTemplateView, self).get(request, *args, **kwargs)
             name = datetime.datetime.now().strftime('%s') + '.pdf'
-            f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'wb')
             res.render()
-            f.write(res.content)
-            f.close()
-            return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
+            if 'as_link' in request.GET:
+                f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'wb')
+                f.write(res.content)
+                f.close()
+                return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
+            else:
+                visit = Visit.objects.get(id=request.GET['visit_id'])
+                r = Result.objects.create(name='Wizyta', uploaded_by=request.user, visit=visit, patient=visit.term.patient,
+                                      specialization=request.user.doctor.specializations.first())
+                r.file.save(name, ContentFile(res.content))
+                return HttpResponse(status=200)
         else:
             return super(PDFTemplateView, self).get(request, *args, **kwargs)
-
-
-class ServicesPdfView(GabinetPdfView):
-    def get(self, request, *args, **kwargs):
-        self.services = json.loads(request.GET.get('services'))
-        self.patient = json.loads(request.GET.get('patient'))
-        self.doctor = self.request.user.doctor
-        self.template_name = 'pdf/services.html'
-        self.now = datetime.datetime.today()
-        self.cmd_options = {'page-width': 95, 'page-height': 297, 'orientation': 'Portrait'}
-        if self.patient['last_name']:
-            self.filename = 'skierowanie_' + slugify(self.patient['last_name'])
-        else:
-            self.filename = 'skierowanie_' + self.now.strftime('%s')
-        return super(ServicesPdfView, self).get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        today = self.now.strftime('%d/%m/%Y')
-        ctx = {'services': self.services, 'doctor': self.doctor, 'patient': self.patient, 'date': today}
-        if 'icd' in self.request.GET:
-            ctx['icd'] = json.loads(self.request.GET['icd'])
-        return ctx
 
 
 class PdfView(GabinetPdfView):
@@ -261,5 +248,9 @@ class PdfView(GabinetPdfView):
         file_name = datetime.datetime.now().strftime('%s')
         barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
         self.visit.tabs = self.visit.tabs.all()
-        return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/',
+        settings = SystemSettings.objects.first()
+        header_left = settings.documents_header_left
+        header_right = settings.documents_header_right
+        return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'header_left': header_left,
+                'patient': self.visit.term.patient, 'header_right': header_right,
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}

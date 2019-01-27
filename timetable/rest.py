@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils import timezone
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
@@ -14,11 +15,12 @@ class TermSerializer(serializers.ModelSerializer):
     start = CharField(source='datetime')
     end = CharField(source='get_end')
     title = CharField(source='get_title')
+    patient = CharField(source='get_patient')
     className = CharField(source='status')
 
     class Meta:
         model = Term
-        fields = ('duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id')
+        fields = ('duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id', 'patient')
 
 
 class TermCreateSerializer(serializers.ModelSerializer):
@@ -28,7 +30,20 @@ class TermCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Term
-        fields = ('doctor', 'service', 'patient', 'status', 'duration', 'datetime')
+        fields = ('doctor', 'service', 'patient', 'status', 'duration', 'datetime', 'id')
+
+    def create(self, validated_data):
+        try:
+            instance = Term.objects.get(datetime=validated_data['datetime'], doctor=validated_data['doctor'],
+                                        status='FREE')
+            validated_data['status'] = 'PENDING'
+            return self.update(instance, validated_data)
+        except ObjectDoesNotExist:
+            return super(TermCreateSerializer, self).create(validated_data)
+        except MultipleObjectsReturned:
+            instance = Term.objects.filter(datetime=validated_data['datetime'], doctor=validated_data['doctor'],
+                                           status='FREE').first()
+            return self.update(instance, validated_data)
 
 
 class TermUpdateSerializer(TermCreateSerializer):
@@ -125,6 +140,8 @@ class TermViewSet(viewsets.ModelViewSet):
                 return Term.objects.none()
             else:
                 doctor = Doctor.objects.get(id=self.request.GET['doctor'])
+        if not doctor.working_hours:
+            return Term.objects.none()
         if settings.GENERATE_TERMS and (not doctor.terms_generated_till or doctor.terms_generated_till < end.date()):
             Term.create_terms_for_period(doctor,
                                          datetime.datetime.strptime(self.request.query_params['start'], '%Y-%m-%d'),

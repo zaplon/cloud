@@ -12,6 +12,10 @@ class SearchMixin(object):
                 query_filter = field + '__icontains'
                 filtered_q |= q.model.objects.filter(**{query_filter: term})
             q = q & filtered_q
+        if 'exclude' in params:
+            ids_to_exclude = [id for id in params['exclude'].split(',') if id]
+            if ids_to_exclude:
+                q = q.exclude(id__in=params['exclude'].split(','))
         if 'term' in self.request.GET:
             self.pagination_class = None
             q = q[0:20]

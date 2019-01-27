@@ -10,6 +10,6 @@ class AjaxFormTestCase(TestCase):
 
     def test_form_is_returned(self):
         url = reverse('get-form')
-        response = self.client.get(url, {'module': 'user_profile', 'klass': 'forms.PatientForm'})
+        response = self.client.get(url, {'module': 'user_profile.forms', 'klass': 'PatientForm'})
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.json()['status'])
+        self.assertTrue(response.json()['success'])

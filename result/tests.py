@@ -1,16 +1,17 @@
-from django.test import TestCase
 from django.test import Client
 import json
 
 from django_dynamic_fixture import G
 
+from g_utils.utils import GabinetTestCase
 from result.models import Result
 from user_profile.models import Patient, Doctor, Specialization
 
 
-class ResultsTestCase(TestCase):
+class ResultsTestCase(GabinetTestCase):
 
     def setUp(self):
+        super(ResultsTestCase, self).setUp()
         patient = G(Patient, pesel='88042003997')
 
         specialization = G(Specialization, name='ortopeda')
@@ -22,8 +23,6 @@ class ResultsTestCase(TestCase):
         doctor = G(Doctor)
         doctor.specializations.add(specialization)
         G(Result, patient=patient, doctor=doctor, specialization=specialization)
-
-        self.client = Client()
 
     def test_can_get_results(self):
         response = self.client.get('/rest/results/', {'pesel': 88042003997})
@@ -40,3 +39,4 @@ class ResultsTestCase(TestCase):
         response = self.client.get('/rest/results/', {'pesel': 88042003997, 'category': 'ortopeda'})
         data = json.loads(response.content)
         self.assertEqual(len(data['results']), 1)
+

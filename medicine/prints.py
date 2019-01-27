@@ -21,7 +21,8 @@ from rest_framework.views import APIView
 
 from g_utils.views import get_client_location_code
 from medicine.models import Medicine, Prescription, MedicineToPrescription
-from user_profile.models import Recipe, Patient
+from result.utils import save_document
+from user_profile.models import PrescriptionNumber, Patient
 
 pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 pdfmetrics.registerFont(TTFont('Arialb', 'ArialBold.ttf'))
@@ -47,6 +48,7 @@ class PrintRecipe(APIView):
         else:
             medicines = []
         patient = data.get('patient', {})
+        patient_id = patient
         patient = Patient.objects.get(id=patient)
         realisation_date = data.get('realisationDate', "")
         c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
@@ -61,7 +63,7 @@ class PrintRecipe(APIView):
                 return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
 
         c.save()
-
+        save_document('Recepta', patient_id, recipe_file, request.user)
         return HttpResponse(json.dumps({'success': True, 'url': '/media/tmp/pdf/recipes/' + file_name}),
                             content_type='application/json')
 
@@ -117,7 +119,7 @@ def recipe_lines(c, tab1=0.3):
 
 def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
 
-    if patient.pesel[6:9] == '999':
+    if patient.pesel and patient.pesel[6:9] == '999':
         patient['pesel'] = ''
 
     doct_margin_left = 1
@@ -174,39 +176,24 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
     y = 29.2
     p.drawString((x + 0) * cm, (y - 0.4) * cm, 'Recepta')
     if useNr:
-        recNr = Recipe.objects.filter(was_used=False, doctor=request.user.doctor)
+        recNr = PrescriptionNumber.objects.filter(date_used__isnull=True, doctor=request.user.doctor)
         if len(recNr) == 0:
             raise RecipePrintException('Brak numeru recepty do wykorzystania')
         recNr = recNr[0]
-        p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr)
+        recNr_instance = recNr
+        p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr.nr)
     p.setFont("Arialb", 8)
-    code = get_client_location_code(request)
-    if code == 'KEN':
-        p.drawString((x + 0) * cm, (y - 0.9) * cm, 'FILIA NR 2 PRZEDSIĘBIORSTWA PODMIOTU LECZNICZEGO')
-        p.drawString((x + 0) * cm, (y - 1.2) * cm, 'SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW')
-        p.drawString((x + 0) * cm, (y - 1.5) * cm, '02-797 WARSZAWA')
-        p.drawString((x + 0) * cm, (y - 1.8) * cm, 'AL. KEN 19')
-        p.drawString((x + 0) * cm, (y - 2.1) * cm, 'Tel.:224467777')
-        p.drawString((x + 0) * cm, (y - 2.4) * cm, 'REGON:000840941')
-    elif code == 'PDT':
-        p.drawString((x + 0) * cm, (y - 0.9) * cm, 'FILIA NR 3 PRZEDSIĘBIORSTWA PODMIOTU LECZNICZEGO')
-        p.drawString((x + 0) * cm, (y - 1.2) * cm, 'SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW')
-        p.drawString((x + 0) * cm, (y - 1.5) * cm, '01-194 WARSZAWA')
-        p.drawString((x + 0) * cm, (y - 1.8) * cm, 'MŁYNARSKA 8/12')
-        p.drawString((x + 0) * cm, (y - 2.1) * cm, 'Tel.:226327705')
-        p.drawString((x + 0) * cm, (y - 2.4) * cm, 'REGON:000840941')
-    else:
-        p.drawString((x + 0) * cm, (y - 0.9) * cm, 'FILIA NR 1 PRZEDSIĘBIORSTWA PODMIOTU LECZNICZEGO')
-        p.drawString((x + 0) * cm, (y - 1.2) * cm, 'SPÓŁDZIELNIA PRACY SPECJALISTÓW RENTGENOLOGÓW')
-        p.drawString((x + 0) * cm, (y - 1.5) * cm, '00-655 WARSZAWA')
-        p.drawString((x + 0) * cm, (y - 1.8) * cm, 'WARYŃSKIEGO 9')
-        p.drawString((x + 0) * cm, (y - 2.1) * cm, 'Tel.:226251590')
-        p.drawString((x + 0) * cm, (y - 2.4) * cm, 'REGON:000840941')
+
+    p.drawString((x + 0) * cm, (y - 0.9) * cm, 'Gabinet Okulistyczny Tomasz Dominik')
+    p.drawString((x + 0) * cm, (y - 1.2) * cm, '05-152 Czosnów ul. Krótka 3')
+    p.drawString((x + 0) * cm, (y - 1.5) * cm, 'REGON: 011604270')
+    p.drawString((x + 0) * cm, (y - 1.8) * cm, 'NIP:531-100-77-45')
+    p.drawString((x + 0) * cm, (y - 2.1) * cm, 'TEL. 22 775 44 66')
 
     p.setFont("Arial", 9)
 
-    b = createBarcodeDrawing('Code128', value="20008409410000", width=5 * cm, height=0.6 * cm)
-    p.drawString((x + 6.7) * cm, (y - 3.1) * cm, "20008409410000")
+    b = createBarcodeDrawing('Code128', value="20116042700009", width=5 * cm, height=0.6 * cm)
+    p.drawString((x + 6.7) * cm, (y - 3.1) * cm, "20116042700009")
     b.drawOn(p, (x + 5.4) * cm, (y - 2.75) * cm)
 
     p.drawString((x + 0) * cm, (y - 3.15) * cm, 'Świadczeniodawca')
@@ -224,8 +211,8 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
 
     p.drawString((x + 4.6) * cm, (y - 19.8) * cm, 'Wydruk własny')
     if useNr:
-        b = createBarcodeDrawing('Code128', value=str(recNr), width=6 * cm, height=0.6 * cm)
-        p.drawString((x + 2.7) * cm, (y - 16.4) * cm, str(recNr))
+        b = createBarcodeDrawing('Code128', value=str(recNr.nr), width=6 * cm, height=0.6 * cm)
+        p.drawString((x + 2.7) * cm, (y - 16.4) * cm, str(recNr.nr))
         b.drawOn(p, (x + 1.6) * cm, (y - 16.05) * cm)
 
     styles = getSampleStyleSheet()
@@ -239,8 +226,11 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
 
     # p.drawString((x+5.5)*cm,(y-17.8)*cm, title)
     # p.drawString((x+5.5)*cm,(y-18.3)*cm, us.name)
-
+    if useNr:
+        recNr_instance.date_used = datetime.datetime.now()
+        recNr_instance.save()
     return p
+
 
 class PrintGlasses(APIView):
     queryset = Prescription.objects.all()
@@ -361,6 +351,8 @@ class PrintGlasses(APIView):
                    (py + r * math.sin(math.radians(ra + 5))) * cm)
 
         c.save()
+
+        save_document('Recepta okulistyczna', data['patientId'], fileNm, request.user)
 
         # return response
         return HttpResponse(fileNm2)

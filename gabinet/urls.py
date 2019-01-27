@@ -18,6 +18,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from dashboard.views import *
+
+from examination.rest import ExaminationViewSet
+from examination.views import ReferralPdfView
 from visit.rest import IcdViewSet, TemplateViewSet, VisitViewSet, TabViewSet
 from result.rest import ResultViewSet
 from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet
@@ -26,8 +29,7 @@ from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDe
 from stats.rest import *
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
-from g_utils.views import AjaxFormView
-
+from g_utils.views import AjaxFormView, PDFView
 
 router = routers.DefaultRouter()
 router.register(r'icd', IcdViewSet)
@@ -47,6 +49,7 @@ router.register(r'medicine_parents', MedicineParentViewSet, base_name='medicine_
 router.register(r'refundations', RefundationViewSet)
 router.register(r'prescriptions', PrescriptionViewSet)
 router.register(r'visits', VisitViewSet, base_name='visits')
+router.register(r'examinations', ExaminationViewSet, base_name='examinations')
 
 
 urlpatterns = [
@@ -64,16 +67,18 @@ urlpatterns = [
     url(r'^visit/', include("visit.urls"), name='visit'),
     url(r'^icd10/', icd10_view, name='icd10'),
     url(r'^templates/', TemplateListView.as_view(), name='templates'),
-    url(r'^medicines/', include("medicine.urls"), name='medicines'),
     url(r'^tabs/', TabsListView.as_view(), name='tabs'),
 
     url(r'^rest/stats/', Stats.as_view(), name='stats-rest'),
     url(r'^rest/user/', UserDetailsView.as_view(), name='user-details'),
     url(r"^rest/", include(router.urls, namespace='rest')),
 
-    url(r"^timetable/", include("timetable.urls"), name='timetable'),
+    url(r'^pdf/', PDFView.as_view(), name='generate-pdf'),
+
+    url(r"^timetable/", include("timetable.urls", namespace='timetable')),
     url(r"^get-form/", AjaxFormView.as_view(), name='get-form'),
     url(r"^forms/", include('forms.urls'), name='forms'),
+    url(r"^backend/forms/", include('forms.urls'), name='forms'),
     url(r"^agreements/", include('agreements.urls'), name='agreements'),
     url(r'^pdf/$', PdfView.as_view(template_name='no_pdf.html', filename='result.pdf'), name='pdf'),
     url(r'^rest-auth/', include('rest_auth.urls'))

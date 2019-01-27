@@ -70,6 +70,12 @@ $(document).ready(function () {
         if ($('textarea[name="' + param + '"]').length > 0)
             $('textarea[name="' + param + '"]').html(params[param]);
     }
+    if (params.header_left) {
+        $('#document-header-left').html(params.header_left);
+    }
+    if (params.header_right) {
+        $('#document-header-right').html(params.header_right);
+    }
     //orzeczeni zdolnosc do pracy
     $('.cross li').addClass('crossable');
 
@@ -130,10 +136,10 @@ function getData() {
 }
 
 function makePdf(event) {
-    $.post('/forms/edit_form/', {data: getData()}, function (res) {
+    $.post('/backend/forms/edit_form/', {data: getData()}, function (res) {
         var params = {tmp: res.tmp, print: true, template_name: event.data.name};
         params['as_file'] = 1;
-        $.get('/forms/show_form/?' + $.param(params), function (res) {
+        $.get('/backend/forms/show_form/?' + $.param(params), function (res) {
             event.source.postMessage(res, event.origin);
         });
 

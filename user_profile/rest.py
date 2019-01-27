@@ -1,9 +1,8 @@
 import json
 
-from django.conf.urls import url, include
 from django.db.models import Q, Min
 from rest_framework import serializers, viewsets
-from rest_framework.fields import CharField, ListField, IntegerField
+from rest_framework.fields import CharField, ListField
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -11,8 +10,9 @@ from django.contrib.auth.models import User, Permission
 from django.conf import settings
 
 from g_utils.rest import SearchMixin
-from .models import Doctor, Patient, Note, Specialization
-import datetime
+from timetable.models import Service
+from .models import Doctor, Patient, Note, Specialization, SystemSettings
+from datetime import datetime
 
 
 # Serializers define the API representation.
@@ -80,10 +80,19 @@ class WorkingHoursSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Doctor
-        fields = ['id', 'working_hours']
+        fields = ['id', 'working_hours', 'terms_start', 'terms_end']
 
     def save(self, **kwargs):
-        self.instance.working_hours = json.dumps(self._kwargs['data']['days'])
+        days = self._kwargs['data']['days']
+        self.instance.working_hours = json.dumps(days)
+        working_days = list(filter(lambda d: d['on'], days))
+        seq = [datetime.strptime(x['value'][0], '%H:%M') for x in working_days]
+        min_time = min(seq)
+        seq = [datetime.strptime(x['value'][1], '%H:%M') for x in working_days]
+        max_time = max(seq)
+        self.instance.terms_start = min_time.time()
+        self.instance.terms_end = max_time.time()
+        self.instance.terms_generated_till = datetime.today()
         self.instance.save()
         return self.instance
 
@@ -92,12 +101,19 @@ class WorkingHoursSerializer(serializers.ModelSerializer):
 class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     name = CharField(source='get_name')
     working_hours = ListField(source='get_working_hours')
+    default_service = serializers.SerializerMethodField()
 
     class Meta:
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
-                  'total_prescriptions')
-        
+                  'total_prescriptions', 'visit_duration', 'default_service')
+
+    def get_default_service(self, obj):
+        doctor_services = Service.objects.filter(doctors__in=[obj])
+        if doctor_services.count() == 1:
+            s = doctor_services.first()
+            return {'id': s.id, 'name': s.name}
+
         
 class DoctorCalendarSerializer(serializers.ModelSerializer):
     first_term = serializers.DateTimeField(format=settings.DATE_FORMAT)
@@ -127,9 +143,9 @@ class DoctorViewSet(viewsets.ModelViewSet, SearchMixin):
             get_params = self.request.GET
             q = super(DoctorViewSet, self).get_queryset()
             if 'dateFrom' in get_params:
-                dt = datetime.datetime.strptime(get_params['dateFrom'], '%Y-%m-%d')
+                dt = datetime.strptime(get_params['dateFrom'], '%Y-%m-%d')
             else:
-                dt = datetime.datetime.today()
+                dt = datetime.today()
             if 'specialization' in get_params:
                 q = q.filter(specializations__id=get_params['specialization'])
             if 'name_like' in get_params:
@@ -155,6 +171,12 @@ class UserSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField('get_user_type')
     doctor = DoctorSerializer()
     user_permissions = serializers.SerializerMethodField('get_all_permissions')
+    system_settings = serializers.SerializerMethodField()
+
+    def get_system_settings(self, instance):
+        settings = SystemSettings.objects.first()
+        return {'documents_header_left': settings.documents_header_left, 'logo': settings.logo.url,
+                'documents_header_right': settings.documents_header_right}
 
     def get_all_permissions(self, instance):
         if instance.is_superuser:
@@ -207,7 +229,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'can_edit_terms', 'can_edit_visits', 'setup_needed', 'modules', 'type',
-                  'doctor', 'user_permissions')
+                  'doctor', 'user_permissions', 'system_settings')
 
 
 class UserDetailsView(APIView):
@@ -227,6 +249,6 @@ class SpecializationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SpecializationViewSet(viewsets.ReadOnlyModelViewSet):
+class SpecializationViewSet(viewsets.ReadOnlyModelViewSet, SearchMixin):
     serializer_class = SpecializationSerializer
     queryset = Specialization.objects.all()

@@ -21,9 +21,9 @@ class TabTypes(Enum):
     ICD10 = 'Rozpoznanie'
     MEDICINES = 'Leki'
     NOTES = 'Notatki'
-    SERVICES = 'Skierowania'
     VIDEO = 'Nagranie wideo'
     OCULIST = 'Okulista'
+    EXAMINATIONS = 'Badania dodatkowe'
 
 
 class Tab(models.Model):
@@ -70,7 +70,7 @@ class VisitTab(models.Model):
     title = models.CharField(max_length=100)
     json = models.TextField(default='null')
     order = models.IntegerField(null=True, blank=True)
-    type = models.CharField(max_length=12)
+    type = models.CharField(max_length=32)
     visit = models.ForeignKey('Visit', related_name='tabs')
 
     @property
@@ -97,6 +97,10 @@ class Visit(models.Model):
             visit_tab = VisitTab.objects.create(title=tab.title, order=tab.order, type=tab.type, visit=self)
             visit_tabs.append(visit_tab)
         return visit_tabs
+
+    @property
+    def printable_tabs(self):
+        return self.tabs.all().exclude(type='OCULIST')
 
 
 class Template(models.Model):
