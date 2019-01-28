@@ -110,10 +110,7 @@ table.no-border td {
 
 .document-header {
   white-space: pre;
-  width: 100%;
-  border: none; }
-  .document-header td {
-    border: none; }
+  width: 100%; }
   .document-header td:last-of-type {
     text-align: right;
     vertical-align: top; }
