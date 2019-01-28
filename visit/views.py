@@ -5,6 +5,7 @@ from django.core.files.base import ContentFile
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from rest_framework.views import APIView
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.list import ListView
@@ -21,10 +22,8 @@ from .forms import *
 import datetime
 import os
 import json
-from django.conf import settings
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib.units import cm
-
 
 
 class VisitView(GabinetPermissionRequiredMixin, View):
@@ -248,9 +247,9 @@ class PdfView(GabinetPdfView):
         file_name = datetime.datetime.now().strftime('%s')
         barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
         self.visit.tabs = self.visit.tabs.all()
-        settings = SystemSettings.objects.first()
-        header_left = settings.documents_header_left
-        header_right = settings.documents_header_right
+        system_settings = SystemSettings.objects.first()
+        header_left = system_settings.documents_header_left
+        header_right = system_settings.documents_header_right
         return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'header_left': header_left,
                 'patient': self.visit.term.patient, 'header_right': header_right,
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}

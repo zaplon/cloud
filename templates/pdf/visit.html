@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                {{ header|linebreaks }}
+                {{ header_left|linebreaks }}
             </div>
             <div class="col-md-6">
                 <div style="display: inline-block; width: 250px; float: right;"><img src="{{ barcode }}"/></div>
@@ -17,23 +17,27 @@
 {% block body %}
     <div class="container">
         <span>Imię i nazwisko: <strong>{{ patient.first_name }} {{ patient.last_name }}</strong></span><br/>
+        <span>Data: <strong>{{ visit.created|date:"d-m-Y H:i" }}</strong></span><br/>
         <span>Adres: <strong>{{ pesel.address|default:'-' }}</strong></span><br/>
         <span>Pesel: <strong>{{ patient.pesel|default:'-' }}</strong></span>
         <h1 class="text-center">Historia choroby</h1>
         {% for tab in visit.printable_tabs %}
-            {% if tab.data %}
-                <div>
-                    <h2>{{ tab.title }}</h2>
-                    {% if tab.type == 'ICD10' %}
-                        {% include 'pdf/tabs/icd10.html' with icds=tab.data %}
-                    {% elif tab.type == 'MEDICINES' %}
-                        {% include 'pdf/tabs/medicines.html' with medicines=tab.data.selections %}
-                    {% elif tab.type == 'EXAMINATIONS' %}
-                        {% include 'pdf/tabs/examinations.html' with examinations=tab.data %}
-                    {% else %}
-                        {{ tab.data }}
-                    {% endif %}
-                </div>
+            {% if tab.type == 'ICD10' %}
+                <h2>{{ tab.title }}</h2>
+                {% include 'pdf/tabs/icd10.html' with icds=visit.icd_codes.all %}
+            {% else %}
+                {% if tab.data %}
+                    <div>
+                        <h2>{{ tab.title }}</h2>
+                        {% if tab.type == 'MEDICINES' %}
+                            {% include 'pdf/tabs/medicines.html' with medicines=tab.data.selections %}
+                        {% elif tab.type == 'EXAMINATIONS' %}
+                            {% include 'pdf/tabs/examinations.html' with examinations=tab.data %}
+                        {% else %}
+                            {{ tab.data }}
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endif %}
         {% endfor %}
     </div>
