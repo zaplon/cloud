@@ -107,13 +107,15 @@ table {
   width: 50%;
   text-align: left;
   display: inline-block;
-  float: left; }
+  float: left;
+  vertical-align: top; }
 
 .document-header-right-container {
   width: 50%;
   text-align: right;
   display: inline-block;
-  float: right; }
+  float: right;
+  vertical-align: top; }
 
 #document-header-left, #document-header-right {
   white-space: pre; }
