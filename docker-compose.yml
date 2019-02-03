@@ -24,22 +24,5 @@ services:
      - ./gabinet_docker/mysql/:/docker-entrypoint-initdb.d/
   elasticsearch:
     image: elasticsearch:6.5.1
-  nginx:
-    image: nginx
-    networks:
-      default:
-        aliases:
-          - gabinet
-    depends_on:
-      - web
-    volumes:
-      - ./gabinet_docker/nginx/sites-enabled/:/etc/nginx/sites-enabled/
-      - ./gabinet_docker/nginx/sites-available/:/etc/nginx/sites-available/
-      - ./gabinet_docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./public/static/:/static/
-      - ./public/media/:/media/
-    ports:
-      - "80:80"
-      - "443:443"
   memcached:
     image: memcached
