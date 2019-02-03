@@ -137,10 +137,19 @@ function getData() {
 
 function makePdf(event) {
     $.post('/backend/forms/edit_form/', {data: getData()}, function (res) {
-        var params = {tmp: res.tmp, print: true, template_name: event.data.name};
+        var params = {tmp: res.tmp, print: true, template_name: event.data.name, pages: event.data.pages};
         params['as_file'] = 1;
+        if ('save' in event.data){
+            params['save'] = 1;
+            params['user_id'] = event.data.user_id;
+            params['patient_id'] = event.data.patient_id;
+            params['nice_name'] = event.data.nice_name;
+        }
         $.get('/backend/forms/show_form/?' + $.param(params), function (res) {
-            event.source.postMessage(res, event.origin);
+            if ('save' in event.data)
+                event.source.postMessage('save', event.origin);
+            else
+                event.source.postMessage(res, event.origin);
         });
 
     });

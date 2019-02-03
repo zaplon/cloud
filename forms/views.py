@@ -3,6 +3,7 @@ import json
 import re
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template.loader import render_to_string
@@ -10,9 +11,9 @@ from django.views.generic import View
 from wkhtmltopdf import convert_to_pdf
 from wkhtmltopdf.views import PDFTemplateView
 
+from result.utils import save_document
 from user_profile.models import SystemSettings
 from .settings import *
-from django.conf import settings
 import os
 import datetime
 from django.conf import settings
@@ -110,6 +111,8 @@ class FormView(PDFTemplateView):
     def get(self, request, *args, **kwargs):
         no_form_template = 'no_form'
         template = request.GET.get('template_name', no_form_template)
+        if 'user_id' in request.GET:
+            user = User.objects.get(id=request.GET['user_id'])
         if 'tmp' in request.GET:
             self.template_name = 'forms/tmp/' + request.GET['tmp']
         else:
@@ -141,7 +144,19 @@ class FormView(PDFTemplateView):
                     f.write(data)
                 # convert_to_pdf_phantom('file://' + os.path.join(settings.BASE_DIR, 'forms', 'templates',
                 #                       self.template_name), output)
-                return HttpResponse('/media/tmp/' + file_name)
+                if request.GET.get('pages', None):
+                    pages = request.GET['pages']
+                    new_file = output.replace('.pdf', '-split.pdf')
+                    os.system('pdftk %s cat %s output %s' % (output, pages, new_file))
+                    output = output.replace('.pdf', '-split.pdf')
+                    file_name = file_name.replace('.pdf', '-split.pdf')
+                    if request.GET.get('save') and request.GET.get('patient_id'):
+                        save_document(request.GET['nice_name'], request.GET['patient_id'], output, user)
+                    return HttpResponse('/media/tmp/' + file_name)
+                else:
+                    if request.GET.get('save') and request.GET.get('patient_id'):
+                        save_document(request.GET['nice_name'], request.GET['patient_id'], output, user)
+                    return HttpResponse('/media/tmp/' + file_name)
             else:
                 return super(PDFTemplateView, self).get(request, *args, **kwargs)
         else:
