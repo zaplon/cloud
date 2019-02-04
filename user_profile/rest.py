@@ -205,6 +205,8 @@ class UserSerializer(serializers.ModelSerializer):
             else:
                 if module[0] is True or instance.has_perm(module[0]):
                     modules.append(module[1])
+        if self.instance.is_staff:
+            modules.append('admin')
         return modules
 
     def check_if_setup_needed(self, instance):

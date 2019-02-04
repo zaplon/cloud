@@ -222,7 +222,7 @@ MODULES = [
     (True, 'icd10', u'Kody ICD-10'),
     ('user_profile.change_template', 'templates', u'Szablony'),
     ('visit.change_tab', 'tabs', u'Zakładki'),
-    (True, 'forms', u'Formularze'),
+    (True, 'forms', u'Formularze')
 ]
 
 # misal settings
