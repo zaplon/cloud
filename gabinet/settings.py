@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'g_utils',
     'user_profile',
     'visit',
-    'dashboard',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -76,7 +75,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'g_utils.middleware.setup_middleware',
     'g_utils.middleware.permissions_middleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -222,6 +220,9 @@ MODULES = [
     (True, 'icd10', u'Kody ICD-10'),
     ('user_profile.change_template', 'templates', u'Szablony'),
     ('visit.change_tab', 'tabs', u'Zakładki'),
+    ('timetable.change_service', 'services', u'Usługi'),
+    ('timetable.change_localization', 'localizations', u'Lokalizacje'),
+    ('auth.change_user', 'users', u'Użytkownicy'),
     (True, 'forms', u'Formularze')
 ]
 

@@ -1,12 +1,10 @@
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from django.forms.utils import flatatt
-from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from g_utils.fields import AutocompleteWidget
-from .models import Term
-from django.forms.widgets import Select, HiddenInput, DateTimeInput
+from .models import Term, Service, Localization
+from django.forms.widgets import HiddenInput, DateTimeInput
 
 
 class PatientSelect(AutocompleteWidget):
@@ -51,3 +49,19 @@ class TermForm(ModelForm):
         if 'patient' not in self.data or not self.data['patient']:
             self.instance.status = u'FREE'
         super(TermForm, self).save(commit)
+
+
+class ServiceForm(ModelForm):
+    horizontal = True
+
+    class Meta:
+        model = Service
+        fields = '__all__'
+
+
+class LocalizationForm(ModelForm):
+    horizontal = True
+
+    class Meta:
+        model = Localization
+        fields = '__all__'

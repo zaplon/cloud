@@ -66,7 +66,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 class ServiceViewSet(viewsets.ModelViewSet, SearchMixin):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
-    pagination_class = None
+    # pagination_class = None
 
 
 class TermDetailSerializer(serializers.ModelSerializer):
@@ -162,4 +162,4 @@ class LocalizationSerializer(serializers.ModelSerializer):
 class LocalizationViewSet(viewsets.ModelViewSet):
     queryset = Localization.objects.all()
     serializer_class = LocalizationSerializer
-    pagination_class = None
+    # pagination_class = None

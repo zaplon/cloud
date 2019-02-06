@@ -50,8 +50,9 @@ class TermMoveView(APIView):
         if t2 and (t2.patient and t.patient):
             return HttpResponse(json.dumps({'message': 'Na ten termin jest już zapisany pacjent.'}), status=400, content_type='application/json')
         if t2 and not t2.patient:
-            t2.patient = t.patient
-            t2.status = 'PENDING'
+            if t.patient:
+                t2.patient = t.patient
+                t2.status = 'PENDING'
             t2.service = t.service
             t.service = None
             t.patient = None

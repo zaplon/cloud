@@ -13,19 +13,18 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 
-from dashboard.views import *
-
 from examination.rest import ExaminationViewSet
-from examination.views import ReferralPdfView
 from visit.rest import IcdViewSet, TemplateViewSet, VisitViewSet, TabViewSet
 from result.rest import ResultViewSet
 from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet
 from medicine.rest import *
-from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDetailsView, SpecializationViewSet
+from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDetailsView, SpecializationViewSet, \
+    UserViewSet
 from stats.rest import *
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
@@ -39,6 +38,7 @@ router.register(r'booking', BookingViewSet)
 router.register(r'localizations', LocalizationViewSet)
 router.register(r'services', ServiceViewSet)
 router.register(r'patients', PatientViewSet)
+router.register(r'users', UserViewSet)
 router.register(r'doctors', DoctorViewSet)
 router.register(r'specializations', SpecializationViewSet)
 router.register(r'templates', TemplateViewSet)
@@ -56,16 +56,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # url(r'^jet_api/', include(jet_urls)),
     url(r"^account/", include("account.urls")),
-    url(r"^setup/(?P<step>[0-9])", SetupView.as_view(), name='setup'),
-    url(r'^patients/', patients_view, name='patients'),
-    url(r'^stats/', stats_view, name='stats'),
-    url(r'^prescriptions/', prescriptions_view, name='prescriptions'),
-    url(r'^calendar/', calendar_view, name='calendar'),
-    url(r'^archive/$', archive_view, name='archive'),
     url(r'^archive/', include("result.urls"), name='archive'),
     url(r'^profile/', include("user_profile.urls")),
     url(r'^visit/', include("visit.urls"), name='visit'),
-    url(r'^icd10/', icd10_view, name='icd10'),
     url(r'^templates/', TemplateListView.as_view(), name='templates'),
     url(r'^tabs/', TabsListView.as_view(), name='tabs'),
 
@@ -80,7 +73,6 @@ urlpatterns = [
     url(r"^forms/", include('forms.urls'), name='forms'),
     url(r"^backend/forms/", include('forms.urls'), name='forms'),
     url(r"^agreements/", include('agreements.urls'), name='agreements'),
-    url(r'^pdf/$', PdfView.as_view(template_name='no_pdf.html', filename='result.pdf'), name='pdf'),
     url(r'^rest-auth/', include('rest_auth.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -15,6 +15,18 @@ from .models import Doctor, Patient, Note, Specialization, SystemSettings
 from datetime import datetime
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class UserViewSet(SearchMixin, viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    search_filters = ['last_name', 'first_name', 'username']
+
+
 # Serializers define the API representation.
 class PatientSerializer(serializers.ModelSerializer):
     # first_name = CharField(source='user.first_name')
