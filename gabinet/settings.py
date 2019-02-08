@@ -80,7 +80,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "account.middleware.LocaleMiddleware",
     "account.middleware.TimezoneMiddleware",
-    "agreements.middleware.display_agreement_middleware"
+    # "agreements.middleware.display_agreement_middleware"
 ]
 
 ROOT_URLCONF = 'gabinet.urls'

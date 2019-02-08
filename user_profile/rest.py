@@ -26,6 +26,9 @@ class UserViewSet(SearchMixin, viewsets.ModelViewSet):
     serializer_class = UserSerializer
     search_filters = ['last_name', 'first_name', 'username']
 
+    def filter_queryset(self, queryset):
+        return super(UserViewSet, self).filter_queryset(queryset)
+
 
 # Serializers define the API representation.
 class PatientSerializer(serializers.ModelSerializer):

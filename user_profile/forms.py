@@ -2,6 +2,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Field, Layout, Div, HTML
 from django import forms
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.forms.fields import TimeField
 from django.forms.widgets import HiddenInput
@@ -58,6 +59,13 @@ class UserForm(forms.Form):
         user.email = self.data['email']
         user.profile.mobile = self.cleaned_data['mobile']
         user.save()
+
+
+class UserModelForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        exclude = ('is_staff',)
 
 
 class DoctorForm(forms.Form):
