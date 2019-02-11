@@ -174,7 +174,7 @@ class PatientForm(forms.Form):
 
     def save(self):
         patient = Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data.get('email', ''),
-                                         mobile=self.cleaned_data('mobile', ''),
+                                         mobile=self.cleaned_data.get('mobile', ''),
                                          address=self.cleaned_data.get('address', ''),
                                first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
         return {'id': patient.id, 'label': patient.name_with_pesel}
