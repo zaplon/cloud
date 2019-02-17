@@ -1,33 +1,19 @@
 import json
 
+from django.contrib.auth.password_validation import validate_password
 from django.db.models import Q, Min
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField, ListField
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User, Permission, Group
 from django.conf import settings
 
 from g_utils.rest import SearchMixin
 from timetable.models import Service
 from .models import Doctor, Patient, Note, Specialization, SystemSettings
 from datetime import datetime
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-
-
-class UserViewSet(SearchMixin, viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    search_filters = ['last_name', 'first_name', 'username']
-
-    def filter_queryset(self, queryset):
-        return super(UserViewSet, self).filter_queryset(queryset)
 
 
 # Serializers define the API representation.
@@ -117,11 +103,12 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     name = CharField(source='get_name')
     working_hours = ListField(source='get_working_hours')
     default_service = serializers.SerializerMethodField()
+    specializations = serializers.PrimaryKeyRelatedField(many=True, queryset=Specialization.objects.all())
 
     class Meta:
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
-                  'total_prescriptions', 'visit_duration', 'default_service')
+                  'total_prescriptions', 'visit_duration', 'default_service', 'specializations')
 
     def get_default_service(self, obj):
         doctor_services = Service.objects.filter(doctors__in=[obj])
@@ -169,6 +156,63 @@ class DoctorViewSet(viewsets.ModelViewSet, SearchMixin):
             q = q.filter(terms__status='FREE', terms__datetime__gt=dt)
             q = q.annotate(first_term=Min('terms__datetime')).order_by('-first_term')
             return q
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    doctor = DoctorSerializer(required=False)
+
+    class Meta:
+        model = User
+        fields = '__all__'
+
+    def update(self, instance, validated_data):
+        doctor = validated_data.pop('doctor')
+        instance = super(UserDetailSerializer, self).update(instance, validated_data)
+        Doctor.objects.update_or_create(user=instance, defaults=doctor)
+        return instance
+
+
+class UserInitSerializer(serializers.ModelSerializer):
+    password = serializers.CharField()
+    password2 = serializers.CharField(write_only=True)
+    role = serializers.ChoiceField(choices=(('doctor', 'Lekarz'), ('worker', 'Pracownik')), write_only=True)
+    doctor = DoctorSerializer(read_only=True, required=False)
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        role = validated_data.pop('role')
+        validated_data.pop('password2')
+        instance = super(UserInitSerializer, self).create(validated_data)
+        instance.set_password(password)
+        instance.save()
+        if role == 'doctor':
+            Doctor.objects.create(user=instance)
+        return instance
+
+    def validate(self, data):
+        if data.get('password2') != data.get('password'):
+            raise serializers.ValidationError({'password': u'Hasła nie są jednakowe'})
+        return data
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'password', 'password2', 'role', 'doctor', 'role')
+
+
+class UserViewSet(SearchMixin, viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
+    search_filters = ['last_name', 'first_name', 'username']
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserInitSerializer
+        else:
+            return self.serializer_class
 
 
 class PermissionSerializer(serializers.ModelSerializer):
@@ -269,3 +313,27 @@ class SpecializationSerializer(serializers.ModelSerializer):
 class SpecializationViewSet(viewsets.ReadOnlyModelViewSet, SearchMixin):
     serializer_class = SpecializationSerializer
     queryset = Specialization.objects.all()
+
+
+class PermissionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Permission
+        fields = '__all__'
+
+
+class PermissionViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PermissionSerializer
+    queryset = Permission.objects.all()
+
+
+class GroupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
+class GroupViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = GroupSerializer
+    queryset = Group.objects.all()

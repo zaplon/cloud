@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
+from django.utils.translation import gettext as _
 
 from visit.models import TabTypes
 
@@ -16,6 +17,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     mobile = models.IntegerField(blank=True, null=True)
     css = models.CharField(default='classic', choices=(('classic', 'Klasyczny'),), max_length=20, verbose_name='Interfejs')
+    role = models.CharField(choices=(('doctor', _('Lekarz')), ('worker', _('Pracownik'))), max_length=10)
 
     # class Meta:
     #     permissions = (
@@ -64,6 +66,8 @@ class Doctor(models.Model):
     misal_id = models.CharField(blank=True, null=True, max_length=10)
     title = models.CharField(default='', verbose_name=u'Tytuł', max_length=50)
     specializations = models.ManyToManyField(Specialization, related_name='doctors', verbose_name=u'Specializacje')
+    # documents_header_left = models.TextField(verbose_name=u'Nagłówek dokumentów (lewa strona)', blank=True)
+    # documents_header_right = models.TextField(verbose_name=u'Nagłówek dokumentów (prawa strona)', blank=True)
 
     class Meta:
         verbose_name = 'Lekarz'

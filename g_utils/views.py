@@ -63,7 +63,9 @@ class AjaxFormView(APIView):
             self.check_permissions(form_class)
         except PermissionError:
             return HttpResponse(status=403)
-        if 'id' in self.request.GET:
+        if 'blank' in self.request.GET:
+            form = form_class()
+        elif 'id' in self.request.GET:
             form = form_class(instance=form_class._meta.model.objects.get(id=self.request.GET['id']))
         else:
             data = json.loads(self.request.GET['data']) if 'data' in self.request.GET else {}

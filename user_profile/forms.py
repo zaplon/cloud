@@ -23,6 +23,7 @@ class HoursForm(forms.Form):
 
 class UserForm(forms.Form):
     save_with_user = True
+    horizontal = True
 
     first_name = forms.CharField(max_length=100, label=u'Imię')
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
@@ -83,6 +84,8 @@ class DoctorForm(forms.Form):
                                         help_text='Liczba minut przypadających na jedną wizytę')
     factory_specializations = forms.MultipleChoiceField(label=u'Specjalizacje', required=False,
                                                         help_text=u'Zaznacz kilka pozycji trzymając wciśnięty klawisz CTRL')
+    # documents_header_left = forms.Textarea(label=u'Nagłówek dokumentów (lewa strona)', required=False)
+    # documents_header_right = forms.Textarea(label=u'Nagłówek dokumentów (prawa strona)', required=False)
 
     def __init__(self, *args, **kwargs):
         if 'user' in kwargs.get('initial', {}):
@@ -202,3 +205,63 @@ class SystemForm(forms.ModelForm):
         self.helper.add_layout(Layout(
             Field('logo', css_class='form-control', wrapper_class='row')
         ))
+
+
+class UserTabForm(UserForm):
+    user_type = forms.ChoiceField(choices=(('doctor', 'Lekarz'), ('worker', 'Pracownik')),
+                                  label='Typ użytkownika')
+    username = forms.CharField(max_length=128, label=u'Nazwa użytkownika')
+    password = forms.CharField(widget=forms.PasswordInput(), label=u'Hasło')
+    password2 = forms.CharField(widget=forms.PasswordInput(), label=u'Powtórz hasło')
+
+    field_order = ['user_type', 'username', 'first_name', 'last_name', 'mobile', 'email', 'password', 'password2']
+
+
+class DoctorTabForm(forms.Form):
+    save_with_user = True
+    horizontal = True
+    mobile = forms.CharField(max_length=9, label=u'Numer telefonu', required=False)
+    pwz = forms.CharField(max_length=7, label=u'Numer PWZ')
+    title = forms.CharField(max_length=50, label=u'Tytuł')
+    form_class = forms.CharField(max_length=50, initial='DoctorTabForm', widget=HiddenInput(), required=False)
+    visit_duration = forms.IntegerField(min_value=5, required=True, label='Czas trwania wizyty',
+                                        help_text='Liczba minut przypadających na jedną wizytę')
+    factory_specializations = forms.MultipleChoiceField(label=u'Specjalizacje', required=False,
+                                                        help_text=u'Zaznacz kilka pozycji trzymając wciśnięty klawisz CTRL')
+
+    def __init__(self, *args, **kwargs):
+        if 'user' in kwargs.get('initial', {}):
+            u = kwargs['initial'].pop('user')
+            kwargs['initial'] = {'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email,
+                                 'visit_duration': u.doctor.visit_duration,
+                                 'mobile': u.profile.mobile, 'pwz': u.doctor.pwz, 'title': u.doctor.title}
+        super(DoctorTabForm, self).__init__(*args, **kwargs)
+        self.fields['factory_specializations'].choices = [(s.id, s.name) for s in Specialization.objects.all()]
+        if 'initial' in kwargs:
+            specs = list(Specialization.objects.filter(doctors=u.doctor).values_list('id', flat=True))
+            self.fields['factory_specializations'].initial = specs
+
+    def clean_factory_specializations(self):
+        return self.cleaned_data['factory_specializations']
+
+    def clean_mobile(self):
+        if self.cleaned_data['mobile'] == '':
+            return None
+        return int(self.cleaned_data['mobile'])
+
+    def save(self, user):
+        user.doctor.title = self.data['title']
+        user.doctor.pwz = self.data['pwz']
+        user.doctor.visit_duration = self.cleaned_data['visit_duration']
+        user.save()
+        user.doctor.save()
+        if 'factory_specializations' in self.cleaned_data:
+            user.doctor.specializations.clear()
+            for s in self.cleaned_data['factory_specializations']:
+                user.doctor.specializations.add(Specialization.objects.get(id=s))
+
+
+class PermissionsTabForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['groups', 'user_permissions']

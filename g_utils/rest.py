@@ -1,3 +1,5 @@
+from rest_framework.pagination import LimitOffsetPagination
+
 
 class SearchMixin(object):
     search_filters = ['name']
@@ -28,3 +30,13 @@ class OnlyDoctorRecords(object):
 
     def get_queryset(self):
         return super(OnlyDoctorRecords, self).get_queryset().filter(doctor=self.request.user.doctor)
+
+
+class GabinetPagination(LimitOffsetPagination):
+
+    def paginate_queryset(self, queryset, request, view=None):
+        if 'no_pagination' in request.query_params:
+            return None
+        return super().paginate_queryset(queryset, request, view)
+
+
