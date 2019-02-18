@@ -134,6 +134,7 @@ class VisitViewSet(viewsets.ModelViewSet):
         for tab in data:
             vt = VisitTab.objects.get(id=tab['id'])
             if vt.type == TabTypes.ICD10.name:
+                visit.icd_codes.clear()
                 visit.icd_codes.add(*[Icd10.objects.get(id=d['id']) for d in tab['data']])
             else:
                 vt.json = json.dumps(tab['data']) if 'data' in tab else ''
