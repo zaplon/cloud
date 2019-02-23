@@ -51,12 +51,13 @@ class PrintRecipe(APIView):
         patient_id = patient
         patient = Patient.objects.get(id=patient)
         realisation_date = data.get('realisationDate', "")
+        system_settings = data['system_settings']
         c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
         for page in range(0, int(len(medicines) / 5) + 1):
             try:
                 c = recipe_lines(c)
                 c = recipe_es(c, patient, realisation_date)
-                c = recipe_texts(request, c, request.user)
+                c = recipe_texts(request, c, request.user, system_settings)
                 c = recipe_medicines(c, medicines)
                 c.showPage()
             except RecipePrintException as e:
@@ -168,7 +169,7 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
     return c
 
 
-def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0000000000'):
+def recipe_texts(request, p, us, system_settings, doct_margin_left=0, doct_margin_top=0, recNr='0000000000'):
     useNr = int(request.data.get('number', False))
     p.setFont("Arial", 9)
 
@@ -184,16 +185,13 @@ def recipe_texts(request, p, us, doct_margin_left=0, doct_margin_top=0, recNr='0
         p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr.nr)
     p.setFont("Arialb", 8)
 
-    p.drawString((x + 0) * cm, (y - 0.9) * cm, 'Gabinet Okulistyczny Tomasz Dominik')
-    p.drawString((x + 0) * cm, (y - 1.2) * cm, '05-152 Czosnów ul. Krótka 3')
-    p.drawString((x + 0) * cm, (y - 1.5) * cm, 'REGON: 011604270')
-    p.drawString((x + 0) * cm, (y - 1.8) * cm, 'NIP:531-100-77-45')
-    p.drawString((x + 0) * cm, (y - 2.1) * cm, 'TEL. 22 775 44 66')
+    for i, line in enumerate(system_settings['documents_header_left'].split('\n')):
+        p.drawString((x + 0) * cm, (y - 0.9 - i*0.3) * cm, line)
 
     p.setFont("Arial", 9)
 
-    b = createBarcodeDrawing('Code128', value="20116042700009", width=5 * cm, height=0.6 * cm)
-    p.drawString((x + 6.7) * cm, (y - 3.1) * cm, "20116042700009")
+    b = createBarcodeDrawing('Code128', value="20%s0009" % system_settings['regon'], width=5 * cm, height=0.6 * cm)
+    p.drawString((x + 6.7) * cm, (y - 3.1) * cm, "20%s0009" % system_settings['regon'])
     b.drawOn(p, (x + 5.4) * cm, (y - 2.75) * cm)
 
     p.drawString((x + 0) * cm, (y - 3.15) * cm, 'Świadczeniodawca')

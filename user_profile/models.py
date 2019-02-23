@@ -10,6 +10,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
+from g_utils.validators import REGONValidator, NIPValidator
 from visit.models import TabTypes
 
 
@@ -177,6 +178,8 @@ class SystemSettings(models.Model):
     logo = models.ImageField(verbose_name='Logo')
     documents_header_left = models.TextField(verbose_name=u'Nagłówek dokumentów (lewa strona)', blank=True)
     documents_header_right = models.TextField(verbose_name=u'Nagłówek dokumentów (prawa strona)', blank=True)
+    regon = models.CharField(max_length=14, blank=True, verbose_name=u'Numer REGON', validators=[REGONValidator()])
+    nip = models.CharField(max_length=13, blank=True, verbose_name=u'Numer NIP', validators=[NIPValidator()])
 
     class Meta:
         verbose_name = 'Ustawienia systemowe'

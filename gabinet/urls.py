@@ -24,7 +24,7 @@ from result.rest import ResultViewSet
 from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet
 from medicine.rest import *
 from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDetailsView, SpecializationViewSet, \
-    UserViewSet, PermissionViewSet, GroupViewSet
+    UserViewSet, PermissionViewSet, GroupViewSet, SystemSettingsViewSet
 from stats.rest import *
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
@@ -52,6 +52,7 @@ router.register(r'refundations', RefundationViewSet)
 router.register(r'prescriptions', PrescriptionViewSet)
 router.register(r'visits', VisitViewSet, base_name='visits')
 router.register(r'examinations', ExaminationViewSet, base_name='examinations')
+router.register(r'settings', SystemSettingsViewSet, base_name='settings')
 
 
 urlpatterns = [

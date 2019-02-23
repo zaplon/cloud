@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from g_utils.rest import OnlyDoctorRecords, SearchMixin
+from result.rest import ResultSerializer
 from timetable.models import Term
 from timetable.rest import TermDetailSerializer
 from .models import Icd10, Template, Visit, VisitTab, Tab, TabTypes
@@ -87,9 +88,26 @@ class VisitSerializer(serializers.ModelSerializer):
         fields = ['id', 'tabs', 'in_progress', 'term', 'icd_codes']
 
 
-class VisitViewSet(viewsets.ModelViewSet):
-    queryset = Visit.objects.all()
+class VisitListSerializer(serializers.ModelSerializer):
+    patient = serializers.CharField(source='term.patient')
+    date = serializers.CharField(source='term.datetime')
+    term_id = serializers.IntegerField(source='term.id')
+    results = ResultSerializer(many=True)
+
+    class Meta:
+        model = Visit
+        fields = ['id', 'patient', 'date', 'updated', 'results', 'term_id']
+
+
+class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
+    queryset = Visit.objects.filter(term__isnull=False)
     serializer_class = VisitSerializer
+    sort_by_fields = {'patient': 'term__patient__last_name', 'date': 'term__datetime'}
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return VisitListSerializer
+        return self.serializer_class
 
     def retrieve(self, request, *args, **kwargs):
         doctor = self.request.user.doctor

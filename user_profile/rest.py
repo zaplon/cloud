@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth.password_validation import validate_password
 from django.db.models import Q, Min
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, viewsets, mixins
 from rest_framework.fields import CharField, ListField
 from rest_framework.response import Response
 from rest_framework import status
@@ -235,6 +235,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_system_settings(self, instance):
         settings = SystemSettings.objects.first()
         return {'documents_header_left': settings.documents_header_left, 'logo': settings.logo.url,
+                'regon': settings.regon, 'nip': settings.nip,
                 'documents_header_right': settings.documents_header_right}
 
     def get_all_permissions(self, instance):
@@ -337,3 +338,16 @@ class GroupSerializer(serializers.ModelSerializer):
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
+
+
+class SystemSettingsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SystemSettings
+        fields = '__all__'
+
+
+class SystemSettingsViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    serializer_class = SystemSettingsSerializer
+    queryset = SystemSettings.objects.all()
+

@@ -90,6 +90,9 @@ class Visit(models.Model):
     visit_pdf = models.FileField(upload_to='visits/', null=True, blank=True)
     in_progress = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['updated']
+
     def create_tabs(self):
         tabs = self.term.doctor.tabs.all()
         visit_tabs = []

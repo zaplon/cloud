@@ -12,10 +12,10 @@
 {% block header %}
     <div class="container">
         <div class="row">
-            <div class="col col-md-6 text-left">
+            <div class="col col-md-6 text-left font-lg">
                 {{ header_left|linebreaks }}
             </div>
-            <div class=" col col-md-6 text-right">
+            <div class=" col col-md-6 text-right font-lg">
                 {{ header_right|linebreaks }}
             </div>
         </div>
@@ -24,10 +24,10 @@
 
 {% block body %}
     <div class="container">
-        <span>Imię i nazwisko: <strong>{{ patient.first_name }} {{ patient.last_name }}</strong></span><br/>
-        <span>Data: <strong>{{ visit.created|date:"d-m-Y H:i" }}</strong></span><br/>
-        <span>Adres: <strong>{{ pesel.address|default:'-' }}</strong></span><br/>
-        <span>Pesel: <strong>{{ patient.pesel|default:'-' }}</strong></span>
+        <span class="font-lg">Imię i nazwisko: <strong>{{ patient.first_name }} {{ patient.last_name }}</strong></span><br/>
+        <span class="font-lg">Data: <strong>{{ visit.created|date:"d-m-Y H:i" }}</strong></span><br/>
+        <span class="font-lg">Adres: <strong>{{ patient.address|default:'-' }}</strong></span><br/>
+        <span class="font-lg">Pesel: <strong>{{ patient.pesel|default:'-' }}</strong></span>
         <h1 class="text-center">Historia choroby</h1>
         {% for tab in visit.printable_tabs %}
             {% if tab.type == 'ICD10' %}

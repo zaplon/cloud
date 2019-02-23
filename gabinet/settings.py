@@ -64,7 +64,8 @@ INSTALLED_APPS = [
     "compressor",
     "debug_toolbar",
     "agreements",
-    'corsheaders'
+    'corsheaders',
+    # 'django_mfa'
 ]
 SITE_ID = 1
 MIDDLEWARE = [
@@ -80,6 +81,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "account.middleware.LocaleMiddleware",
     "account.middleware.TimezoneMiddleware",
+    # 'django_mfa.middleware.MfaMiddleware'
     # "agreements.middleware.display_agreement_middleware"
 ]
 
@@ -223,7 +225,9 @@ MODULES = [
     ('timetable.change_service', 'services', u'Usługi'),
     ('timetable.change_localization', 'localizations', u'Lokalizacje'),
     ('auth.change_user', 'users', u'Użytkownicy'),
-    (True, 'forms', u'Formularze')
+    (True, 'forms', u'Formularze'),
+    ('user_profile.change_system_settings', 'settings', u'Ustawienia'),
+    ('visit.change_visit', 'visits', u'Wizyty')
 ]
 
 # misal settings
