@@ -1,4 +1,3 @@
-from django.test import Client
 from django.urls import reverse
 
 from g_utils.utils import GabinetTestCase
@@ -9,9 +8,9 @@ from django_dynamic_fixture import G
 class MedicineParentTestCase(GabinetTestCase):
 
     def setUp(self):
+        super(MedicineParentTestCase, self).setUp()
         self.medicine_parent = G(MedicineParent)
         G(Medicine, parent=self.medicine_parent)
-        self.client = Client()
 
     def test_medicine_viewset_returns_children(self):
         url = reverse('rest:medicines-list')

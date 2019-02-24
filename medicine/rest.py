@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+
+from g_utils.rest import SearchMixin
 from medicine.serializers import *
 
 
@@ -10,7 +12,7 @@ class MedicineParentSerializer(serializers.ModelSerializer):
 
 
 # ViewSets define the view behavior.
-class MedicineParentViewSet(viewsets.ReadOnlyModelViewSet):
+class MedicineParentViewSet(SearchMixin, viewsets.ReadOnlyModelViewSet):
     queryset = MedicineParent.objects.all()
     serializer_class = MedicineParentSerializer
     lookup_field = 'pk'

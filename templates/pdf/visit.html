@@ -27,7 +27,9 @@
         <span class="font-lg">Imię i nazwisko: <strong>{{ patient.first_name }} {{ patient.last_name }}</strong></span><br/>
         <span class="font-lg">Data: <strong>{{ visit.created|date:"d-m-Y H:i" }}</strong></span><br/>
         <span class="font-lg">Adres: <strong>{{ patient.address|default:'-' }}</strong></span><br/>
-        <span class="font-lg">Pesel: <strong>{{ patient.pesel|default:'-' }}</strong></span>
+        <span class="font-lg">Pesel: <strong>{{ patient.pesel|default:'-' }}</strong></span><br/>
+        <span class="font-lg">Data urodzenia: <strong>{{ patient_birth_date|date:"d-m-Y"|default:'-' }}</strong></span><br/>
+        <span class="font-lg">Wiek: <strong>{{ patient_age|default:'-' }}</strong></span>
         <h1 class="text-center">Historia choroby</h1>
         {% for tab in visit.printable_tabs %}
             {% if tab.type == 'ICD10' %}

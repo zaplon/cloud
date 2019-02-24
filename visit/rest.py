@@ -103,6 +103,7 @@ class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
     queryset = Visit.objects.filter(term__isnull=False)
     serializer_class = VisitSerializer
     sort_by_fields = {'patient': 'term__patient__last_name', 'date': 'term__datetime'}
+    search_filters = ['term__patient__last_name', 'term__patient__first_name', 'term__patient__pesel']
 
     def get_serializer_class(self):
         if self.action == 'list':

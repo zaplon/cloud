@@ -13,6 +13,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from wkhtmltopdf.views import PDFTemplateView
 
+from g_utils.utils import get_age_from_pesel, get_birth_date_from_pesel
 from g_utils.views import GabinetPermissionRequiredMixin
 from result.models import Result
 from timetable.models import Term
@@ -250,6 +251,9 @@ class PdfView(GabinetPdfView):
         system_settings = SystemSettings.objects.first()
         header_left = system_settings.documents_header_left
         header_right = system_settings.documents_header_right
+        patient_age = get_age_from_pesel(pesel)
+        patient_birth_date = get_birth_date_from_pesel(pesel)
         return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'header_left': header_left,
                 'patient': self.visit.term.patient, 'header_right': header_right,
+                'patient_age': patient_age, 'patient_birth_date': patient_birth_date,
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}

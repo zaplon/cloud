@@ -13,7 +13,20 @@ class TermTestCase(TestCase):
     def setUp(self):
         self.u = User.objects.create(username='jan', email='jan@wp.pl', password='123456')
         self.d = Doctor.objects.create(user=self.u, pwz='123456',
-                                       working_hours=u'[{"start":"09:00","end":"17:00","break_start":null,"break_end":null,"dayName":"poniedzia\u0142ek","dayIndex":1},{"start":"09:00","end":"17:00","break_start":null,"break_end":null,"dayName":"wtorek","dayIndex":2},{"start":"09:00","end":"17:00","break_start":null,"break_end":null,"dayName":"\u015broda","dayIndex":3},{"start":"09:00","end":"17:00","break_start":null,"break_end":null,"dayName":"czwartek","dayIndex":4},{"start":"09:00","end":"17:00","break_start":null,"break_end":null,"dayName":"pi\u0105tek","dayIndex":5},{"start":"09:00","end":"17:00","break_start":null,"break_end":null,"dayName":"sobota","dayIndex":6},{"start":"09:00","end":"17:00","break_start":null,"break_end":null,"dayName":"niedziela","dayIndex":0}]')
+                                       working_hours=u'[{"value":["09:00", "17:00"],"break_start":null,'
+                                                     u'"break_end":null,"dayName":"poniedzia\u0142ek","dayIndex":1},'
+                                                     u'{"value":["09:00", "17:00"],"break_start":null,'
+                                                     u'"break_end":null,"dayName":"wtorek","dayIndex":2},'
+                                                     u'{"value":["09:00", "17:00"],"break_start":null,'
+                                                     u'"break_end":null,"dayName":"\u015broda","dayIndex":3},'
+                                                     u'{"value":["09:00", "17:00"],"break_start":null,'
+                                                     u'"break_end":null,"dayName":"czwartek","dayIndex":4},'
+                                                     u'{"value":["09:00", "17:00"],"break_start":null,'
+                                                     u'"break_end":null,"dayName":"pi\u0105tek","dayIndex":5},'
+                                                     u'{"value":["09:00", "17:00"],"break_start":null,'
+                                                     u'"break_end":null,"dayName":"sobota","dayIndex":6},'
+                                                     u'{"value":["09:00", "17:00"],"break_start":null,'
+                                                     u'"break_end":null,"dayName":"niedziela","dayIndex":0}]') 
         self.p = Patient.objects.create(user=self.u)
         self.s = G(Service)
         self.client = Client()
