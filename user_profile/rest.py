@@ -22,7 +22,7 @@ class PatientSerializer(serializers.ModelSerializer):
     # last_name = CharField(source='user.last_name')
     class Meta:
         model = Patient
-        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address', 'name_with_pesel')
+        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address', 'name_with_pesel', 'info')
 
 
 class PatientAutocompleteSerializer(serializers.ModelSerializer):
