@@ -227,7 +227,7 @@ MODULES = [
     ('auth.change_user', 'users', u'Użytkownicy'),
     (True, 'forms', u'Formularze'),
     (True, 'links', u'Linki'),
-    ('user_profile.change_system_settings', 'settings', u'Ustawienia'),
+    ('user_profile.change_systemsettings', 'settings', u'Ustawienia'),
     ('visit.change_visit', 'visits', u'Wizyty')
 ]
 
