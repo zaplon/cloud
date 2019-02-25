@@ -80,7 +80,7 @@ class VisitView(GabinetPermissionRequiredMixin, View):
                 pass
 
         if not int(tmp):
-            term.status = 'finished'
+            term.status = 'FINISHED'
             term.save()
         return HttpResponse(content=json.dumps({'success': True}), status=200, content_type='application/json')
 

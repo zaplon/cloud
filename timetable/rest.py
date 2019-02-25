@@ -5,6 +5,7 @@ from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
 
 from g_utils.rest import SearchMixin
+from result.rest import ResultSerializer
 from user_profile.models import Doctor, Patient
 from user_profile.rest import PatientSerializer, DoctorSerializer
 from .models import Term, Service, Localization
@@ -151,6 +152,29 @@ class TermViewSet(viewsets.ModelViewSet):
             q = q.filter(datetime__gte=self.request.query_params['start'], datetime__lte=self.request.query_params['end'])
             q = q.filter(doctor=doctor)
         return q
+
+
+class TermListSerializer(serializers.ModelSerializer):
+    updated = serializers.CharField(source='visit.updated')
+    result = serializers.SerializerMethodField()
+    patient_name = serializers.CharField(source='patient.first_name')
+    patient_last_name = serializers.CharField(source='patient.last_name')
+
+    def get_result(self, obj):
+        if obj.visit and obj.visit.results.exists():
+            result = obj.visit.results.first()
+            return {'name': result.name, 'file': result.file.name}
+        return None
+
+    class Meta:
+        model = Term
+        fields = ['datetime', 'visit', 'updated', 'patient_last_name', 'patient_name', 'status', 'result', 'id']
+
+
+class TermlistView(SearchMixin, viewsets.ReadOnlyModelViewSet):
+    serializer_class = TermListSerializer
+    queryset = Term.objects.filter(patient__isnull=False)
+    fields_mapping = {'patient_name': 'patient__first_name', 'patient_last_name': 'patient__last_name'}
 
 
 class LocalizationSerializer(serializers.ModelSerializer):

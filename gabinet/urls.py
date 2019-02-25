@@ -21,7 +21,7 @@ from django.contrib import admin
 from examination.rest import ExaminationViewSet
 from visit.rest import IcdViewSet, TemplateViewSet, VisitViewSet, TabViewSet
 from result.rest import ResultViewSet
-from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet
+from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet, TermlistView
 from medicine.rest import *
 from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDetailsView, SpecializationViewSet, \
     UserViewSet, PermissionViewSet, GroupViewSet, SystemSettingsViewSet
@@ -34,6 +34,7 @@ router = routers.DefaultRouter()
 router.register(r'icd', IcdViewSet)
 router.register(r'results', ResultViewSet)
 router.register(r'terms', TermViewSet)
+router.register(r'terms_list', TermlistView)
 router.register(r'booking', BookingViewSet)
 router.register(r'localizations', LocalizationViewSet)
 router.register(r'services', ServiceViewSet)

@@ -1,16 +1,20 @@
+import json
 from rest_framework.pagination import LimitOffsetPagination
 
 
 class SearchMixin(object):
     search_filters = ['name']
-    sort_by_fields = {'name': 'name'}
+    fields_mapping = {'name': 'name'}
 
     def get_queryset(self):
         q = super(SearchMixin, self).get_queryset()
         filtered_q = q.model.objects.none()
         params = self.request.query_params
         if params.get('byColumn', False) and bool(int(params['byColumn'])):
-            pass
+            for field, value in json.loads(params['search']).items():
+                backend_field = self.fields_mapping.get(field, field)
+                query_filter = backend_field + '__icontains'
+                q &= q.model.objects.filter(**{query_filter: value})
         elif 'term' in params or 'search' in params:
             term = params.get('term', params.get('search'))
             for field in self.search_filters:
@@ -26,7 +30,7 @@ class SearchMixin(object):
             q = q[0:20]
         if 'orderBy' in params:
             sort_field = params['orderBy']
-            order_by = self.sort_by_fields.get(sort_field, sort_field)
+            order_by = self.fields_mapping.get(sort_field, sort_field)
             if 'ascending' in params and bool(int(params['ascending'])):
                 q = q.order_by(order_by)
             else:
