@@ -26,3 +26,5 @@ services:
     image: elasticsearch:6.5.1
   memcached:
     image: memcached
+  selenium:
+    image: selenium/standalone-chrome

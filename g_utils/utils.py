@@ -28,7 +28,7 @@ def get_birth_date_from_pesel(pesel):
         return ''
     birth_date = pesel[0:6]
     if int(birth_date[2]) >= 2:
-        birth_date = '20' + birth_date
+        birth_date = '20' + birth_date[0:2] + str(int(birth_date[2]) - 2) + birth_date[3:]
     else:
         birth_date = '19' + birth_date
     return datetime.strptime(birth_date, '%Y%m%d')
