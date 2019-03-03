@@ -65,7 +65,7 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if request.user.is_authenticated() and instance.doctor == request.user.doctor:
+        if request.user.is_authenticated() and instance.uploaded_by == request.user:
             self.perform_destroy(instance)
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
