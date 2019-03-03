@@ -311,7 +311,7 @@ class SpecializationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SpecializationViewSet(viewsets.ReadOnlyModelViewSet, SearchMixin):
+class SpecializationViewSet(SearchMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = SpecializationSerializer
     queryset = Specialization.objects.all()
 
