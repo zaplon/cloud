@@ -55,7 +55,6 @@ class TemplateForm(ModelForm):
         return super(TemplateForm, self).save(commit)
 
 
-
 class TabForm(ModelForm):
     save_with_user = True
 

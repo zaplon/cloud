@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from g_utils.rest import OnlyDoctorRecords, SearchMixin
-from result.rest import ResultSerializer
 from timetable.models import Term
 from timetable.rest import TermDetailSerializer
 from .models import Icd10, Template, Visit, VisitTab, Tab, TabTypes
@@ -93,6 +92,11 @@ class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
     serializer_class = VisitSerializer
     fields_mapping = {'patient': 'term__patient__last_name', 'date': 'term__datetime'}
     search_filters = ['term__patient__last_name', 'term__patient__first_name', 'term__patient__pesel']
+
+    def get_queryset(self):
+        queryset = super(VisitViewSet, self).get_queryset()
+        queryset.filter(doctor__user=self.request.user)
+        return queryset
 
     def retrieve(self, request, *args, **kwargs):
         doctor = self.request.user.doctor

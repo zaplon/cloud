@@ -3,7 +3,16 @@
 
 {% block header %}
     <img class="mb-2" src="{{ APP_URL }}assets/img/logo.jpg"/>
-    <p>{{ header|linebreaks }}</p>
+    <div class="container">
+        <div class="row">
+            <div class="col col-md-6 text-left font-lg">
+                {{ header_left|linebreaks }}
+            </div>
+            <div class=" col col-md-6 text-right font-lg">
+                {{ header_right|linebreaks }}
+            </div>
+        </div>
+    </div>
     <table class="table" style="margin-top: 4rem; margin-bottom: 2rem;">
         <tbody>
         <tr>
@@ -32,6 +41,14 @@
 {% block body %}
     <table class="table table-striped">
         <body>
+        {% if examinations %}
+            <thead>
+                <tr>
+                    <td>Nazwa</td>
+                    <td>Kategoria</td>
+                </tr>
+            </thead>
+        {% endif %}
         {% for examination in examinations %}
             <tr>
                 <td>{{ examination.name }}</td>

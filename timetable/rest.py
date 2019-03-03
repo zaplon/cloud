@@ -83,11 +83,21 @@ class TermDetailSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     doctor = serializers.CharField(source='doctor.__str__')
     service = serializers.CharField(source='service.__str__')
+    service_id = serializers.PrimaryKeyRelatedField(source='service', queryset=Service.objects.all(), write_only=True)
     localization = serializers.CharField(source='localization.__str__')
+    patient = PatientSerializer(write_only=True)
 
     class Meta:
         model = Term
-        fields = ['id', 'doctor', 'service', 'datetime', 'duration', 'status', 'localization']
+        fields = ['id', 'doctor', 'service', 'datetime', 'duration', 'status', 'localization', 'patient', 'service_id']
+
+    def update(self, instance, validated_data):
+        patient = validated_data.pop('patient')
+        instance = super(BookingSerializer, self).update(instance, validated_data)
+        patient_instance = Patient.objects.create(**patient)
+        instance.patient = patient_instance
+        instance.save()
+        return instance
 
 
 class BookingViewSet(viewsets.ModelViewSet):
@@ -97,8 +107,10 @@ class BookingViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         q = super(BookingViewSet, self).get_queryset()
-        q = q.filter(datetime__gte=self.request.GET['start'])
-        q = q.filter(doctor__service__id=self.request.GET['service'])
+        if 'start' in self.request.GET:
+            q = q.filter(datetime__gte=self.request.GET['start'])
+        if 'service' in self.request.GET:
+            q = q.filter(doctor__service__id=self.request.GET['service'])
         return q
 
 
