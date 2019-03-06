@@ -1,0 +1,4 @@
+zeep
+flask
+xmltodict
+uWSGI

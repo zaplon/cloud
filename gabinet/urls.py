@@ -18,8 +18,8 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 
-from examination.rest import ExaminationViewSet
-from visit.rest import IcdViewSet, TemplateViewSet, VisitViewSet, TabViewSet
+from examination.rest import ExaminationViewSet, ExaminationCategoryViewSet
+from visit.rest import IcdViewSet, TemplateViewSet, VisitViewSet, TabViewSet, PopularIcdViewSet
 from result.rest import ResultViewSet
 from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet, TermlistView
 from medicine.rest import *
@@ -31,6 +31,7 @@ from visit.views import TemplateListView, TabsListView
 from g_utils.views import AjaxFormView, PDFView
 
 router = routers.DefaultRouter()
+router.register(r'icd/popular', PopularIcdViewSet)
 router.register(r'icd', IcdViewSet)
 router.register(r'results', ResultViewSet)
 router.register(r'terms', TermViewSet)
@@ -53,6 +54,7 @@ router.register(r'refundations', RefundationViewSet)
 router.register(r'prescriptions', PrescriptionViewSet)
 router.register(r'visits', VisitViewSet, base_name='visits')
 router.register(r'examinations', ExaminationViewSet, base_name='examinations')
+router.register(r'examinations_categories', ExaminationCategoryViewSet, base_name='examinations_categories')
 router.register(r'settings', SystemSettingsViewSet, base_name='settings')
 
 

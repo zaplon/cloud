@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
 from rest_framework.mixins import DestroyModelMixin
@@ -19,6 +19,14 @@ class IcdSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'code', 'desc')
 
 
+class PopularIcdSerializer(serializers.HyperlinkedModelSerializer):
+    use_count = serializers.IntegerField()
+
+    class Meta:
+        model = Icd10
+        fields = ('id', 'code', 'desc', 'use_count')
+
+
 # ViewSets define the view behavior.
 class IcdViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Icd10.objects.all()
@@ -31,6 +39,17 @@ class IcdViewSet(viewsets.ReadOnlyModelViewSet):
             q = q.filter(Q(desc__icontains=term) | Q(code__icontains=term))
         if 'exclude' in self.request.GET and self.request.GET['exclude']:
             q = q.exclude(id__in=self.request.GET['exclude'].split(','))
+        return q
+
+
+class PopularIcdViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Icd10.objects.all()
+    serializer_class = PopularIcdSerializer
+
+    def get_queryset(self):
+        q = super(PopularIcdViewSet, self).get_queryset()
+        q = q.filter(visits__term__doctor=self.request.user.doctor)
+        q = q.annotate(use_count=Count('visits__term__doctor__id')).order_by('use_count')
         return q
 
 
