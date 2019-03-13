@@ -12,7 +12,7 @@ class MedicineParentSerializer(serializers.ModelSerializer):
 
 # Serializers define the API representation.
 class MedicineSerializer(serializers.ModelSerializer):
-    parent = MedicineParentSerializer()
+    parent = MedicineParentSerializer(read_only=True)
 
     class Meta:
         model = Medicine

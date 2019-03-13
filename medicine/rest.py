@@ -4,15 +4,40 @@ from g_utils.rest import SearchMixin
 from medicine.serializers import *
 
 
-# Serializers define the API representation.
 class MedicineParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicineParent
         fields = '__all__'
+    children = MedicineSerializer(write_only=True, many=True)
+
+    def __init__(self, *args, **kwargs):
+        super(MedicineParentSerializer, self).__init__(*args, **kwargs)
+        if 'request' in kwargs['context']:
+            self.user = kwargs['context']['request'].user
+        else:
+            self.user = None
+
+    def create(self, validated_data):
+        children = validated_data.pop('children')
+        validated_data['user_id'] = self.user.id
+        instance = super(MedicineParentSerializer, self).create(validated_data)
+        for c in children:
+            c.update({'parent': instance, 'in_use': True})
+            Medicine.objects.create(**c)
+        return instance
+
+    def update(self, instance, validated_data):
+        children = validated_data.pop('children')
+        validated_data['user_id'] = self.user.id
+        instance = super(MedicineParentSerializer, self).update(instance, validated_data)
+        for c in children:
+            c['parent'] = instance
+            Medicine.objects.update_or_create(id=c.get('id', 0), defaults=c)
+        return instance
 
 
 # ViewSets define the view behavior.
-class MedicineParentViewSet(SearchMixin, viewsets.ReadOnlyModelViewSet):
+class MedicineParentViewSet(SearchMixin, viewsets.ModelViewSet):
     queryset = MedicineParent.objects.all()
     serializer_class = MedicineParentSerializer
     lookup_field = 'pk'
@@ -30,7 +55,7 @@ class MedicineParentViewSet(SearchMixin, viewsets.ReadOnlyModelViewSet):
 
 
 # ViewSets define the view behavior.
-class MedicineViewSet(viewsets.ReadOnlyModelViewSet):
+class MedicineViewSet(viewsets.ModelViewSet):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
     filter_fields = ('parent', )

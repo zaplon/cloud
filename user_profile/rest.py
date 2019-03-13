@@ -4,6 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.db.models import Q, Min
 from rest_framework import serializers, viewsets, mixins
 from rest_framework.fields import CharField, ListField
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -341,7 +342,6 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class SystemSettingsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SystemSettings
         fields = '__all__'
@@ -351,3 +351,14 @@ class SystemSettingsViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, 
     serializer_class = SystemSettingsSerializer
     queryset = SystemSettings.objects.all()
 
+
+class BookingSystemSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SystemSettings
+        fields = ('documents_header_left', 'documents_header_right')
+
+
+class InfoViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = BookingSystemSettingsSerializer
+    queryset = SystemSettings.objects.all()

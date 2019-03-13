@@ -16,6 +16,7 @@ class MedicineParent(models.Model):
     inn = models.TextField(blank=True, null=True)  # Nazwa INN  tylko 3
     importer = models.TextField(blank=True, null=True)  # Importer rownolegly #tylko 3
     dose = models.TextField(blank=True, null=True)  # Dawka
+    user_id = models.IntegerField(blank=True, null=True)
 
 
 class Medicine(models.Model):

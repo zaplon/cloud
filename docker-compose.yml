@@ -11,6 +11,7 @@ services:
     links:
      - mysql
      - memcached
+     - ezla
     environment:
       DJANGO_SETTINGS_MODULE: docker_settings
       LANG: "pl_PL.UTF-8"
@@ -28,3 +29,10 @@ services:
     image: memcached
   selenium:
     image: selenium/standalone-chrome
+  ezla:
+    build: microservices/ezla/
+    ports:
+      - "8090:9001"
+    command: uwsgi --ini uwsgi.ini
+
+
