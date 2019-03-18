@@ -15,10 +15,15 @@ from visit.models import TabTypes
 
 
 class Profile(models.Model):
+    CssThemeChoices = (
+        ('yeti', 'Yeti'),
+        ('minty', 'Minty'),
+        ('materia', 'Materia')
+    )
     user = models.OneToOneField(User, related_name='profile')
     mobile = models.IntegerField(blank=True, null=True)
-    css = models.CharField(default='classic', choices=(('classic', 'Klasyczny'),), max_length=20, verbose_name='Interfejs')
     role = models.CharField(choices=(('doctor', _('Lekarz')), ('worker', _('Pracownik'))), max_length=10)
+    css_theme = models.CharField(choices=CssThemeChoices, default='yeti', max_length=10)
 
     # class Meta:
     #     permissions = (
@@ -61,6 +66,7 @@ class Doctor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='doctor', verbose_name=u'Lekarz')
     working_hours = models.CharField(max_length=1000, blank=True, null=True, verbose_name=u'Godziny pracy')
     visit_duration = models.IntegerField(default=15, verbose_name=u'Czas trwania wizyty')
+    show_weekends = models.BooleanField(default=False, verbose_name=u'Pokaż weekendy na kalendarzu')
     terms_generated_till = models.DateField(null=True, blank=True)
     terms_start = models.TimeField(default='09:00')
     terms_end = models.TimeField(default='17:00')

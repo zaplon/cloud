@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.forms.fields import TimeField
 from django.forms.widgets import HiddenInput
 
-from user_profile.models import Patient, Specialization, SystemSettings
+from user_profile.models import Patient, Specialization, SystemSettings, Profile
 from localflavor.pl.forms import PLPESELField
 
 
@@ -82,6 +82,8 @@ class DoctorForm(forms.Form):
     form_class = forms.CharField(max_length=50, initial='DoctorForm', widget=HiddenInput(), required=False)
     visit_duration = forms.IntegerField(min_value=5, required=True, label='Czas trwania wizyty',
                                         help_text='Liczba minut przypadających na jedną wizytę')
+    show_weekends = forms.BooleanField(label=u'Pokaż weekendy na kalendarzu', required=False)
+    # css_theme = forms.ChoiceField(label=u'Styl interfejsu', choices=Profile.CssThemeChoices, required=False)
     factory_specializations = forms.MultipleChoiceField(label=u'Specjalizacje', required=False,
                                                         help_text=u'Zaznacz kilka pozycji trzymając wciśnięty klawisz CTRL')
     # documents_header_left = forms.Textarea(label=u'Nagłówek dokumentów (lewa strona)', required=False)
@@ -92,7 +94,9 @@ class DoctorForm(forms.Form):
             u = kwargs['initial'].pop('user')
             kwargs['initial'] = {'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email,
                                  'visit_duration': u.doctor.visit_duration,
-                                 'mobile': u.profile.mobile, 'pwz': u.doctor.pwz, 'title': u.doctor.title}
+                                 'show_weekends': u.doctor.show_weekends,
+                                 # 'css_theme': u.profile.css_theme,
+                                 'mobile': u.doctor.mobile, 'pwz': u.doctor.pwz, 'title': u.doctor.title}
         super(DoctorForm, self).__init__(*args, **kwargs)
         self.fields['factory_specializations'].choices = [(s.id, s.name) for s in Specialization.objects.all()]
         if 'initial' in kwargs:
@@ -109,6 +113,8 @@ class DoctorForm(forms.Form):
             Field('email', css_class='form-control', wrapper_class='row'),
             Field('mobile', css_class='form-control', wrapper_class='row'),
             Field('pwz', css_class='form-control', wrapper_class='row'),
+            Field('show_weekeds', css_class='form-control', wrapper_class='row'),
+            # Field('css_theme', css_class='form-control', wrapper_class='row'),
             Field('factory_specializations', css_class='form-control', wrapper_class='row'),
             Field('form_class', css_class='form-control', wrapper_class='row')
         ))
@@ -129,7 +135,10 @@ class DoctorForm(forms.Form):
         user.doctor.pwz = self.data['pwz']
         user.doctor.mobile = self.cleaned_data['mobile']
         user.doctor.visit_duration = self.cleaned_data['visit_duration']
+        user.doctor.show_weekends = self.cleaned_data['show_weekends']
+        # user.profile.css_theme = self.cleaned_data['css_theme']
         user.save()
+        user.profile.save()
         user.doctor.save()
         if 'factory_specializations' in self.cleaned_data:
             user.doctor.specializations.clear()

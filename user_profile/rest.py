@@ -109,7 +109,7 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
-                  'total_prescriptions', 'visit_duration', 'default_service', 'specializations')
+                  'total_prescriptions', 'visit_duration', 'default_service', 'specializations', 'show_weekends')
 
     def get_default_service(self, obj):
         doctor_services = Service.objects.filter(doctors__in=[obj])
@@ -232,6 +232,7 @@ class UserSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer()
     user_permissions = serializers.SerializerMethodField('get_all_permissions')
     system_settings = serializers.SerializerMethodField()
+    css_theme = serializers.CharField(source='profile.css_theme')
 
     def get_system_settings(self, instance):
         settings = SystemSettings.objects.first()
@@ -292,7 +293,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'can_edit_terms', 'can_edit_visits', 'setup_needed', 'modules', 'type',
-                  'doctor', 'user_permissions', 'system_settings')
+                  'doctor', 'user_permissions', 'system_settings', 'css_theme')
 
 
 class UserDetailsView(APIView):

@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.utils import timezone
 from rest_framework import serializers, viewsets
 from rest_framework.fields import CharField
+from rest_framework.permissions import AllowAny
 
 from g_utils.rest import SearchMixin
 from result.rest import ResultSerializer
@@ -67,6 +68,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 class ServiceViewSet(viewsets.ModelViewSet, SearchMixin):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+    permission_classes = [AllowAny]
     # pagination_class = None
 
 
@@ -95,6 +97,7 @@ class BookingSerializer(serializers.ModelSerializer):
         patient = validated_data.pop('patient')
         instance = super(BookingSerializer, self).update(instance, validated_data)
         patient_instance = Patient.objects.create(**patient)
+        instance.status = 'PENDING'
         instance.patient = patient_instance
         instance.save()
         return instance
@@ -104,6 +107,7 @@ class BookingViewSet(viewsets.ModelViewSet):
     queryset = Term.objects.filter(status='FREE')
     serializer_class = BookingSerializer
     filter_fields = ['doctor']
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         q = super(BookingViewSet, self).get_queryset()
@@ -198,4 +202,5 @@ class LocalizationSerializer(serializers.ModelSerializer):
 class LocalizationViewSet(viewsets.ModelViewSet):
     queryset = Localization.objects.all()
     serializer_class = LocalizationSerializer
+    permission_classes = [AllowAny]
     # pagination_class = None
