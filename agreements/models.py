@@ -7,8 +7,8 @@ from django.contrib.auth.models import Group
 
 class AgreementToUser(models.Model):
     datetime = models.DateTimeField(auto_now_add=True, verbose_name=_('Added date'))
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('User'))
-    agreement = models.ForeignKey('Agreement', verbose_name=_('Agreement'))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('User'), on_delete=models.CASCADE)
+    agreement = models.ForeignKey('Agreement', verbose_name=_('Agreement'), on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _('user agreement')
@@ -22,10 +22,12 @@ class Agreement(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, through=AgreementToUser, related_name='agreements')
     text = models.TextField(blank=True, null=True, verbose_name=_('Text'))
     document = models.FileField(blank=True, null=True, verbose_name=_('Document'))
-    title = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Title'))
+    title = models.CharField(max_length=256, verbose_name=_('Title'))
     targeted_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_agreements',
                                             verbose_name=_('targeted users'), blank=True,
                                             help_text=_('select users which should see the agreement.'))
+    creation_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _('agreement')

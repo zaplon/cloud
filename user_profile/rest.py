@@ -71,7 +71,7 @@ class NoteViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if not request.user.is_authenticated() or not instance.doctor == request.user.doctor:
+        if not request.user.is_authenticated or not instance.doctor == request.user.doctor:
             return Response(status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -164,12 +164,15 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = '__all__'
+        exclude = ('password', )
 
     def update(self, instance, validated_data):
         doctor = validated_data.pop('doctor')
         instance = super(UserDetailSerializer, self).update(instance, validated_data)
-        Doctor.objects.update_or_create(user=instance, defaults=doctor)
+        doctor.pop('get_working_hours')
+        specializations = doctor.pop('specializations')
+        doctor, _ = Doctor.objects.update_or_create(user=instance, defaults=doctor)
+        doctor.specializations.set(specializations)
         return instance
 
 
@@ -301,7 +304,7 @@ class UserDetailsView(APIView):
     queryset = User.objects.none()
 
     def get(self, request):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return Response(status=403)
         return Response(UserSerializer(instance=request.user).data)
 

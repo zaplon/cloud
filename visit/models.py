@@ -32,7 +32,7 @@ class Tab(models.Model):
         ordering = ['order', 'title']
 
     title = models.CharField(max_length=100, verbose_name=u'Tytuł')
-    doctor = models.ForeignKey('user_profile.Doctor', related_name='tabs')
+    doctor = models.ForeignKey('user_profile.Doctor', related_name='tabs', on_delete=models.CASCADE)
     order = models.IntegerField(null=True, blank=True, verbose_name=u'Kolejność')
     enabled = models.BooleanField(default=True, verbose_name=u'Włączona')
     type = models.CharField(max_length=16, choices=[(tag.name, tag.value) for tag in TabTypes],
@@ -71,7 +71,7 @@ class VisitTab(models.Model):
     json = models.TextField(default='null')
     order = models.IntegerField(null=True, blank=True)
     type = models.CharField(max_length=32)
-    visit = models.ForeignKey('Visit', related_name='tabs')
+    visit = models.ForeignKey('Visit', related_name='tabs', on_delete=models.CASCADE)
 
     @property
     def data(self):
@@ -108,11 +108,12 @@ class Visit(models.Model):
 
 class Template(models.Model):
     name = models.CharField(max_length=100, verbose_name=u'Nazwa')
-    tab = models.ForeignKey(Tab, related_name='templates', verbose_name=u'Sekcja')
+    tab = models.ForeignKey(Tab, related_name='templates', verbose_name=u'Sekcja', on_delete=models.CASCADE)
     text = models.CharField(max_length=1000, verbose_name=u'Tekst')
     key = models.CharField(max_length=8, blank=True, null=True, verbose_name=u'Skrót',
                            choices=keys_choices)
-    doctor = models.ForeignKey('user_profile.Doctor', related_name='templates', null=True, blank=True)
+    doctor = models.ForeignKey('user_profile.Doctor', related_name='templates', null=True, blank=True,
+                               on_delete=models.CASCADE)
 
     def get_absolute_url(self):
         return reverse('templates')

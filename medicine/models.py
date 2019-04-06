@@ -20,7 +20,7 @@ class MedicineParent(models.Model):
 
 
 class Medicine(models.Model):
-    parent = models.ForeignKey(MedicineParent, related_name='children')
+    parent = models.ForeignKey(MedicineParent, related_name='children', on_delete=models.CASCADE)
     size = models.TextField(blank=True, null=True)  # Wielkosc opakowania
     availability_cat = models.TextField(blank=True, null=True)  # Kat. dost.
     ean = models.CharField(max_length=20, blank=True, null=True)  # Kod EAN
@@ -42,7 +42,7 @@ class Refundation(models.Model):
     other_recommendations = models.CharField(max_length=400, blank=True, null=True)
     to_pay = models.CharField(max_length=10, blank=True, null=True)
     patient_price = models.CharField(max_length=10, blank=True, null=True)
-    medicine = models.ForeignKey(Medicine, related_name='refundations')
+    medicine = models.ForeignKey(Medicine, related_name='refundations', on_delete=models.CASCADE)
 
 
 class MedicineToPrescription(models.Model):
@@ -50,15 +50,15 @@ class MedicineToPrescription(models.Model):
    prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
    dosage = models.CharField(max_length=128)
    notes = models.CharField(max_length=128, blank=True, null=True)
-   refundation = models.ForeignKey(Refundation, blank=True, null=True)
+   refundation = models.ForeignKey(Refundation, blank=True, null=True, on_delete=models.CASCADE)
 
 
 class Prescription(models.Model):
     number = models.CharField(max_length=16, blank=True, null=True)
     date = models.DateTimeField(auto_created=True)
     medicines = models.ManyToManyField(Medicine, related_name='prescriptions', through=MedicineToPrescription)
-    patient = models.ForeignKey(Patient, related_name='prescriptions')
-    doctor = models.ForeignKey(Doctor, related_name='prescriptions')
+    patient = models.ForeignKey(Patient, related_name='prescriptions', on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, related_name='prescriptions', on_delete=models.CASCADE)
     nfz = models.CharField(max_length=16)
     permissions = models.CharField(max_length=16)
     number_of_medicines = models.IntegerField(default=0)

@@ -24,7 +24,7 @@ class AjaxFormView(APIView):
     permission_classes = []
 
     def add_data(self, data):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             if not 'user' in data:
                 data['user'] = self.request.user
         data['ajax'] = True

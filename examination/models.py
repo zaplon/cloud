@@ -8,7 +8,7 @@ class ExaminationCategory(models.Model):
 class Examination(models.Model):
     name = models.CharField(max_length=256, verbose_name=u'Nazwa')
     code = models.CharField(max_length=16, verbose_name=u'Kod')
-    category = models.ForeignKey(ExaminationCategory, related_name='items')
+    category = models.ForeignKey(ExaminationCategory, related_name='items', on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
 

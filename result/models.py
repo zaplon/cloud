@@ -23,12 +23,15 @@ class Result(models.Model):
     file = models.FileField(upload_to='results/', verbose_name='Plik')
     uploaded = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=1000, blank=True, null=True, verbose_name='Opis')
-    visit = models.ForeignKey(Visit, related_name='results', null=True, blank=True)
-    patient = models.ForeignKey(Patient, related_name='results', verbose_name='Pacjent')
+    visit = models.ForeignKey(Visit, related_name='results', null=True, blank=True, on_delete=models.SET_NULL)
+    patient = models.ForeignKey(Patient, related_name='results', verbose_name='Pacjent', on_delete=models.CASCADE)
     type = models.CharField(max_length=20, choices=RESULT_TYPES, default='DOCUMENT')
-    doctor = models.ForeignKey(Doctor, blank=True, null=True, related_name='results', verbose_name='Doktor')
-    specialization = models.ForeignKey(Specialization, verbose_name=u'Kategoria')
-    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='uploaded_documents', verbose_name='Dodany przez')
+    doctor = models.ForeignKey(Doctor, blank=True, null=True, related_name='results', verbose_name='Doktor',
+                               on_delete=models.CASCADE)
+    specialization = models.ForeignKey(Specialization, verbose_name=u'Kategoria', null=True,
+                                       on_delete=models.SET_NULL)
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='uploaded_documents', verbose_name='Dodany przez',
+                                    on_delete=models.CASCADE)
 
     def get_absolute_url(self):
         return reverse('archive')

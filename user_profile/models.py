@@ -20,7 +20,7 @@ class Profile(models.Model):
         ('minty', 'Minty'),
         ('materia', 'Materia')
     )
-    user = models.OneToOneField(User, related_name='profile')
+    user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     mobile = models.IntegerField(blank=True, null=True)
     role = models.CharField(choices=(('doctor', _('Lekarz')), ('worker', _('Pracownik'))), max_length=10)
     css_theme = models.CharField(choices=CssThemeChoices, default='yeti', max_length=10)
@@ -63,7 +63,8 @@ class Specialization(models.Model):
 class Doctor(models.Model):
     pwz = models.CharField(max_length=7, verbose_name=u'Numer PWZ')
     mobile = models.IntegerField(blank=True, null=True, verbose_name=u'Numer komórki')
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='doctor', verbose_name=u'Lekarz')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='doctor', verbose_name=u'Lekarz',
+                                on_delete=models.CASCADE)
     working_hours = models.CharField(max_length=1000, blank=True, null=True, verbose_name=u'Godziny pracy')
     visit_duration = models.IntegerField(default=15, verbose_name=u'Czas trwania wizyty')
     show_weekends = models.BooleanField(default=False, verbose_name=u'Pokaż weekendy na kalendarzu')
@@ -123,7 +124,7 @@ def create_doctor_tabs(sender, instance, created, **kwargs):
 
 class Patient(models.Model):
     mobile = models.CharField(blank=True, null=True, verbose_name=u'Telefon', max_length=20)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100, default='', verbose_name=u'Imię')
     last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
     pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel', unique=True)
@@ -152,8 +153,8 @@ class Patient(models.Model):
 
 class Note(models.Model):
     text = models.CharField(max_length=1024)
-    patient = models.ForeignKey(Patient, related_name='notes')
-    doctor = models.ForeignKey(Doctor, related_name='notes')
+    patient = models.ForeignKey(Patient, related_name='notes', on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, related_name='notes', on_delete=models.CASCADE)
     private = models.BooleanField(default=False)
 
     def get_author(self):
@@ -161,7 +162,7 @@ class Note(models.Model):
 
 
 class PrescriptionNumber(models.Model):
-    doctor = models.ForeignKey(Doctor, related_name='recipes')
+    doctor = models.ForeignKey(Doctor, related_name='recipes', on_delete=models.CASCADE)
     nr = models.CharField(max_length=30)
     date_used = models.DateTimeField(null=True)
 
@@ -177,7 +178,8 @@ class PrescriptionNumber(models.Model):
 class Code(models.Model):
     code = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='codes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='codes',
+                             on_delete=models.CASCADE)
 
 
 class SystemSettings(models.Model):

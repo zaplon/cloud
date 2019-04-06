@@ -24,7 +24,7 @@ def parse_json(obj):
     return json.parse(obj)
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def has_perm(context, perm):
     if perm is True:
         return True
@@ -33,7 +33,7 @@ def has_perm(context, perm):
     return context['request'].user.has_perm(perm)
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def is_doctor(context=False, user=False):
     if user:
         u = user

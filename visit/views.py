@@ -90,7 +90,7 @@ class TemplateCreate(CreateView):
     form_class = TemplateForm
 
     def get_initial(self):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             return {'doctor': self.request.user.doctor, 'user': self.request.user}
 
     def get_context_data(self, **kwargs):
@@ -247,7 +247,6 @@ class PdfView(GabinetPdfView):
         barcode = createBarcodeDrawing('Code128', value=pesel, width=5 * cm, height=0.5 * cm)
         file_name = datetime.datetime.now().strftime('%s')
         barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
-        self.visit.tabs = self.visit.tabs.all()
         system_settings = SystemSettings.objects.first()
         header_left = system_settings.documents_header_left
         header_right = system_settings.documents_header_right

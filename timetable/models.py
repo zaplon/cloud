@@ -9,10 +9,10 @@ from django.utils import timezone
 
 
 class ServiceToDoctor(models.Model):
-    doctor = models.ForeignKey(Doctor, verbose_name=u'Lekarz')
-    service = models.ForeignKey('Service', verbose_name=u'Usługa')
+    doctor = models.ForeignKey(Doctor, verbose_name=u'Lekarz', on_delete=models.CASCADE)
+    service = models.ForeignKey('Service', verbose_name=u'Usługa', on_delete=models.CASCADE)
     price = models.FloatField(blank=True, null=True, verbose_name=u'Cena')
-    localization = models.ForeignKey('Localization', null=True, blank=True)
+    localization = models.ForeignKey('Localization', null=True, blank=True, on_delete=models.CASCADE)
 
 
 class Service(models.Model):
@@ -43,17 +43,20 @@ class Localization(models.Model):
 
 
 class Term(models.Model):
-    patient = models.ForeignKey(Patient, related_name='patient', blank=True, null=True, verbose_name=u'Pacjent')
-    visit = models.OneToOneField(Visit, related_name='term', blank=True, null=True)
+    patient = models.ForeignKey(Patient, related_name='patient', blank=True, null=True, verbose_name=u'Pacjent',
+                                on_delete=models.CASCADE)
+    visit = models.OneToOneField(Visit, related_name='term', blank=True, null=True, on_delete=models.CASCADE)
     datetime = models.DateTimeField(verbose_name=u'Data')
     status = models.CharField(max_length=10, choices=(('CANCELLED', u'Anulowany'), ('PENDING', u'Oczekujący'),
                                                       ('FREE', u'Wolny'),
                                                       ('FINISHED', u'Zakończony')), default='PENDING')
-    doctor = models.ForeignKey(Doctor, related_name='terms', verbose_name=u'Lekarz')
+    doctor = models.ForeignKey(Doctor, related_name='terms', verbose_name=u'Lekarz', on_delete=models.CASCADE)
     duration = models.IntegerField(default=15, verbose_name=u'Czas trwania (min)')
     code = models.CharField(max_length=50, null=True, blank=True)
-    service = models.ForeignKey(Service, blank=True, null=True, related_name='terms', verbose_name=u'Usługa')
-    localization = models.ForeignKey(Localization, blank=True, null=True, related_name='terms', verbose_name=u'Lokalizacja')
+    service = models.ForeignKey(Service, blank=True, null=True, related_name='terms', verbose_name=u'Usługa',
+                                on_delete=models.CASCADE)
+    localization = models.ForeignKey(Localization, blank=True, null=True, related_name='terms',
+                                     verbose_name=u'Lokalizacja', on_delete=models.CASCADE)
 
     def __str__(self):
         if self.patient:

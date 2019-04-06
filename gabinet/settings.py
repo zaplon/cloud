@@ -229,7 +229,8 @@ MODULES = [
     (True, 'links', u'Linki'),
     ('user_profile.change_systemsettings', 'settings', u'Ustawienia'),
     ('visit.change_visit', 'visits', u'Wizyty'),
-    ('examination.change_examination', 'examinations', u'Badania dodatkowe')
+    ('examination.change_examination', 'examinations', u'Badania dodatkowe'),
+    ('agreement.add_agreement', 'agreements', u'Zgody')
 ]
 
 # misal settings
