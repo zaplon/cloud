@@ -171,10 +171,13 @@ class TermViewSet(viewsets.ModelViewSet):
 
 
 class TermListSerializer(serializers.ModelSerializer):
-    updated = serializers.CharField(source='visit.updated')
+    updated = serializers.SerializerMethodField()
     result = serializers.SerializerMethodField()
     patient_name = serializers.CharField(source='patient.first_name')
     patient_last_name = serializers.CharField(source='patient.last_name')
+
+    def get_updated(self, instance):
+        return instance.visit.updated if instance.visit else None
 
     def get_result(self, obj):
         if obj.visit and obj.visit.results.exists():

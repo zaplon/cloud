@@ -53,12 +53,23 @@ class PrintRecipe(APIView):
         realisation_date = data.get('realisationDate', "")
         system_settings = data['system_settings']
         c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
-        for page in range(0, int(len(medicines) / 5) + 1):
+        regular_medicines = [m for m in medicines if not 'separate' in m]
+        separate_medicines = [m for m in medicines if 'separate' in m]
+        for page in range(0, int(len(regular_medicines) / 5) + 1):
             try:
                 c = recipe_lines(c)
                 c = recipe_es(c, patient, realisation_date)
                 c = recipe_texts(request, c, request.user, system_settings)
-                c = recipe_medicines(c, medicines)
+                c = recipe_medicines(c, regular_medicines)
+                c.showPage()
+            except RecipePrintException as e:
+                return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
+        for page in range(0, int(len(separate_medicines) / 5) + 1):
+            try:
+                c = recipe_lines(c)
+                c = recipe_es(c, patient, realisation_date)
+                c = recipe_texts(request, c, request.user, system_settings)
+                c = recipe_medicines(c, separate_medicines)
                 c.showPage()
             except RecipePrintException as e:
                 return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
@@ -77,14 +88,14 @@ def recipe_medicines(c, medicines):
     top = 21.5 * cm
     for m in medicines:
 
-        txt = "%s %s %s" % (m['name'], m['dose'], m['dosage'])
+        txt = "%s %s %s %s %s" % (m['name'], m['dose'], m['amount'], m['dosage'], m['notes'])
         par = Paragraph(txt, styles['style'])
-        par.wrapOn(c, 7.0 * cm, 3 * cm)
-        par.drawOn(c, 0.5 * cm, top)
+        w, h = par.wrapOn(c, 7.0 * cm, 3 * cm)
+        par.drawOn(c, 0.5 * cm, top - h)
 
         par = Paragraph(m.get('refundations', [{'to_pay': '100%'}])[0]['to_pay'], styles['style'])
-        par.wrapOn(c, 1.0 * cm, 3 * cm)
-        par.drawOn(c, 8.5 * cm, top)
+        w, h = par.wrapOn(c, 1.0 * cm, 3 * cm)
+        par.drawOn(c, 8.5 * cm, top - h)
 
         top -= offset
     return c
@@ -203,7 +214,7 @@ def recipe_texts(request, p, us, system_settings, doct_margin_left=0, doct_margi
     p.drawString((x + 0) * cm, (y - 7.0) * cm, 'Rp')
     p.drawString((x + 7.82) * cm, (y - 7.0) * cm, 'Odpłatność')
     p.drawString((x + 0.0) * cm, (y - 17.0) * cm, 'Data wystawienia:')
-    p.drawString((x + 4.6) * cm, (y - 17.0) * cm, 'Dane i podpis lekarza')
+    p.drawString((x + 4.6) * cm, (y - 17.0) * cm, 'Dane i podpis osoby uprawnionej')
     p.drawString((x + 0) * cm, (y - 18.6) * cm, 'Data realizacji "od dnia":')
     # p.drawString((x+5.4)*cm,(y-20.0)*cm, 'KOD')
 
