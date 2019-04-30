@@ -91,8 +91,13 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
             r.save()
             return HttpResponse(json.dumps({'id': r.id}), status=200, content_type='application/json')
         else:
-            request.data['uploaded_by'] = self.request.user.id
-            return super(ResultViewSet, self).create(request)
+            data = request.data.copy()
+            data['uploaded_by'] = self.request.user.id
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def retrieve(self, request, *args, **kwargs):
         doc = ResultIndex.get(id=kwargs['pk'])
