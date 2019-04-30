@@ -1,5 +1,3 @@
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 from gabinet.settings import *
 
 
@@ -32,9 +30,4 @@ CORS_ORIGIN_WHITELIST = (
     '10.198.0.2',
     '10.0.0.157',
     '10.0.2.199'
-)
-
-sentry_sdk.init(
-    dsn="https://9a0a9166b59c4093a5255c1a2c580c92@192.168.12.4:9000/3",
-    integrations=[DjangoIntegration()]
 )
