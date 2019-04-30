@@ -24,6 +24,10 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
     specialization = serializers.PrimaryKeyRelatedField(queryset=Specialization.objects.all())
     uploaded_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
+    def __init__(self, *args, **kwargs):
+        kwargs['data']['uploaded_by'] = kwargs['context'].pop('uploaded_by', None)
+        super(ResultSerializer, self).__init__(*args, **kwargs)
+
     class Meta:
         model = Result
         fields = ('id', 'name', 'description', 'file', 'patient', 'specialization', 'uploaded_by', 'uploaded')
@@ -71,6 +75,11 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
+    def get_serializer_context(self):
+        context = super(ResultViewSet, self).get_serializer_context()
+        context['uploaded_by'] = self.request.user.id
+        return context
+
     def create(self, request):
         if 'endoscope_image' in request.POST or 'endoscope_video' in request.POST:
             r = Result()
@@ -91,13 +100,7 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
             r.save()
             return HttpResponse(json.dumps({'id': r.id}), status=200, content_type='application/json')
         else:
-            data = request.data.copy()
-            data['uploaded_by'] = self.request.user.id
-            serializer = self.get_serializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            return super(ResultViewSet, self).create(request)
 
     def retrieve(self, request, *args, **kwargs):
         doc = ResultIndex.get(id=kwargs['pk'])
