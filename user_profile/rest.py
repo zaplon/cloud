@@ -104,18 +104,23 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     name = CharField(source='get_name')
     working_hours = ListField(source='get_working_hours')
     default_service = serializers.SerializerMethodField()
+    has_many_services = serializers.SerializerMethodField()
     specializations = serializers.PrimaryKeyRelatedField(many=True, queryset=Specialization.objects.all())
 
     class Meta:
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
-                  'total_prescriptions', 'visit_duration', 'default_service', 'specializations', 'show_weekends')
+                  'total_prescriptions', 'visit_duration', 'default_service', 'has_many_services',
+                  'specializations', 'show_weekends')
 
     def get_default_service(self, obj):
         doctor_services = Service.objects.filter(doctors__in=[obj])
         if doctor_services.count() == 1:
             s = doctor_services.first()
             return {'id': s.id, 'name': s.name}
+
+    def get_has_many_services(self, obj):
+        return Service.objects.filter(doctors__in=[obj]).count() > 1
 
         
 class DoctorCalendarSerializer(serializers.ModelSerializer):

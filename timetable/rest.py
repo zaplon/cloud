@@ -58,23 +58,34 @@ class TermUpdateSerializer(TermCreateSerializer):
         super(TermUpdateSerializer, self).save(**kwargs)
 
 
-class ServiceSerializer(serializers.ModelSerializer):
+class ServiceListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
         fields = ('id', 'name')
 
 
+class ServiceDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Service
+        fields = ('id', 'name', 'price', 'code', 'doctors')
+
+
 class ServiceViewSet(viewsets.ModelViewSet, SearchMixin):
     queryset = Service.objects.all()
-    serializer_class = ServiceSerializer
     permission_classes = [AllowAny]
     # pagination_class = None
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ServiceListSerializer
+        return ServiceDetailSerializer
 
 
 class TermDetailSerializer(serializers.ModelSerializer):
     patient = PatientSerializer()
-    service = ServiceSerializer()
+    service = ServiceListSerializer()
     doctor = DoctorSerializer()
 
     class Meta:
