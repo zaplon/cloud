@@ -154,6 +154,12 @@ class GabinetPermissionRequiredMixin(PermissionRequiredMixin, AccessMixin):
 
 
 class PDFView(APIView, PDFTemplateView):
+    documents_settings = {
+        'default': {'page-size': 'A4', 'orientation': 'Portrait', 'dpi': 300, 'zoom': 1,
+                    'margin-top': 0, 'margin-left': 0, 'margin-right': 0, 'margin-bottom': 0},
+        'examinations': {'page-width': 70, 'page-height': 210,
+                         'margin-top': 10, 'margin-left': 5, 'margin-right': 5, 'margin-bottom': 10}
+    }
     data = {}
 
     def post(self, request, *args, **kwargs):
@@ -168,6 +174,9 @@ class PDFView(APIView, PDFTemplateView):
         f.close()
         save_document(self.data['name'], self.data['patient']['id'], file_name, request.user)
         return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
+
+    def get_cmd_options(self):
+        return self.documents_settings.get(self.data['template_name'], self.documents_settings['default'])
 
     def get_context_data(self, **kwargs):
         context = self.data

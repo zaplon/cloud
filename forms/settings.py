@@ -9,7 +9,5 @@ FORMS = {
     'karta_badania_lekarskiego': {'orientation': 'Landscape', 'margin-top': 25, 'margin-bottom': 25,
                                   'margin-left': 25, 'margin-right': 25},
     'skierowanie_rtg': {'page-width': 70, 'page-height': 210,
-                        'margin-top': 0, 'margin-left': 0, 'margin-right': 0, 'margin-bottom': 0},
-    'skierowanie_na_badania': {'page-width': 70, 'page-height': 210,
-                               'margin-top': 0, 'margin-left': 0, 'margin-right': 0, 'margin-bottom': 0}
+                        'margin-top': 0, 'margin-left': 0, 'margin-right': 0, 'margin-bottom': 0}
 }

@@ -25,7 +25,8 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
     uploaded_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     def __init__(self, *args, **kwargs):
-        kwargs['data']['uploaded_by'] = kwargs['context'].pop('uploaded_by', None)
+        if 'data' in kwargs:
+            kwargs['data']['uploaded_by'] = kwargs['context'].pop('uploaded_by', None)
         super(ResultSerializer, self).__init__(*args, **kwargs)
 
     class Meta:
