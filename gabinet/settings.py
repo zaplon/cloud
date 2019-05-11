@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "agreements",
     'corsheaders',
+    'localflavor'
     # 'django_mfa'
 ]
 SITE_ID = 1
@@ -211,6 +212,13 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 LANGUAGE_CODE = 'pl'
 VISIT_TABS_DIR = os.path.join(BASE_DIR, 'templates', 'visit', 'tabs')
 APP_URL = 'http://127.0.0.1:8001/'
+
+
+LANGUAGES = (
+    ('en', 'English'),
+    ('pl', 'Polish')
+)
+
 
 MODULES = [
     (True, 'stats', u'Statystyki'),
