@@ -149,7 +149,7 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
     # informacje o pacjencie
     name = patient.__str__()
     c.drawString((patient_margin_left + tab1) * cm, (doct_margin_top) * cm, name.encode('utf-8'))
-    if len(patient.address) > 0:
+    if patient.address and len(patient.address) > 0:
         # p.drawString((doct_margin_left+tab1)*cm, (doct_margin_top+pat-0.5)*cm, patient['address'].encode('utf-8'))
         par = Paragraph(patient.address.encode('utf-8'), styles['address'])
         par.wrapOn(c, 6.0 * cm, (2) * cm)
