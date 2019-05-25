@@ -1,9 +1,9 @@
 <table class="table table-striped">
     <tbody>
-    {% for icd in icds %}
+    {% for i in icdtovisit %}
         <tr>
-            <td>{{ icd.code }}</td>
-            <td>{{ icd.desc }}</td>
+            <td>{{ i.icd.code }}</td>
+            <td>{% if i.custom_text %}{{ i.custom_text }}{% else %}{{ i.icd.desc }}{% endif %}</td>
         </tr>
     {% endfor %}
     </tbody>

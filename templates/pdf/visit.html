@@ -37,7 +37,7 @@
         {% for tab in visit.printable_tabs %}
             {% if tab.type == 'ICD10' %}
                 <h2>{{ tab.title }}</h2>
-                {% include 'pdf/tabs/icd10.html' with icds=visit.icd_codes.all %}
+                {% include 'pdf/tabs/icd10.html' with icdtovisit=visit.icdtovisit_set.all %}
             {% else %}
                 {% if tab.data %}
                     <div>

@@ -8,8 +8,18 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from g_utils.rest import OnlyDoctorRecords, SearchMixin
 from timetable.models import Term
 from timetable.rest import TermDetailSerializer
-from .models import Icd10, Template, Visit, VisitTab, Tab, TabTypes
+from .models import Icd10, Template, Visit, VisitTab, Tab, TabTypes, IcdToVisit
 import json
+
+
+class IcdToVisitSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='icd.id')
+    code = serializers.CharField(source='icd.code')
+    desc = serializers.CharField(source='icd.desc')
+
+    class Meta:
+        model = IcdToVisit
+        fields = ('id', 'code', 'desc', 'custom_text')
 
 
 # Serializers define the API representation.
@@ -99,11 +109,11 @@ class VisitTabSerializer(serializers.ModelSerializer):
 class VisitSerializer(serializers.ModelSerializer):
     tabs = VisitTabSerializer(many=True)
     term = TermDetailSerializer()
-    icd_codes = IcdSerializer(many=True)
+    icdtovisit_set = IcdToVisitSerializer(many=True)
 
     class Meta:
         model = Visit
-        fields = ['id', 'tabs', 'in_progress', 'term', 'icd_codes']
+        fields = ['id', 'tabs', 'in_progress', 'term', 'icdtovisit_set']
 
 
 class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
@@ -160,8 +170,9 @@ class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
         for tab in data:
             vt = VisitTab.objects.get(id=tab['id'])
             if vt.type == TabTypes.ICD10.name:
-                visit.icd_codes.clear()
-                visit.icd_codes.add(*[Icd10.objects.get(id=d['id']) for d in tab['data']])
+                visit.icdtovisit_set.all().delete()
+                for d in tab['data']:
+                    IcdToVisit.objects.create(icd_id=d['id'], custom_text=d.get('custom_text', ''), visit=visit)
             else:
                 vt.json = json.dumps(tab['data']) if 'data' in tab else ''
                 vt.save()

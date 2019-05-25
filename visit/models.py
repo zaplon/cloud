@@ -122,9 +122,14 @@ class Template(models.Model):
 class Icd10(models.Model):
     code = models.CharField(max_length=5)
     desc = models.CharField(max_length=200)
-    visits = models.ManyToManyField(Visit, related_name='icd_codes')
+    visits = models.ManyToManyField(Visit, through='IcdToVisit', related_name='icd_codes')
 
     class Meta:
         verbose_name = 'Rozpoznanie'
         verbose_name_plural = 'Rozpoznania'
 
+
+class IcdToVisit(models.Model):
+    icd = models.ForeignKey(Icd10, on_delete=models.CASCADE)
+    visit = models.ForeignKey(Visit, on_delete=models.CASCADE)
+    custom_text = models.CharField(max_length=400, blank=True)

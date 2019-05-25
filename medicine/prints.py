@@ -141,7 +141,6 @@ def recipe_es(c, patient, realisation_date, permissions='X', nfz='7'):
     ab = 29.7
     patient_margin_left = 0.3
 
-
     c.setFont("Arial", 9)
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='PolishS', fontName='Arial', fontSize=9))
