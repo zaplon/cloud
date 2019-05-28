@@ -9,7 +9,7 @@ def save_icds(apps, schema_editor):
     try:
         visits = Visit.objects.filter(icd_codes__isnull=False)
         visits.count()
-    except OperationalError:
+    except:
         return
     for visit in visits:
         for icd in visit.icd_codes.all():
