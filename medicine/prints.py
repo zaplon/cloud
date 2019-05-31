@@ -55,21 +55,32 @@ class PrintRecipe(APIView):
         c = canvas.Canvas(recipe_file, pagesize=(10 * cm, 29.7 * cm))
         regular_medicines = [m for m in medicines if not 'separate' in m]
         separate_medicines = [m for m in medicines if 'separate' in m]
-        for page in range(0, int(len(regular_medicines) / 5) + 1):
+        if regular_medicines:
+            for page in range(0, int(len(regular_medicines) / 5) + 1):
+                try:
+                    c = recipe_lines(c)
+                    c = recipe_es(c, patient, realisation_date)
+                    c = recipe_texts(request, c, request.user, system_settings)
+                    c = recipe_medicines(c, regular_medicines)
+                    c.showPage()
+                except RecipePrintException as e:
+                    return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
+        if separate_medicines:
+            for page in range(0, int(len(separate_medicines) / 5) + 1):
+                try:
+                    c = recipe_lines(c)
+                    c = recipe_es(c, patient, realisation_date)
+                    c = recipe_texts(request, c, request.user, system_settings)
+                    c = recipe_medicines(c, separate_medicines)
+                    c.showPage()
+                except RecipePrintException as e:
+                    return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
+
+        if len(separate_medicines) == 0 and len(regular_medicines) == 0:
             try:
                 c = recipe_lines(c)
                 c = recipe_es(c, patient, realisation_date)
                 c = recipe_texts(request, c, request.user, system_settings)
-                c = recipe_medicines(c, regular_medicines)
-                c.showPage()
-            except RecipePrintException as e:
-                return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
-        for page in range(0, int(len(separate_medicines) / 5) + 1):
-            try:
-                c = recipe_lines(c)
-                c = recipe_es(c, patient, realisation_date)
-                c = recipe_texts(request, c, request.user, system_settings)
-                c = recipe_medicines(c, separate_medicines)
                 c.showPage()
             except RecipePrintException as e:
                 return HttpResponse(json.dumps({'success': False, 'message': e.value}), content_type='application/json')
@@ -88,7 +99,7 @@ def recipe_medicines(c, medicines):
     top = 21.5 * cm
     for m in medicines:
 
-        txt = "%s %s %s %s %s" % (m['name'], m['dose'], m['amount'], m['dosage'], m['notes'])
+        txt = "%s %s %s %s %s" % (m.get('name', ''), m.get('dose', ''), m.get('amount', ''), m.get('dosage', ''), m.get('notes', ''))
         par = Paragraph(txt, styles['style'])
         w, h = par.wrapOn(c, 7.0 * cm, 3 * cm)
         par.drawOn(c, 0.5 * cm, top - h)
