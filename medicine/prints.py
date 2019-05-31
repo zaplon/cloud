@@ -239,7 +239,18 @@ def recipe_texts(request, p, us, system_settings, doct_margin_left=0, doct_margi
     par = Paragraph(us.first_name + ' ' + us.last_name, styles['PolishS'])
     w, h = par.wrapOn(p, 4.5 * cm, (5) * cm)
     par.drawOn(p, (5.0) * cm, (y - 17.3) * cm - h)
-    b = createBarcodeDrawing('Code128', value=str('30' + us.doctor.pwz + '7'), width=5 * cm, height=0.6 * cm)
+    nr = ''.join(['0'] * (7 - len(us.doctor.pwz))) + us.doctor.pwz
+    base = '30' + nr
+    control_number = 0
+    weights = [7, 9, 1, 3, 7, 9, 1, 7, 9]
+    for i, val in enumerate(weights):
+        try:
+            control_number += val * int(base[i])
+        except:
+            control_number += 0
+    control_number = control_number % 10
+    nr = base + str(control_number)
+    b = createBarcodeDrawing('Code128', value=nr, width=5 * cm, height=0.6 * cm)
     p.drawString((x + 5.5) * cm, (y - 18.4) * cm - h, str(us.doctor.pwz))
     b.drawOn(p, (x + 3.9) * cm, (y - 18.1) * cm - h)
 
