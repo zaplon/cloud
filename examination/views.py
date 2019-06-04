@@ -10,7 +10,7 @@ class ReferralPdfView(GabinetPdfView):
     def get(self, request, *args, **kwargs):
         patient = json.loads(self.request.GET['patient'])
         self.template_name = 'pdf/referral.html'
-        self.cmd_options = {'page-width': 95, 'page-height': 297, 'orientation': 'Portrait'}
+        self.cmd_options = {'page-width': 95, 'page-height': 210, 'orientation': 'Portrait'}
         if patient['last_name']:
             self.filename = 'skierowanie_' + slugify(self.patient['last_name'])
         else:
