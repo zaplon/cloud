@@ -204,12 +204,12 @@ def recipe_texts(request, p, us, system_settings, doct_margin_left=0, doct_margi
         recNr = recNr[0]
         recNr_instance = recNr
         p.drawString((x + 3) * cm, (y - 0.4) * cm, recNr.nr)
-    p.setFont("Arialb", 8)
+    p.setFont("Arialb", 9)
 
     for i, line in enumerate(system_settings['documents_header_left'].split('\n')):
         p.drawString((x + 0) * cm, (y - 0.9 - i*0.3) * cm, line)
 
-    p.setFont("Arial", 9)
+    p.setFont("Arial", 10)
 
     b = createBarcodeDrawing('Code128', value="20%s0009" % system_settings['regon'], width=5 * cm, height=0.6 * cm)
     p.drawString((x + 6.7) * cm, (y - 3.1) * cm, "20%s0009" % system_settings['regon'])
