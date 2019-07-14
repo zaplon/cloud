@@ -4,9 +4,11 @@ import os
 import datetime
 from django.conf.urls import url, include
 from django.db.models import Q, Sum, Count
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseNotFound
 from elasticsearch_dsl import Search
 from rest_framework import serializers, viewsets
+from django_redis import get_redis_connection
+from rest_framework.decorators import action
 
 from g_utils.rest import SearchMixin
 from user_profile.models import Patient, Doctor, Specialization, User
@@ -16,6 +18,7 @@ from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.response import Response
+from .tasks import generate_results_pdf
 
 
 # Serializers define the API representation.
@@ -122,4 +125,19 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
             return self.categories_list(request, *args, **kwargs)
         return super(ResultViewSet, self).list(request, *args, **kwargs)
 
+    @action(detail=False, methods=['get'])
+    def generate_pdf(self, request, *args, **kwargs):
+        patient_id = request.GET['patient_id']
+        period = request.GET['period']
+        generate_results_pdf.delay(patient_id, period)
+        return HttpResponse()
+
+    @action(detail=False, methods=['get'])
+    def get_results_pdf(self, request, *args, **kwargs):
+        redis = get_redis_connection()
+        pdf = redis.get(settings.RESULTS_PDF_KEY_PATTERN % (request.GET['patient_id'], request.GET['period']))
+        if pdf:
+            return HttpResponse(pdf)
+        else:
+            return HttpResponseNotFound()
 

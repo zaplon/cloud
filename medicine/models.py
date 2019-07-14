@@ -23,7 +23,7 @@ class Medicine(models.Model):
     parent = models.ForeignKey(MedicineParent, related_name='children', on_delete=models.CASCADE)
     size = models.TextField(blank=True, null=True)  # Wielkosc opakowania
     availability_cat = models.TextField(blank=True, null=True)  # Kat. dost.
-    ean = models.CharField(max_length=20, blank=True, null=True)  # Kod EAN
+    ean = models.CharField(max_length=20, blank=True, null=True, unique=True)  # Kod EAN
     in_use = models.BooleanField(default=False)
     refundation = models.BooleanField(blank=False, default=False)
 

@@ -75,6 +75,8 @@ class EditFormView(View):
             klass = klass.group(1).strip() if klass else ''
             if (text.find('checkbox') > -1 or text.find('radio') > -1) and text.find('checked') > -1:
                 return '<span class="checkbox %s">X</span>' % klass
+            elif (text.find('checkbox') > -1 or text.find('radio') > -1) and text.find('checked') == -1:
+                return '<span class="checkbox %s"></span>' % klass
             elif text.find('type="number"') > -1 or text.find('type="date"') > -1:
                 value = re.search('value="(.*)"', text)
                 style = re.search('style="([^"]+)"', text)
@@ -120,7 +122,7 @@ class FormView(PDFTemplateView):
         if 'print' in request.GET:
             project_dir = settings.PROJECT_DIR
             if template in ['ABA', 'zgoda na znieczulenie', 'karta_badania_lekarskiego', 'zaswiadczenie_okulary',
-                            'skierowanie_rtg']:
+                            'skierowanie_rtg', 'oswiadczenie_dotyczace_stanu_zdrowia', 'karta_konsultacyjna_neurologiczna']:
                 style = 'bootstrap_print.css'
             else:
                 style = 'prints.css'

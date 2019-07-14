@@ -125,9 +125,12 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'memcached:11211',
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://cache:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 
@@ -158,7 +161,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 TIME_ZONE = 'Europe/Warsaw'
 
 LOGIN_URL = '/account/login/'
@@ -265,3 +268,9 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 OLD_PASSWORD_FIELD_ENABLED = True
+RESULTS_PDF_KEY_PATTERN = 'result:%s:%s'
+RESULTS_PDF_TTL = 60 * 60
+
+CELERY_BROKER_URL = 'amqp://rabbitmq:rabbitmq@rabbitmq'
+# Celery settings
+from .tasks import *

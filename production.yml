@@ -13,6 +13,9 @@ services:
     links:
      - mysql
      - memcached
+     - redis
+     - celery
+     - rabbitmq
     command: uwsgi --http 0.0.0.0:9001 --module docker_wsgi_configuration_module
   mysql:
     image: "mariadb"
@@ -45,3 +48,38 @@ services:
       - "443:443"
   memcached:
     image: memcached
+  celery:
+    image: "docker.io/zaplon/gabinet"
+    working_dir: /app/
+    links:
+      - rabbitmq
+      - mysql
+      - redis
+    volumes:
+      - ./:/app/:Z
+    environment:
+      DJANGO_SETTINGS_MODULE: docker_settings
+    command: [celery, worker, --app=gabinet.tasks, --concurrency=2, --loglevel=INFO]
+    depends_on:
+      - rabbitmq
+  redis:
+    image: redis
+    container_name: cache
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    expose:
+      - '6379'
+    volumes:
+      - ./gabinet_docker/redis:/bitnami/redis/data
+  rabbitmq:
+    image: rabbitmq:3.7.5-management
+    expose:
+      - '5672'
+      - '15672'
+    volumes:
+      - ./gabinet_docker/rabbitmq:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 6085e2412b6fa88647466c6a81c0cea0
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+      RABBITMQ_DEFAULT_VHOST: /

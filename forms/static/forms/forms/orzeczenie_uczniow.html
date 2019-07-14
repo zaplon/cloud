@@ -1,0 +1,144 @@
+<html>
+<head>
+
+    <title>Orzeczenie o zdolności do pracy</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link data-ignore="1" rel="stylesheet" media="all" href="/assets/forms/css/bootstrap.css">
+
+    <script data-ignore="1" src="/assets/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/assets/forms/js/datepicker.js.min"></script>
+    <script>window.datepicker = true;</script>
+    <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <style>
+        .option-selected {
+            border: 2px solid #555555;
+        }
+        #option-1-mark, #option-2-mark {
+            padding: 5px;
+        }
+        #option-1, #option-2 {
+            cursor: pointer;
+        }
+        .mt-1 {
+            margin-top: 1rem;
+        }
+        .mt-2 {
+            margin-top: 2rem;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function(){
+           $('#option-1').click(function(){
+            $('#option-1-mark').addClass('option-selected');
+            $('#option-2-mark').removeClass('option-selected');
+        });
+        $('#option-2').click(function(){
+            $('#option-2-mark').addClass('option-selected');
+            $('#option-1-mark').removeClass('option-selected');
+        });
+        });
+    </script>
+</head>
+<body class="page" style="padding: 1cm; background-color: white;">
+<div class="row">
+    <div class="col-md-3">
+        <p>pieczątka jednostki medycyny pracy <br/>przeprowadzającej badanie</p>
+    </div>
+</div>
+<h1 class="text-center">ZAŚWIADCZENIE LEKARSKIE</h1>
+<p class="mt-2 text-justify">
+    W wyniku badania lekarskiego mającego na celu ocenę możliwości pobierania nauki, uwzględniającą stan zdrowia i
+    zagrożenia występujące w miejscu odbywania praktycznej nauki zawodu, studiów, kwalifikacyjnych kursów zawodowych
+    albo studiów doktoranckich osób badanych stosownie do przepisu art. 5 ust. 1 pkt 4 i 5 ustawy z dnia 27 czerwca
+    1997r. o służbie medycyny pracy (Dz.U. 2019r. poz. 1175)
+</p>
+<div class="row">
+    <div class="col-md-12">
+        <p>orzeka się, że :</p>
+    </div>
+    <div class="col-md-12">
+        <div style="width: 4%; display: inline-block;">u</div>
+        <div style="width: 95%; display: inline-block;"><input style="width: 100%;" name="name" type="text"></div>
+        <div style="width: 95%; display: inline-block; text-align: center; margin-left: 4%;"><span>/imię i nazwisko/</span></div>
+    </div>
+    <div class="col-md-12">
+        <span>urodzonego(ej) dnia</span>
+        <input data-toggle="datepicker" name="birth_date" type="text" style="width: 100px; margin-left: 5px; display: inline-block;">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span>nr PESEL, a w przypadku osoby, która nie posiada nr PESEL – rodzaj, serię i numer  dokumentu</span>
+    </div>
+    <div class="col-md-12">
+        <div style="width: 25%; display: inline-block">stwierdzającego tożsamość</div>
+        <div style="width: 74%; display: inline-block"><input name="pesel" type="text" style="width: 100%;"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p>podejmującego/kontynuującego praktyczną naukę zawodu*, studiów*, kwalifikacyjny kurs zawodowy*, studia
+            doktoranckie* w</p>
+        <input type="text" class="whole_line" name="placowka1">
+        <div class="text-center"><span>/nazwa i adres placówki dydaktycznej/</span></div>
+        <div class="text-center"><input type="text" class="whole_line" name="placowka2"><span>/kierunek praktycznej nauki zawodu albo kształcenia/</span></div>
+    </div>
+</div>
+<div class="row mt-1">
+    <div class="col-md-12">
+        <div id="option-1" class="selectable">
+            <div style="width: 9%; vertical-align: top; display: inline-block"><span id="option-1-mark">1)</span></div>
+            <div style="width: 90%; display: inline-block">
+                <span>brak jest przeciwwskazań zdrowotnych do wykonywania i pobierania praktycznej nauki zawodu*, studiów*, kwalifikacyjnego kursu zawodowego * , studiów  doktoranckich*</span>
+            </div>
+            <div style="margin-left: 10%">
+                <span style="margin-right: 5px;">Data następnego badania</span><input type="text" style="width: 100px;" data-toggle="datepicker" name="next">
+            </div>
+        </div>
+        <div id="option-2" class="selectable">
+            <div style="width: 9%; vertical-align: top; display: inline-block"><span id="option-2-mark">2)</span></div>
+            <div style="width: 90%; display: inline-block">
+               <span>istnieją przeciwwskazania zdrowotne do wykonywania i pobierania  praktycznej nauki zawodu* , studiów * kwalifikacyjnego kursu zawodowego*, studiów doktoranckich*</span>            </div>
+        </div>
+        <div style="clear: both;">
+            <span class="font-small">* właściwe zaznaczyć</span>
+        </div>
+    </div>
+</div>
+<div class="row mt-1">
+    <div class="col-md-12" style="text-align: right;">
+        <input type="text" name="pieczec" style="width: 200px;"><br/>
+        <div style="width: 200px; text-align: center; float: right;">
+            <span style="font-style: italic">podpis i pieczątka lekarza przeprowadzającego badanie</span>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+    <div class="col-md-12">
+        <input type="text" name="city" class="" style="width:100px;" value="Warszawa">
+        <span>dnia</span>
+        <input style="width: 100px;" type="text" name="today-date" data-toggle="datepicker"><span>r.</span>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-md-12">
+        <p style="text-align: justify;">POUCZENIE <br/>
+            Od zaświadczenia lekarskiego osobie badanej oraz placówce dydaktycznej przysługuje odwołanie wnoszone na
+            piśmie.
+            Odwołanie wraz z uzasadnieniem wnosi się w terminie 14 dni od dnia otrzymania zaświadczenia lekarskiego,
+            za
+            pośrednictwem lekarza, który wydał zaświadczenie lekarskie, do wojewódzkiego ośrodka medycyny pracy,
+            właściwego ze
+            względu na siedzibę placówki dydaktycznej, a w przypadku gdy odwołanie dotyczy zaświadczenia lekarskiego
+            wydanego w
+            wojewódzkim ośrodku medycyny pracy – do instytutu badawczego w dziedzinie medycyny pracy.
+        </p>
+    </div>
+</div>
+</body>
+</html>

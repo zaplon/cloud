@@ -1,0 +1,311 @@
+<html>
+<head>
+
+    <title>Karta konsultacyjna neurologiczna</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/forms/css/bootstrap.css">
+
+    <script data-ignore="1" src="/assets/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/assets/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <script>
+        $(document).ready(function(){
+            var pesel = window.SPSR.params.pesel;
+            for (p in pesel){ $('input[name=pesel_' + p + ']').val(pesel[p]); }
+        })
+    </script>
+    <style>
+        body {
+            font-size: 12px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .aba-table .border {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        table.border td {
+            border: 1px solid black;
+            border-spacing: 0;
+        }
+        table.no-border td {
+            border: 0 !important;
+        }
+        table td:first-of-type {
+            padding-left: 0px!important;
+        }
+        .row .radio-div:first-of-type {
+            margin-left: 15px;
+        }
+        input, textarea  {
+            border: 1px solid black !important;
+            padding: 0.25cm;
+            border-bottom: 1px solid black !important;
+        }
+        .radio-div {
+            border: 1px solid black;
+            padding: 0.20cm 0.25cm;
+            text-align: center;
+        }
+        .row {
+            margin-top: 1rem;
+        }
+        table {
+            font-size: 12px;
+        }
+        .medium-input {
+            width: 50px;
+        }
+        .border {
+            border: 1px solid black;
+        }
+        .border input,textarea {
+            border: none!important;
+        }
+    </style>
+</head>
+<body class="page" style="height: inherit; padding: 1.0cm;">
+<div class="row">
+    <div class="col-md-5">
+        <textarea class="whole_line" style="height: 100px;"></textarea>
+    </div>
+    <div class="col-md-6 offset-md-4" style="margin-top: 25px;">
+        <h1 class="text-center">Karta konsultacyjna neurologiczna</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Dane osobowe pacjenta</h2>
+    </div>
+    <div class="col-md-2">
+        <span>Imię i nazwisko badanego</span>
+    </div>
+    <div class="col-md-10">
+        <input type="text" name="name" class="whole_line">
+    </div>
+    <div class="col-md-12">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1">
+        <span>Numer PESEL</span>
+    </div>
+    <div class="col-md-6">
+        <table class="no-border">
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_0" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_1" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_2" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_3" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_4" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_5" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_6" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_7" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_8" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_9" maxlength="1"></td>
+                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_10" maxlength="1"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-3">
+        <span>nazwa i numer dokumentu  stwierdzającego tożsamość osoby, której nie nadano PESEL</span>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="other_pesel" class="whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1">
+        <span>adres zamieszkania:</span>
+    </div>
+    <div class="col-md-2 text-right">
+        <span>miejscowość</span>
+    </div>
+    <div class="col-md-5">
+        <input type="text" name="miejscowosc" class="whole_line">
+    </div>
+    <div class="col-md-2 text-right">
+        <span>kod pocztowy</span>
+    </div>
+    <div class="col-md-2">
+        <input type="text" maxlength="6" name="postal" class="whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1">
+        <span>ulica</span>
+    </div>
+    <div class="col-md-5">
+        <input name="ulica" type="text" class="whole_line">
+    </div>
+    <div class="col-md-2 text-right">
+        <span>numer domu/mieszkania</span>
+    </div>
+    <div class="col-md-4">
+        <input type="text" name="numer_domu" class="whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1 radio-div" style="margin-left: 15px;">
+        <input type="radio" class="whole_line" name="typ" value="kandydat">
+    </div>
+    <div class="col-md-3">
+        <span>kandydat na kierowcę</span>
+    </div>
+    <div class="col-md-1 offset-md-1 radio-div">
+        <input type="radio" class="whole_line" name="typ" value="kierowca">
+    </div>
+    <div class="col-md-2">
+        kierowca
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1">
+        <span><strong>Padaczka</strong></span>
+    </div>
+    <div class="col-md-1"><input type="checkbox" name="padaczka"></div>
+    <div class="col-md-1"><span>data rozpoznania:</span></div>
+    <div class="col-md-1"><input type="text" name="data_rozpoznania" class="whole_line"></div>
+    <div class="col-md-2"><span>lekarz prowadzący leczenie padaczki:</span></div>
+    <div class="col-md-1"><input type="text" name="lekarz_prowadzacy" class="whole_line"></div>
+    <div class="col-md-2"><span>podmiot wykonujący działalność leczniczą:</span></div>
+    <div class="col-md-1"><input type="text" name="data_rozpoznania" class="whole_line"></div>
+    <div class="col-md-1"><span>poradnia neurologiczna:</span></div>
+    <div class="col-md-1"><input type="text" name="data_rozpoznania" class="whole_line"></div>
+</div>
+<div class="row">
+    <div class="col-md-6 border">
+        <div class="row">
+            <div class="col-md-2"><span>zespół padaczkowy</span></div>
+            <div class="col-md-10"><input type="text" class="whole_line" name="zespol_padaczkowy"></div>
+        </div>
+    </div>
+    <div class="col-md-6 border">
+        <div class="row">
+            <div class="col-md-2"><span>rodzaj napadów</span></div>
+            <div class="col-md-10"><input type="text" class="whole_line" name="rodzaj_napadów"></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 border">
+        <div class="row">
+            <div class="col-md-12">
+                <span>dane dotyczące przeprowadzonej diagnostyki (wyniki przeprowadzonych badań obrazowych)</span>
+            </div>
+            <div class="col-md-12">
+                <textarea name="wyniki" rows="3" class="whole_line"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 border">
+        <div class="row">
+            <div class="col-md-2">
+                <span>czas trwania choroby</span>
+            </div>
+            <div class="col-md-10"><textarea rows="3" name="czas_trwania" class="whole_line"></textarea></div>
+        </div>
+    </div>
+    <div class="col-md-12 border">
+        <div class="row">
+            <div class="col-md-2">
+                <span>przebieg choroby (w tym data ostatniego napadu)</span>
+            </div>
+            <div class="col-md-10"><textarea rows="3" name="czas_trwania" class="whole_line"></textarea></div>
+        </div>
+    </div>
+    <div class="col-md-12 border">
+        <div class="row">
+            <div class="col-md-12">
+                <span>przebieg i rodzaj leczenia, a jeżeli odstawiono leczenie - data odstawienia leczenia</span>
+            </div>
+            <div class="col-md-12"><textarea rows="3" name="przebieg" class="whole_line"></textarea></div>
+        </div>
+    </div>
+    <div class="col-md-12 border">
+        <div class="row">
+            <div class="col-md-12">
+                <span>współistniejące schorzenia mające wpływ na przebieg choroby</span>
+            </div>
+            <div class="col-md-12"><textarea rows="3" name="wspolistniejace" class="whole_line"></textarea></div>
+        </div>
+    </div>
+    <div class="col-md-12 border">
+        <div class="row">
+            <div class="col-md-12">
+                <span>uwagi dotyczące przewlekłych powikłań choroby</span>
+            </div>
+            <div class="col-md-12"><textarea rows="4" name="uwagi_powiklania" class="whole_line"></textarea></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 border">
+        <div class="row">
+            <div class="col-md-12">
+                <span>okres, w którym badany nie może kierować pojazdem od</span>
+                <input class="dotted" type="text" data-toggle="datepicker" name="zakaz_od">
+                <span>do</span>
+                <input class="dotted" type="text" data-toggle="datepicker" name="zakaz_do">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 border">
+        <div class="row">
+            <div class="col-md-12">
+                <span>wymagania dalszej obserwacji</span>
+            </div>
+            <div class="col-md-12"><textarea rows="4" name="wymagania_obserwacji" class="whole_line"></textarea></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span><strong>Inne uwagi</strong> (np. inna utrata świadomości lub zaburzenia świadomości lub napadowe zaburzenia ruchowe o
+            symptomatologii padaczkowej, strukturalna zmiana śródmózgowa lub śródczaszkowa itp.): </span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" name="inne_uwagi" class="whole_line">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-4">
+        <input style="width:100%" type="text" data-toggle="datepicker" class="dotted" name="today_date">
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-4">
+        <input style="width:100%" type="text" name="podpis" class="dotted">
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-1"></div>
+    <div class="col-md-4 text-center">
+        <span>(data sporządzenia opinii)</span>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-4 text-center">
+        <span>(pieczątka i podpis lekarza neurologa)</span>
+    </div>
+</div>
+</body>
+</html>
