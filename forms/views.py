@@ -57,8 +57,8 @@ class EditFormView(View):
             f.write(data)
             Form.objects.create(name=request.POST.get('name', ''), path=tmp_name, user=request.user)
             return HttpResponse(status=200)
-        data = data.replace('<textarea', '<span')
-        data = data.replace('/textarea', '/span')
+        data = data.replace('<textarea', '<p')
+        data = data.replace('/textarea', '/p')
 
         def repl(m):
             text = m.group(0)

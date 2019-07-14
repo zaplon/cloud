@@ -61,7 +61,7 @@
             text-align: center;
         }
         .row {
-            margin-top: 1rem;
+            margin-top: 2rem;
         }
         table {
             font-size: 12px;
@@ -69,11 +69,19 @@
         .medium-input {
             width: 50px;
         }
-        .border {
-            border: 1px solid black;
+        .no-bottom-border {
+            border-bottom: none;
         }
         .border input,textarea {
             border: none!important;
+        }
+        #padaczka-table td {
+            border: none;
+            padding: 3px;
+            font-size: 11px;
+        }
+        .border {
+            border: 1px solid black;
         }
     </style>
 </head>
@@ -94,7 +102,7 @@
         <span>Imię i nazwisko badanego</span>
     </div>
     <div class="col-md-10">
-        <input type="text" name="name" class="whole_line">
+        <input type="text" name="name" class="whole_line not-dotted">
     </div>
     <div class="col-md-12">
     </div>
@@ -108,17 +116,17 @@
             <tbody>
                 <tr>
                     <td></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_0" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_1" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_2" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_3" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_4" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_5" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_6" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_7" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_8" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_9" maxlength="1"></td>
-                    <td><input class="whole_line" type="text" pattern="\d" name="pesel_10" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_0" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_1" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_2" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_3" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_4" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_5" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_6" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_7" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_8" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_9" maxlength="1"></td>
+                    <td><input class="whole_line not-dotted" type="text" pattern="\d" name="pesel_10" maxlength="1"></td>
                 </tr>
             </tbody>
         </table>
@@ -127,7 +135,7 @@
         <span>nazwa i numer dokumentu  stwierdzającego tożsamość osoby, której nie nadano PESEL</span>
     </div>
     <div class="col-md-2">
-        <input type="text" name="other_pesel" class="whole_line">
+        <input type="text" name="other_pesel" class="whole_line not-dotted">
     </div>
 </div>
 <div class="row">
@@ -138,13 +146,13 @@
         <span>miejscowość</span>
     </div>
     <div class="col-md-5">
-        <input type="text" name="miejscowosc" class="whole_line">
+        <input type="text" name="miejscowosc" class="whole_line not-dotted">
     </div>
     <div class="col-md-2 text-right">
         <span>kod pocztowy</span>
     </div>
     <div class="col-md-2">
-        <input type="text" maxlength="6" name="postal" class="whole_line">
+        <input type="text" maxlength="6" name="postal" class="whole_line not-dotted">
     </div>
 </div>
 <div class="row">
@@ -152,13 +160,13 @@
         <span>ulica</span>
     </div>
     <div class="col-md-5">
-        <input name="ulica" type="text" class="whole_line">
+        <input name="ulica" type="text" class="whole_line not-dotted">
     </div>
     <div class="col-md-2 text-right">
         <span>numer domu/mieszkania</span>
     </div>
     <div class="col-md-4">
-        <input type="text" name="numer_domu" class="whole_line">
+        <input type="text" name="numer_domu" class="whole_line not-dotted">
     </div>
 </div>
 <div class="row">
@@ -176,30 +184,34 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-1">
-        <span><strong>Padaczka</strong></span>
-    </div>
-    <div class="col-md-1"><input type="checkbox" name="padaczka"></div>
-    <div class="col-md-1"><span>data rozpoznania:</span></div>
-    <div class="col-md-1"><input type="text" name="data_rozpoznania" class="whole_line"></div>
-    <div class="col-md-2"><span>lekarz prowadzący leczenie padaczki:</span></div>
-    <div class="col-md-1"><input type="text" name="lekarz_prowadzacy" class="whole_line"></div>
-    <div class="col-md-2"><span>podmiot wykonujący działalność leczniczą:</span></div>
-    <div class="col-md-1"><input type="text" name="data_rozpoznania" class="whole_line"></div>
-    <div class="col-md-1"><span>poradnia neurologiczna:</span></div>
-    <div class="col-md-1"><input type="text" name="data_rozpoznania" class="whole_line"></div>
+    <table class="table" id="padaczka-table">
+        <tbody>
+            <tr>
+                <td><strong>Padaczka</strong></td>
+                <td style="height:75px; width: 50px; border: 1px solid black;"><textarea type="text" name="padaczka" class="not-dotted"></textarea></td>
+                <td><span>data rozpoznania:</span></td>
+                <td style="height:85px; width: 75px; border: 1px solid black;"><textarea data-toggle="datepicker" type="text" name="data_rozpoznania" class="not-dotted"></textarea></td>
+                <td><span>lekarz prowadzący leczenie padaczki:</span></td>
+                <td style="height:75px; width: 100px; border: 1px solid black;"><textarea type="text" name="lekarz_prowadzacy" class="not-dotted"></textarea></td>
+                <td><span style="width:50px;">podmiot wykonujący działalność leczniczą:</span></td>
+                <td style="height:75px; width: 75px; border: 1px solid black;"><textarea type="text" name="podmiot" class="not-dotted"></textarea></td>
+                <td><span>poradnia neurologiczna:</span></td>
+                <td style="height:75px; width: 100px; border: 1px solid black;"><textarea type="text" name="poradnia" class="not-dotted"></textarea></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <div class="row">
-    <div class="col-md-6 border">
+    <div class="col-md-6 border" style="border-right: none;">
         <div class="row">
-            <div class="col-md-2"><span>zespół padaczkowy</span></div>
-            <div class="col-md-10"><input type="text" class="whole_line" name="zespol_padaczkowy"></div>
+            <div class="col-md-12"><span>zespół padaczkowy</span></div>
+            <div class="col-md-12"><textarea style="height: 100px;" class="whole_line" name="zespol_padaczkowy"></textarea></div>
         </div>
     </div>
     <div class="col-md-6 border">
         <div class="row">
-            <div class="col-md-2"><span>rodzaj napadów</span></div>
-            <div class="col-md-10"><input type="text" class="whole_line" name="rodzaj_napadów"></div>
+            <div class="col-md-12"><span>rodzaj napadów</span></div>
+            <div class="col-md-12"><textarea style="height: 100px;" class="whole_line" name="rodzaj_napadów"></textarea></div>
         </div>
     </div>
 </div>
@@ -210,42 +222,43 @@
                 <span>dane dotyczące przeprowadzonej diagnostyki (wyniki przeprowadzonych badań obrazowych)</span>
             </div>
             <div class="col-md-12">
-                <textarea name="wyniki" rows="3" class="whole_line"></textarea>
+                <textarea name="wyniki" style="height: 200px;" class="whole_line"></textarea>
             </div>
         </div>
     </div>
 </div>
+<div style="page-break-after: always"></div>
 <div class="row">
-    <div class="col-md-12 border">
+    <div class="col-md-12 border no-bottom-border">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-12">
                 <span>czas trwania choroby</span>
             </div>
-            <div class="col-md-10"><textarea rows="3" name="czas_trwania" class="whole_line"></textarea></div>
+            <div class="col-md-12"><textarea style="height: 200px;" name="czas_trwania" class="whole_line"></textarea></div>
         </div>
     </div>
-    <div class="col-md-12 border">
+    <div class="col-md-12 border no-bottom-border">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-12">
                 <span>przebieg choroby (w tym data ostatniego napadu)</span>
             </div>
-            <div class="col-md-10"><textarea rows="3" name="czas_trwania" class="whole_line"></textarea></div>
+            <div class="col-md-12"><textarea style="height: 150px;" name="czas_trwania" class="whole_line"></textarea></div>
         </div>
     </div>
-    <div class="col-md-12 border">
+    <div class="col-md-12 border no-bottom-border">
         <div class="row">
             <div class="col-md-12">
                 <span>przebieg i rodzaj leczenia, a jeżeli odstawiono leczenie - data odstawienia leczenia</span>
             </div>
-            <div class="col-md-12"><textarea rows="3" name="przebieg" class="whole_line"></textarea></div>
+            <div class="col-md-12"><textarea style="height: 150px;" name="przebieg" class="whole_line"></textarea></div>
         </div>
     </div>
-    <div class="col-md-12 border">
+    <div class="col-md-12 border no-bottom-border">
         <div class="row">
             <div class="col-md-12">
                 <span>współistniejące schorzenia mające wpływ na przebieg choroby</span>
             </div>
-            <div class="col-md-12"><textarea rows="3" name="wspolistniejace" class="whole_line"></textarea></div>
+            <div class="col-md-12"><textarea style="height: 150px;" name="wspolistniejace" class="whole_line"></textarea></div>
         </div>
     </div>
     <div class="col-md-12 border">
@@ -253,18 +266,19 @@
             <div class="col-md-12">
                 <span>uwagi dotyczące przewlekłych powikłań choroby</span>
             </div>
-            <div class="col-md-12"><textarea rows="4" name="uwagi_powiklania" class="whole_line"></textarea></div>
+            <div class="col-md-12"><textarea style="height: 200px;" name="uwagi_powiklania" class="whole_line"></textarea></div>
         </div>
     </div>
 </div>
+<div style="page-break-after: always"></div>
 <div class="row">
-    <div class="col-md-12 border">
+    <div class="col-md-12 border no-bottom-border">
         <div class="row">
             <div class="col-md-12">
                 <span>okres, w którym badany nie może kierować pojazdem od</span>
-                <input class="dotted" type="text" data-toggle="datepicker" name="zakaz_od">
+                <input class="dotted" style="margin-bottom: 10px;"  type="text" data-toggle="datepicker" name="zakaz_od">
                 <span>do</span>
-                <input class="dotted" type="text" data-toggle="datepicker" name="zakaz_do">
+                <input class="dotted" style="margin-bottom: 10px;" type="text" data-toggle="datepicker" name="zakaz_do">
             </div>
         </div>
     </div>
@@ -273,7 +287,7 @@
             <div class="col-md-12">
                 <span>wymagania dalszej obserwacji</span>
             </div>
-            <div class="col-md-12"><textarea rows="4" name="wymagania_obserwacji" class="whole_line"></textarea></div>
+            <div class="col-md-12"><textarea style="height: 200px;" name="wymagania_obserwacji" class="whole_line"></textarea></div>
         </div>
     </div>
 </div>
@@ -284,20 +298,21 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
-        <input type="text" name="inne_uwagi" class="whole_line">
+    <div class="col-md-12 border">
+        <textarea style="height: 100px;" name="inne_uwagi" class="whole_line"></textarea>
     </div>
 </div>
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-4">
-        <input style="width:100%" type="text" data-toggle="datepicker" class="dotted" name="today_date">
+        <input style="width:100%" type="text" data-toggle="datepicker" class="dotted whole-line" name="today-date">
     </div>
     <div class="col-md-2"></div>
     <div class="col-md-4">
-        <input style="width:100%" type="text" name="podpis" class="dotted">
+        <input style="width:100%" type="text" name="podpis" class="dotted whole-line">
     </div>
-    <div class="col-md-1"></div>
+</div>
+<div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-4 text-center">
         <span>(data sporządzenia opinii)</span>
