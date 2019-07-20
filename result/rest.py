@@ -3,9 +3,8 @@ import os
 
 import datetime
 
-from django.db.models import Q, Sum, Count
+from django.db.models import Count
 from django.http import HttpResponse, HttpResponseNotFound
-from elasticsearch_dsl import Search
 from rest_framework import serializers, viewsets
 from django_redis import get_redis_connection
 from rest_framework.decorators import action
