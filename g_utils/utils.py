@@ -33,3 +33,6 @@ def get_birth_date_from_pesel(pesel):
         birth_date = '19' + birth_date
     return datetime.strptime(birth_date, '%Y%m%d')
 
+
+def merge_jpgs_into_pdf(jpg_files):
+    pass

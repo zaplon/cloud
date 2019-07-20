@@ -2,7 +2,7 @@ import json
 import os
 
 import datetime
-from django.conf.urls import url, include
+
 from django.db.models import Q, Sum, Count
 from django.http import HttpResponse, HttpResponseNotFound
 from elasticsearch_dsl import Search
@@ -141,3 +141,17 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
         else:
             return HttpResponseNotFound()
 
+    @action(detail=False, methods=['post'])
+    def add_images(self, request, *args, **kwargs):
+        try:
+            patient_id = request.data['patient_id']
+        except KeyError:
+            return HttpResponse(status=400)
+        for file in request.FILES.getlist('files[]'):
+            r = Result()
+            r.uploaded_by = self.request.user
+            r.patient_id = patient_id
+            r.name = request.data.get('name', 'Dokument')
+            r.save()
+            r.file.save(file.name, file.file)
+        return HttpResponse()

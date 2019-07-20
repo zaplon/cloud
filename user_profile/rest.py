@@ -8,13 +8,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 from django.contrib.auth.models import User, Permission, Group
 from django.conf import settings
 
 from g_utils.rest import SearchMixin
-from timetable.models import Service
+from timetable.models import Service, Term
 from .models import Doctor, Patient, Note, Specialization, SystemSettings
-from datetime import datetime
+from datetime import datetime, date, timezone
 
 
 # Serializers define the API representation.
@@ -46,6 +47,18 @@ class PatientViewSet(SearchMixin, viewsets.ModelViewSet):
             return PatientAutocompleteSerializer
         else:
             return self.serializer_class
+
+    @action(detail=False, methods=['get'])
+    def last_served(self, request, *args, **kwargs):
+        today = date.today()
+        now = datetime.now(timezone.utc)
+        terms = Term.objects.filter(doctor__user=request.user, datetime__date=today, patient__isnull=False)
+        if not terms:
+            return Response(status=404)
+        closest_term = min(list(terms), key=lambda x: abs(x.datetime - now))
+        data = PatientSerializer(instance=closest_term.patient).data
+        return Response(data=data)
+
 
 
 # Serializers define the API representation.
@@ -104,6 +117,7 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     name = CharField(source='get_name')
     working_hours = ListField(source='get_working_hours')
     default_service = serializers.SerializerMethodField()
+    default_archive_category = serializers.SerializerMethodField()
     has_many_services = serializers.SerializerMethodField()
     specializations = serializers.PrimaryKeyRelatedField(many=True, queryset=Specialization.objects.all())
 
@@ -111,13 +125,18 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
                   'total_prescriptions', 'visit_duration', 'default_service', 'has_many_services',
-                  'specializations', 'show_weekends')
+                  'specializations', 'show_weekends', 'default_archive_category')
 
     def get_default_service(self, obj):
         doctor_services = Service.objects.filter(doctors__in=[obj])
         if doctor_services.count() == 1:
             s = doctor_services.first()
             return {'id': s.id, 'name': s.name}
+
+    def get_default_archive_category(self, obj):
+        s = obj.specializations.first()
+        if s:
+            return SpecializationSerializer(instance=s).data
 
     def get_has_many_services(self, obj):
         return Service.objects.filter(doctors__in=[obj]).count() > 1
