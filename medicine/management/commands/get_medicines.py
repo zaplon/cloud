@@ -17,10 +17,10 @@ class Command(BaseCommand):
     file_name = "meds.xml"
     xml_to_medicine_parent_dict = {
         'nazwaProduktu': 'name', 'moc': 'dose', 'postac': 'form', 'nazwaPowszechnieStosowana': 'inn',
-        'podmiotOdpowiedzialny': 'mah', 'numerPozwolenia': 'permission_nr'
+        'podmiotOdpowiedzialny': 'mah', 'numerPozwolenia': 'permission_nr', 'id': 'external_id'
     }
     xml_to_medicine_dict = {
-        'kodEAN': 'ean', 'kategoriaDostepnosci': 'availability_cat'
+        'kategoriaDostepnosci': 'availability_cat', 'id': 'external_id'
     }
 
     def add_arguments(self, parser):
@@ -42,11 +42,11 @@ class Command(BaseCommand):
             to_delete = False
             if med.attrib.get('status') == 'Usuniety':
                 to_delete = True
-            data = {}
+            data = {'in_use': not to_delete}
             active_substances = med.findall('.//{%s}substancjaCzynna' % namespace)
             substances = []
             for substance in active_substances:
-                if substance:
+                if substance.text:
                     substances.append(substance.text)
             if substances:
                 data['composition'] = ' '.join(substances)
@@ -56,18 +56,20 @@ class Command(BaseCommand):
             sizes = med.findall('.//{%s}opakowanie' % namespace)
             if sizes:
                 for child in sizes:
-                    if to_delete:
-                        Medicine.objects.filter(ean=data['ean']).update(in_use=False)
+                    data = {'ean': child.attrib.get('kodEAN', ''), 'in_use': True}
+                    if child.attrib.get('skasowane', 'NIE') == 'TAK':
+                        Medicine.objects.filter(external_id=child.attrib['id']).update(in_use=False)
                         continue
                     for xml_field, db_field in self.xml_to_medicine_dict.items():
                         data[db_field] = child.attrib.get(xml_field, '')
-                    data['size'] = '%s %s' % (child.attrib.get('wielkosc'), child.attrib.get('jednostkaWielkosci'))
                     data['parent'] = parent
-                    Medicine.objects.update_or_create(ean=data['ean'], defaults=data)
-                    print(data)
+                    data['size'] = '%s %s' % (child.attrib.get('wielkosc'), child.attrib.get('jednostkaWielkosci'))
+                    Medicine.objects.update_or_create(external_id=data['external_id'], defaults=data)
 
     def handle(self, *args, **options):
         import_type = options['import_type']
         self.get_file(import_type)
+        if import_type == 'FULL':
+            MedicineParent.objects.all().update(in_use=False)
         self.parse_file()
 

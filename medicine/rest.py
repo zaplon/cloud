@@ -38,7 +38,7 @@ class MedicineParentSerializer(serializers.ModelSerializer):
 
 # ViewSets define the view behavior.
 class MedicineParentViewSet(SearchMixin, viewsets.ModelViewSet):
-    queryset = MedicineParent.objects.all()
+    queryset = MedicineParent.objects.filter(in_use=True)
     serializer_class = MedicineParentSerializer
     lookup_field = 'pk'
 
