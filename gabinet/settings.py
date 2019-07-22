@@ -272,6 +272,8 @@ RESULTS_PDF_KEY_PATTERN = 'result:%s:%s'
 RESULTS_PDF_TTL = 60 * 60
 
 SMS_VERIFICATION = True
+SMS_API_LOGIN = ''
+SMS_API_PASSWORD = ''
 
 CELERY_BROKER_URL = 'amqp://rabbitmq:rabbitmq@rabbitmq'
 # Celery settings
