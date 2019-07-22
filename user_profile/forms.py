@@ -59,6 +59,7 @@ class UserForm(forms.Form):
         user.last_name = self.data['last_name']
         user.email = self.data['email']
         user.profile.mobile = self.cleaned_data['mobile']
+        user.profile.save()
         user.save()
 
 
@@ -96,7 +97,7 @@ class DoctorForm(forms.Form):
                                  'visit_duration': u.doctor.visit_duration,
                                  'show_weekends': u.doctor.show_weekends,
                                  # 'css_theme': u.profile.css_theme,
-                                 'mobile': u.doctor.mobile, 'pwz': u.doctor.pwz, 'title': u.doctor.title}
+                                 'mobile': u.profile.mobile, 'pwz': u.doctor.pwz, 'title': u.doctor.title}
         super(DoctorForm, self).__init__(*args, **kwargs)
         self.fields['factory_specializations'].choices = [(s.id, s.name) for s in Specialization.objects.all()]
         if 'initial' in kwargs:
@@ -133,7 +134,7 @@ class DoctorForm(forms.Form):
         user.last_name = self.data['last_name']
         user.email = self.data['email']
         user.doctor.pwz = self.data['pwz']
-        user.doctor.mobile = self.cleaned_data['mobile']
+        user.profile.mobile = self.cleaned_data['mobile']
         user.doctor.visit_duration = self.cleaned_data['visit_duration']
         user.doctor.show_weekends = self.cleaned_data['show_weekends']
         # user.profile.css_theme = self.cleaned_data['css_theme']

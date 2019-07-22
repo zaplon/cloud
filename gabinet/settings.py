@@ -271,6 +271,8 @@ OLD_PASSWORD_FIELD_ENABLED = True
 RESULTS_PDF_KEY_PATTERN = 'result:%s:%s'
 RESULTS_PDF_TTL = 60 * 60
 
+SMS_VERIFICATION = True
+
 CELERY_BROKER_URL = 'amqp://rabbitmq:rabbitmq@rabbitmq'
 # Celery settings
 from .tasks import *

@@ -5,9 +5,11 @@ from xml.dom import minidom
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
+from rest_auth.views import LoginView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from user_profile.sms_verification import send_verification_code
 from .forms import *
 from g_utils.forms import ajax_form_validate
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -129,3 +131,4 @@ class AddPrescriptionNumbersView(APIView):
         return Response(status=200, data={
             'available': PrescriptionNumber.available(doctor),
             'total': PrescriptionNumber.total(doctor)}, content_type='application/json')
+

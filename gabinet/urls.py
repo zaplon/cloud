@@ -20,6 +20,7 @@ from django.contrib import admin
 
 from agreements.api.agreements import AgreementApiView, AgreementToUserApiView
 from examination.rest import ExaminationViewSet, ExaminationCategoryViewSet
+from user_profile.sms_verification import GabinetLoginView, SMSCodeViewSet, SMSValidationView
 from visit.rest import IcdViewSet, TemplateViewSet, VisitViewSet, TabViewSet, PopularIcdViewSet
 from result.rest import ResultViewSet
 from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet, TermlistView
@@ -60,6 +61,7 @@ router.register(r'examinations_categories', ExaminationCategoryViewSet, base_nam
 router.register(r'settings', SystemSettingsViewSet, base_name='settings')
 router.register(r'agreements', AgreementApiView, base_name='agreements')
 router.register(r'agreements_to_users', AgreementToUserApiView, base_name='agreements_to_users')
+router.register(r'sms', SMSCodeViewSet, base_name='sms')
 
 
 urlpatterns = [
@@ -74,6 +76,8 @@ urlpatterns = [
 
     re_path(r'^rest/stats/', Stats.as_view(), name='stats-rest'),
     re_path(r'^rest/user/', UserDetailsView.as_view(), name='user-details'),
+    re_path(r'^rest/sms/validate_code', SMSValidationView.as_view(), name='sms-validate'),
+
     re_path(r"^rest/", include((router.urls, 'rest'), namespace='rest')),
 
     re_path(r'^pdf/', PDFView.as_view(), name='generate-pdf'),
@@ -83,6 +87,7 @@ urlpatterns = [
     re_path(r"^forms/", include('forms.urls'), name='forms'),
     re_path(r"^backend/forms/", include('forms.urls'), name='forms'),
     re_path(r"^agreements/", include('agreements.urls'), name='agreements'),
+    re_path(r"^rest-auth/login/$", GabinetLoginView.as_view(), name="login"),
     re_path(r'^rest-auth/', include('rest_auth.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

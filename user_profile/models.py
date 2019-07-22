@@ -21,7 +21,7 @@ class Profile(models.Model):
         ('materia', 'Materia')
     )
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
-    mobile = models.IntegerField(blank=True, null=True)
+    mobile = models.IntegerField(blank=False, null=True)
     role = models.CharField(choices=(('doctor', _('Lekarz')), ('worker', _('Pracownik'))), max_length=10)
     css_theme = models.CharField(choices=CssThemeChoices, default='yeti', max_length=10)
 
@@ -195,3 +195,9 @@ class SystemSettings(models.Model):
 
     def __str__(self):
         return 'Ustawienia systemowe'
+
+
+class MobileCode(models.Model):
+    code = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(auto_now_add=True)
