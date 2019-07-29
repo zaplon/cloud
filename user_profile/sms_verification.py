@@ -24,7 +24,7 @@ from django.conf import settings
 
 def send_verification_code(user):
     code = MobileCode.objects.create(user=user, code=random.randint(100000, 999999))
-    message = f'Hasło weryfikacyjne do systemu Gabinet ważne przez 15 minut: {code}'
+    message = f'Hasło weryfikacyjne do systemu Gabinet ważne przez 15 minut: {code.code}'
     send_sms(user.profile.mobile, message)
 
 
