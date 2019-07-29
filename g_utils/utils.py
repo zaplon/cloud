@@ -35,13 +35,15 @@ def get_birth_date_from_pesel(pesel):
         birth_date = '19' + birth_date
     return datetime.strptime(birth_date, '%Y%m%d')
 
+
 def send_sms(mobile, message):
     mobile = '504485575'
     if settings.SMS_VERIFICATION:
         params = {'login': settings.SMS_API_LOGIN, 'haslo': settings.SMS_API_PASSWORD,
-                  'akcja': 'wyslij_sms', 'nadawca': 'Gabinet Online',
+                  'akcja': 'wyslij_sms',
                   'numer': '+48' + str(mobile), 'wiadomosc': message}
         res = requests.get('https://api1.serwersms.pl/zdalnie/index.php', params)
+
 
 def merge_jpgs_into_pdf(jpg_files):
     pass
