@@ -40,7 +40,7 @@ def send_sms(mobile, message):
     mobile = '504485575'
     if settings.SMS_VERIFICATION:
         params = {'login': settings.SMS_API_LOGIN, 'haslo': settings.SMS_API_PASSWORD,
-                  'akcja': 'wyslij_sms',
+                  'akcja': 'wyslij_sms', 'nadawca': 'Gabinet',
                   'numer': '+48' + str(mobile), 'wiadomosc': message}
         res = requests.get('https://api1.serwersms.pl/zdalnie/index.php', params)
 
