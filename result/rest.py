@@ -2,6 +2,7 @@ import json
 import os
 
 import datetime
+import tempfile
 
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseNotFound
@@ -10,6 +11,7 @@ from django_redis import get_redis_connection
 from rest_framework.decorators import action
 
 from g_utils.rest import SearchMixin
+from g_utils.utils import merge_jpgs_into_pdf
 from user_profile.models import Patient, Doctor, Specialization, User
 from visit.models import Visit
 from .models import Result, ResultIndex
@@ -140,19 +142,37 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
         else:
             return HttpResponseNotFound()
 
+    def save_image(self, file, file_name, patient_id, request):
+        r = Result()
+        r.uploaded_by = self.request.user
+        r.patient_id = patient_id
+        r.name = request.data.get('name', 'Dokument')
+        if request.data.get('category_id'):
+            r.category_id = request.data['category_id']
+        r.save()
+        r.file.save(file_name, file)
+
     @action(detail=False, methods=['post'])
     def add_images(self, request, *args, **kwargs):
         try:
             patient_id = request.data['patient_id']
         except KeyError:
             return HttpResponse(status=400)
-        for file in request.FILES.getlist('files[]'):
-            r = Result()
-            r.uploaded_by = self.request.user
-            r.patient_id = patient_id
-            r.name = request.data.get('name', 'Dokument')
-            if request.data.get('category_id'):
-                r.category_id = request.data['category_id']
-            r.save()
-            r.file.save(file.name, file.file)
+        files = request.FILES.getlist('files[]')
+        if request.data.get('merge'):
+            tmp_files = []
+            for file in files:
+                temp = tempfile.NamedTemporaryFile()
+                temp.write(file.read())
+                temp.seek(0)
+                tmp_files.append(temp)
+            file_name = merge_jpgs_into_pdf([tmp_file.name for tmp_file in tmp_files])
+            for tmp_file in tmp_files:
+                tmp_file.close()
+            file = open(file_name, 'rb')
+            self.save_image(file, file_name, patient_id, request)
+            file.close()
+            return HttpResponse()
+        for file in files:
+            self.save_image(file.file, file.name, patient_id, request)
         return HttpResponse()

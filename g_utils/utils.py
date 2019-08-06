@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import img2pdf
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -46,4 +47,7 @@ def send_sms(mobile, message):
 
 
 def merge_jpgs_into_pdf(jpg_files):
-    pass
+    name = 'dokument_%s.pdf' % datetime.now().strftime('%s')
+    with open(name, "wb") as f:
+        f.write(img2pdf.convert(jpg_files))
+    return f.name

@@ -59,7 +59,7 @@ class PopularIcdViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         q = super(PopularIcdViewSet, self).get_queryset()
         q = q.filter(visits__term__doctor=self.request.user.doctor)
-        q = q.annotate(use_count=Count('visits__term__doctor__id')).order_by('use_count')
+        q = q.annotate(use_count=Count('visits__term__doctor__id')).order_by('-use_count')
         return q
 
 
