@@ -158,7 +158,9 @@ class PDFView(APIView, PDFTemplateView):
         'default': {'page-size': 'A4', 'orientation': 'Portrait', 'dpi': 300, 'zoom': 1,
                     'margin-top': 0, 'margin-left': 0, 'margin-right': 0, 'margin-bottom': 0},
         'examinations': {'page-width': 70, 'page-height': 210,
-                         'margin-top': 10, 'margin-left': 5, 'margin-right': 5, 'margin-bottom': 10}
+                         'margin-top': 10, 'margin-left': 5, 'margin-right': 5, 'margin-bottom': 10},
+        'visit_notes': {'page-width': 70, 'page-height': 210,
+                        'margin-top': 10, 'margin-left': 5, 'margin-right': 5, 'margin-bottom': 10}
     }
     data = {}
 

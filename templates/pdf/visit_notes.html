@@ -1,0 +1,47 @@
+{% extends 'pdf/base.html' %}
+{% load static %}
+
+{% block header %}
+    <img class="mb-2" src="{{ APP_URL }}assets/img/logo.jpg"/>
+    <div class="container">
+        <div class="row">
+            <div class="col col-md-12 text-left font-lg">
+                {{ header_left|linebreaks }}
+            </div>
+        </div>
+    </div>
+    <table class="table" style="margin-top: 4rem; margin-bottom: 2rem;">
+        <tbody>
+        <tr>
+            <td>Nazwisko</td>
+            <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+        </tr>
+        <tr>
+            <td>Pesel</td>
+            <td>{{ patient.pesel|default:'-' }}</td>
+        </tr>
+        <tr>
+            <td>Data</td>
+            <td>{% now "Y-m-d" %}</td>
+        </tr>
+        </tbody>
+    </table>
+    <h5 class="text-center mt-2" style="text-align:center;"><strong>{{title}}</strong></h5>
+    {% if icd %}
+        <p>Rozpoznanie:</p>
+        {% for i in icd %}
+            {{ i.code }}{% if forloop.last %}{% else %}, {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <p>{{ text }}</p>
+{% endblock %}
+
+{% block footer %}
+    <p style="text-align: right; margin-top: 6rem;">
+        {{ user.doctor.title }} {{ user.doctor.user.first_name }} {{ user.doctor.user.last_name }} <br/>
+        numer PWZ: {{ user.doctor.pwz }}
+    </p>
+{% endblock %}
