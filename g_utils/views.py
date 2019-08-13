@@ -174,7 +174,8 @@ class PDFView(APIView, PDFTemplateView):
         res.render()
         f.write(res.content)
         f.close()
-        save_document(self.data['name'], self.data['patient']['id'], file_name, request.user)
+        if not self.data.get('skip_saving'):
+            save_document(self.data['name'], self.data['patient']['id'], file_name, request.user)
         return HttpResponse(settings.MEDIA_URL + 'tmp/pdf/' + name)
 
     def get_cmd_options(self):
