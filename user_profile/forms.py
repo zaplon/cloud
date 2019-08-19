@@ -83,7 +83,7 @@ class DoctorForm(forms.Form):
     form_class = forms.CharField(max_length=50, initial='DoctorForm', widget=HiddenInput(), required=False)
     visit_duration = forms.IntegerField(min_value=5, required=True, label='Czas trwania wizyty',
                                         help_text='Liczba minut przypadających na jedną wizytę')
-    show_weekends = forms.BooleanField(label=u'Pokaż weekendy na kalendarzu', required=False)
+    # show_weekends = forms.BooleanField(label=u'Pokaż weekendy na kalendarzu', required=False)
     # css_theme = forms.ChoiceField(label=u'Styl interfejsu', choices=Profile.CssThemeChoices, required=False)
     factory_specializations = forms.MultipleChoiceField(label=u'Specjalizacje', required=False,
                                                         help_text=u'Zaznacz kilka pozycji trzymając wciśnięty klawisz CTRL')
@@ -95,7 +95,7 @@ class DoctorForm(forms.Form):
             u = kwargs['initial'].pop('user')
             kwargs['initial'] = {'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email,
                                  'visit_duration': u.doctor.visit_duration,
-                                 'show_weekends': u.doctor.show_weekends,
+                                 # 'show_weekends': u.doctor.show_weekends,
                                  # 'css_theme': u.profile.css_theme,
                                  'mobile': u.profile.mobile, 'pwz': u.doctor.pwz, 'title': u.doctor.title}
         super(DoctorForm, self).__init__(*args, **kwargs)
@@ -136,7 +136,7 @@ class DoctorForm(forms.Form):
         user.doctor.pwz = self.data['pwz']
         user.profile.mobile = self.cleaned_data['mobile']
         user.doctor.visit_duration = self.cleaned_data['visit_duration']
-        user.doctor.show_weekends = self.cleaned_data['show_weekends']
+        # user.doctor.show_weekends = self.cleaned_data['show_weekends']
         # user.profile.css_theme = self.cleaned_data['css_theme']
         user.save()
         user.profile.save()

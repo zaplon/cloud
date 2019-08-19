@@ -125,7 +125,7 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
         model = Doctor
         fields = ('mobile', 'pwz', 'terms_start', 'terms_end', 'name', 'id', 'working_hours', 'available_prescriptions',
                   'total_prescriptions', 'visit_duration', 'default_service', 'has_many_services',
-                  'specializations', 'show_weekends', 'default_archive_category')
+                  'specializations', 'default_archive_category')
 
     def get_default_service(self, obj):
         doctor_services = Service.objects.filter(doctors__in=[obj])
