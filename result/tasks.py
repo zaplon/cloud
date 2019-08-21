@@ -32,6 +32,6 @@ def generate_results_pdf(patient_id, period):
     file_name = os.path.join(output_dir, '%s.pdf' % ts)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    subprocess.check_output(["pdftk", pdfs.join(' '), 'cat', 'output', file_name], stderr=subprocess.STDOUT)
+    subprocess.check_output(["pdftk", ' '.join(pdfs), 'cat', 'output', file_name], stderr=subprocess.STDOUT)
     file_url = 'media/merged_results/%s.pdf' % ts
     redis.set(settings.RESULTS_PDF_KEY_PATTERN % (patient_id, period), file_url, settings.RESULTS_PDF_TTL)
