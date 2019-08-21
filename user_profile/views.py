@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 import zipfile
 from xml.dom import minidom
 
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
-from rest_auth.views import LoginView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from user_profile.sms_verification import send_verification_code
 from .forms import *
 from g_utils.forms import ajax_form_validate
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 import json
-from .models import Doctor, PrescriptionNumber
-from django.contrib.auth.models import User
+from .models import PrescriptionNumber
+
 
 
 class SettingsView(View):
@@ -68,6 +67,7 @@ class SettingsView(View):
                 if change_range:
                     doctor.terms_start = minimum
                     doctor.terms_end = maximum
+                    doctor.terms_generated_till = datetime.today().date()
                 doctor.working_hours = request.POST['days']
                 doctor.save()
                 return HttpResponse(json.dumps({'success': True}), status=200, content_type='application/json')
