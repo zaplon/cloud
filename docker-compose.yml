@@ -32,7 +32,7 @@ services:
       - ./:/app/:Z
     environment:
       DJANGO_SETTINGS_MODULE: docker_settings
-    command: [celery, worker, --app=gabinet.tasks, --concurrency=2, --loglevel=INFO]
+    command: [celery, worker, --app=gabinet.tasks, --concurrency=2, --loglevel=DEBUG]
     depends_on:
       - rabbitmq
   mysql:
