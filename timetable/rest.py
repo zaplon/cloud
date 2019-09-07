@@ -6,7 +6,6 @@ from rest_framework.fields import CharField
 from rest_framework.permissions import AllowAny
 
 from g_utils.rest import SearchMixin
-from result.rest import ResultSerializer
 from user_profile.models import Doctor, Patient
 from user_profile.rest import PatientSerializer, DoctorSerializer
 from .models import Term, Service, Localization
