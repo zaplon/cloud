@@ -26,6 +26,9 @@ class PatientSerializer(serializers.ModelSerializer):
         model = Patient
         fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address', 'name_with_pesel', 'info')
 
+    def get_prescriptions(self, instance):
+        pass
+
 
 class PatientAutocompleteSerializer(serializers.ModelSerializer):
     label = CharField(source='name_with_pesel')
@@ -58,7 +61,6 @@ class PatientViewSet(SearchMixin, viewsets.ModelViewSet):
         closest_term = min(list(terms), key=lambda x: abs(x.datetime - now))
         data = PatientSerializer(instance=closest_term.patient).data
         return Response(data=data)
-
 
 
 # Serializers define the API representation.

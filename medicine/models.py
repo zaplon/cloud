@@ -6,6 +6,8 @@ from user_profile.models import Patient, Doctor
 
 
 class MedicineParent(models.Model):
+    class Meta:
+        ordering = ('name', )
     name = models.CharField(max_length=200)
     composition = models.TextField(blank=True, null=True)  # sklad 1 i 2
     manufacturer = models.TextField(blank=True, null=True)  # Wytworca
@@ -49,22 +51,27 @@ class Refundation(models.Model):
 
 
 class MedicineToPrescription(models.Model):
-   medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+   medicine_id = models.IntegerField(db_index=True)
    prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
-   dosage = models.CharField(max_length=128)
+   dosage = models.CharField(max_length=128, default='')
+   amount = models.CharField(max_length=128, default='')
    notes = models.CharField(max_length=128, blank=True, null=True)
    refundation = models.ForeignKey(Refundation, blank=True, null=True, on_delete=models.CASCADE)
+   prescription = models.ForeignKey('Prescription', related_name='medicines', on_delete=models.CASCADE)
 
 
 class Prescription(models.Model):
+    class Meta:
+        ordering = ('-date', )
+
     number = models.CharField(max_length=16, blank=True, null=True)
-    date = models.DateTimeField(auto_created=True)
-    medicines = models.ManyToManyField(Medicine, related_name='prescriptions', through=MedicineToPrescription)
+    date = models.DateTimeField(auto_now_add=True)
     patient = models.ForeignKey(Patient, related_name='prescriptions', on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, related_name='prescriptions', on_delete=models.CASCADE)
     nfz = models.CharField(max_length=16)
     permissions = models.CharField(max_length=16)
     number_of_medicines = models.IntegerField(default=0)
+    realisation_date = models.DateField()
     # body = models.CharField(max_length=512)
 
     def get_medicines(self):

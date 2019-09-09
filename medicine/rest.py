@@ -100,4 +100,9 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         q = super(PrescriptionViewSet, self).get_queryset()
+        if 'patient_id' in self.request.GET:
+            q = q.filter(patient_id=self.request.GET['patient_id'])
+        if 'only_filled' in self.request.GET:
+            q = q.filter(medicines__isnull=False)
+            q = q.distinct()
         return q.filter(doctor=self.request.user.doctor)

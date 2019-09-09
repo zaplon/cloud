@@ -27,12 +27,15 @@ class RefundationSerializer(serializers.ModelSerializer):
 
 
 class MedicineToPrescriptionRetrieveSerializer(serializers.ModelSerializer):
-    medicine = MedicineSerializer()
+    medicine = serializers.SerializerMethodField()
     refundation = RefundationSerializer()
 
     class Meta:
         model = MedicineToPrescription
         fields = '__all__'
+
+    def get_medicine(self, instance):
+        return MedicineSerializer(instance=Medicine.objects.get(id=instance.medicine_id)).data
 
 
 class PrescriptionRetrieveSerializer(serializers.ModelSerializer):
@@ -52,7 +55,7 @@ class MedicineToPrescriptionSerializer(serializers.ModelSerializer):
 
 
 class PrescriptionSerializer(serializers.ModelSerializer):
-    # medicines = MedicineToPrescriptionSerializer(many=True)
+    medicines = MedicineToPrescriptionSerializer(many=True)
 
     def save(self, **kwargs):
         instance = super(PrescriptionSerializer, self).save(**kwargs)
@@ -68,7 +71,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prescription
-        fields = '__all__'
+        fields = ['id', 'number', 'date', 'medicines', 'patient', 'nfz', 'permissions']
 
 
 class PrescriptionListSerializer(serializers.ModelSerializer):

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from g_utils.rest import OnlyDoctorRecords, SearchMixin
+from medicine.models import Prescription, MedicineToPrescription, Medicine
 from timetable.models import Term
 from timetable.rest import TermDetailSerializer
 from .models import Icd10, Template, Visit, VisitTab, Tab, TabTypes, IcdToVisit
@@ -174,6 +175,20 @@ class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
                 for d in tab['data']:
                     IcdToVisit.objects.create(icd_id=d['id'], custom_text=d.get('custom_text', ''), visit=visit)
             else:
+                if vt.type == TabTypes.MEDICINES.name:
+                    medicines = tab['data']['selections']
+                    prescription = tab['data']['prescription']
+                    if not tmp:
+                        p = Prescription.objects.create(doctor=doctor, number=prescription['number'], patient=term.patient,
+                                                        nfz=prescription['nfz'], permissions=prescription['permissions'],
+                                                        number_of_medicines=len(medicines),
+                                                        realisation_date=prescription['realisationDate'].split('T')[0])
+                        for m in medicines:
+                            refundation = int(m['refundation'])
+                            refundation = refundation if refundation > 0 else None
+                            MedicineToPrescription.objects.create(prescription=p, medicine_id=m['size'], dosage=m['dosage'],
+                                                                  amount=m['amount'], notes=m.get('notes', ''),
+                                                                  refundation_id=refundation)
                 vt.json = json.dumps(tab['data']) if 'data' in tab else ''
                 vt.save()
                 visit.tabs.add(vt)
