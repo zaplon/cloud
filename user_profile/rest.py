@@ -267,6 +267,7 @@ class UserSerializer(serializers.ModelSerializer):
         settings = SystemSettings.objects.first()
         return {'documents_header_left': settings.documents_header_left, 'logo': settings.logo.url,
                 'regon': settings.regon, 'nip': settings.nip,
+                'nfz_department': settings.nfz_department,
                 'documents_header_right': settings.documents_header_right}
 
     def get_all_permissions(self, instance):

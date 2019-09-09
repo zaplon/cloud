@@ -188,6 +188,7 @@ class SystemSettings(models.Model):
     documents_header_right = models.TextField(verbose_name=u'Nagłówek dokumentów (prawa strona)', blank=True)
     regon = models.CharField(max_length=14, blank=True, verbose_name=u'Numer REGON', validators=[REGONValidator()])
     nip = models.CharField(max_length=13, blank=True, verbose_name=u'Numer NIP', validators=[NIPValidator()])
+    nfz_department = models.CharField(max_length=2, default='07', verbose_name=u"Oddział NFZ")
 
     class Meta:
         verbose_name = 'Ustawienia systemowe'
