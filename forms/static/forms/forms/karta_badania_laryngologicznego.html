@@ -1,0 +1,192 @@
+<html>
+<head>
+
+    <title>Karta badania laryngologicznego</title>
+    <meta name="author" content="Jan Zapał"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/forms/css/bootstrap.css">
+
+    <script data-ignore="1" src="/assets/forms/js/jquery-3.2.1.min.js"></script>
+    <script data-ignore="1" src="/assets/forms/js/datepicker.js.min"></script>
+    <script data-ignore="1" src="/assets/forms/js/form_scripts.js"></script>
+    <link data-ignore="1" href="/assets/forms/css/form_styles.css" rel="stylesheet"/>
+    <link data-ignore="1" href="/assets/forms/css/datepicker.css.min" rel="stylesheet"/>
+    <script>
+        $(document).ready(function(){
+            var pesel = window.SPSR.params.pesel;
+            for (p in pesel){ $('input[name=pesel_' + p + ']').val(pesel[p]); }
+        })
+    </script>
+    <style>
+        ul {
+            list-style: none;
+            padding-left: 0px;
+        }
+        li {
+            margin-top: 0.5rem;
+        }
+        table {
+            margin-bottom: 0px;
+        }
+        table input {
+            width: 200px!important;
+        }
+        li input[type="text"] {
+            margin-left: 0.5rem;
+            width: 400px;
+            display: inline-block;
+        }
+        body {
+            font-size: 12px;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .aba-table .border {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        table.border td {
+            border: 1px solid black;
+            border-spacing: 0;
+        }
+        table.no-border td {
+            border: 0 !important;
+        }
+        table td:first-of-type {
+            padding-left: 0px!important;
+        }
+        .row .radio-div:first-of-type {
+            margin-left: 15px;
+        }
+        input, textarea  {
+            border: 1px solid black !important;
+            padding: 0.25cm;
+            border-bottom: 1px solid black !important;
+        }
+        .radio-div {
+            border: 1px solid black;
+            padding: 0.20cm 0.25cm;
+            text-align: center;
+        }
+        .row {
+            margin-top: 1rem;
+        }
+        table {
+            font-size: 12px;
+        }
+        .medium-input {
+            width: 50px;
+        }
+        .mt-4 { margin-top: 2rem; }
+        .mb-4 { margin-bottom: 2rem; }
+    </style>
+</head>
+<body class="page" style="height: inherit; padding: 1.0cm;">
+<div class="row">
+    <table class="document-header">
+    <tr>
+        <td><p id="document-header-left"></p></td>
+        <td><p id="document-header-right"></p></td>
+    </tr>
+</table>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="text-center mb-4">Karta badania laryngologicznego dla PMP i PDK</h1>
+    </div>
+</div>
+<div class="row">
+    <ul>
+        <li><strong>Stanowisko/Kierunek nauki:</strong><input type="text" class="form-control" name="job_position"></li>
+        <li><strong>Narażenia:</strong><input type="text" class="form-control" name="narazenia"></li>
+        <li><strong>Imię i nazwisko:</strong><input type="text" class="form-control" name="name"></li>
+        <li><strong>PESEL:</strong><input type="text" class="form-control" name="pesel"></li>
+        <li><strong>Zawroty głowy:</strong><input type="text" class="form-control" name="zawroty"></li>
+        <li><strong>Zaburzenia równowagi:</strong><input type="text" class="form-control" name="zaburzenia_rownowagi"></li>
+        <li><strong>Choroby uszu:</strong><input type="text" class="form-control" name="choroby_uszu"></li>
+        <li><strong>Inne dolegliwości:</strong><input type="text" class="form-control" name="inne_dolegliwosci"></li>
+    </ul>
+    <h2 style="margin: 2rem 0 1rem 0; text-transform: capitalize;">Badanie przedmiotowe</h2>
+    <ul>
+        <li><strong>Gardło:</strong><input type="text" class="form-control" name="gardlo"></li>
+        <li><strong>Krtań:</strong><input type="text" class="form-control" name="krtan"></li>
+        <li><strong>Nos:</strong><input type="text" class="form-control" name="nos"></li>
+
+        <li>
+            <table class="table no-border">
+                <td><strong>Otoskopia:</strong></td>
+                <td>UP:</td>
+                <td><input type="text" class="form-control" name="otroskopia_up"></td>
+                <td>UL:</td>
+                <td><input type="text" class="form-control" name="otroskopia_ul"></td>
+            </table>
+        </li>
+        <li>
+            <table class="table no-border">
+                <tr>
+                    <td><strong>Szept:</strong></td>
+                    <td>UP:</td>
+                    <td><input type="text" class="form-control" name="szept_up"></td>
+                    <td>UP:</td>
+                    <td><input type="text" class="form-control" name="szept_ul"></td>
+                </tr>
+            </table>
+        </li>
+
+        <li><strong>Oczopląs samoistny:</strong><input type="text" class="form-control" name="oczoplas"></li>
+
+        <li>
+            <table class="table no-border">
+                <tr>
+                    <td><strong>Próba Romberga:</strong></td>
+                    <td><input style="width: 300px;" type="text" class="form-control" name="proba_romberga"></td>
+                    <td><strong>Próba Romberga uczulonego:</strong></td>
+                    <td><input style="width: 300px;" type="text" class="form-control" name="proba_romberga_uczulonego"></td>
+                </tr>
+            </table>
+        </li>
+
+        <li><strong>Próba Unterberga/Fukudy:</strong><input type="text" class="form-control" name="proba_unterberga"></li>
+        <li><strong>Badanie audiometryczne słuchu:</strong><input type="text" class="form-control" name="badanie_audiometryczne"></li>
+        <li><strong>Inne badania dodatkowe:</strong><input type="text" class="form-control" name="inne_badania"></li>
+        <li>
+            <strong>Rozpoznanie:</strong><br/>
+            <input type="text" class="form-control whole_line" name="icd_text">
+            <input type="text" class="form-control whole_line" name="icd_text_2">
+        </li>
+        <li>
+            <strong>Wnioski:</strong><br/>
+            <input type="text" class="form-control whole_line" name="wnioski">
+            <input type="text" class="form-control whole_line" name="wnioski_2">
+        </li>
+    </ul>
+</div>
+<div class="row" style="margin-top: 4rem;">
+    <div class="col col-md-4 col-sm-4">
+        <input type="text" class="form-control" name="city_and_date">
+    </div>
+    <div class="col col-md-4 col-sm-4"></div>
+    <div class="col col-md-4 col-sm-4">
+        <input type="text" class="form-control" name="pieczec">
+    </div>
+
+    <div class="col col-md-4 col-sm-4 text-center">
+        <span></span>
+    </div>
+    <div class="col col-md-4 col-sm-4"></div>
+    <div class="col col-md-4 col-sm-4 text-center">
+        <span>Pieczęć i podpis lekarza</span>
+    </div>
+</div>
+</body>
+</html>
