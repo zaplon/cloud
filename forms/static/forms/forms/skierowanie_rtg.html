@@ -27,17 +27,20 @@
       </div>
       <div class="form-group">
         <label for="icd_text">Rozpoznanie</label>
-          <textarea name="icd_text" class="form-control" id="icd_text"></textarea>
+          <textarea style="height: 100px;" name="icd_list" class="form-control" id="icd_list"></textarea>
       </div>
       <div class="form-group" style="margin-top: 1cm">
-        <input type="text" name="doctor" class="form-control" id="doctor">
-        <label for="doctor">Lekarz kierujący</label>
+        <input type="text" name="doctor_name" class="form-control" id="doctor">
+        <label for="doctor_name">Lekarz kierujący</label>
       </div>
     </form>
     <div class="pull-right" style="margin-top: 1cm">
         <span id="date"></span>
     </div>
     <script>
+         $(document).on('input', 'textarea', function () {
+            $(this).outerHeight(38).outerHeight(this.scrollHeight); // 38 or '1em' -min-height
+        });
         if ($('#date').html().length == 0){
             $('#date').html(todayStr);
         }

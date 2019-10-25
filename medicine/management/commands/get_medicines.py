@@ -65,6 +65,7 @@ class Command(BaseCommand):
                     data['parent'] = parent
                     data['size'] = '%s %s' % (child.attrib.get('wielkosc'), child.attrib.get('jednostkaWielkosci'))
                     Medicine.objects.update_or_create(external_id=data['external_id'], defaults=data)
+                    print('Medicine updated: %s' % data)
 
     def handle(self, *args, **options):
         import_type = options['import_type']

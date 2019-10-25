@@ -62,6 +62,7 @@ $(document).ready(function () {
            var parts = val.split('=');
            params[parts[0]] = decodeURIComponent(parts[1]);
         });
+    params.icd_list = params.icd_text.replace(/, /g, '\n');
     console.log(params);
     window.params = params;
     for (param in params) {
