@@ -94,7 +94,7 @@ class Visit(models.Model):
         ordering = ['updated']
 
     def create_tabs(self):
-        tabs = self.term.doctor.tabs.all()
+        tabs = self.term.doctor.tabs.filter(enabled=True)
         visit_tabs = []
         for tab in tabs:
             visit_tab = VisitTab.objects.create(title=tab.title, order=tab.order, type=tab.type, visit=self)
