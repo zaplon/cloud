@@ -153,6 +153,15 @@ class GabinetPermissionRequiredMixin(PermissionRequiredMixin, AccessMixin):
     raise_exception = True
 
 
+class SaveDocumentView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(self.request.body)
+        file_path = data['path']
+        save_document(data['name'], data['patient_id'], file_path, request.user)
+        return HttpResponse()
+
+
 class PDFView(APIView, PDFTemplateView):
     documents_settings = {
         'default': {'page-size': 'A4', 'orientation': 'Portrait', 'dpi': 300, 'zoom': 1,

@@ -28,7 +28,7 @@
         </translation>
     </code>
     <title>Recepta</title>
-    <effectiveTime value="{{data_wystawienia}}"/>
+    <effectiveTime value="{{recepta.data_wystawienia}}"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
     <languageCode code="pl-PL"/>
     <setId extension="432231" root="2.16.840.1.113883.3.4424.7.2.2"/>
@@ -73,7 +73,7 @@
             </assignedPerson>
             <representedOrganization>
                 <templateId root="2.16.840.1.113883.3.4424.13.10.2.17"/>
-                <id extension="{{podmiot.id}}-001" root="2.16.840.1.113883.3.4424.2.3.2" displayable="true"/>
+                <id extension="{{podmiot.root_id}}-001" root="2.16.840.1.113883.3.4424.2.3.2" displayable="true"/>
                 <name>Poradnia POZ</name>
                 <telecom use="PUB" value="tel:22-1111123"/>
                 <addr>
@@ -85,7 +85,7 @@
                 <asOrganizationPartOf>
                     <wholeOrganization>
 						<!-- Regon przedsiębiorstwa -->
-                        <id extension="{{regon14}}" root="2.16.840.1.113883.3.4424.2.2.2" displayable="true"/>
+                        <id extension="{{podmiot.regon14}}" root="2.16.840.1.113883.3.4424.2.2.2" displayable="true"/>
                         <asOrganizationPartOf>
 						<!-- podmiot - nr ksiegi + regon podmiotu -->
                             <wholeOrganization>
@@ -143,7 +143,7 @@
                             </text>
                             <statusCode code="completed"/>
                             <effectiveTime xsi:type="IVL_TS">
-                                <low value="20171012"/>
+                                <low value="{{recepta.data_wystawienia}}"/>
                                 <high nullFlavor="NA"/>
                             </effectiveTime>
                             <repeatNumber value="1"/>

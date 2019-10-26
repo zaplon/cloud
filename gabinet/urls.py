@@ -30,7 +30,7 @@ from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDe
 from stats.rest import *
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
-from g_utils.views import AjaxFormView, PDFView
+from g_utils.views import AjaxFormView, PDFView, SaveDocumentView
 
 router = routers.DefaultRouter()
 router.register(r'icd/popular', PopularIcdViewSet)
@@ -81,6 +81,7 @@ urlpatterns = [
     re_path(r"^rest/", include((router.urls, 'rest'), namespace='rest')),
 
     re_path(r'^pdf/', PDFView.as_view(), name='generate-pdf'),
+    re_path(r'^save_document/', SaveDocumentView.as_view(), name='save-document'),
 
     re_path(r"^timetable/", include(("timetable.urls", 'timetable'), namespace='timetable')),
     re_path(r"^get-form/", AjaxFormView.as_view(), name='get-form'),

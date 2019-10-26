@@ -15,6 +15,7 @@ services:
      - rabbitmq
      - redis
      - celery
+     - prescriptions
     environment:
       DJANGO_SETTINGS_MODULE: docker_settings
       LANG: "pl_PL.UTF-8"
@@ -75,4 +76,4 @@ services:
   prescriptions:
     build: ./microservices/prescription/
     ports:
-      - "80:8082" 
+      - "8082:80"

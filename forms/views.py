@@ -59,6 +59,7 @@ class EditFormView(View):
             return HttpResponse(status=200)
         data = data.replace('<textarea', '<p')
         data = data.replace('/textarea', '/p')
+        data = data.replace('[br]', '<br/>')
 
         def repl(m):
             text = m.group(0)
@@ -93,7 +94,6 @@ class EditFormView(View):
         data = re.sub('<input[^>]+>', repl, data)
         data = re.sub('<.[^>]*data-ignore[^>]+>', '', data)
         data = re.sub('<.[^>]*datepicker-hide.*div>', '', data)
-        print(settings.BASE_DIR + '/static')
         data = data.replace("/static", settings.BASE_DIR + '/static')
         f = codecs.open(os.path.join(settings.PROJECT_DIR, 'forms', 'templates', 'forms', 'tmp', file_name), 'w', 'utf8')
         f.write(data)
@@ -123,7 +123,7 @@ class FormView(PDFTemplateView):
             project_dir = settings.PROJECT_DIR
             if template in ['ABA', 'zgoda na znieczulenie', 'karta_badania_lekarskiego', 'zaswiadczenie_okulary',
                             'skierowanie_rtg', 'oswiadczenie_dotyczace_stanu_zdrowia', 'karta_konsultacyjna_neurologiczna',
-                            'karta_badania_laryngologicznego']:
+                            'karta_badania_laryngologicznego', 'skierowanie_na_badania']:
                 style = 'bootstrap_print.css'
             else:
                 style = 'prints.css'

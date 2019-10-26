@@ -5,9 +5,9 @@ body {
   width: 7cm;
   height: 21cm;
   padding: 0.25cm;
-  font-size: 11px; }
+  font-size: 14px; }
   .small-page h1 {
-    font-size: 11px; }
+    font-size: 14px; }
 
 .cross-out {
   text-decoration: line-through !important; }
@@ -18,7 +18,7 @@ body {
 input[type='text']:not(.not-dotted) {
   border: none !important;
   border-bottom: 1px dotted black !important;
-  padding-left: 3px;
+  /*padding-left: 3px;*/
   border-radius: 0 !important;
   box-shadow: none !important; }
 

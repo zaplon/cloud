@@ -59,7 +59,8 @@ class PrescriptionClient(object):
         leki = data.pop('leki')
         for lek in leki:
             data['lek'] = lek
-            prescriptions.append(self._prepare_prescription(data))
+            prescription = self._prepare_prescription(data)
+            prescriptions.append(prescription)
         return self.client.service.zapisPakietuRecept(pakietRecept={'recepty': prescriptions})
 
 
@@ -68,22 +69,21 @@ class PrescriptionClient(object):
             template = Template(f.read())
 
         pacjent = {'pesel': '', 'imie': '', 'drugie_imie': '', 'nazwisko': '', 'kod_pocztowy': '', 'miasto': '',
-                   'numer_ulicy': '', 'numer_lokalu': '', 'ulica': ''}.update(input_data['pacjent'])
-        lek = {'nazwa': '', 'categoria': '', 'ean': '', 'tekst': '', 'postac': '', 'wielkosc': ''}.update(
-            input_data['lek'])
-        recepta = {'oddzial_nfz': '', 'uprawnienia_dodatkowe': '', 'numer_recepty': '', 'data_wystawienia': ''}.update(
-            input_data['recepta'])
-        podmiot = {'id_lokalne': settings.idPodmiotuOidExt, 'id': settings.idPodmiotuOidExt,
+                   'numer_ulicy': '', 'numer_lokalu': '', 'ulica': '', **input_data['pacjent']}
+        lek = {'nazwa': '', 'categoria': '', 'ean': '', 'tekst': '', 'postac': '', 'wielkosc': '', **input_data['lek']}
+        recepta = {'oddzial_nfz': '', 'uprawnienia_dodatkowe': '', 'numer_recepty': '', 'data_wystawienia': '',
+                   **input_data['recepta']}
+        podmiot = {'id_lokalne': settings.idPodmiotuLokalne, 'id': settings.idPodmiotuOidExt,
                    'id_root': settings.idPodmiotuOidRoot, 'miasto': '', 'numer_domu': '', 'regon14': '', 'ulica': '',
-                   'numer_domu': ''}.update(input_data['podmiot'])
-        pracownik = {'id_ext': '', 'imie': '', 'nazwisko': ''}.update(input_data['pracownik'])
+                   'numer_domu': '', **input_data['podmiot']}
+        pracownik = {'id_ext': '', 'imie': '', 'nazwisko': '', **input_data['pracownik']}
         data = {'pacjent': pacjent, 'lek': lek, 'podmiot': podmiot, 'recepta': recepta, 'pracownik': pracownik}
         prescription = template.render(data)
         with tempfile.NamedTemporaryFile() as fp:
             fp.write(prescription.encode())
             fp.seek(0)
             prescription_signed = self._sign_prescription(fp.name)
-        return {'recepta': {'identyfikatorDokumentuWPakiecie': 'aaa123', 'tresc': prescription_signed}}
+        return {'recepta': {'identyfikatorDokumentuWPakiecie': 1, 'tresc': prescription_signed}}
 
     def _sign_prescription(self, tmp_prescription):
         signed_prescription = subprocess.check_output(f'java -jar {settings.SOAP_DIR}/prescription_signer/signer.jar "{tmp_prescription}" '

@@ -11,4 +11,3 @@ def create_app():
     from . import api
     app.register_blueprint(api.bp)
     return app
-

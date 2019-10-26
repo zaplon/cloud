@@ -23,6 +23,7 @@ WSDL = os.path.join(SOAP_DIR, 'wsdl', 'ObslugaRecepty.wsdl')
 
 idPodmiotuOidRoot = '2.16.840.1.113883.3.4424.2.3.1'
 idPodmiotuOidExt = '000000926670'
+idPodmiotuLokalne = '2.16.840.1.113883.3.4424.2.7.293'
 idUzytkownikaOidRoot = '2.16.840.1.113883.3.4424.1.6.2'
 idUzytkownikaOidExt = '5992363'
 idMiejscaPracyOidRoot = '2.16.840.1.113883.3.4424.2.3.2'

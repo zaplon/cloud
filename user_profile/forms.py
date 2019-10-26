@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.forms.fields import TimeField
 from django.forms.widgets import HiddenInput
 
-from user_profile.models import Patient, Specialization, SystemSettings, Profile
+from user_profile.models import Patient, Specialization, SystemSettings
 from localflavor.pl.forms import PLPESELField
 
 
@@ -198,7 +198,8 @@ class PatientModelForm(forms.ModelForm):
     pesel = PLPESELField(label=u'Pesel', required=False)
     class Meta:
         model = Patient
-        fields = ['first_name', 'last_name', 'pesel', 'address', 'email', 'mobile', 'info']
+        fields = ['first_name', 'last_name', 'pesel', 'city', 'postal_code', 'street', 'street_number',
+                  'apartment_number', 'email', 'mobile', 'info']
 
 
 class SystemForm(forms.ModelForm):

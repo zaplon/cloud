@@ -18,10 +18,18 @@ class TermSerializer(serializers.ModelSerializer):
     title = CharField(source='get_title')
     patient = CharField(source='get_patient')
     className = CharField(source='status')
+    backgroundColor = serializers.SerializerMethodField()
+
+    def get_backgroundColor(self, instance):
+        if instance.service:
+            return instance.service.color
+        else:
+            return None
 
     class Meta:
         model = Term
-        fields = ('duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id', 'patient')
+        fields = ('duration', 'doctor', 'start', 'end', 'title', 'className', 'status', 'id', 'patient',
+                  'backgroundColor')
 
 
 class TermCreateSerializer(serializers.ModelSerializer):
@@ -61,14 +69,14 @@ class ServiceListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'color')
 
 
 class ServiceDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ('id', 'name', 'price', 'code', 'doctors')
+        fields = ('id', 'name', 'price', 'code', 'color', 'doctors')
 
 
 class ServiceViewSet(viewsets.ModelViewSet, SearchMixin):

@@ -72,6 +72,7 @@ class Prescription(models.Model):
     permissions = models.CharField(max_length=16)
     number_of_medicines = models.IntegerField(default=0)
     realisation_date = models.DateField()
+    external_id = models.CharField(max_length=128, blank=True)
     # body = models.CharField(max_length=512)
 
     def get_medicines(self):

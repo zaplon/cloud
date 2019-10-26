@@ -20,6 +20,7 @@ class Service(models.Model):
     price = models.FloatField(default=0, verbose_name=u'Cena')
     code = models.CharField(unique=True, verbose_name='Kod', max_length=10)
     doctors = models.ManyToManyField(Doctor, verbose_name=u'Lekarze', blank=True)
+    color = models.CharField(max_length=8, blank=True, default='#5bc0de')
 
     class Meta:
         verbose_name = u'Usługa'

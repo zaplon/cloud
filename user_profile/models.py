@@ -126,9 +126,15 @@ class Patient(models.Model):
     mobile = models.CharField(blank=True, null=True, verbose_name=u'Telefon', max_length=20)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100, default='', verbose_name=u'Imię')
+    second_name = models.CharField(max_length=100, default='', verbose_name=u'Drugie imię')
     last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
     pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel', unique=True)
     email = models.EmailField(blank=True, null=True, verbose_name=u'Email')
+    postal_code = models.CharField(blank=True, max_length=6, verbose_name='Kod pocztowy')
+    street = models.CharField(blank=True, max_length=200, verbose_name='Ulica')
+    street_number = models.CharField(blank=True, max_length=10, verbose_name='Numer domu')
+    apartment_number = models.CharField(blank=True, max_length=10, verbose_name='Numer lokalu')
+    city = models.CharField(blank=True, max_length=100,  verbose_name=u'Miejscowość')
     address = models.CharField(blank=True, null=True, verbose_name=u'Adres', max_length=200)
     info = models.TextField(blank=True, null=True, verbose_name=u'Ważne informacje',
                             help_text=u'Informacje pomocnicze o alergiach, przebytych zabiegach, etc...')
@@ -189,6 +195,9 @@ class SystemSettings(models.Model):
     regon = models.CharField(max_length=14, blank=True, verbose_name=u'Numer REGON', validators=[REGONValidator()])
     nip = models.CharField(max_length=13, blank=True, verbose_name=u'Numer NIP', validators=[NIPValidator()])
     nfz_department = models.CharField(max_length=2, default='07', verbose_name=u"Oddział NFZ")
+    city = models.CharField(max_length=100, blank=True, verbose_name=u'Miejscowość')
+    street = models.CharField(max_length=200, blank=True, verbose_name=u'Ulica')
+    street_number = models.CharField(max_length=10, blank=True, verbose_name=u'Numer domu')
 
     class Meta:
         verbose_name = 'Ustawienia systemowe'

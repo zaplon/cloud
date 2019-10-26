@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, serializers
 
 from g_utils.rest import SearchMixin
 from medicine.serializers import *

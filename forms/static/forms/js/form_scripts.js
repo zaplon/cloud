@@ -128,7 +128,8 @@ function getData() {
             $(i).attr('value', $(i).val());
     });
     textareas.each(function (index, t) {
-        $(t).html(t.value);
+        console.log(t.value);
+        $(t).html(t.value.replace(/\n/g, '[br]'));
     });
     selects.each(function (index, s) {
         s.outerHTML = '<span>' + $(s).val() + '</span>';
