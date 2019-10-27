@@ -84,6 +84,12 @@ class ServiceViewSet(viewsets.ModelViewSet, SearchMixin):
     permission_classes = [AllowAny]
     # pagination_class = None
 
+    def get_queryset(self):
+        q = super().get_queryset()
+        if 'only_assigned' in self.request.GET:
+            q = q.filter(doctors__isnull=False)
+        return q
+
     def get_serializer_class(self):
         if self.action == 'list':
             return ServiceListSerializer
@@ -101,15 +107,21 @@ class TermDetailSerializer(serializers.ModelSerializer):
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    doctor = serializers.CharField(source='doctor.__str__')
-    service = serializers.CharField(source='service.__str__')
+    doctor = serializers.CharField(source='doctor.name')
+    display = serializers.SerializerMethodField()
     service_id = serializers.PrimaryKeyRelatedField(source='service', queryset=Service.objects.all(), write_only=True)
-    localization = serializers.CharField(source='localization.__str__')
     patient = PatientSerializer(write_only=True)
+
+    def get_display(self, instance):
+        if instance.localization:
+            return f'{instance.doctor} {instance.localization}'
+        else:
+            return f'{instance.doctor}'
 
     class Meta:
         model = Term
-        fields = ['id', 'doctor', 'service', 'datetime', 'duration', 'status', 'localization', 'patient', 'service_id']
+        fields = ['id', 'doctor', 'service', 'datetime', 'duration', 'status', 'localization', 'patient', 'service_id',
+                  'display']
 
     def update(self, instance, validated_data):
         patient = validated_data.pop('patient')
