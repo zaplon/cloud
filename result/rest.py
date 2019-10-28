@@ -148,7 +148,7 @@ class ResultViewSet(SearchMixin, viewsets.ModelViewSet):
         r.patient_id = patient_id
         r.name = request.data.get('name', 'Dokument')
         if request.data.get('category_id'):
-            r.category_id = request.data['category_id']
+            r.specialization_id = request.data['category_id']
         r.save()
         r.file.save(file_name, file)
 
