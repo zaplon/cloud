@@ -7,6 +7,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from g_utils.rest import OnlyDoctorRecords, SearchMixin
 from medicine.models import Prescription, MedicineToPrescription, Medicine
+from medicine.serializers import PrescriptionSerializer
 from timetable.models import Term
 from timetable.rest import TermDetailSerializer
 from .models import Icd10, Template, Visit, VisitTab, Tab, TabTypes, IcdToVisit
@@ -166,7 +167,7 @@ class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
             rozpoznanie = list(filter(lambda d: d['type'] == TabTypes.ICD10.name, data))
             if len(rozpoznanie) == 0 or len(rozpoznanie[0]['data']) == 0:
                 return Response({'success': False, 'errors': {'rozpoznanie': u'Musisz podać rozpoznanie'}},
-                    content_type='application/json')
+                                content_type='application/json')
 
         for tab in data:
             vt = VisitTab.objects.get(id=tab['id'])
@@ -179,16 +180,16 @@ class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
                     medicines = tab['data']['selections']
                     prescription = tab['data']['prescription']
                     if not tmp:
-                        p = Prescription.objects.create(doctor=doctor, number=prescription['number'], patient=term.patient,
-                                                        nfz=prescription['nfz'], permissions=prescription['permissions'],
-                                                        number_of_medicines=len(medicines),
-                                                        realisation_date=prescription['realisationDate'].split('T')[0])
-                        for m in medicines:
-                            refundation = int(m['refundation'])
-                            refundation = refundation if refundation > 0 else None
-                            MedicineToPrescription.objects.create(prescription=p, medicine_id=m['size'], dosage=m['dosage'],
-                                                                  amount=m['amount'], notes=m.get('notes', ''),
-                                                                  refundation_id=refundation)
+                        Prescription.create(doctor, term.patient, prescription, medicines)
+                        # could be also unified at some point
+                        # realization_date = prescription['realisationDate'].split('T')[0]
+                        # ps = PrescriptionSerializer(data={'patient': term.patient.id, 'doctor': doctor.id,
+                        #                                   'nfz': prescription['nfz'],
+                        #                                   'medicines': medicines,
+                        #                                   'realization_date': realization_date,
+                        #                                   'permissions': prescription['permissions']})
+                        # if ps.is_valid(raise_errors=True):
+                        #     ps.save()
                 vt.json = json.dumps(tab['data']) if 'data' in tab else ''
                 vt.save()
                 visit.tabs.add(vt)

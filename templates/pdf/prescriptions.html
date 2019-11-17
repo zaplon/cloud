@@ -1,0 +1,9 @@
+{% extends 'pdf/base.html' %}
+{% load static %}
+
+{% block body %}
+    {% for prescription in prescriptions %}
+        {% include 'pdf/prescription.html' %}
+        <div style="page-break-after: always"></div>
+    {% endfor %}
+{% endblock %}

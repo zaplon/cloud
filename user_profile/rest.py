@@ -14,7 +14,7 @@ from django.conf import settings
 
 from g_utils.rest import SearchMixin
 from timetable.models import Service, Term
-from .models import Doctor, Patient, Note, Specialization, SystemSettings
+from .models import Doctor, Patient, Note, Specialization, SystemSettings, NFZSettings
 from datetime import datetime, date, timezone
 
 
@@ -265,9 +265,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_system_settings(self, instance):
         settings = SystemSettings.objects.first()
+        nfz_settings = NFZSettings.objects.get(user=instance)
         return {'documents_header_left': settings.documents_header_left, 'logo': settings.logo.url,
                 'regon': settings.regon, 'nip': settings.nip,
                 'nfz_department': settings.nfz_department,
+                'nfz': NFZSettingsSerializer(instance=nfz_settings).data,
                 'documents_header_right': settings.documents_header_right}
 
     def get_all_permissions(self, instance):
@@ -393,3 +395,15 @@ class InfoViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     serializer_class = BookingSystemSettingsSerializer
     queryset = SystemSettings.objects.all()
+
+
+class NFZSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NFZSettings
+        read_only_fields = ['id_pracownika_oid_ext']
+        fields = [f.name for f in NFZSettings._meta.get_fields()] + ['id_pracownika_oid_ext']
+
+
+class NFZSettingsViewSet(viewsets.ModelViewSet):
+    serializer_class = NFZSettingsSerializer
+    queryset = NFZSettings.objects.all()

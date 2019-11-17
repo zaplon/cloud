@@ -123,7 +123,7 @@ class FormView(PDFTemplateView):
             project_dir = settings.PROJECT_DIR
             if template in ['ABA', 'zgoda na znieczulenie', 'karta_badania_lekarskiego', 'zaswiadczenie_okulary',
                             'skierowanie_rtg', 'oswiadczenie_dotyczace_stanu_zdrowia', 'karta_konsultacyjna_neurologiczna',
-                            'karta_badania_laryngologicznego', 'skierowanie_na_badania']:
+                            'karta_badania_laryngologicznego', 'skierowanie_na_badania', 'recepta']:
                 style = 'bootstrap_print.css'
             else:
                 style = 'prints.css'

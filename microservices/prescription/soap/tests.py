@@ -1,13 +1,21 @@
-import base64
-import subprocess
-
 from lxml import etree
 from .client import PrescriptionClient
 from . import settings
 
 
+def create_client():
+    input_data = {'certificate_tls': settings.CLIENT_P12, 'certificate_tls_password': settings.CLIENT_P12_PASS,
+                  'certificate_wsse': settings.WSSE_P12, 'certificate_wsse_password': settings.WSSE_P12_PASS,
+                  'certificate_user': settings.PRESCRIPTION_P12, 'certificate_user_password': settings.PRESCRIPTION_P12_PASS,
+                  'id_podmiotu_oid_root': settings.idPodmiotuOidRoot, 'id_podmiotu_oid_ext': settings.idPodmiotuOidExt,
+                  'id_podmiotu_lokalne': settings.idPodmiotuLokalne, 'id_pracownika_oid_root': settings.idPracownikaOidRoot,
+                  'id_pracownika_oid_ext': settings.idPracownikaOidExt, 'id_miejsca_pracy_oid_root': settings.idMiejscaPracyOidRoot,
+                  'id_miejsca_pracy_oid_ext': settings.idMiejscaPracyOidExt, 'rola_biznesowa': settings.rolaBiznesowa}
+    return PrescriptionClient(input_data)
+
+
 def test_client():
-    c = PrescriptionClient()
+    c = create_client()
     try:
         data = {'dataWystawieniaReceptyDo': '2019-09-30T09:57:33',
                 'dataWystawieniaReceptyOd': '2019-09-28T09:57:33',
@@ -21,13 +29,15 @@ def test_client():
 
 
 def test_signing_prescription():
-    c = PrescriptionClient()
-    c._sign_prescription(f'{settings.SOAP_DIR}/tests/prescription.xml')
+    c = create_client()
+    c._sign_prescription(f'{settings.SOAP_DIR}/tests/prescription.xml', settings.PRESCRIPTION_P12,
+                         settings.PRESCRIPTION_P12_PASS)
 
 
 def test_sending_example_prescription():
-    c = PrescriptionClient()
-    encoded_prescription = c._sign_prescription(f'{settings.SOAP_DIR}/tests/example_prescription.xml')
+    c = create_client()
+    encoded_prescription = c._sign_prescription(f'{settings.SOAP_DIR}/tests/example_prescription.xml',
+                                                settings.PRESCRIPTION_P12, settings.PRESCRIPTION_P12_PASS)
     prescriptions = [{'recepta':{'identyfikatorDokumentuWPakiecie': 123, 'tresc': encoded_prescription}}]
     # with open(f'{settings.SOAP_DIR}/tests/example_prescription.xml') as f:
     #      tresc = f.read().encode()
@@ -37,8 +47,7 @@ def test_sending_example_prescription():
 
 
 def test_sending_prescription():
-    c = PrescriptionClient()
-
+    c = create_client()
     pacjent = {'pesel': '70032816894', 'imie': 'Jan', 'drugie_imie': 'Stanisław', 'nazwisko': 'Zapał',
                'kod_pocztowy': '01-105', 'miasto': 'Warszawa',
                'numer_ulicy': '49b', 'numer_lokalu': '153', 'ulica': 'Sowińskiego'}

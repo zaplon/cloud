@@ -26,7 +26,7 @@ from result.rest import ResultViewSet
 from timetable.rest import TermViewSet, ServiceViewSet, LocalizationViewSet, BookingViewSet, TermlistView
 from medicine.rest import *
 from user_profile.rest import PatientViewSet, DoctorViewSet, NoteViewSet, UserDetailsView, SpecializationViewSet, \
-    UserViewSet, PermissionViewSet, GroupViewSet, SystemSettingsViewSet, InfoViewSet
+    UserViewSet, PermissionViewSet, GroupViewSet, SystemSettingsViewSet, InfoViewSet, NFZSettingsViewSet
 from stats.rest import *
 from rest_framework import routers
 from visit.views import TemplateListView, TabsListView
@@ -54,7 +54,7 @@ router.register(r'notes', NoteViewSet)
 router.register(r'medicines', MedicineViewSet, base_name='medicines')
 router.register(r'medicine_parents', MedicineParentViewSet, base_name='medicine_parents')
 router.register(r'refundations', RefundationViewSet)
-router.register(r'prescriptions', PrescriptionViewSet)
+router.register(r'prescriptions', PrescriptionViewSet, base_name='prescriptions')
 router.register(r'visits', VisitViewSet, base_name='visits')
 router.register(r'examinations', ExaminationViewSet, base_name='examinations')
 router.register(r'examinations_categories', ExaminationCategoryViewSet, base_name='examinations_categories')
@@ -62,6 +62,7 @@ router.register(r'settings', SystemSettingsViewSet, base_name='settings')
 router.register(r'agreements', AgreementApiView, base_name='agreements')
 router.register(r'agreements_to_users', AgreementToUserApiView, base_name='agreements_to_users')
 router.register(r'sms', SMSCodeViewSet, base_name='sms')
+router.register(r'nfz-settings', NFZSettingsViewSet, base_name='nfz-settings')
 
 
 urlpatterns = [

@@ -36,6 +36,36 @@ class Profile(models.Model):
     #     )
 
 
+class NFZSettings(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    rola_biznesowa = models.CharField(max_length=32,
+                                      choices=(('LEKARZ_LEK_DENTYSTA_FELCZER', 'LEKARZ_LEK_DENTYSTA_FELCZER'),
+                                               ('PIELEGNIARKA_POLOZNA', 'PIELEGNIARKA_POLOZNA')),
+                                      default='LEKARZ_LEK_DENTYSTA_FELCZER')
+    certificate_tls = models.FileField(null=True, blank=True, upload_to='certs')
+    certificate_tls_password = models.CharField(max_length=126, blank=True)
+    certificate_wsse = models.FileField(null=True, blank=True, upload_to='certs')
+    certificate_wsse_password = models.CharField(max_length=126, blank=True)
+    certificate_user = models.FileField(null=True, blank=True, upload_to='certs')
+    certificate_user_password = models.CharField(max_length=126, blank=True)
+
+    id_podmiotu_oid_ext = models.CharField(max_length=126, blank=True)
+    id_podmiotu_lokalne = models.CharField(max_length=126, blank=True)
+    id_miejsca_pracy_oid_ext = models.CharField(max_length=8, blank=True)
+
+    @property
+    def id_pracownika_oid_ext(self):
+        return self.user.doctor.pwz
+
+    @property
+    def id_pracownika_root(self):
+        if self.rola_biznesowa == 'LEKARZ_LEK_DENTYSTA_FELCZER':
+            return '2.16.840.1.113883.3.4424.1.6.2'
+        elif self.rola_biznesowa == 'PIELEGNIARKA_POLOZNA':
+            return '2.16.840.1.113883.3.4424.1.6.3'
+
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     if instance.groups.filter(name='Lekarze').exists():
@@ -45,6 +75,12 @@ def save_user_profile(sender, instance, **kwargs):
         Profile.objects.create(user=instance)
     else:
         instance.profile.save()
+
+
+@receiver(post_save, sender=User)
+def create_nfz_settings(sender, instance, **kwargs):
+    if kwargs.get('created'):
+        NFZSettings.objects.get_or_create(id=instance.id, user=instance)
 
 
 class Specialization(models.Model):
@@ -128,6 +164,7 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=100, default='', verbose_name=u'Imię')
     second_name = models.CharField(max_length=100, default='', verbose_name=u'Drugie imię')
     last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
+    gender = models.CharField(max_length=1, verbose_name=u'Płeć', choices=(('M', u'Mężczyzna'), ('F', u'Kobieta')))
     pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel', unique=True)
     email = models.EmailField(blank=True, null=True, verbose_name=u'Email')
     postal_code = models.CharField(blank=True, max_length=6, verbose_name='Kod pocztowy')
@@ -198,6 +235,7 @@ class SystemSettings(models.Model):
     city = models.CharField(max_length=100, blank=True, verbose_name=u'Miejscowość')
     street = models.CharField(max_length=200, blank=True, verbose_name=u'Ulica')
     street_number = models.CharField(max_length=10, blank=True, verbose_name=u'Numer domu')
+    postal_code = models.CharField(blank=True, max_length=6, verbose_name='Kod pocztowy')
 
     class Meta:
         verbose_name = 'Ustawienia systemowe'

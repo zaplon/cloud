@@ -30,7 +30,7 @@ class Medicine(models.Model):
     ean = models.CharField(max_length=20, blank=True, null=True)  # Kod EAN
     in_use = models.BooleanField(default=True)
     refundation = models.BooleanField(blank=False, default=False)
-    external_id = models.IntegerField()
+    external_id = models.IntegerField(blank=True, null=True)
 
 
 class Refundation(models.Model):
@@ -58,13 +58,14 @@ class MedicineToPrescription(models.Model):
    notes = models.CharField(max_length=128, blank=True, null=True)
    refundation = models.ForeignKey(Refundation, blank=True, null=True, on_delete=models.CASCADE)
    prescription = models.ForeignKey('Prescription', related_name='medicines', on_delete=models.CASCADE)
+   external_id = models.IntegerField(blank=True, null=True)
 
 
 class Prescription(models.Model):
     class Meta:
         ordering = ('-date', )
 
-    number = models.CharField(max_length=16, blank=True, null=True)
+    number = models.CharField(max_length=32, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
     patient = models.ForeignKey(Patient, related_name='prescriptions', on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, related_name='prescriptions', on_delete=models.CASCADE)
@@ -82,4 +83,18 @@ class Prescription(models.Model):
                                      medicines_to_prescription]
         # medicines_to_prescription = [med.is_valid() for med in medicines_to_prescription]
         return [med.data for med in medicines_to_prescription]
+
+    @staticmethod
+    def create(doctor, patient, prescription_data, medicines_data):
+        p = Prescription.objects.create(doctor=doctor, number=prescription_data['number'], patient=patient,
+                                        nfz=prescription_data['nfz'], permissions=prescription_data['permissions'],
+                                        number_of_medicines=len(medicines_data),
+                                        realisation_date=prescription_data['realisationDate'].split('T')[0])
+        for m in medicines_data:
+            refundation = int(m['refundation'])
+            refundation = refundation if refundation > 0 else None
+            MedicineToPrescription.objects.create(prescription=p, medicine_id=m['size'], dosage=m['dosage'],
+                                                  amount=m['amount'], notes=m.get('notes', ''),
+                                                  refundation_id=refundation)
+        return True
 

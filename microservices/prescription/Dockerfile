@@ -1,6 +1,6 @@
 FROM python:3.6
-
-RUN apt-get update -y && apt-get install -y libxml2 xmlsec1 libxml2-dev libxmlsec1-dev
+RUN apt-get update -y && apt-get install -y libxml2 xmlsec1 libxml2-dev libxmlsec1-dev software-properties-common
+RUN apt-get install -y default-jre
 
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt

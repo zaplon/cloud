@@ -39,3 +39,4 @@ zipp==0.6.0
 SQLAlchemy
 flask_inputs
 jsonschema
+flask-cors

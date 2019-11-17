@@ -45,7 +45,7 @@ class PrescriptionRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prescription
-        fields = ['number', 'date', 'patient', 'doctor', 'medicines', 'permissions', 'nfz']
+        fields = ['number', 'date', 'patient', 'doctor', 'medicines', 'permissions', 'nfz', 'external_id']
 
 
 class MedicineToPrescriptionSerializer(serializers.ModelSerializer):
@@ -55,23 +55,12 @@ class MedicineToPrescriptionSerializer(serializers.ModelSerializer):
 
 
 class PrescriptionSerializer(serializers.ModelSerializer):
-    medicines = MedicineToPrescriptionSerializer(many=True)
-
-    def save(self, **kwargs):
-        instance = super(PrescriptionSerializer, self).save(**kwargs)
-        number_of_medicines = 0
-        for medicine in self.initial_data['medicines']:
-            medicine['prescription'] = instance.id
-            medicine_to_prescription = MedicineToPrescriptionSerializer(data=medicine)
-            if medicine_to_prescription.is_valid():
-                medicine_to_prescription.save()
-                number_of_medicines += 1
-        instance.number_of_medicines = number_of_medicines
-        instance.save()
+    medicines = MedicineToPrescriptionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Prescription
-        fields = ['id', 'number', 'date', 'medicines', 'patient', 'nfz', 'permissions']
+        fields = ['id', 'number', 'date', 'medicines', 'patient', 'doctor', 'nfz', 'permissions', 'realisation_date',
+                  'external_id']
 
 
 class PrescriptionListSerializer(serializers.ModelSerializer):
@@ -80,4 +69,4 @@ class PrescriptionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prescription
-        fields = ['id', 'number', 'date', 'patient', 'doctor', 'number_of_medicines']
+        fields = ['id', 'number', 'date', 'patient', 'doctor', 'number_of_medicines', 'external_id']
