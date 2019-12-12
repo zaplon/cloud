@@ -154,8 +154,13 @@ class Doctor(models.Model):
 def create_doctor_tabs(sender, instance, created, **kwargs):
     from visit.models import Tab
     if created:
-        for i, type in enumerate(TabTypes):
-            Tab.objects.create(doctor=instance, title=type.value, type=type.name, order=i)
+        Tab.objects.get_or_create(title='Wywiad', order=1, type=TabTypes.DEFAULT, doctor=instance)
+        Tab.objects.get_or_create(title='Rozpoznanie', order=2, type=TabTypes.ICD10, doctor=instance)
+        Tab.objects.get_or_create(title='Badania', order=3, type=TabTypes.DEFAULT, doctor=instance)
+        Tab.objects.get_or_create(title='Zalecenia', order=4, type=TabTypes.DEFAULT, doctor=instance)
+        Tab.objects.get_or_create(title='Recepty', order=5, type=TabTypes.MEDICINES, doctor=instance)
+        Tab.objects.get_or_create(title='Skierowania', order=6, type=TabTypes.EXAMINATIONS, doctor=instance)
+        Tab.objects.get_or_create(title='Notatki', order=7, type=TabTypes.NOTES, doctor=instance)
 
 
 class Patient(models.Model):
@@ -166,6 +171,7 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
     gender = models.CharField(max_length=1, verbose_name=u'Płeć', choices=(('M', u'Mężczyzna'), ('F', u'Kobieta')))
     pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel', unique=True)
+    birth_date = models.DateField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True, verbose_name=u'Email')
     postal_code = models.CharField(blank=True, max_length=6, verbose_name='Kod pocztowy')
     street = models.CharField(blank=True, max_length=200, verbose_name='Ulica')

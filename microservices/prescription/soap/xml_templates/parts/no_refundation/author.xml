@@ -1,0 +1,41 @@
+<author>
+    <templateId root="2.16.840.1.113883.3.4424.13.10.2.82"/>
+    <functionCode code="LEK" codeSystem="2.16.840.1.113883.3.4424.11.3.18" displayName="Lekarz"/>
+    <time value="{{ recepta.data_wystawienia }}"/>
+    <assignedAuthor>
+        <id extension="{{pracownik.id_ext}}" root="2.16.840.1.113883.3.4424.1.6.2" displayable="true"/>
+        <assignedPerson>
+            <templateId root="2.16.840.1.113883.3.4424.13.10.2.1"/>
+            <name>
+                <given>{{ pracownik.imie }}</given>
+                <family>{{ pracownik.nazwisko }}</family>
+            </name>
+        </assignedPerson>
+        <representedOrganization>
+            <templateId root="2.16.840.1.113883.3.4424.13.10.2.17"/>
+            <id extension="{{podmiot.id_lokalne}}-001" root="2.16.840.1.113883.3.4424.2.3.2" displayable="true"/>
+            <name>Poradnia POZ</name>
+            <telecom use="{{ pracownik.telefon_rodzaj }}" value="tel:{{ pracownik.telefon }}"/>
+            <addr>
+                <postalCode>{{ podmiot.kod_pocztowy }}</postalCode>
+                <city>{{ podmiot.miasto }}</city>
+                <streetName>{{ podmiot.ulica }}</streetName>
+                <houseNumber>{{ podmiot.numer_domu }}</houseNumber>
+            </addr>
+            <asOrganizationPartOf>
+                <wholeOrganization>
+                    <!-- Regon przedsiębiorstwa -->
+                    <id extension="{{podmiot.regon14}}" root="2.16.840.1.113883.3.4424.2.2.2" displayable="true"/>
+                    <asOrganizationPartOf>
+                        <!-- podmiot - nr ksiegi + regon podmiotu -->
+                        <wholeOrganization>
+                            <id extension="{{podmiot.id}}" root="2.16.840.1.113883.3.4424.2.3.1"
+                                displayable="true"/>
+                            <!-- <id extension="123456789" root="2.16.840.1.113883.3.4424.2.2.1" displayable="true"/> -->
+                        </wholeOrganization>
+                    </asOrganizationPartOf>
+                </wholeOrganization>
+            </asOrganizationPartOf>
+        </representedOrganization>
+    </assignedAuthor>
+</author>

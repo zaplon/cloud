@@ -1,0 +1,8 @@
+<legalAuthenticator>
+    <templateId root="2.16.840.1.113883.3.4424.13.10.2.6"/>
+    <time value="{{ recepta.data_wystawienia }}"/>
+    <signatureCode code="S"/>
+    <assignedEntity>
+        <id extension="{{pracownik.id_ext}}" root="2.16.840.1.113883.3.4424.1.6.2" displayable="true"/>
+    </assignedEntity>
+</legalAuthenticator>

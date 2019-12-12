@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from wkhtmltopdf.utils import wkhtmltopdf
 from g_utils.rest import SearchMixin
 from medicine.serializers import *
-from user_profile.models import NFZSettings, SystemSettings, PrescriptionNumber
+from user_profile.models import NFZSettings, SystemSettings
 from user_profile.rest import NFZSettingsSerializer
 
 
@@ -114,12 +114,17 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         medicines = prescriptions_base.pop('medicines')
         n = 5
         chunks = [medicines[i * n:(i + 1) * n] for i in range((len(medicines) + n - 1) // n)]
+        use_numbers = prescriptions_base.pop('number', False)
         for chunk in chunks:
             prescription = copy.deepcopy(prescriptions_base)
             prescription['medicines'] = chunk
-            if prescription.get('number'):
-                prescription['number'] = PrescriptionNumber.objects.filter(doctor_id=prescription['doctor'],
-                                                                           date_used__isnull=True).last().nr
+            if use_numbers:
+                for i, m in enumerate(prescription['medicines']):
+                    m['number'] = str(uuid.uuid1()).replace('-', '')[0:22]
+                # numbers = PrescriptionNumber.objects.filter(doctor_id=prescription['doctor'],
+                #                                             date_used__isnull=True).order_by('id')[0:len(prescription['medicines'])]
+                # for i, m in enumerate(prescription['medicines']):
+                #     m['number'] = numbers[i].nr
             else:
                 prescription.pop('number', False)
             prescriptions.append(prescription)
@@ -189,21 +194,28 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         prescriptions = []
         for prescription in self._split_input_data(request.data):
             medicines = prescription.pop('medicines')
-            serializer = self.get_serializer(data=prescription)
+            if prescription.get('id'):
+                serializer = self.get_serializer(instance=Prescription.objects.get(id=prescription.get('id')))
+            else:
+                serializer = self.get_serializer(data=prescription)
             serializer.is_valid(raise_exception=True)
             p1_data = self._prepare_for_p1(serializer.data, medicines)
             res = requests.post('http://prescriptions/api/save_prescription/', json.dumps(p1_data),
                                 headers={'Content-type': 'application/json'})
             res_json = json.loads(res.content)
+            if res.status_code == status.HTTP_401_UNAUTHORIZED:
+                return Response(res_json, status=status.HTTP_401_UNAUTHORIZED)
             if 'major' in res_json['wynik'] and res_json['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
                 prescription = serializer.data
                 prescription['external_id'] = \
                     res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kluczPakietuRecept']
+                prescription['external_code'] = \
+                    res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kodPakietuRecept']
                 serializer = self.get_serializer(data=prescription)
                 serializer.is_valid(raise_exception=True)
-                nr = PrescriptionNumber.objects.filter(doctor_id=prescription['doctor'], date_used__isnull=True).last()
-                nr.date_used = datetime.today()
-                nr.save()
+                for i, m in enumerate(medicines):
+                     m['external_id'] = res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['wynikWeryfikacji']['weryfikowanaRecepta'][i]['kluczRecepty']
+                     # PrescriptionNumber.objects.filter(nr=m['number']).update(date_used=datetime.today())
                 self.perform_create(serializer)
                 self.save_medicines(serializer.instance, medicines)
                 prescriptions.append(serializer.data)
@@ -213,12 +225,15 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
 
     def _prepare_for_p1(self, prescription_data, medicines):
         patient = Patient.objects.get(id=prescription_data['patient'])
+        user = Doctor.objects.get(id=prescription_data['doctor']).user
+        profile = NFZSettingsSerializer(instance=NFZSettings.objects.get(id=user.id)).data
         pacjent = {
             'pesel': patient.pesel, 'imie': patient.first_name,
             'drugie_imie': patient.second_name, 'nazwisko': patient.last_name,
             'kod_pocztowy': patient.postal_code, 'miasto': patient.city,
             'numer_ulicy': patient.street_number, 'numer_lokalu': patient.apartment_number,
             'ulica': patient.street,
+            'data_urodzenia': patient.birth_date,
             'plec': 'M' if patient.gender == 'M' else 'K'
         }
         system_settings = SystemSettings.objects.get(id=1)
@@ -226,41 +241,123 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'miasto': system_settings.city,
             'numer_domu': system_settings.street_number,
             'regon14': system_settings.regon,
-            'ulica': system_settings.street
+            'ulica': system_settings.street,
+            'id_lokalne': profile['id_podmiotu_lokalne']
         }
-        user = Doctor.objects.get(id=prescription_data['doctor']).user
-        pracownik = {'imie': user.first_name, 'nazwisko': user.last_name}
+        pracownik = {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile}
         leki = []
         for m in medicines:
             medicine = Medicine.objects.get(id=m['medicine_id'])
             parent = medicine.parent
             tekst = f'{parent.name} {m["amount"]} {m["dosage"]}'
+            refundacja_tekst = refundacja_kod = '100%'
             if m['refundation']:
                 tekst = f"{tekst} <br/>Odpłatność: {m['refundation']}"
+                refundacja_tekst = m['refundation']
+                refundacja_kod = 'R' if m['refundation'] == u'Ryczałt' else m['refundation']
             leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
-                         'tekst': tekst, 'postac': parent.form, 'wielkosc': m['amount']})
+                         'tekst': tekst, 'postac': parent.form, 'wielkosc': m['amount'],
+                         'external_id': medicine.external_id,
+                         'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
+                         'numer_recepty': m['number']})
+            data_wystawienia = prescription_data['date'][0:10].replace('-', '') if 'date' in prescription_data \
+                else datetime.today().strftime('%Y%m%d')
         recepta = {
             'oddzial_nfz': prescription_data['nfz'],
             'uprawnienia_dodatkowe': prescription_data['permissions'],
-            'numer_recepty': prescription_data['number'],
-            'data_wystawienia': datetime.today().strftime('%Y%m%d')}
+            'kluczPakietu': prescription_data.get('external_id'),
+            'kodPakietu': prescription_data['external_code'][-4:] if 'external_code' in prescription_data else '',
+            'data_wystawienia': data_wystawienia}
         data = {'pacjent': pacjent,
                 'pracownik': pracownik,
                 'leki': leki,
                 'recepta': recepta,
                 'podmiot': podmiot,
-                'profile': NFZSettingsSerializer(instance=NFZSettings.objects.get(id=user.id)).data}
+                'profile': profile}
+
+        # tests
+        data['podmiot']['regon14'] = '97619191000009'
+        data['pacjent']['pesel'] = '70032816894'
+        data['pacjent']['data_urodzenia'] = '19880420'
+        data['profile']['id_pracownika_oid_ext'] = '5992363'
+        data['recepta']['oddzial_nfz'] = '07'
+        return data
+
+    def _print_from_serializer(self, serializer, medicines):
+        p1_data = self._prepare_for_p1(serializer.data, medicines)
+        res = requests.post('http://prescriptions/api/print_prescription/', json.dumps(p1_data),
+                            headers={'Content-type': 'application/json'})
+        html = res.content
+        tmp_filepath = os.path.join(settings.MEDIA_ROOT, 'tmp', f'{uuid.uuid4()}.html')
+        with codecs.open(tmp_filepath, 'wb') as f:
+            f.write(html)
+        relative_filepath = os.path.join('tmp', f'{uuid.uuid4()}.pdf')
+        filepath = os.path.join(settings.MEDIA_ROOT, relative_filepath)
+        wkhtmltopdf(tmp_filepath, output=filepath, page_width=60, page_height=210, margin_left=0,
+                    margin_right=0, margin_top=0, margin_bottom=0)
+        os.remove(tmp_filepath)
+        return os.path.join(settings.MEDIA_URL, relative_filepath)
+
+    @action(detail=True, methods=['get'])
+    def cancel(self, request, pk):
+        instance = self.get_object()
+        user = request.user
+        patient = instance.patient
+        system_settings = SystemSettings.objects.get(id=1)
+        profil = NFZSettingsSerializer(instance=NFZSettings.objects.get(user=request.user)).data
+        data = {
+            'pacjent': {'imie': patient.first_name, 'nazwisko': patient.last_name, 'plec': patient.gender,
+                        'data_urodzenia': patient.birth_date.strftime('%Y%m%d') if patient.birth_date else '',
+                        'miasto': patient.city,
+                        'kod_pocztowy': patient.postal_code,
+                        'ulica': patient.street, 'numer_ulicy': patient.street_number,
+                        'numer_lokalu': patient.apartment_number},
+            'numer_anulowania': str(uuid.uuid1()).replace('-', '')[0:22],
+            'profile': profil,
+            'podmiot': {
+                'kod_pocztowy': system_settings.postal_code,
+                'miasto': system_settings.city,
+                'numer_domu': system_settings.street_number,
+                'ulica': system_settings.street,
+                'regon14': system_settings.regon,
+                'id_lokalne': profil['id_podmiotu_lokalne']
+            },
+            'lekarz': {'imie': user.first_name, 'nazwisko': user.last_name}
+        }
+        for medicine in instance.medicines.all():
+            data['recepta'] = {'data_wystawienia': instance.date.strftime('%Y%m%d'),
+                               'wersja': 1,
+                               'numer': medicine.number,
+                               'external_id': medicine.external_id}
 
         # tests
         data['podmiot']['regon14'] = '97619191000009'
         data['pacjent']['pesel'] = '70032816894'
         data['profile']['id_pracownika_oid_ext'] = '5992363'
-        # for l in data['leki']:
-        #     l['ean'] = '5909990001811'
-        return data
+
+        res = requests.post('http://prescriptions/api/cancel_prescription/', json.dumps(data),
+                            headers={'Content-type': 'application/json'})
+        return Response(res.json(), status=res.status_code)
+
+    @action(detail=True, methods=['get'])
+    def print_one(self, request, pk):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance)
+        file_name = self._print_from_serializer(serializer, serializer.data['medicines'])
+        return Response({'file': file_name}, content_type='application_json')
 
     @action(detail=False, methods=['post'])
     def print(self, request):
+        file_names = []
+        for prescription in self._split_input_data(request.data):
+            medicines = prescription.pop('medicines')
+            serializer = self.get_serializer(data=prescription)
+            serializer.is_valid(raise_exception=True)
+            file_names.append(self._print_from_serializer(serializer, medicines))
+        return Response({'files': file_names}, content_type='application_json')
+
+    @action(detail=False, methods=['post'])
+    def print_internal(self, request):
         output_filename = f'{uuid.uuid4()}.pdf'
         output_filepath = os.path.join(settings.MEDIA_ROOT, 'tmp', output_filename)
         data = self._get_html(request.data, request.user)

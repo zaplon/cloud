@@ -1,0 +1,8 @@
+<custodian>
+    <templateId root="2.16.840.1.113883.3.4424.13.10.2.20"/>
+    <assignedCustodian>
+        <representedCustodianOrganization>
+            <id root="2.16.840.1.113883.3.4424" assigningAuthorityName="CSIOZ" displayable="false"/>
+        </representedCustodianOrganization>
+    </assignedCustodian>
+</custodian>

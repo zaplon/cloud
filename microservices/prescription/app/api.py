@@ -1,20 +1,26 @@
 import json
 
+import OpenSSL
 from flask import Blueprint, current_app
 from flask import jsonify, request
 from flask_cors import CORS
 from flask_inputs import Inputs
 from flask_inputs.validators import JsonSchema
-from soap.client import PrescriptionClient
+from soap.client import PrescriptionClient, PrescriptionXMLHandler, PrescriptionSigningError
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 CORS(bp, headers='Content-Type')
+
+CREDENTIALS_ERROR = {'message': 'Dostarczone dane dostępowe są niepoprawne.'}
 
 
 @bp.route('/test/', methods=['POST'])
 def test():
     data = json.loads(request.data)
-    c = PrescriptionClient(data)
+    try:
+        c = PrescriptionClient(data)
+    except OpenSSL.crypto.Error:
+        return json_response(CREDENTIALS_ERROR, 401)
     if c.test_connection():
         return jsonify(success=True)
     else:
@@ -41,9 +47,12 @@ def json_response(data={}, status_code=200):
 @bp.route('/cancel_prescription/', methods=['POST'])
 def cancel_prescription():
     data = json.loads(request.data)
-    c = PrescriptionClient(data['profile'])
-    status = c.cancel_prescription(data)
-    return json_response({}, status_code=200 if status else 400)
+    try:
+        c = PrescriptionClient(data['profile'])
+    except OpenSSL.crypto.Error:
+        return json_response(CREDENTIALS_ERROR, 401)
+    status, response = c.cancel_prescription(data)
+    return json_response(response, status_code=200 if status else 400)
 
 
 @bp.route('/save_prescription/', methods=['POST'])
@@ -53,11 +62,33 @@ def save_prescription():
         current_app.logger.info(inputs.errors)
         return json_response(inputs.errors, status_code=400)
     data = json.loads(request.data)
-    c = PrescriptionClient(data['profile'])
-    status, result = c.save_prescriptions(data)
+    try:
+        c = PrescriptionClient(data['profile'])
+    except OpenSSL.crypto.Error:
+        return json_response(CREDENTIALS_ERROR, 401)
+    try:
+        status, result = c.save_prescriptions(data)
+    except PrescriptionSigningError:
+        return json_response(CREDENTIALS_ERROR, 401)
     current_app.logger.info(result)
     status_code = 200 if status else 400
     return json_response(result, status_code)
+
+
+@bp.route('/print_prescription/', methods=['POST'])
+def print_prescription():
+    inputs = SaveJsonInputs(request)
+    if not inputs.validate():
+        current_app.logger.info(inputs.errors)
+        return json_response(inputs.errors, status_code=400)
+    data = json.loads(request.data)
+    c = PrescriptionXMLHandler(data['profile'])
+    prescription = c.get_prescription_html(data)
+    return current_app.response_class(
+        response=prescription,
+        status=200,
+        mimetype='text/html'
+    )
 
 
 save_schema = {

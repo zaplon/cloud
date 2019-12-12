@@ -29,3 +29,10 @@ idPracownikaOidExt = '5992363'
 idMiejscaPracyOidRoot = '2.16.840.1.113883.3.4424.2.3.2'
 idMiejscaPracyOidExt = '4'
 rolaBiznesowa = 'LEKARZ_LEK_DENTYSTA_FELCZER'
+
+USE_TRANSPORT = True
+
+local_settings = os.path.join(os.path.dirname(__file__), 'local_settings.py')
+if os.path.isfile(local_settings):
+    from .local_settings import *
+

@@ -1,0 +1,99 @@
+<component>
+    <section>
+    <templateId root="1.3.6.1.4.1.19376.1.9.1.2.1"/>
+    <templateId root="2.16.840.1.113883.3.4424.13.10.3.4"/>
+    <id extension="322122" root="2.16.840.1.113883.3.4424.2.7.99999.2.4"/>
+    <code code="57828-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+          displayName="Prescriptions"/>
+    <title>Rp</title>
+    <text>
+        <paragraph>
+            <content ID="p1_nazwaLeku">{{ lek.nazwa }}</content>
+            <content ID="p1_iloscLeku">{{ lek.ilosc }}</content>
+            <content ID="p1_receptura">{{ lek.receptura }}</content>
+        </paragraph>
+        {% if lek.refundacja_kod and lek.refundacja_kod != '100%' %}
+        <paragraph ID="ACT_3">
+            <content ID="p1_odplatnosc_opis">Odpłatność</content>
+            <content ID="p1_odplatnosc_wartosc" styleCode="Bold">{{ lek.refundacja_tekst }}</content>
+        </paragraph>
+        {% endif %}
+    </text>
+    <entry>
+        <substanceAdministration classCode="SBADM" moodCode="INT">
+            <templateId root="1.3.6.1.4.1.19376.1.9.1.3.2"/>
+            <templateId root="2.16.840.1.113883.10.20.1.24"/>
+            <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7"/>
+            <templateId root="1.3.6.1.4.1.19376.1.9.1.3.6"/>
+            <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/>
+            <templateId root="2.16.840.1.113883.3.4424.13.10.4.48"/>
+            <id extension="{{lek.numer_recepty}}-1" root="2.16.840.1.113883.3.4424.2.7.99999.2.3"/>
+            <text>
+                <reference value="#SBADM_1"/>
+            </text>
+            <statusCode code="completed"/>
+            <effectiveTime xsi:type="IVL_TS">
+                <low value="{{ recepta.data_wystawienia }}"/>
+                <high nullFlavor="NA"/>
+            </effectiveTime>
+            <repeatNumber value="1"/>
+            <consumable>
+                <manufacturedProduct>
+                    <templateId root="2.16.840.1.113883.10.20.1.53"/>
+                    <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.2"/>
+                    <manufacturedMaterial>
+                        <templateId root="2.16.840.1.113883.3.4424.13.10.4.70"/>
+                        <templateId root="1.3.6.1.4.1.19376.1.9.1.3.1"/>
+                        <code nullFlavor="NA"/>
+                        <name>{{ lek.nazwa }}</name>
+                    </manufacturedMaterial>
+                </manufacturedProduct>
+            </consumable>
+            <entryRelationship typeCode="COMP">
+                <supply classCode="SPLY" moodCode="RQO">
+                    <templateId root="1.3.6.1.4.1.19376.1.9.1.3.8"/>
+                    <templateId root="2.16.840.1.113883.3.4424.13.10.4.55"/>
+                    <effectiveTime value="{{ recepta.data_wystawienia }}"/>
+                    <independentInd value="false"/>
+                    <quantity unit="g" value="80"/>
+                    <entryRelationship typeCode="COMP">
+                        <act classCode="ACT" moodCode="DEF">
+                            <templateId root="2.16.840.1.113883.3.4424.13.10.4.57"/>
+                            <code code="48768-6" codeSystem="2.16.840.1.113883.6.1"
+                                  displayName="Payment source"/>
+                            <text>
+                                <reference value="#ACT_3"/>
+                            </text>
+                            <statusCode code="completed"/>
+                            <entryRelationship typeCode="COMP">
+                                <act classCode="ACT" moodCode="EVN">
+                                    <code code="PUBLICPOL" codeSystem="2.16.840.1.113883.5.4">
+                                        <qualifier>
+                                            <name code="RLPO"
+                                                  codeSystem="2.16.840.1.113883.3.4424.13.5.1"
+                                                  codeSystemName="PolskieKlasyfikatoryHL7v3"
+                                                  displayName="Poziomy odpłatności leków refundowanych"/>
+                                            <value code="{{ lek.refundacja_kod }}"
+                                                   codeSystem="2.16.840.1.113883.3.4424.11.1.1"
+                                                   displayName="{{ lek.refundacja_tekst }}"/>
+                                        </qualifier>
+                                    </code>
+                                    <statusCode code="completed"/>
+                                    <performer typeCode="PRF">
+                                        <!-- Dane ubezpieczyciela/płatnika -->
+                                        <assignedEntity>
+                                            <id extension="{{ recepta.oddzial_nfz }}"
+                                                root="2.16.840.1.113883.3.4424.3.1"
+                                                displayable="true"/>
+                                        </assignedEntity>
+                                    </performer>
+                                </act>
+                            </entryRelationship>
+                        </act>
+                    </entryRelationship>
+                </supply>
+            </entryRelationship>
+        </substanceAdministration>
+    </entry>
+</section>
+</component>

@@ -1,0 +1,28 @@
+<recordTarget>
+    <templateId root="2.16.840.1.113883.3.4424.13.10.2.23"/>
+    <patientRole>
+        <id extension="12345" root="2.16.840.1.113883.3.4424.2.7.0.17.1" displayable="false"/>
+        <id extension="{{pacjent.pesel}}" root="2.16.840.1.113883.3.4424.1.1.616" displayable="true"/>
+        <addr>
+            <country>Polska</country>
+            <postalCode xsi:type="extPL:adxp.postalCode" postCity="{{ pacjent.miasto }}">{{ pacjent.kod_pocztowy}}
+            </postalCode>
+            <city>{{ pacjent.miasto }}</city>
+            <streetName>{{ pacjent.ulica }}</streetName>
+            <houseNumber>{{ pacjent.numer_ulicy }}</houseNumber>
+            <unitID>{{ pacjent.numer_lokalu }}</unitID>
+            <censusTract>TERYT SIMC: 987654</censusTract>
+        </addr>
+        <patient>
+            <name>
+                <given>{{ pacjent.imie }}</given>
+                <given>{{ pacjent.drugie_imie }}</given>
+                <family>{{ pacjent.nazwisko }}</family>
+            </name>
+            <administrativeGenderCode code="{{ pacjent.plec }}" codeSystem="2.16.840.1.113883.5.1"/>
+            {% if pacjent.data_urodzenia %}
+            <birthTime value="{{ pacjent.data_urodzenia }}"/>
+            {% endif %}
+        </patient>
+    </patientRole>
+</recordTarget>

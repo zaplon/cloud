@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from user_profile.models import Patient, Doctor
@@ -51,14 +52,21 @@ class Refundation(models.Model):
 
 
 class MedicineToPrescription(models.Model):
-   medicine_id = models.IntegerField(db_index=True)
-   prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
-   dosage = models.CharField(max_length=128, default='')
-   amount = models.CharField(max_length=128, default='')
-   notes = models.CharField(max_length=128, blank=True, null=True)
-   refundation = models.ForeignKey(Refundation, blank=True, null=True, on_delete=models.CASCADE)
-   prescription = models.ForeignKey('Prescription', related_name='medicines', on_delete=models.CASCADE)
-   external_id = models.IntegerField(blank=True, null=True)
+    medicine_id = models.IntegerField(db_index=True, blank=True, null=True)
+    prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
+    dosage = models.CharField(max_length=128, default='')
+    amount = models.CharField(max_length=128, default='')
+    notes = models.CharField(max_length=128, blank=True, null=True)
+    refundation = models.CharField(max_length=10, blank=True)
+    prescription = models.ForeignKey('Prescription', related_name='medicines', on_delete=models.CASCADE)
+    external_id = models.CharField(max_length=64, blank=True)
+    number = models.CharField(max_length=32, blank=True, null=True)
+    composition = models.TextField(blank=True)
+
+    def clean(self, *args, **kwargs):
+        if not (self.medicine_id or self.composition):
+            raise ValidationError('Medicine needs to have composition or medicine_id filled.')
+        super().clean(*args, **kwargs)
 
 
 class Prescription(models.Model):
@@ -74,6 +82,7 @@ class Prescription(models.Model):
     number_of_medicines = models.IntegerField(default=0)
     realisation_date = models.DateField()
     external_id = models.CharField(max_length=128, blank=True)
+    external_code = models.CharField(max_length=32, blank=True)
     # body = models.CharField(max_length=512)
 
     def get_medicines(self):

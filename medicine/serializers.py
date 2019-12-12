@@ -45,7 +45,8 @@ class PrescriptionRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prescription
-        fields = ['number', 'date', 'patient', 'doctor', 'medicines', 'permissions', 'nfz', 'external_id']
+        fields = ['id', 'number', 'date', 'patient', 'doctor', 'medicines', 'permissions', 'nfz', 'external_id',
+                  'external_code']
 
 
 class MedicineToPrescriptionSerializer(serializers.ModelSerializer):
@@ -60,7 +61,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prescription
         fields = ['id', 'number', 'date', 'medicines', 'patient', 'doctor', 'nfz', 'permissions', 'realisation_date',
-                  'external_id']
+                  'external_id', 'external_code']
 
 
 class PrescriptionListSerializer(serializers.ModelSerializer):
@@ -69,4 +70,4 @@ class PrescriptionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prescription
-        fields = ['id', 'number', 'date', 'patient', 'doctor', 'number_of_medicines', 'external_id']
+        fields = ['id', 'number', 'date', 'patient', 'doctor', 'number_of_medicines', 'external_id', 'external_code']
