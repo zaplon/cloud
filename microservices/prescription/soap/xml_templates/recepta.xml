@@ -58,6 +58,7 @@
             {% else %}
             {% include 'parts/lek_gotowy.xml' %}
             {% endif %}
+            {% if recepta.uprawnienia_dodatkowe %}
             <component>
                 <section>
                     <templateId root="2.16.840.1.113883.10.20.1.9"/>
@@ -132,6 +133,7 @@
                     </entry>
                 </section>
             </component>
+            {% endif %}
         </structuredBody>
     </component>
 </ClinicalDocument>

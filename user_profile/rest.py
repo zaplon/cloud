@@ -14,7 +14,7 @@ from django.conf import settings
 
 from g_utils.rest import SearchMixin
 from timetable.models import Service, Term
-from .models import Doctor, Patient, Note, Specialization, SystemSettings, NFZSettings
+from .models import Doctor, Patient, Note, Specialization, SystemSettings, NFZSettings, Profile
 from datetime import datetime, date, timezone
 
 
@@ -187,10 +187,11 @@ class DoctorViewSet(viewsets.ModelViewSet, SearchMixin):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(required=False)
+    role = serializers.CharField(source='profile.role')
 
     class Meta:
         model = User
-        exclude = ('password', )
+        fields = [f.name for f in User._meta.fields] + ['role', 'doctor']
 
     def update(self, instance, validated_data):
         doctor = validated_data.pop('doctor')
@@ -205,7 +206,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class UserInitSerializer(serializers.ModelSerializer):
     password = serializers.CharField()
     password2 = serializers.CharField(write_only=True)
-    role = serializers.ChoiceField(choices=(('doctor', 'Lekarz'), ('worker', 'Pracownik')), write_only=True)
+    role = serializers.ChoiceField(choices=(('doctor', 'Lekarz'), ('admin', 'Administrator')), write_only=True)
     doctor = DoctorSerializer(read_only=True, required=False)
 
     def validate_password(self, value):
@@ -219,6 +220,7 @@ class UserInitSerializer(serializers.ModelSerializer):
         instance = super(UserInitSerializer, self).create(validated_data)
         instance.set_password(password)
         instance.save()
+        Profile.objects.create(role=role, user=instance)
         if role == 'doctor':
             Doctor.objects.create(user=instance)
         return instance
@@ -262,6 +264,7 @@ class UserSerializer(serializers.ModelSerializer):
     user_permissions = serializers.SerializerMethodField('get_all_permissions')
     system_settings = serializers.SerializerMethodField()
     css_theme = serializers.CharField(source='profile.css_theme')
+    role = serializers.CharField(source='profile.role')
 
     def get_system_settings(self, instance):
         settings = SystemSettings.objects.first()
@@ -304,7 +307,7 @@ class UserSerializer(serializers.ModelSerializer):
         return modules
 
     def check_if_setup_needed(self, instance):
-        if hasattr(instance, 'doctor'):
+        if hasattr(instance, 'doctor') and instance.profile.role == 'doctor':
             d = instance.doctor
             if len(d.pwz) == 0 or len(d.user.last_name) == 0:
                 return 1
@@ -325,7 +328,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'can_edit_terms', 'can_edit_visits', 'setup_needed', 'modules', 'type',
-                  'doctor', 'user_permissions', 'system_settings', 'css_theme')
+                  'doctor', 'user_permissions', 'system_settings', 'css_theme', 'role')
 
 
 class UserDetailsView(APIView):

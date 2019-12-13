@@ -40,6 +40,11 @@ class PrescriptionXMLHandler(object):
                      **input_data['pracownik']}
         data = {'pacjent': pacjent, 'lek': lek, 'podmiot': podmiot, 'recepta': recepta, 'pracownik': pracownik}
 
+        if recepta.get('uprawnienia_dodatkowe'):
+            recepta['uprawnienia_dodatkowe'] = recepta['uprawnienia_dodatkowe'].upper()
+            if recepta['uprawnienia_dodatkowe'] not in ['IB', 'AZ', 'BW', 'CN', 'DN', 'IN', 'IW', 'PO', 'WP', 'ZK']:
+                recepta.pop('uprawnienia_dodatkowe')
+
         if lek['jest_refundowany']:
             with open(os.path.join(settings.SOAP_DIR, 'xml_templates', 'recepta_refundowana.xml'), 'r') as f:
                 template = Environment(loader=FileSystemLoader(os.path.join(settings.SOAP_DIR, "xml_templates/"))).from_string(f.read())

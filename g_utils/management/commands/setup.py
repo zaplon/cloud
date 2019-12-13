@@ -33,7 +33,7 @@ class Command(BaseCommand):
         groups = {'Lekarze': ['_visit', '_result', '_term', '_medicine', '_template', '_tab',
                               'can_add_prescription', '_prescriptionnumber', '_refundation',
                               '_nfzsettings', '_patient'],
-                  'Administratorzy': ['_result', '_user', '_service', '_localization', '_patient',
+                  'Administratorzy': ['_term',  '_result', '_user', '_service', '_localization', '_patient',
                                       '_systemsettings']}
         for group_name, permissions_patterns in groups.items():
             permissions = Permission.objects.none()

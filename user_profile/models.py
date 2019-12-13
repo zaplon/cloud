@@ -22,7 +22,7 @@ class Profile(models.Model):
     )
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     mobile = models.IntegerField(blank=False, null=True)
-    role = models.CharField(choices=(('doctor', _('Lekarz')), ('worker', _('Pracownik'))), max_length=10)
+    role = models.CharField(choices=(('doctor', _('Lekarz')), ('admin', _('Administrator'))), max_length=10)
     css_theme = models.CharField(choices=CssThemeChoices, default='yeti', max_length=10)
 
     # class Meta:
@@ -66,15 +66,15 @@ class NFZSettings(models.Model):
             return '2.16.840.1.113883.3.4424.1.6.3'
 
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    if instance.groups.filter(name='Lekarze').exists():
-        if not hasattr(instance, 'doctor'):
-            Doctor.objects.create(user=instance)
-    if not hasattr(instance, 'profile'):
-        Profile.objects.create(user=instance)
-    else:
-        instance.profile.save()
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     if instance.groups.filter(name='Lekarze').exists():
+#         if not hasattr(instance, 'doctor'):
+#             Doctor.objects.create(user=instance)
+#     if not hasattr(instance, 'profile'):
+#         Profile.objects.create(user=instance)
+#     else:
+#         instance.profile.save()
 
 
 @receiver(post_save, sender=User)
