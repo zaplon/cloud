@@ -4,10 +4,7 @@ import csv
 from django.core.management.base import BaseCommand, CommandError
 
 from django.contrib.auth.models import Permission, Group, User
-from django.core.management import call_command
-from visit.models import Icd10
-from user_profile.models import Specialization, Doctor, SystemSettings
-from django.core.files import File
+from user_profile.models import Doctor, Profile
 
 
 
@@ -22,11 +19,13 @@ class Command(BaseCommand):
     def create_doctor(self, username, password):
         u = User.objects.create_user(username=username, password=password)
         u.groups.add(Group.objects.get(name='Lekarze'))
+        Profile.objects.create(user=u, role='doctor')
         Doctor.objects.create(user=u)
 
     def create_admin(self, username, password):
         u = User.objects.create_user(username=username, password=password)
         u.groups.add(Group.objects.get(name='Administratorzy'))
+        Profile.objects.create(user=u, role='admin')
         Doctor.objects.create(user=u)
 
     def handle(self, *args, **options):
