@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="ProjectResources">
+    <resource url="http://www.csioz.gov.pl/xsd/extPL/r2" location="$USER_HOME$/Documents/m/recepta/hl7/plcda-xsd-1.3.1/extPL_r2.xsd" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.6 (prescription)" project-jdk-type="Python SDK" />
+</project>

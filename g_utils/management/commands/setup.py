@@ -29,26 +29,13 @@ class Command(BaseCommand):
                 print(specialization.name)
             print('***** Specializations imported *****')
 
-    def create_groups(self):
-        groups = {'Lekarze': ['_visit', '_result', '_term', '_medicine', '_template', '_tab',
-                              'can_add_prescription', '_prescriptionnumber', '_refundation', '_prescription',
-                              '_nfzsettings', '_patient'],
-                  'Administratorzy': ['_term',  '_result', '_user', '_service', '_localization', '_patient',
-                                      '_systemsettings']}
-        for group_name, permissions_patterns in groups.items():
-            permissions = Permission.objects.none()
-            for p in permissions_patterns:
-                permissions |= Permission.objects.filter(codename__icontains=p)
-            group, _ = Group.objects.get_or_create(name=group_name)
-            group.permissions.add(*permissions)
-
     def create_system_settings(self):
         system_settings = SystemSettings.objects.create(id=1)
         with open('g_utils/initial_data/logo.png', 'rb') as f:
             system_settings.logo.save(f.name, File(f))
 
     def handle(self, *args, **options):
-        self.create_groups()
+        call_command('create_groups')
         self.load_icd10()
         self.load_specializations()
         self.create_system_settings()

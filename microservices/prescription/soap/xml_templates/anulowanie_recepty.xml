@@ -43,7 +43,7 @@
     <author>
         <templateId root="2.16.840.1.113883.3.4424.13.10.2.4"/>
         <functionCode code="LEK" codeSystem="2.16.840.1.113883.3.4424.11.3.18" displayName="Lekarz"/>
-        <time value="20171012"/>
+        <time value="{{ recepta.data_anulowania }}"/>
         <assignedAuthor>
             <id extension="{{ profile.id_pracownika_oid_ext }}" root="2.16.840.1.113883.3.4424.1.6.2" displayable="true"/>
             <code code="0718" codeSystem="2.16.840.1.113883.3.4424.11.3.3.1" displayName="neurologia"/>
@@ -57,9 +57,9 @@
             </assignedPerson>
             <representedOrganization>
                 <templateId root="2.16.840.1.113883.3.4424.13.10.2.17"/>
-                <id extension="{{profile.id_podmiotu_oid_ext}}" root="2.16.840.1.113883.3.4424.2.3.2" displayable="true"/>
+                <id extension="{{profile.id_podmiotu_oid_ext}}-001" root="2.16.840.1.113883.3.4424.2.3.2" displayable="true"/>
                 <name>Poradnia POZ</name>
-                <telecom use="PUB" value="tel:22-1111123"/>
+                <telecom use="{{ lekarz.rodzaj_telefonu }}" value="{{ lekarz.telefon }}"/>
                 <addr>
                     <postalCode>{{ podmiot.kod_pocztowy }}</postalCode>
                     <city>{{ podmiot.miasto }}</city>
@@ -90,7 +90,7 @@
     </custodian>
     <legalAuthenticator>
         <templateId root="2.16.840.1.113883.3.4424.13.10.2.6"/>
-        <time value="20171012"/>
+        <time value="{{ recepta.data_anulowania }}"/>
         <signatureCode code="S"/>
         <assignedEntity>
             <id extension="{{ profile.id_pracownika_oid_ext }}" root="2.16.840.1.113883.3.4424.1.6.2" displayable="false"/>

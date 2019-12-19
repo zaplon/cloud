@@ -236,7 +236,7 @@ MODULES = [
     ('timetable.change_service', 'services', u'Usługi'),
     ('timetable.change_localization', 'localizations', u'Lokalizacje'),
     ('auth.change_user', 'users', u'Użytkownicy'),
-    (True, 'forms', u'Formularze'),
+    ('visit.change_visit', 'forms', u'Formularze'),
     (True, 'links', u'Linki'),
     ('user_profile.change_systemsettings', 'settings', u'Ustawienia'),
     ('visit.change_visit', 'visits', u'Wizyty'),

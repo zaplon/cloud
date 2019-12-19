@@ -239,7 +239,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         system_settings = SystemSettings.objects.get(id=1)
         podmiot = {
             'miasto': system_settings.city,
-            'numer_domu': system_settings.street_number,
+            'numer_ulicy': system_settings.street_number,
             'regon14': system_settings.regon,
             'ulica': system_settings.street,
             'id_lokalne': profile['id_podmiotu_lokalne']
@@ -266,7 +266,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'oddzial_nfz': prescription_data['nfz'],
             'uprawnienia_dodatkowe': prescription_data['permissions'],
             'kluczPakietu': prescription_data.get('external_id'),
-            'kodPakietu': prescription_data['external_code'][-4:] if 'external_code' in prescription_data else '',
+            'kodPakietu': prescription_data['external_code'][0:4] if 'external_code' in prescription_data else '',
             'data_wystawienia': data_wystawienia}
         data = {'pacjent': pacjent,
                 'pracownik': pracownik,
@@ -298,7 +298,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         os.remove(tmp_filepath)
         return os.path.join(settings.MEDIA_URL, relative_filepath)
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['post'])
     def cancel(self, request, pk):
         instance = self.get_object()
         user = request.user
@@ -309,6 +309,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'pacjent': {'imie': patient.first_name, 'nazwisko': patient.last_name, 'plec': patient.gender,
                         'data_urodzenia': patient.birth_date.strftime('%Y%m%d') if patient.birth_date else '',
                         'miasto': patient.city,
+                        'pesel': patient.pesel,
                         'kod_pocztowy': patient.postal_code,
                         'ulica': patient.street, 'numer_ulicy': patient.street_number,
                         'numer_lokalu': patient.apartment_number},
@@ -317,16 +318,18 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'podmiot': {
                 'kod_pocztowy': system_settings.postal_code,
                 'miasto': system_settings.city,
-                'numer_domu': system_settings.street_number,
+                'numer_ulicy': system_settings.street_number,
                 'ulica': system_settings.street,
                 'regon14': system_settings.regon,
                 'id_lokalne': profil['id_podmiotu_lokalne']
             },
-            'lekarz': {'imie': user.first_name, 'nazwisko': user.last_name}
+            'lekarz': {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile,
+                       'rodzaj_telefonu': 'DIR'}
         }
         for medicine in instance.medicines.all():
             data['recepta'] = {'data_wystawienia': instance.date.strftime('%Y%m%d'),
                                'wersja': 1,
+                               'data_anulowania': datetime.today().strftime('%Y%m%d'),
                                'numer': medicine.number,
                                'external_id': medicine.external_id}
 
@@ -337,7 +340,12 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
 
         res = requests.post('http://prescriptions/api/cancel_prescription/', json.dumps(data),
                             headers={'Content-type': 'application/json'})
-        return Response(res.json(), status=res.status_code)
+        data = res.json()
+        if res.status_code == 200:
+            instance.deleted = datetime.now()
+            instance.save()
+            data['instance'] = PrescriptionSerializer(instance=instance).data
+        return Response(data, status=res.status_code)
 
     @action(detail=True, methods=['get'])
     def print_one(self, request, pk):

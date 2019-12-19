@@ -25,6 +25,9 @@ class Profile(models.Model):
     role = models.CharField(choices=(('doctor', _('Lekarz')), ('admin', _('Administrator'))), max_length=10)
     css_theme = models.CharField(choices=CssThemeChoices, default='yeti', max_length=10)
 
+    def role_display(self):
+        return self.get_role_display()
+
     # class Meta:
     #     permissions = (
     #         ("edit_term", u"Może edytować terminy"),
@@ -154,13 +157,13 @@ class Doctor(models.Model):
 def create_doctor_tabs(sender, instance, created, **kwargs):
     from visit.models import Tab
     if created:
-        Tab.objects.get_or_create(title='Wywiad', order=1, type=TabTypes.DEFAULT, doctor=instance)
-        Tab.objects.get_or_create(title='Rozpoznanie', order=2, type=TabTypes.ICD10, doctor=instance)
-        Tab.objects.get_or_create(title='Badania', order=3, type=TabTypes.DEFAULT, doctor=instance)
-        Tab.objects.get_or_create(title='Zalecenia', order=4, type=TabTypes.DEFAULT, doctor=instance)
-        Tab.objects.get_or_create(title='Recepty', order=5, type=TabTypes.MEDICINES, doctor=instance)
-        Tab.objects.get_or_create(title='Skierowania', order=6, type=TabTypes.EXAMINATIONS, doctor=instance)
-        Tab.objects.get_or_create(title='Notatki', order=7, type=TabTypes.NOTES, doctor=instance)
+        Tab.objects.get_or_create(title='Wywiad', order=1, type=TabTypes.DEFAULT.name, doctor=instance)
+        Tab.objects.get_or_create(title='Rozpoznanie', order=2, type=TabTypes.ICD10.name, doctor=instance)
+        Tab.objects.get_or_create(title='Badania', order=3, type=TabTypes.DEFAULT.name, doctor=instance)
+        Tab.objects.get_or_create(title='Zalecenia', order=4, type=TabTypes.DEFAULT.name, doctor=instance)
+        Tab.objects.get_or_create(title='Recepty', order=5, type=TabTypes.MEDICINES.name, doctor=instance)
+        Tab.objects.get_or_create(title='Skierowania', order=6, type=TabTypes.EXAMINATIONS.name, doctor=instance)
+        Tab.objects.get_or_create(title='Notatki', order=7, type=TabTypes.NOTES.name, doctor=instance)
 
 
 class Patient(models.Model):

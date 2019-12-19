@@ -166,40 +166,40 @@ class DoctorViewSet(viewsets.ModelViewSet, SearchMixin):
             return self.serializer_class
 
     def get_queryset(self, *args, **kwargs):
-        if hasattr(self.request.user, 'doctor') and 'id' not in kwargs:
-            return Doctor.objects.filter(user=self.request.user)
+        get_params = self.request.GET
+        if not 'forCalendar' in get_params:
+            return super().get_queryset()
+        q = super(DoctorViewSet, self).get_queryset()
+        if 'dateFrom' in get_params:
+            dt = datetime.strptime(get_params['dateFrom'], '%Y-%m-%d')
         else:
-            get_params = self.request.GET
-            q = super(DoctorViewSet, self).get_queryset()
-            if 'dateFrom' in get_params:
-                dt = datetime.strptime(get_params['dateFrom'], '%Y-%m-%d')
-            else:
-                dt = datetime.today()
-            if 'specialization' in get_params:
-                q = q.filter(specializations__id=get_params['specialization'])
-            if 'name_like' in get_params:
-                q = q.filter(Q(user__first_name__icontains=get_params['name_like']) |
-                             Q(user__last_name__icontains=get_params['name_like']))
-            q = q.filter(terms__status='FREE', terms__datetime__gt=dt)
-            q = q.annotate(first_term=Min('terms__datetime')).order_by('-first_term')
-            return q
+            dt = datetime.today()
+        if 'specialization' in get_params:
+            q = q.filter(specializations__id=get_params['specialization'])
+        if 'name_like' in get_params:
+            q = q.filter(Q(user__first_name__icontains=get_params['name_like']) |
+                         Q(user__last_name__icontains=get_params['name_like']))
+        q = q.filter(terms__status='FREE', terms__datetime__gt=dt)
+        q = q.annotate(first_term=Min('terms__datetime')).order_by('-first_term')
+        return q
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(required=False)
-    role = serializers.CharField(source='profile.role')
+    role_display = serializers.CharField(source='profile.role_display', read_only=True)
 
     class Meta:
         model = User
-        fields = [f.name for f in User._meta.fields] + ['role', 'doctor']
+        fields = [f.name for f in User._meta.fields] + ['role_display', 'doctor']
 
     def update(self, instance, validated_data):
-        doctor = validated_data.pop('doctor')
         instance = super(UserDetailSerializer, self).update(instance, validated_data)
-        doctor.pop('get_working_hours')
-        specializations = doctor.pop('specializations')
-        doctor, _ = Doctor.objects.update_or_create(user=instance, defaults=doctor)
-        doctor.specializations.set(specializations)
+        doctor = validated_data.pop('doctor', False)
+        if doctor:
+            doctor['working_hours'] = json.dumps(doctor.pop('get_working_hours'))
+            specializations = doctor.pop('specializations')
+            doctor, _ = Doctor.objects.update_or_create(user=instance, defaults=doctor)
+            doctor.specializations.set(specializations)
         return instance
 
 
@@ -208,6 +208,7 @@ class UserInitSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
     role = serializers.ChoiceField(choices=(('doctor', 'Lekarz'), ('admin', 'Administrator')), write_only=True)
     doctor = DoctorSerializer(read_only=True, required=False)
+    role_display = serializers.CharField(source='profile.role_display', read_only=True)
 
     def validate_password(self, value):
         validate_password(value)
@@ -222,7 +223,10 @@ class UserInitSerializer(serializers.ModelSerializer):
         instance.save()
         Profile.objects.create(role=role, user=instance)
         if role == 'doctor':
+            instance.groups.add(Group.objects.get(name='Lekarze'))
             Doctor.objects.create(user=instance)
+        if role == 'admin':
+            instance.groups.add(Group.objects.get(name='Administratorzy'))
         return instance
 
     def validate(self, data):
@@ -232,7 +236,7 @@ class UserInitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'password', 'password2', 'role', 'doctor', 'role')
+        fields = ('id', 'username', 'first_name', 'last_name', 'password', 'password2', 'role', 'doctor', 'role_display')
 
 
 class UserViewSet(SearchMixin, viewsets.ModelViewSet):

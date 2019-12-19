@@ -225,6 +225,10 @@ class TermlistView(SearchMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Term.objects.filter(patient__isnull=False)
     fields_mapping = {'patient_name': 'patient__first_name', 'patient_last_name': 'patient__last_name'}
 
+    def get_queryset(self):
+        q = super().get_queryset()
+        q = q.filter(doctor=self.request.user.doctor)
+        return q
 
 class LocalizationSerializer(serializers.ModelSerializer):
     class Meta:

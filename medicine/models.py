@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from g_utils.models import SoftDeleteModel
 from user_profile.models import Patient, Doctor
 
 
@@ -69,7 +70,7 @@ class MedicineToPrescription(models.Model):
         super().clean(*args, **kwargs)
 
 
-class Prescription(models.Model):
+class Prescription(SoftDeleteModel):
     class Meta:
         ordering = ('-date', )
 
