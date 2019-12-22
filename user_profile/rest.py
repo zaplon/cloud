@@ -24,7 +24,8 @@ class PatientSerializer(serializers.ModelSerializer):
     # last_name = CharField(source='user.last_name')
     class Meta:
         model = Patient
-        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address', 'name_with_pesel', 'info')
+        fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address', 'name_with_pesel', 'info',
+                  'street', 'street_number', 'city', 'postal_code')
 
     def get_prescriptions(self, instance):
         pass

@@ -230,6 +230,7 @@ class TermlistView(SearchMixin, viewsets.ReadOnlyModelViewSet):
         q = q.filter(doctor=self.request.user.doctor)
         return q
 
+
 class LocalizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Localization

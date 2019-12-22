@@ -61,11 +61,7 @@ def get_prescription_data():
                'numer_ulicy': '49b', 'numer_lokalu': '153', 'ulica': 'Sowińskiego'}
     leki = [{'nazwa': 'Aspiryna', 'kategoria': 'OTC', 'ean': '05909990760619', 'tekst': 'Aspiryna',
              'refundacja_kod': '100%', 'refundacja_tekst': '100%', 'external_id': '100083164',
-             'postac': 'tabletka', 'wielkosc': 10,
-             'numer_recepty': str(uuid.uuid1()).replace('-', '')[0:22]},
-            # {'nazwa': 'Aspiryna2', 'kategoria': 'OTC', 'ean': '05909990760619', 'tekst': 'Aspiryna 2',
-            #  'refundacja_kod': '100%', 'refundacja_tekst': '100%', 'external_id': '100083164',
-            #  'postac': 'tabletka', 'wielkosc': 10, 'numer_recepty': str(uuid.uuid1()).replace('-', '')[0:22]}
+             'postac': 'tabletka', 'wielkosc': 10, 'numer_recepty': str(uuid.uuid1()).replace('-', '')[0:22]}
             ]
     recepta = {'oddzial_nfz': '07', 'uprawnienia_dodatkowe': 'x', 'data_wystawienia': today,
                'kluczPakietu': '11010203040506070809101112131415161718192011', 'kodPakietu': '0987'}
@@ -88,8 +84,8 @@ def test_sending_prescription():
 def test_sending_recepture_prescription():
     c = create_client()
     data = get_prescription_data()
-    data['leki'] = [{'nazwa': 'Syrop z cebuli', 'jest_recepturowy': True, 'refundacja_tekst': '50%',
-                     'jest_refundowany': True, 'ilosc': '100g', 'receptura': 'Wycisnąć cebulę',
+    data['leki'] = [{'jest_recepturowy': True, 'refundacja_tekst': '50%',
+                     'jest_refundowany': True, 'receptura': 'Wycisnąć cebulę',
                      'refundacja_kod': '50%', 'numer_recepty': str(uuid.uuid1()).replace('-', '')[0:22]}]
     status, response = c.save_prescriptions(data)
     print(response)

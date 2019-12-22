@@ -19,7 +19,6 @@ PRESCRIPTION_P12_PASS = 'VfkxFEnqyt'
 #CLIENT_P12_PASS = '8Y8aP3CSxf'
 
 KEY_PASSWORD = '8Y8aP3CSxf'
-WSDL = os.path.join(SOAP_DIR, 'wsdl', 'ObslugaRecepty.wsdl')
 
 idPodmiotuOidRoot = '2.16.840.1.113883.3.4424.2.3.1'
 idPodmiotuOidExt = '000000926670'
@@ -30,7 +29,8 @@ idMiejscaPracyOidRoot = '2.16.840.1.113883.3.4424.2.3.2'
 idMiejscaPracyOidExt = '4'
 rolaBiznesowa = 'LEKARZ_LEK_DENTYSTA_FELCZER'
 
-USE_TRANSPORT = True
+WSDL = os.path.join(SOAP_DIR, 'wsdl_prod', 'ObslugaRecepty.wsdl')
+USE_TRANSPORT = False
 
 local_settings = os.path.join(os.path.dirname(__file__), 'local_settings.py')
 if os.path.isfile(local_settings):

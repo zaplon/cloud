@@ -8,8 +8,8 @@
     <title>Rp</title>
     <text>
         <paragraph>
-            <content ID="p1_nazwaLeku">{{ lek.nazwa }}</content>
-            <content ID="p1_iloscLeku">{{ lek.ilosc }}</content>
+            {% if lek.nazwa %}<content ID="p1_nazwaLeku">{{ lek.nazwa }}</content>{% endif %}
+            {% if lek.ilosc %}<content ID="p1_iloscLeku">{{ lek.ilosc }}</content>{% endif %}
             <content ID="p1_receptura">{{ lek.receptura }}</content>
         </paragraph>
         {% if lek.refundacja_kod and lek.refundacja_kod != '100%' %}

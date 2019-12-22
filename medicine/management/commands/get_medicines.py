@@ -39,6 +39,8 @@ class Command(BaseCommand):
         document = ElementTree.parse(self.file_name)
         meds_data = document.findall(str(QName(namespace, 'produktLeczniczy')))
         for med in meds_data:
+            if med.attrib.get('weterynaryjny'):
+                continue
             to_delete = False
             if med.attrib.get('status') == 'Usuniety':
                 to_delete = True

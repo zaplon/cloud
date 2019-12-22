@@ -74,7 +74,8 @@ class PrescriptionXMLHandler(object):
         try:
             if data['recepta'].get('kluczPakietu'):
                 new_dom = xslt(dom, kluczPakietu=ET.XSLT.strparam(data['recepta']['kluczPakietu']),
-                               receptWPakiecie=str(len(leki)), kodPakietu=data['recepta']['kodPakietu'], **docs)
+                               receptWPakiecie=str(len(leki)),
+                               kodPakietu=ET.XSLT.strparam(data['recepta']['kodPakietu']), **docs)
             else:
                 new_dom = xslt(dom, receptWPakiecie=str(len(leki)), **docs)
         finally:

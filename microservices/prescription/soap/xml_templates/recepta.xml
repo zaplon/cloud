@@ -13,7 +13,7 @@
     <code code="57833-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
           displayName="Prescription for medication Document">
         <translation code="04.01" codeSystem="2.16.840.1.113883.3.4424.11.1.32" codeSystemName="KLAS_DOK_P1"
-                     displayName="Recepta">
+                     displayName="Recepta">po
             <qualifier>
                 <name code="KDLEK" codeSystem="2.16.840.1.113883.3.4424.13.5.1"
                       codeSystemName="PolskieKlasyfikatoryHL7v3" displayName="Kategoria dostępności leku"/>
@@ -53,7 +53,7 @@
     <component>
         <templateId root="2.16.840.1.113883.3.4424.13.10.2.25"/>
         <structuredBody>
-            {% if lek.recepturowy %}
+            {% if lek.jest_recepturowy %}
             {% include 'parts/lek_recepturowy.xml' %}
             {% else %}
             {% include 'parts/lek_gotowy.xml' %}
