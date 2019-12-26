@@ -57,6 +57,17 @@ class NFZSettings(models.Model):
     id_podmiotu_lokalne = models.CharField(max_length=126, blank=True)
     id_miejsca_pracy_oid_ext = models.CharField(max_length=8, blank=True)
 
+
+    @property
+    def is_filled_in(self):
+        """ Checks if all the fields have been filled """
+        fields_names = [f.name for f in self._meta.get_fields()]
+        for field_name in fields_names:
+            value = getattr(self, field_name)
+            if value is None or value == '':
+                return False
+        return True
+
     @property
     def id_pracownika_oid_ext(self):
         return self.user.doctor.pwz

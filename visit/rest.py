@@ -177,19 +177,7 @@ class VisitViewSet(SearchMixin, viewsets.ModelViewSet):
                     IcdToVisit.objects.create(icd_id=d['id'], custom_text=d.get('custom_text', ''), visit=visit)
             else:
                 if vt.type == TabTypes.MEDICINES.name:
-                    medicines = tab['data']['selections']
-                    prescription = tab['data']['prescription']
-                    if not tmp:
-                        Prescription.create(doctor, term.patient, prescription, medicines)
-                        # could be also unified at some point
-                        # realization_date = prescription['realisationDate'].split('T')[0]
-                        # ps = PrescriptionSerializer(data={'patient': term.patient.id, 'doctor': doctor.id,
-                        #                                   'nfz': prescription['nfz'],
-                        #                                   'medicines': medicines,
-                        #                                   'realization_date': realization_date,
-                        #                                   'permissions': prescription['permissions']})
-                        # if ps.is_valid(raise_errors=True):
-                        #     ps.save()
+                    continue
                 vt.json = json.dumps(tab['data']) if 'data' in tab else ''
                 vt.save()
                 visit.tabs.add(vt)

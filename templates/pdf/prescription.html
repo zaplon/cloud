@@ -10,87 +10,125 @@
         border: none;
     }
 </style>
-<div style="height: 4cm;" class="m-2">
-    <div class="row text-left">
-        <div class="col-md-12">
-            <span><strong>Recepta</strong></span>{% if prescription.number %}
-            <span>&nbsp;{{ prescription.number }}</span>{% endif %}
+<div style="width: 100%; margin: 0 auto;">
+    <div style="height: 4cm;" class="m-2">
+        <div class="row" style="padding-top: 1rem;">
+            <div class="col-md-12">
+                <span><strong>Recepta</strong></span>
+                {% if prescription.number %}
+                    <span>{{ prescription.number }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="height: 2.4cm;">
+                {{ header }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if barcodes.regon %}
+                    <strong>Świadczeniodawca</strong>
+                    <img style="display: inline-block;" src="{{ MEDIA_URL }}{{ barcodes.regon }}"/>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
-<div>
-    <table class="table table-bordered" style="height: 4cm;">
-        <col width="70%">
-        <col width="30%">
-        <tbody>
-        <tr>
-            <td rowspan="2">
-                <table class="blank" style="height: 4cm;">
-                    <tr style="height:3.7cm;">
-                        <td>
-                            <p><strong>Pacjent</strong></p>
-                            <p>{{ patient.name }}</p>
-                            <p>{{ patient.address }}</p>
+    <div>
+        <table class="table table-bordered" style="height: 4cm;">
+            <col width="70%">
+            <col width="30%">
+            <tbody>
+            <tr>
+                <td rowspan="2">
+                    <table class="blank" style="height: 4cm;">
+                        <tr style="height:3cm;">
+                            <td>
+                                <p><strong>Pacjent</strong></p>
+                                <p>{{ patient.name }}</p>
+                                <p>{{ patient.address }}</p>
+                            </td>
+                        </tr>
+                        <tr style="height: 0.6cm">
+                            <td>
+                                <img style="margin-left: -0.3cm;" src="{{ MEDIA_URL }}{{ barcodes.pesel }}"/>
+                            </td>
+                        </tr>
+                        <tr style="height:0.4cm;">
+                            <td style="padding-top: 0.2cm;"><span><strong>PESEL</strong> {{ patient.pesel }}</span></td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="text-center" style="height: 2cm;">
+                    <p><strong>Oddział NFZ</strong></p>
+                    <p>{{ prescription.nfz }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <p><strong>Uprawnienia dodatkowe</strong></p>
+                    <p>{{ prescription.permissions }}</p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="height: 10.1cm; margin-top: -1rem;">
+        <table class="table">
+            <col width="70%">
+            <col width="30%">
+            <thead>
+                <tr class="text-left">
+                    <th>Rp</th>
+                    <th class="text-center">Odpłatność</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medicine in prescription.medicines %}
+                    <tr style="height: 1.6cm; border-bottom: 2px dashed #999; vertical-align: middle;">
+                        <td>{{ medicine.name }} {{ medicine.form }} {{ medicine.dose }} {{  medicine.amount }}
+                            {{ medicine.dosage }} {{ medicine.notes }}</td>
+                        <td style="border-left: 2px dashed #999;" class="text-center">
+                            {% if medicine.refundation %}{{ medicine.refundation }} {% else %} 100% {% endif %}
                         </td>
                     </tr>
-                    <tr style="height:0.3cm;">
-                        <td><p><strong>PESEL</strong> {{ patient.pesel }}</p></td>
-                    </tr>
-                </table>
-            </td>
-            <td class="text-center">
-                <p><strong>Oddział NFZ</strong></p>
-                <p>{{ nfz }}</p>
-            </td>
-        </tr>
-        <tr>
-            <td class="text-center">
-                <p><strong>Uprawnienia dodatkowe</strong></p>
-                <p>{{ permissions }}</p>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<div style="height: 11cm; margin-top: -1rem;">
-    <table class="table">
-        <col width="70%">
-        <col width="30%">
-        <thead>
-            <tr class="text-left">
-                <th>Rp</th>
-                <th>Odpłatność</th>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="height: 2cm;" class="text-center">
+        {% if prescription.number %}
+            <div class="row">
+                <div class="col-md-12">
+                    <img src="{{ MEDIA_URL }}{{ prescription.number_barcode }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <span>{{ prescription.number }}</span>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div style="height: 3cm;">
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    <p><strong>Data wystawienia</strong></p>
+                    <p>{{ prescription.realisation_date }}</p>
+                </td>
+                <td rowspan="2">
+                    <p><strong>Dane i podpis osoby uprawnionej</strong></p>
+                    <p>{{ doctor.name }}</p>
+                    <img src="{{ MEDIA_URL }}{{ barcodes.pwz }}">
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            {% for medicine in prescription.medicines %}
-                <tr style="height: 2cm; border-bottom: 2px dashed #999; vertical-align: middle;">
-                    <td>{{ medicine.name }} {{ medicine.dosage }} {{ medicine.notes }}</td>
-                    <td style="border-left: 2px dashed #999;">
-                        {% if medicine.refundation %}{{ medicine.refundation }} {% else %} 100% {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<div style="height: 3cm;">
-    <table class="table table-bordered">
-        <tr>
-            <td>
-                <p><strong>Data wystawienia</strong></p>
-                <p>{{ prescription.realisation_date }}</p>
-            </td>
-            <td rowspan="2">
-                <p><strong>Dane i podpis osoby uprawnionej</strong></p>
-                <p>{{ doctor.name }}</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p><strong>Data realizacji "od dnia"</strong></p>
-                <p>{{ prescription.realisation_date }}</p>
-            </td>
-        </tr>
-    </table>
+            <tr>
+                <td>
+                    <p><strong>Data realizacji "od dnia"</strong></p>
+                    <p>{{ prescription.realisation_date }}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>

@@ -116,11 +116,11 @@ WSGI_APPLICATION = 'gabinet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db3.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db2.sqlite3'),
     },
     'medicines': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'medicines3.sqlite3')
+        'NAME': os.path.join(BASE_DIR, 'medicines.sqlite3')
     }
 }
 
@@ -239,6 +239,7 @@ MODULES = [
     ('visit.change_visit', 'forms', u'Formularze'),
     (True, 'links', u'Linki'),
     ('user_profile.change_systemsettings', 'settings', u'Ustawienia'),
+    ('user_profile.change_nfzsettings', 'nfz_settings', u'Ustawienia NFZ'),
     ('visit.change_visit', 'visits', u'Wizyty'),
     ('examination.change_examination', 'examinations', u'Badania dodatkowe'),
     ('agreement.add_agreement', 'agreements', u'Zgody')

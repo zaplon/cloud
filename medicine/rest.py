@@ -8,15 +8,14 @@ from datetime import datetime
 
 from django.template.loader import render_to_string
 from django.conf import settings
-from reportlab.graphics.barcode import createBarcodeDrawing
-from reportlab.lib.units import cm
+import barcode
 from rest_framework import viewsets, serializers, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from wkhtmltopdf.utils import wkhtmltopdf
 from g_utils.rest import SearchMixin
 from medicine.serializers import *
-from user_profile.models import NFZSettings, SystemSettings
+from user_profile.models import NFZSettings, SystemSettings, PrescriptionNumber
 from user_profile.rest import NFZSettingsSerializer
 
 
@@ -114,32 +113,15 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         medicines = prescriptions_base.pop('medicines')
         n = 5
         chunks = [medicines[i * n:(i + 1) * n] for i in range((len(medicines) + n - 1) // n)]
-        use_numbers = prescriptions_base.pop('number', False)
         for chunk in chunks:
             prescription = copy.deepcopy(prescriptions_base)
             prescription['medicines'] = chunk
-            if use_numbers:
-                for i, m in enumerate(prescription['medicines']):
-                    m['number'] = str(uuid.uuid1()).replace('-', '')[0:22]
-                # numbers = PrescriptionNumber.objects.filter(doctor_id=prescription['doctor'],
-                #                                             date_used__isnull=True).order_by('id')[0:len(prescription['medicines'])]
-                # for i, m in enumerate(prescription['medicines']):
-                #     m['number'] = numbers[i].nr
+            for i, m in enumerate(prescription['medicines']):
+                m['number'] = str(uuid.uuid1()).replace('-', '')[0:22]
             else:
                 prescription.pop('number', False)
             prescriptions.append(prescription)
         return prescriptions
-
-    def create(self, request):
-        prescriptions = []
-        for prescription in self._split_input_data(request.data):
-            medicines = prescription.pop('medicines')
-            serializer = self.get_serializer(data=prescription)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            self.save_medicines(serializer.instance, medicines)
-            prescriptions.append(serializer.data)
-        return Response(prescriptions, status=status.HTTP_201_CREATED)
 
     def _get_html(self, data, user):
         def _get_pwz(pwz):
@@ -154,28 +136,58 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                     control_number += 0
             control_number = control_number % 10
             return base + str(control_number)
-        prescriptions = self._split_input_data(data)
-        doctor = Doctor.objects.get(id=prescriptions[0]['doctor'])
-        patient = Patient.objects.get(id=prescriptions[0]['patient'])
+        prescription = data
+        doctor = Doctor.objects.get(id=prescription['doctor'])
+        patient = Patient.objects.get(id=prescription['patient'])
+        system_settings = SystemSettings.objects.first()
 
-        barcode = createBarcodeDrawing('Code128', value=patient.pesel, width=5 * cm, height=0.5 * cm)
+        code128 = barcode.get_barcode_class('code128')
+        barcodes = {}
+
+        code = code128(patient.pesel)
         barcode_pesel_filename = str(uuid.uuid4())
-        barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', barcode_pesel_filename),
-                     _renderPM_dpi=200)
+        code.save(os.path.join(settings.MEDIA_ROOT, 'tmp', barcode_pesel_filename), options={'module_height': 5,
+                                                                                             'module_width': 0.2,
+                                                                                             'write_text': False})
+        barcodes['pesel'] = f'tmp/{barcode_pesel_filename}.svg'
 
-        barcode = createBarcodeDrawing('Code128', value=_get_pwz(doctor.pwz), width=5 * cm, height=0.6 * cm)
+        code = code128(_get_pwz(doctor.pwz))
         barcode_pwz_filename = str(uuid.uuid4())
-        barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', barcode_pwz_filename),
-                     _renderPM_dpi=200)
+        code.save(os.path.join(settings.MEDIA_ROOT, 'tmp', barcode_pwz_filename), options={'module_height': 5})
+        barcodes['pwz'] = f'tmp/{barcode_pwz_filename}.svg'
+
+        if system_settings.regon:
+            code = code128(system_settings.regon)
+            barcode_regon_filename = str(uuid.uuid4())
+            code.save(os.path.join(settings.MEDIA_ROOT, 'tmp', barcode_regon_filename), options={'module_height': 5})
+            barcodes['regon'] = f'tmp/{barcode_pesel_filename}.svg'
+
+        p = prescription
+        if p['use_number']:
+            number = PrescriptionNumber.objects.filter(doctor=doctor, date_used__isnull=True).first()
+            number.date_used = datetime.today()
+            number.save()
+            p['number'] = number.nr if number else ''
+        for m in p['medicines']:
+            medicine = Medicine.objects.get(id=m['medicine_id'])
+            parent = medicine.parent
+            m.update({'name': parent.name, 'dose': parent.dose, 'size': medicine.size, 'form': parent.form})
+        if p.get('number'):
+            code = code128(p['number'])
+            barcode_number_filename = str(uuid.uuid4())
+            code.save(os.path.join(settings.MEDIA_ROOT, 'tmp', barcode_number_filename),
+                      options={'module_height': 5, 'write_text': False})
+            p['number_barcode'] = f'tmp/{barcode_number_filename}.svg'
 
         context = {'user': doctor.user,
-                   'barcodes': {
-                       'pesel': f'tmp/{barcode_pesel_filename}', 'pwz': f'tmp/{barcode_pwz_filename}'
-                   },
+                   'barcodes': barcodes,
+                   'header': system_settings.documents_header_left,
                    'doctor': doctor,
                    'patient': patient,
-                   'prescriptions': prescriptions,
-                   'APP_URL': settings.APP_URL}
+                   'prescriptions': [p],
+                   'APP_URL': settings.APP_URL,
+                   'MEDIA_URL': settings.APP_URL[:-1] + settings.MEDIA_URL
+                   }
         return render_to_string('pdf/prescriptions.html', context)
 
     def save_medicines(self, instance, medicines):
@@ -189,17 +201,36 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         instance.number_of_medicines = number_of_medicines
         instance.save()
 
+    def perform_update(self, serializer):
+        prescription = self.request.data
+        medicines = prescription.pop('medicines')
+        serializer.save()
+        serializer.instance.medicines.all().delete()
+        self.save_medicines(serializer.instance, medicines)
+
+    def create(self, request):
+        prescription = request.data
+        medicines = prescription.pop('medicines')
+        serializer = self.get_serializer(data=prescription)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        self.save_medicines(serializer.instance, medicines)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     @action(detail=False, methods=['post'])
     def save_in_p1(self, request):
         prescriptions = []
+        nfz_settings = NFZSettings.objects.get(id=request.user.id)
+        if not nfz_settings.is_filled_in:
+            return Response('Proszę wypełnić dane ustawień NFZ', status=status.HTTP_400_BAD_REQUEST)
         for prescription in self._split_input_data(request.data):
             medicines = prescription.pop('medicines')
             if prescription.get('id'):
                 serializer = self.get_serializer(instance=Prescription.objects.get(id=prescription.get('id')))
             else:
                 serializer = self.get_serializer(data=prescription)
-            serializer.is_valid(raise_exception=True)
-            p1_data = self._prepare_for_p1(serializer.data, medicines)
+                serializer.is_valid(raise_exception=True)
+            p1_data = self._prepare_for_p1(serializer.data, medicines, nfz_settings=nfz_settings)
             res = requests.post('http://prescriptions/api/save_prescription/', json.dumps(p1_data),
                                 headers={'Content-type': 'application/json'})
             res_json = json.loads(res.content)
@@ -215,7 +246,6 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 serializer.is_valid(raise_exception=True)
                 for i, m in enumerate(medicines):
                      m['external_id'] = res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['wynikWeryfikacji']['weryfikowanaRecepta'][i]['kluczRecepty']
-                     # PrescriptionNumber.objects.filter(nr=m['number']).update(date_used=datetime.today())
                 self.perform_create(serializer)
                 self.save_medicines(serializer.instance, medicines)
                 prescriptions.append(serializer.data)
@@ -223,10 +253,12 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             else:
                 return Response(res_json, status=status.HTTP_400_BAD_REQUEST)
 
-    def _prepare_for_p1(self, prescription_data, medicines):
+    def _prepare_for_p1(self, prescription_data, medicines, nfz_settings=False):
         patient = Patient.objects.get(id=prescription_data['patient'])
         user = Doctor.objects.get(id=prescription_data['doctor']).user
-        profile = NFZSettingsSerializer(instance=NFZSettings.objects.get(id=user.id)).data
+        if not nfz_settings:
+            nfz_settings = NFZSettings.objects.get(user=user)
+        profile = NFZSettingsSerializer(instance=nfz_settings).data
         pacjent = {
             'pesel': patient.pesel, 'imie': patient.first_name,
             'drugie_imie': patient.second_name, 'nazwisko': patient.last_name,
@@ -242,6 +274,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'numer_ulicy': system_settings.street_number,
             'regon14': system_settings.regon,
             'ulica': system_settings.street,
+            'kod_pocztowy': system_settings.postal_code,
             'id_lokalne': profile['id_podmiotu_lokalne']
         }
         pracownik = {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile}
@@ -372,18 +405,33 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         tmp_filepath = os.path.join(settings.MEDIA_ROOT, 'tmp', f'{uuid.uuid4()}.html')
         with codecs.open(tmp_filepath, 'w', encoding='utf-8') as f:
             f.write(data)
-        wkhtmltopdf(tmp_filepath, output=output_filepath, page_width=90, page_height=210, margin_left=0,
-                    margin_right=0, margin_top=0, margin_bottom=0)
+        wkhtmltopdf(tmp_filepath, output=output_filepath, page_width=100, page_height=210, margin_left=0,
+                    margin_right=0, margin_top=0, margin_bottom=0, zoom=1, dpi=300)
         os.remove(tmp_filepath)
         return Response({'url': f'/media/tmp/{output_filename}'}, content_type='application/json',
                         status=status.HTTP_200_OK)
 
     def get_serializer_class(self):
+        if 'full' in self.request.GET:
+            return PrescriptionSerializer
         if self.action == 'list':
             return PrescriptionListSerializer
         if self.action == 'retrieve':
-            return PrescriptionRetrieveSerializer
+            return PrescriptionSerializer
         return self.serializer_class
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        if 'with_tmp' not in request.GET:
+            queryset = queryset.filter(tmp=False)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def get_queryset(self):
         q = super(PrescriptionViewSet, self).get_queryset()
@@ -392,4 +440,6 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         if 'only_filled' in self.request.GET:
             q = q.filter(medicines__isnull=False)
             q = q.distinct()
+        if 'visit_id' in self.request.GET:
+            q = q.filter(visit_id=self.request.GET['visit_id'])
         return q.filter(doctor=self.request.user.doctor)

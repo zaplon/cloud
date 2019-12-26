@@ -5,6 +5,7 @@ from django.db import models
 
 from g_utils.models import SoftDeleteModel
 from user_profile.models import Patient, Doctor
+from visit.models import Visit
 
 
 class MedicineParent(models.Model):
@@ -84,6 +85,8 @@ class Prescription(SoftDeleteModel):
     realisation_date = models.DateField()
     external_id = models.CharField(max_length=128, blank=True)
     external_code = models.CharField(max_length=32, blank=True)
+    visit = models.ForeignKey(Visit, null=True, blank=True, related_name='prescriptions', on_delete=models.CASCADE)
+    tmp = models.BooleanField(default=False)
     # body = models.CharField(max_length=512)
 
     def get_medicines(self):
@@ -91,7 +94,6 @@ class Prescription(SoftDeleteModel):
         medicines_to_prescription = MedicineToPrescription.objects.filter(prescription_id=self.id)
         medicines_to_prescription = [MedicineToPrescriptionRetrieveSerializer(instance=med) for med in
                                      medicines_to_prescription]
-        # medicines_to_prescription = [med.is_valid() for med in medicines_to_prescription]
         return [med.data for med in medicines_to_prescription]
 
     @staticmethod
