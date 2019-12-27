@@ -312,6 +312,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 'podmiot': podmiot,
                 'profile': profile}
 
+        data['profile']['id_miejsca_pracy_oid_ext'] = '4'
+
         # tests
         if settings.DEBUG:
             data['podmiot']['regon14'] = '97619191000009'
@@ -370,6 +372,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                                'data_anulowania': datetime.today().strftime('%Y%m%d'),
                                'numer': medicine.number,
                                'external_id': medicine.external_id}
+
+        data['profile']['id_miejsca_pracy_oid_ext'] = '4'
 
         # tests
         data['podmiot']['regon14'] = '97619191000009'

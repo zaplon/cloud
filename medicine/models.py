@@ -109,4 +109,3 @@ class Prescription(SoftDeleteModel):
                                                   amount=m['amount'], notes=m.get('notes', ''),
                                                   refundation_id=refundation)
         return True
-
