@@ -163,7 +163,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             barcodes['regon'] = f'tmp/{barcode_pesel_filename}.svg'
 
         p = prescription
-        if p['use_number']:
+        if not p['number'] and p.get('use_number', False):
             number = PrescriptionNumber.objects.filter(doctor=doctor, date_used__isnull=True).first()
             number.date_used = datetime.today()
             number.save()
@@ -402,28 +402,40 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             file_names.append(self._print_from_serializer(serializer, medicines))
         return Response({'files': file_names}, content_type='application_json')
 
-    @action(detail=False, methods=['post'])
-    def print_internal(self, request):
+    def _print_internal(self, data, user):
         output_filename = f'{uuid.uuid4()}.pdf'
         output_filepath = os.path.join(settings.MEDIA_ROOT, 'tmp', output_filename)
-        data = self._get_html(request.data, request.user)
+        data = self._get_html(data, user)
         tmp_filepath = os.path.join(settings.MEDIA_ROOT, 'tmp', f'{uuid.uuid4()}.html')
         with codecs.open(tmp_filepath, 'w', encoding='utf-8') as f:
             f.write(data)
         wkhtmltopdf(tmp_filepath, output=output_filepath, page_width=100, page_height=210, margin_left=0,
                     margin_right=0, margin_top=0, margin_bottom=0, zoom=1, dpi=300)
         os.remove(tmp_filepath)
-        return Response({'file': f'/media/tmp/{output_filename}'}, content_type='application/json',
+        return f'/media/tmp/{output_filename}'
+
+    @action(detail=False, methods=['post'])
+    def print_internal(self, request):
+        filepath = self._print_internal(request.data, request.user)
+        return Response({'file': filepath}, content_type='application/json',
+                        status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get'])
+    def print_one_internal(self, request, pk):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance)
+        filepath = self._print_internal(serializer.data, request.user)
+        return Response({'file': filepath}, content_type='application/json',
                         status=status.HTTP_200_OK)
 
     def get_serializer_class(self):
-        if 'full' in self.request.GET:
-            return PrescriptionSerializer
-        if self.action == 'list':
-            return PrescriptionListSerializer
-        if self.action == 'retrieve':
-            return PrescriptionSerializer
-        return self.serializer_class
+            if 'full' in self.request.GET:
+                return PrescriptionSerializer
+            if self.action == 'list':
+                return PrescriptionListSerializer
+            if self.action == 'retrieve':
+                return PrescriptionSerializer
+            return self.serializer_class
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
