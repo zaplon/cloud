@@ -408,7 +408,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         wkhtmltopdf(tmp_filepath, output=output_filepath, page_width=100, page_height=210, margin_left=0,
                     margin_right=0, margin_top=0, margin_bottom=0, zoom=1, dpi=300)
         os.remove(tmp_filepath)
-        return Response({'url': f'/media/tmp/{output_filename}'}, content_type='application/json',
+        return Response({'file': f'/media/tmp/{output_filename}'}, content_type='application/json',
                         status=status.HTTP_200_OK)
 
     def get_serializer_class(self):
