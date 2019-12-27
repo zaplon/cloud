@@ -91,3 +91,5 @@ services:
       - ./public/media/certs/:/certs/:Z
     expose:
       - '80'
+    environment:
+      GABINET_ENV: dev

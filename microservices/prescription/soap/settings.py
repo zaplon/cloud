@@ -32,7 +32,8 @@ rolaBiznesowa = 'LEKARZ_LEK_DENTYSTA_FELCZER'
 WSDL = os.path.join(SOAP_DIR, 'wsdl_prod', 'ObslugaRecepty.wsdl')
 USE_TRANSPORT = False
 
-local_settings = os.path.join(os.path.dirname(__file__), 'local_settings.py')
-if os.path.isfile(local_settings):
-    from .local_settings import *
+if os.environ.get('GABINET_ENV') == 'dev':
+    local_settings = os.path.join(os.path.dirname(__file__), 'dev_settings.py')
+    if os.path.isfile(local_settings):
+        from .dev_settings import *
 
