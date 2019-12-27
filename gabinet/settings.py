@@ -238,6 +238,8 @@ MODULES = [
     ('auth.change_user', 'users', u'Użytkownicy'),
     ('visit.change_visit', 'forms', u'Formularze'),
     (True, 'links', u'Linki'),
+    (True, 'ewus', u'Ewus'),
+    (True, 'zwolnienia', u'Zwolnienia'),
     ('user_profile.change_systemsettings', 'settings', u'Ustawienia'),
     ('user_profile.change_nfzsettings', 'nfz_settings', u'Ustawienia NFZ'),
     ('visit.change_visit', 'visits', u'Wizyty'),
