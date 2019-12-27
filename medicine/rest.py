@@ -313,11 +313,12 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 'profile': profile}
 
         # tests
-        data['podmiot']['regon14'] = '97619191000009'
-        data['pacjent']['pesel'] = '70032816894'
-        data['pacjent']['data_urodzenia'] = '19880420'
-        data['profile']['id_pracownika_oid_ext'] = '5992363'
-        data['recepta']['oddzial_nfz'] = '07'
+        if settings.DEBUG:
+            data['podmiot']['regon14'] = '97619191000009'
+            data['pacjent']['pesel'] = '70032816894'
+            data['pacjent']['data_urodzenia'] = '19880420'
+            data['profile']['id_pracownika_oid_ext'] = '5992363'
+            data['recepta']['oddzial_nfz'] = '07'
         return data
 
     def _print_from_serializer(self, serializer, medicines):
