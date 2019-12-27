@@ -25,3 +25,5 @@ django-compressor==2.1.1
 django-jet
 python-memcached
 python-barcode
+django-rest-auth==0.9.3
+

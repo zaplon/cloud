@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.conf.re_paths import re_path, include
     2. Add a URL to re_pathpatterns:  re_path(r'^blog/', include('blog.re_paths'))
 """
-from django.conf import settings
 from django.urls import include, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -90,7 +89,8 @@ urlpatterns = [
     re_path(r"^backend/forms/", include('forms.urls'), name='forms'),
     re_path(r"^agreements/", include('agreements.urls'), name='agreements'),
     re_path(r"^rest-auth/login/$", GabinetLoginView.as_view(), name="login"),
-    re_path(r'^rest-auth/', include('rest_auth.urls'))
+    re_path(r'^rest-auth/', include('rest_auth.urls')),
+    re_path('reset_potwierdz/<uidb64>/<token>/', GabinetLoginView.as_view(), name='password_reset_confirm'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
