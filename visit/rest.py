@@ -6,8 +6,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from g_utils.rest import OnlyDoctorRecords, SearchMixin
-from medicine.models import Prescription, MedicineToPrescription, Medicine
-from medicine.serializers import PrescriptionSerializer
 from timetable.models import Term
 from timetable.rest import TermDetailSerializer
 from .models import Icd10, Template, Visit, VisitTab, Tab, TabTypes, IcdToVisit

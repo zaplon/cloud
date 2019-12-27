@@ -154,7 +154,7 @@ class DoctorCalendarSerializer(serializers.ModelSerializer):
 
 
 # ViewSets define the view behavior.
-class DoctorViewSet(viewsets.ModelViewSet, SearchMixin):
+class DoctorViewSet(SearchMixin, viewsets.ModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
 

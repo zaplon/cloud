@@ -79,7 +79,7 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'price', 'code', 'color', 'doctors')
 
 
-class ServiceViewSet(viewsets.ModelViewSet, SearchMixin):
+class ServiceViewSet(SearchMixin, viewsets.ModelViewSet):
     queryset = Service.objects.all()
     permission_classes = [AllowAny]
     # pagination_class = None
