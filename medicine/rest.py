@@ -219,39 +219,43 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def save_in_p1(self, request):
-        prescriptions = []
         nfz_settings = NFZSettings.objects.get(id=request.user.id)
         if not nfz_settings.is_filled_in:
             return Response('Proszę wypełnić dane ustawień NFZ', status=status.HTTP_400_BAD_REQUEST)
-        for prescription in self._split_input_data(request.data):
-            medicines = prescription.pop('medicines')
-            if prescription.get('id'):
-                serializer = self.get_serializer(instance=Prescription.objects.get(id=prescription.get('id')))
-            else:
-                serializer = self.get_serializer(data=prescription)
-                serializer.is_valid(raise_exception=True)
-            p1_data = self._prepare_for_p1(serializer.data, medicines, nfz_settings=nfz_settings)
-            res = requests.post('http://prescriptions/api/save_prescription/', json.dumps(p1_data),
-                                headers={'Content-type': 'application/json'})
-            res_json = json.loads(res.content)
-            if res.status_code == status.HTTP_401_UNAUTHORIZED:
-                return Response(res_json, status=status.HTTP_401_UNAUTHORIZED)
-            if 'major' in res_json['wynik'] and res_json['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
-                prescription = serializer.data
-                prescription['external_id'] = \
-                    res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kluczPakietuRecept']
-                prescription['external_code'] = \
-                    res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kodPakietuRecept']
-                serializer = self.get_serializer(data=prescription)
-                serializer.is_valid(raise_exception=True)
-                for i, m in enumerate(medicines):
-                     m['external_id'] = res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['wynikWeryfikacji']['weryfikowanaRecepta'][i]['kluczRecepty']
-                self.perform_create(serializer)
-                self.save_medicines(serializer.instance, medicines)
-                prescriptions.append(serializer.data)
-                return Response(prescriptions, status=status.HTTP_201_CREATED)
-            else:
-                return Response(res_json, status=status.HTTP_400_BAD_REQUEST)
+        prescription = self.request.data
+
+        medicines = prescription.pop('medicines')
+        for i, m in enumerate(medicines):
+            m['number'] = str(uuid.uuid1()).replace('-', '')[0:22]
+        else:
+            prescription.pop('number', False)
+
+        if prescription.get('id'):
+            serializer = self.get_serializer(instance=Prescription.objects.get(id=prescription.get('id')))
+        else:
+            serializer = self.get_serializer(data=prescription)
+            serializer.is_valid(raise_exception=True)
+        p1_data = self._prepare_for_p1(serializer.data, medicines, nfz_settings=nfz_settings)
+        res = requests.post('http://prescriptions/api/save_prescription/', json.dumps(p1_data),
+                            headers={'Content-type': 'application/json'})
+        res_json = json.loads(res.content)
+        if res.status_code == status.HTTP_401_UNAUTHORIZED:
+            return Response(res_json, status=status.HTTP_401_UNAUTHORIZED)
+        if 'major' in res_json['wynik'] and res_json['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
+            prescription = serializer.data
+            prescription['external_id'] = \
+                res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kluczPakietuRecept']
+            prescription['external_code'] = \
+                res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kodPakietuRecept']
+            serializer = self.get_serializer(data=prescription)
+            serializer.is_valid(raise_exception=True)
+            for i, m in enumerate(medicines):
+                 m['external_id'] = res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['wynikWeryfikacji']['weryfikowanaRecepta'][i]['kluczRecepty']
+            self.perform_create(serializer)
+            self.save_medicines(serializer.instance, medicines)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(res_json, status=status.HTTP_400_BAD_REQUEST)
 
     def _prepare_for_p1(self, prescription_data, medicines, nfz_settings=False):
         patient = Patient.objects.get(id=prescription_data['patient'])
@@ -282,7 +286,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         for m in medicines:
             medicine = Medicine.objects.get(id=m['medicine_id'])
             parent = medicine.parent
-            tekst = f'{parent.name} {m["amount"]} {m["dosage"]}'
+            tekst = f'{parent.name} {parent.dose} {parent.form} {m["amount"]} op. po {medicine.size} {m["dosage"]}'
             refundacja_tekst = refundacja_kod = '100%'
             if m['refundation']:
                 tekst = f"{tekst} <br/>Odpłatność: {m['refundation']}"
