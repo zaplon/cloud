@@ -76,7 +76,7 @@ class HoursWidget(Widget):
 class DoctorForm(ModelForm):
 
     class Meta:
-        fields = ['pwz', 'mobile', 'title', 'working_hours', 'working_hours_editor', 'specializations']
+        fields = ['pwz', 'mobile', 'title', 'working_hours', 'specializations']
 
     def __init__(self, *args, **kwargs):
         super(DoctorForm, self).__init__(*args, **kwargs)
