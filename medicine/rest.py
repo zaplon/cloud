@@ -163,7 +163,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             barcodes['regon'] = f'tmp/{barcode_pesel_filename}.svg'
 
         p = prescription
-        if not p['number'] and p.get('use_number', False):
+        if not p.get('number') and p.get('use_number', False):
             number = PrescriptionNumber.objects.filter(doctor=doctor, date_used__isnull=True).first()
             number.date_used = datetime.today()
             number.save()
@@ -296,7 +296,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             if m['refundation']:
                 tekst = f"{tekst} <br/>Odpłatność: {m['refundation']}"
                 refundacja_tekst = m['refundation']
-                refundacja_kod = 'R' if m['refundation'] == u'Ryczałt' else m['refundation']
+                refundacja_kod = 'R' if m['refundation'].lower() == u'ryczałt' else m['refundation']
             leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
                          'tekst': tekst, 'postac': parent.form, 'wielkosc': m['amount'],
                          'external_id': medicine.external_id,
@@ -451,7 +451,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         if 'with_tmp' not in request.GET:
             queryset = queryset.filter(tmp=False)
-
+        if 'visit_id' in request.GET:
+            queryset = queryset.order_by('date')
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

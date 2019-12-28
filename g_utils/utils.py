@@ -38,7 +38,6 @@ def get_birth_date_from_pesel(pesel):
 
 
 def send_sms(mobile, message):
-    mobile = '504485575'
     if settings.SMS_VERIFICATION:
         params = {'login': settings.SMS_API_LOGIN, 'haslo': settings.SMS_API_PASSWORD,
                   'akcja': 'wyslij_sms', 'nadawca': 'Gabinet',
