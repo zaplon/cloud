@@ -223,6 +223,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         if not nfz_settings.is_filled_in:
             return Response('Proszę wypełnić dane ustawień NFZ', status=status.HTTP_400_BAD_REQUEST)
         prescription = self.request.data
+        instance = False
 
         medicines = prescription.pop('medicines')
         for i, m in enumerate(medicines):
@@ -231,6 +232,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             prescription.pop('number', False)
 
         if prescription.get('id'):
+            instance = Prescription.objects.get(id=prescription.get('id'))
             serializer = self.get_serializer(instance=Prescription.objects.get(id=prescription.get('id')))
         else:
             serializer = self.get_serializer(data=prescription)
@@ -247,7 +249,10 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kluczPakietuRecept']
             prescription['external_code'] = \
                 res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kodPakietuRecept']
-            serializer = self.get_serializer(data=prescription)
+            if instance:
+                serializer = self.get_serializer(data=prescription, instance=instance)
+            else:
+                serializer = self.get_serializer(data=prescription)
             serializer.is_valid(raise_exception=True)
             for i, m in enumerate(medicines):
                  m['external_id'] = res_json['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['wynikWeryfikacji']['weryfikowanaRecepta'][i]['kluczRecepty']

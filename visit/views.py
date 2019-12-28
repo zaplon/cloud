@@ -15,6 +15,7 @@ from wkhtmltopdf.views import PDFTemplateView
 
 from g_utils.utils import get_age_from_pesel, get_birth_date_from_pesel
 from g_utils.views import GabinetPermissionRequiredMixin
+from medicine.models import Prescription
 from result.models import Result
 from timetable.models import Term
 from user_profile.models import SystemSettings
@@ -252,7 +253,11 @@ class PdfView(GabinetPdfView):
         header_right = system_settings.documents_header_right
         patient_age = get_age_from_pesel(pesel)
         patient_birth_date = get_birth_date_from_pesel(pesel)
+        prescriptions = Prescription.objects.filter(visit=self.visit)
+        for p in prescriptions:
+            p.meds = p.medicines.all()
         return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'header_left': header_left,
                 'patient': self.visit.term.patient, 'header_right': header_right,
                 'patient_age': patient_age, 'patient_birth_date': patient_birth_date,
+                'prescriptions': prescriptions,
                 'barcode': settings.APP_URL + 'media/tmp/' + file_name + '/Drawing000.png'}

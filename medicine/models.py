@@ -65,6 +65,10 @@ class MedicineToPrescription(models.Model):
     number = models.CharField(max_length=32, blank=True, null=True)
     composition = models.TextField(blank=True)
 
+    @property
+    def medicine(self):
+        return Medicine.objects.get(id=self.medicine_id)
+
     def clean(self, *args, **kwargs):
         if not (self.medicine_id or self.composition):
             raise ValidationError('Medicine needs to have composition or medicine_id filled.')

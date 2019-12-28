@@ -35,16 +35,25 @@
         <span class="font-lg">Wiek: <strong>{{ patient_age|default:'-' }} lat</strong></span>
         <h1 class="text-center">Historia choroby</h1>
         {% for tab in visit.printable_tabs %}
-            {% if tab.type == 'ICD10' %}
+            {% if tab.type == 'MEDICINES' %}
+                {% if tab.data.selections or prescriptions %}
+                    <div>
+                        <h2>{{ tab.title }}</h2>
+                        {%  if tab.data.selections %}
+                            {% include 'pdf/tabs/medicines.html' with medicines=tab.data.selections %}
+                        {% else %}
+                            {% include 'pdf/tabs/prescriptions.html' %}
+                        {%  endif %}
+                    </div>
+                {% endif %}
+            {% elif tab.type == 'ICD10' %}
                 <h2>{{ tab.title }}</h2>
                 {% include 'pdf/tabs/icd10.html' with icdtovisit=visit.icdtovisit_set.all %}
             {% else %}
                 {% if tab.data %}
                     <div>
                         <h2>{{ tab.title }}</h2>
-                        {% if tab.type == 'MEDICINES' %}
-                            {% include 'pdf/tabs/medicines.html' with medicines=tab.data.selections %}
-                        {% elif tab.type == 'EXAMINATIONS' %}
+                        {% if tab.type == 'EXAMINATIONS' %}
                             {% include 'pdf/tabs/examinations.html' with examinations=tab.data %}
                         {% else %}
                             {{ tab.data|linebreaks }}

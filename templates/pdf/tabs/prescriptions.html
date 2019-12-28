@@ -1,0 +1,28 @@
+{% if prescriptions %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nazwa leku</th>
+                <th>Opakowanie</th>
+                <th>Postać</th>
+                <th>Dawka</th>
+                <th>Ilość i dawkowanie</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for prescription in prescriptions %}
+            {% for m in prescription.meds %}
+                <tr class="text-center">
+                    <td>{{ m.medicine.parent.name }}</td>
+                    <td>{{ m.medicine.size }}</td>
+                    <td>{{ m.medicine.parent.form }}</td>
+                    <td>{{ m.medicine.parent.dose }}</td>
+                    <td>{{ m.amount }} op. {{ m.dosage }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    Brak przepisanych leków
+{% endif %}
