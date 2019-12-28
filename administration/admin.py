@@ -74,15 +74,12 @@ class HoursWidget(Widget):
 
 
 class DoctorForm(ModelForm):
-    working_hours_editor = CharField(max_length=1024, required=False, label='Godziny pracy')
 
     class Meta:
         fields = ['pwz', 'mobile', 'title', 'working_hours', 'working_hours_editor', 'specializations']
 
     def __init__(self, *args, **kwargs):
         super(DoctorForm, self).__init__(*args, **kwargs)
-        self.fields['working_hours_editor'].widget = HoursWidget(working_hours=self.instance.working_hours)
-        self.fields['working_hours'].widget = HiddenInput()
 
 
 class DoctorInline(admin.StackedInline):
