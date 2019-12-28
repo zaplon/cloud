@@ -6,6 +6,7 @@ services:
       LANG: "pl_PL.UTF-8"
       LANGUAGE: "pl_PL"
       QT_QPA_PLATFORM: "offscreen"
+      P1_ENV: prod
     image: "docker.io/zaplon/gabinet"
     working_dir: /app/
     volumes:
@@ -92,4 +93,4 @@ services:
     expose:
       - '80'
     environment:
-      GABINET_ENV: dev
+      P1_ENV: prod

@@ -315,7 +315,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         data['profile']['id_miejsca_pracy_oid_ext'] = '4'
 
         # tests
-        if settings.DEBUG:
+        if os.environ.get('P1_ENV') == 'dev':
             data['podmiot']['regon14'] = '97619191000009'
             data['pacjent']['pesel'] = '70032816894'
             data['pacjent']['data_urodzenia'] = '19880420'
