@@ -381,9 +381,10 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         data['profile']['id_miejsca_pracy_oid_ext'] = '4'
 
         # tests
-        data['podmiot']['regon14'] = '97619191000009'
-        data['pacjent']['pesel'] = '70032816894'
-        data['profile']['id_pracownika_oid_ext'] = '5992363'
+        if os.environ.get('P1_ENV') == 'dev':
+            data['podmiot']['regon14'] = '97619191000009'
+            data['pacjent']['pesel'] = '70032816894'
+            data['profile']['id_pracownika_oid_ext'] = '5992363'
 
         res = requests.post('http://prescriptions/api/cancel_prescription/', json.dumps(data),
                             headers={'Content-type': 'application/json'})
