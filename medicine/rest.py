@@ -191,6 +191,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         return render_to_string('pdf/prescriptions.html', context)
 
     def save_medicines(self, instance, medicines):
+        instance.medicines.all().delete()
         number_of_medicines = 0
         for medicine in medicines:
             medicine['prescription'] = instance.id
@@ -205,7 +206,6 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         prescription = self.request.data
         medicines = prescription.pop('medicines')
         serializer.save()
-        serializer.instance.medicines.all().delete()
         self.save_medicines(serializer.instance, medicines)
 
     def create(self, request):
@@ -464,8 +464,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         if 'patient_id' in self.request.GET:
             q = q.filter(patient_id=self.request.GET['patient_id'])
         if 'only_filled' in self.request.GET:
-            q = q.filter(medicines__isnull=False)
+            q = q.filter(medicines__isnull=False, deleted__isnull=True)
             q = q.distinct()
         if 'visit_id' in self.request.GET:
-            q = q.filter(visit_id=self.request.GET['visit_id'])
+            q = q.filter(visit_id=self.request.GET['visit_id'], deleted__isnull=True)
         return q.filter(doctor=self.request.user.doctor)
