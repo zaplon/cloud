@@ -167,7 +167,7 @@ class TermViewSet(viewsets.ModelViewSet):
         if 'next_visits' in self.request.GET:
             if hasattr(self.request.user, 'doctor'):
                 return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
-                                                                      doctor=self.request.user.doctor, status='PENDING').order_by('datetime')[0:5]
+                                                                      doctor=self.request.user.doctor, status='PENDING').order_by('datetime')[0:1]
             elif 'doctor' in self.request.GET:
                 return super(TermViewSet, self).get_queryset().filter(datetime__gte=timezone.now(),
                                                                       doctor__id=self.request.GET['doctor'], status='PENDING').order_by('datetime')[0:5]

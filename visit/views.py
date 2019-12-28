@@ -253,7 +253,7 @@ class PdfView(GabinetPdfView):
         header_right = system_settings.documents_header_right
         patient_age = get_age_from_pesel(pesel)
         patient_birth_date = get_birth_date_from_pesel(pesel)
-        prescriptions = Prescription.objects.filter(visit=self.visit)
+        prescriptions = Prescription.objects.filter(visit=self.visit, deleted__isnull=True)
         for p in prescriptions:
             p.meds = p.medicines.all()
         return {'visit': self.visit, 'IMAGES_ROOT': settings.APP_URL + 'static/', 'header_left': header_left,
