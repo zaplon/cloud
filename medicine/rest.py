@@ -275,7 +275,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'numer_ulicy': patient.street_number, 'numer_lokalu': patient.apartment_number,
             'ulica': patient.street,
             'data_urodzenia': patient.birth_date,
-            'plec': 'M' if patient.gender == 'M' else 'K'
+            'plec': 'M' if patient.gender == 'M' else 'F'
         }
         system_settings = SystemSettings.objects.get(id=1)
         podmiot = {

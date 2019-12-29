@@ -3,6 +3,7 @@ from datetime import datetime
 import zipfile
 from xml.dom import minidom
 
+import requests
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
@@ -13,8 +14,15 @@ from .forms import *
 from g_utils.forms import ajax_form_validate
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 import json
-from .models import PrescriptionNumber
+from .models import PrescriptionNumber, NFZSettings
+from .rest import NFZSettingsSerializer
 
+
+class TestP1View(APIView):
+    def get(self, request):
+        nfz_settings = NFZSettingsSerializer(instance=NFZSettings.objects.get(user=request.user))
+        res = requests.post('http://prescriptions/api/test/', json.dumps(nfz_settings.data))
+        return Response(res.content, status=res.status_code)
 
 
 class SettingsView(View):

@@ -33,6 +33,7 @@ class TermCancelView(APIView):
         else:
             t.status = 'FREE'
             t.patient = None
+            t.service = None
         t.save()
         return HttpResponse(status=200)
 
