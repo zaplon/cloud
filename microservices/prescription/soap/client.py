@@ -32,8 +32,8 @@ class PrescriptionXMLHandler(object):
         recepta = {'oddzial_nfz': '', 'uprawnienia_dodatkowe': '',  'data_wystawienia': '',
                    **input_data['recepta']}
         podmiot = {'id_lokalne': self.nfz_settings['id_podmiotu_lokalne'], 'id': self.nfz_settings['id_podmiotu_oid_ext'],
-                   'id_root': settings.idPodmiotuOidRoot, 'miasto': '', 'numer_domu': '',
-                   'regon14': '',
+                   'id_root': self.nfz_settings.get('id_podmiotu_oid_root') or settings.idPodmiotuOidRoot,
+                   'miasto': '', 'numer_domu': '', 'regon14': '',
                    'ulica': '', 'numer_domu': '', **input_data['podmiot']}
         pracownik = {'id_ext': self.nfz_settings['id_pracownika_oid_ext'], 'imie': '', 'nazwisko': '',
                      'telefon_rodzaj': 'PUB',
@@ -130,7 +130,7 @@ class PrescriptionClient(PrescriptionXMLHandler):
             f'{{{header_ns}}}kontekstWywolania',
             xsd.ComplexType([attr] * 7)
         )
-        header_value = header(atrybut={'wartosc': settings.idPodmiotuOidRoot,
+        header_value = header(atrybut={'wartosc': self.nfz_settings.get('id_podmiotu_oid_root') or settings.idPodmiotuOidRoot,
                                        'nazwa': 'urn:csioz:p1:erecepta:kontekst:idPodmiotuOidRoot'},
                               atrybut__1={'wartosc': self.nfz_settings['id_podmiotu_oid_ext'],
                                           'nazwa': 'urn:csioz:p1:erecepta:kontekst:idPodmiotuOidExt'},
