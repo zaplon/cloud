@@ -23,6 +23,10 @@ server {
         alias /media/;
     }
 
+    location /media/certs/ {
+        return 403;
+    }
+
     #location /backend/ezla/ {
     #    proxy_pass http://ezla:9001/;
     #    proxy_set_header Host $host;

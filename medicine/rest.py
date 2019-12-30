@@ -226,6 +226,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         instance = False
 
         medicines = prescription.pop('medicines')
+        if len(medicines) == 0:
+            return Response('Proszę umieścić leki na recepcie', status=status.HTTP_400_BAD_REQUEST)
         for i, m in enumerate(medicines):
             m['number'] = str(uuid.uuid1()).replace('-', '')[0:22]
         else:
