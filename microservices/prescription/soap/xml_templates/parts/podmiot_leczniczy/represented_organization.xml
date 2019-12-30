@@ -12,7 +12,11 @@
     <asOrganizationPartOf>
         <wholeOrganization>
             <!-- Regon przedsiębiorstwa -->
+            {% if podmiot.regon_length ==  9 %}
+            <id extension="{{podmiot.regon14}}" root="2.16.840.1.113883.3.4424.2.2.1" displayable="true"/>
+            {% elif podmiot.regon_length == 14 %}
             <id extension="{{podmiot.regon14}}" root="2.16.840.1.113883.3.4424.2.2.2" displayable="true"/>
+            {% endif %}
             <asOrganizationPartOf>
                 <!-- podmiot - nr ksiegi + regon podmiotu -->
                 <wholeOrganization>

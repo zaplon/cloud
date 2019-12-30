@@ -55,7 +55,7 @@ class NFZSettings(models.Model):
     certificate_user = models.FileField(null=True, blank=True, upload_to='certs')
     certificate_user_password = models.CharField(max_length=126, blank=True)
     id_podmiotu_oid_ext = models.CharField(max_length=126, blank=True)
-
+    id_podmiotu_oid_root = models.CharField(max_length=126, blank=True, default='2.16.840.1.113883.3.4424.2.4.68')
     id_podmiotu_lokalne = models.CharField(max_length=126, blank=True)
     id_miejsca_pracy_oid_ext = models.CharField(max_length=8, blank=True)
 
@@ -72,13 +72,6 @@ class NFZSettings(models.Model):
     @property
     def id_pracownika_oid_ext(self):
         return self.user.doctor.pwz
-
-    @property
-    def id_podmiotu_oid_root(self):
-        if self.typ_podmiotu == 'PRAKTYKA_LEKARSKA':
-            return '2.16.840.1.113883.3.4424.2.4.68'
-        if self.typ_podmiotu == 'PODMIOT_LECZNICZY':
-            return '2.16.840.1.113883.3.4424.2.3.1'
 
     @property
     def id_pracownika_root(self):

@@ -14,7 +14,11 @@
               displayName="Praktyka lekarska"/>
         <wholeOrganization>
             <id extension="{{ profile.id_podmiotu_oid_ext}}" root="2.16.840.1.113883.3.4424.2.4.68"/>
-            <id extension="{{ podmiot.regon14 }}" root="2.16.840.1.113883.3.4424.2.2.2" displayable="true"/>
+            {% if podmiot.regon_length ==  9 %}
+            <id extension="{{podmiot.regon14}}" root="2.16.840.1.113883.3.4424.2.2.1" displayable="true"/>
+            {% elif podmiot.regon_length == 14 %}
+            <id extension="{{podmiot.regon14}}" root="2.16.840.1.113883.3.4424.2.2.2" displayable="true"/>
+            {% endif %}
             <name>Prywatna praktyka lekarska</name>
             <telecom use="{{ pracownik.telefon_rodzaj }}" value="tel:{{ pracownik.telefon }}"/>
             <addr>

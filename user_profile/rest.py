@@ -408,8 +408,8 @@ class InfoViewSet(viewsets.ReadOnlyModelViewSet):
 class NFZSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = NFZSettings
-        read_only_fields = ['id_pracownika_oid_ext', 'id_podmiotu_oid_root']
-        fields = [f.name for f in NFZSettings._meta.get_fields()] + ['id_pracownika_oid_ext', 'id_podmiotu_oid_root']
+        read_only_fields = ['id_pracownika_oid_ext']
+        fields = [f.name for f in NFZSettings._meta.get_fields()] + ['id_pracownika_oid_ext']
 
 
 class NFZSettingsViewSet(viewsets.ModelViewSet):

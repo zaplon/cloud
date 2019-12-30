@@ -262,6 +262,20 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         else:
             return Response(res_json, status=status.HTTP_400_BAD_REQUEST)
 
+    def _get_podmiot(self, system_settings, profile):
+        podmiot = {
+            'miasto': system_settings.city,
+            'numer_ulicy': system_settings.street_number,
+            'regon14': system_settings.regon,
+            'regon_length': len(system_settings.regon),
+            'ulica': system_settings.street,
+            'kod_pocztowy': system_settings.postal_code,
+            'id_lokalne': profile['id_podmiotu_lokalne'],
+            'typ_podmiotu': profile['typ_podmiotu'],
+            'id_root': profile['id_podmiotu_oid_root']
+        }
+        return podmiot
+
     def _prepare_for_p1(self, prescription_data, medicines, nfz_settings=False):
         patient = Patient.objects.get(id=prescription_data['patient'])
         user = Doctor.objects.get(id=prescription_data['doctor']).user
@@ -278,16 +292,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'plec': 'M' if patient.gender == 'M' else 'F'
         }
         system_settings = SystemSettings.objects.get(id=1)
-        podmiot = {
-            'miasto': system_settings.city,
-            'numer_ulicy': system_settings.street_number,
-            'regon14': system_settings.regon,
-            'ulica': system_settings.street,
-            'kod_pocztowy': system_settings.postal_code,
-            'id_lokalne': profile['id_podmiotu_lokalne'],
-            'typ_podmiotu': profile['typ_podmiotu'],
-            'id_root': profile['id_podmiotu_oid_root']
-        }
+        podmiot = self._get_podmiot(system_settings, profile)
         pracownik = {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile,
                      'profile': profile}
         leki = []
@@ -363,14 +368,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                         'numer_lokalu': patient.apartment_number},
             'numer_anulowania': str(uuid.uuid1()).replace('-', '')[0:22],
             'profile': profil,
-            'podmiot': {
-                'kod_pocztowy': system_settings.postal_code,
-                'miasto': system_settings.city,
-                'numer_ulicy': system_settings.street_number,
-                'ulica': system_settings.street,
-                'regon14': system_settings.regon,
-                'id_lokalne': profil['id_podmiotu_lokalne']
-            },
+            'podmiot': self._get_podmiot(system_settings, profil),
             'pracownik': {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile,
                           'telefon_rodzaj': 'DIR'}
         }
