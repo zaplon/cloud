@@ -284,9 +284,12 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'regon14': system_settings.regon,
             'ulica': system_settings.street,
             'kod_pocztowy': system_settings.postal_code,
-            'id_lokalne': profile['id_podmiotu_lokalne']
+            'id_lokalne': profile['id_podmiotu_lokalne'],
+            'typ_podmiotu': profile['typ_podmiotu'],
+            'id_root': profile['id_podmiotu_oid_root']
         }
-        pracownik = {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile}
+        pracownik = {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile,
+                     'profile': profile}
         leki = []
         for m in medicines:
             medicine = Medicine.objects.get(id=m['medicine_id'])
@@ -321,10 +324,10 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
 
         # tests
         if os.environ.get('P1_ENV') == 'dev':
-            data['podmiot']['regon14'] = '97619191000009'
+            # data['podmiot']['regon14'] = '97619191000009'
             data['pacjent']['pesel'] = '70032816894'
             data['pacjent']['data_urodzenia'] = '19880420'
-            data['profile']['id_pracownika_oid_ext'] = '5992363'
+            # data['profile']['id_pracownika_oid_ext'] = '5992363'
             data['recepta']['oddzial_nfz'] = '07'
         return data
 
@@ -368,8 +371,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 'regon14': system_settings.regon,
                 'id_lokalne': profil['id_podmiotu_lokalne']
             },
-            'lekarz': {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile,
-                       'rodzaj_telefonu': 'DIR'}
+            'pracownik': {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile,
+                          'telefon_rodzaj': 'DIR'}
         }
         for medicine in instance.medicines.all():
             data['recepta'] = {'data_wystawienia': instance.date.strftime('%Y%m%d'),
@@ -382,9 +385,9 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
 
         # tests
         if os.environ.get('P1_ENV') == 'dev':
-            data['podmiot']['regon14'] = '97619191000009'
+            # data['podmiot']['regon14'] = '97619191000009'
             data['pacjent']['pesel'] = '70032816894'
-            data['profile']['id_pracownika_oid_ext'] = '5992363'
+            # data['profile']['id_pracownika_oid_ext'] = '5992363'
 
         res = requests.post('http://prescriptions/api/cancel_prescription/', json.dumps(data),
                             headers={'Content-type': 'application/json'})

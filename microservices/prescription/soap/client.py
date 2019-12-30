@@ -38,7 +38,8 @@ class PrescriptionXMLHandler(object):
         pracownik = {'id_ext': self.nfz_settings['id_pracownika_oid_ext'], 'imie': '', 'nazwisko': '',
                      'telefon_rodzaj': 'PUB',
                      **input_data['pracownik']}
-        data = {'pacjent': pacjent, 'lek': lek, 'podmiot': podmiot, 'recepta': recepta, 'pracownik': pracownik}
+        data = {'pacjent': pacjent, 'lek': lek, 'podmiot': podmiot, 'recepta': recepta, 'pracownik': pracownik,
+                'profile': input_data['profile']}
 
         if recepta.get('uprawnienia_dodatkowe'):
             recepta['uprawnienia_dodatkowe'] = recepta['uprawnienia_dodatkowe'].upper()
@@ -167,7 +168,11 @@ class PrescriptionClient(PrescriptionXMLHandler):
             prescription = self._prepare_prescription(data)
             prescriptions.append(recepta(tresc=prescription, identyfikatorDokumentuWPakiecie=i + 1))
         objects = recepty(prescriptions)
-        res = self.client.service.zapisPakietuRecept(pakietRecept={'recepty': objects})
+        try:
+            res = self.client.service.zapisPakietuRecept(pakietRecept={'recepty': objects})
+        except:
+            print(etree.tostring(self.client.history.last_received['envelope']))
+            raise
         if 'major' in res['wynik'] and res['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
             status = True
         else:
@@ -188,7 +193,7 @@ class PrescriptionClient(PrescriptionXMLHandler):
 
     def _prepare_prescription_cancellation(self, input_data):
         with open(os.path.join(settings.SOAP_DIR, 'xml_templates', 'anulowanie_recepty.xml'), 'r') as f:
-            template = Template(f.read())
+            template = Environment(loader=FileSystemLoader(os.path.join(settings.SOAP_DIR, "xml_templates/"))).from_string(f.read())
         document = template.render(input_data)
         document_signed = self.sign_prescription_from_string(document, self.nfz_settings['certificate_user'],
                                                              self.nfz_settings['certificate_user_password'])

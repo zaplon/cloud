@@ -1,0 +1,26 @@
+<representedOrganization>
+    <templateId root="2.16.840.1.113883.3.4424.13.10.2.17"/>
+    <id extension="{{profile.id_podmiotu_lokalne}}-001" root="2.16.840.1.113883.3.4424.2.3.2" displayable="true"/>
+    <name>Poradnia POZ</name>
+    <telecom use="{{ pracownik.telefon_rodzaj }}" value="tel:{{ pracownik.telefon }}"/>
+    <addr>
+        <postalCode>{{ podmiot.kod_pocztowy }}</postalCode>
+        <city>{{ podmiot.miasto }}</city>
+        <streetName>{{ podmiot.ulica }}</streetName>
+        <houseNumber>{{ podmiot.numer_ulicy }}</houseNumber>
+    </addr>
+    <asOrganizationPartOf>
+        <wholeOrganization>
+            <!-- Regon przedsiębiorstwa -->
+            <id extension="{{podmiot.regon14}}" root="2.16.840.1.113883.3.4424.2.2.2" displayable="true"/>
+            <asOrganizationPartOf>
+                <!-- podmiot - nr ksiegi + regon podmiotu -->
+                <wholeOrganization>
+                    <id extension="{{profile.id_podmiotu_oid_ext}}" root="{{ profile.id_podmiotu_oid_root }}"
+                        displayable="true"/>
+                    <!-- <id extension="123456789" root="2.16.840.1.113883.3.4424.2.2.1" displayable="true"/> -->
+                </wholeOrganization>
+            </asOrganizationPartOf>
+        </wholeOrganization>
+    </asOrganizationPartOf>
+</representedOrganization>

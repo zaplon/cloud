@@ -92,7 +92,7 @@
                         <asOrganizationPartOf>
                             <wholeOrganization>
                                 <id displayable="true" extension="{{ podmiot.id }}"
-                                    root="2.16.840.1.113883.3.4424.2.3.1"/>
+                                    root="{{ profile.id_podmiotu_oid_root }}"/>
                             </wholeOrganization>
                         </asOrganizationPartOf>
                     </wholeOrganization>

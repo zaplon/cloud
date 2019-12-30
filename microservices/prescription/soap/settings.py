@@ -20,7 +20,7 @@ PRESCRIPTION_P12_PASS = 'VfkxFEnqyt'
 
 KEY_PASSWORD = '8Y8aP3CSxf'
 
-idPodmiotuOidRoot = '2.16.840.1.113883.3.4424.2.4.68'
+idPodmiotuOidRoot = '2.16.840.1.113883.3.4424.2.3.1'
 idPodmiotuOidExt = '000000926670'
 idPodmiotuLokalne = '2.16.840.1.113883.3.4424.2.7.293'
 idPracownikaOidRoot = '2.16.840.1.113883.3.4424.1.6.2'

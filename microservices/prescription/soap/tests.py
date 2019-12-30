@@ -68,6 +68,9 @@ def get_prescription_data():
     podmiot = {'id_lokalne': settings.idPodmiotuLokalne, 'id': settings.idPodmiotuOidExt,
                'id_root': settings.idPodmiotuOidRoot, 'miasto': 'Warszawa', 'numer_domu': '12',
                'regon14': '97619191000009', 'ulica': 'Waryńskiego'}
+    profile = {
+
+    }
     pracownik = {'id_ext': '5992363', 'imie': 'Jan', 'nazwisko': 'Kowalski', 'telefon': '504485575'}
     data = {'pracownik': pracownik, 'podmiot': podmiot, 'leki': leki, 'recepta': recepta, 'pacjent': pacjent}
 
