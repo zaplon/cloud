@@ -301,14 +301,14 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         for m in medicines:
             medicine = Medicine.objects.get(id=m['medicine_id'])
             parent = medicine.parent
-            tekst = f'{parent.name} {parent.dose} {parent.form} {m["amount"]} op. po {medicine.size} {m["dosage"]}'
+            tekst = f'{parent.name} {parent.dose or ""} {parent.form or ""} {m["amount"]} op. po {medicine.size} {m["dosage"]}'
             refundacja_tekst = refundacja_kod = '100%'
             if m['refundation']:
                 tekst = f"{tekst} <br/>Odpłatność: {m['refundation']}"
                 refundacja_tekst = m['refundation']
                 refundacja_kod = 'R' if m['refundation'].lower() == u'ryczałt' else m['refundation']
             leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
-                         'tekst': tekst, 'postac': parent.form, 'wielkosc': m['amount'],
+                         'tekst': tekst, 'postac': parent.form or '', 'wielkosc': m['amount'],
                          'external_id': medicine.external_id,
                          'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
                          'numer_recepty': m['number']})
