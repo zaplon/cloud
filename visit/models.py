@@ -108,7 +108,7 @@ class Visit(models.Model):
 
 class Template(models.Model):
     name = models.CharField(max_length=100, verbose_name=u'Nazwa')
-    tab = models.ForeignKey(Tab, related_name='templates', verbose_name=u'Sekcja', on_delete=models.CASCADE)
+    tab = models.ForeignKey(Tab, related_name='templates', verbose_name=u'Zakładka', on_delete=models.CASCADE)
     text = models.CharField(max_length=1000, verbose_name=u'Tekst')
     key = models.CharField(max_length=8, blank=True, null=True, verbose_name=u'Skrót',
                            choices=keys_choices)

@@ -68,7 +68,7 @@ class TemplateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Template
-        fields = ('text', 'tab', 'key', 'name', 'tab_title', 'tab_name', 'id')
+        fields = ('text', 'tab', 'key', 'name', 'tab_title', 'tab_name', 'id', 'doctor')
 
 
 class TemplateViewSet(SearchMixin, ModelViewSet):
@@ -83,6 +83,7 @@ class TemplateViewSet(SearchMixin, ModelViewSet):
             return Response({'key': ['Ten skrót klawiszowy jest już przypisany do innego szablonu w tej sekcji']},
                             status=status.HTTP_400_BAD_REQUEST)
         data['tab'] = tab.id
+        data['doctor'] = request.user.doctor.id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
