@@ -50,6 +50,7 @@ class Command(BaseCommand):
                     sheets[i].append(obj)
 
         Refundation.objects.all().delete()
+        Medicine.objects.all().update(refundation=False)
 
         i = 0
         for sheet in sheets:

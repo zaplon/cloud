@@ -1,9 +1,8 @@
 from django.db.models import Q, Count
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, viewsets, status
 from rest_framework.fields import CharField
-from rest_framework.mixins import DestroyModelMixin
 from rest_framework.response import Response
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from g_utils.rest import OnlyDoctorRecords, SearchMixin
 from timetable.models import Term
@@ -64,24 +63,38 @@ class PopularIcdViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TemplateSerializer(serializers.ModelSerializer):
-    tab_name = CharField(source='tab.name')
-    tab_title = CharField(source='tab.title')
+    tab_name = CharField(source='tab.name', read_only=True)
+    tab_title = CharField(source='tab.title', read_only=True)
+
     class Meta:
         model = Template
         fields = ('text', 'tab', 'key', 'name', 'tab_title', 'tab_name', 'id')
 
 
-class TemplateViewSet(SearchMixin, DestroyModelMixin, ReadOnlyModelViewSet):
+class TemplateViewSet(SearchMixin, ModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
     search_filters = ['name', 'text']
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        tab = Tab.objects.get(title=data['tab_name'], doctor=request.user.doctor)
+        if data['key'] and Template.objects.filter(key=data['key'], doctor=request.user.doctor, tab=tab).exists():
+            return Response({'key': ['Ten skrót klawiszowy jest już przypisany do innego szablonu w tej sekcji']},
+                            status=status.HTTP_400_BAD_REQUEST)
+        data['tab'] = tab.id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def get_queryset(self):
-        q = super(TemplateViewSet, self).get_queryset()
-        q = q.filter(doctor__user=self.request.user)
-        if self.request.GET.get('tab', None):
-            q = q.filter(tab__id=self.request.GET['tab'])
-        return q
+            q = super(TemplateViewSet, self).get_queryset()
+            q = q.filter(doctor__user=self.request.user)
+            if self.request.GET.get('tab', None):
+                q = q.filter(tab__id=self.request.GET['tab'])
+            return q
 
 
 class TabSerializer(serializers.ModelSerializer):

@@ -11,9 +11,9 @@ import json
 
 keys_choices = (('CTRL+F1', 'ctrl+f1'), ('CTRL+F2', 'ctrl+f2'), ('CTRL+F3', 'ctrl+f3'), ('CTRL+F4', 'ctrl+f4'),
                 ('CTRL+F5', 'ctrl+f5'), ('CTRL+F6', 'ctrl+f6'), ('CTRL+F7', 'ctrl+f7'), ('CTRL+F8', 'ctrl+f8'),
-                ('CTRL+F9', 'ctrl+f9'), ('CTRL+F10', 'ctrl+f10'), ('alt+f1', 'ALT+F1'), ('alt+f2', 'ALT+F2'),
-                ('alt+f3', 'ALT+F3'),  ('alt+f4', 'ALT+F4'),  ('alt+f5', 'ALT+F5'),  ('alt+f6', 'ALT+F6'),
-                 ('alt+f7', 'ALT+F7'),  ('alt+f8', 'ALT+F8'),  ('alt+f9', 'ALT+F9'),  ('alt+f10', 'ALT+F10'))
+                ('CTRL+F9', 'ctrl+f9'), ('CTRL+F10', 'ctrl+f10'), ('ALT+F1', 'ALT+F1'), ('ALT+F2', 'ALT+F2'),
+                ('ALT+F3', 'ALT+F3'),  ('ALT+F4', 'ALT+F4'),  ('ALT+F5', 'ALT+F5'),  ('ALT+F6', 'ALT+F6'),
+                 ('ALT+F7', 'ALT+F7'),  ('ALT+F8', 'ALT+F8'),  ('ALT+F9', 'ALT+F9'),  ('ALT+F10', 'ALT+F10'))
 
 
 class TabTypes(Enum):
