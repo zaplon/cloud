@@ -3,7 +3,7 @@ from xml.etree import ElementTree
 import urllib.request
 from xml.etree.ElementTree import QName
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from medicine.models import Medicine, MedicineParent
 
 
@@ -54,7 +54,7 @@ class Command(BaseCommand):
                 data['composition'] = ' '.join(substances)
             for xml_field, db_field in self.xml_to_medicine_parent_dict.items():
                 data[db_field] = med.attrib.get(xml_field, '')
-            parent, _ = MedicineParent.objects.update_or_create(name=data['name'], inn=data['inn'], defaults=data)
+            parent, _ = MedicineParent.objects.update_or_create(external_id=data['external_id'], defaults=data)
             sizes = med.findall('.//{%s}opakowanie' % namespace)
             if sizes:
                 for child in sizes:
@@ -74,5 +74,6 @@ class Command(BaseCommand):
         self.get_file(import_type)
         if import_type == 'FULL':
             MedicineParent.objects.all().update(in_use=False)
+            Medicine.objects.all().update(in_use=False)
         self.parse_file()
 

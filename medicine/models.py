@@ -22,7 +22,7 @@ class MedicineParent(models.Model):
     importer = models.TextField(blank=True, null=True)  # Importer rownolegly #tylko 3
     dose = models.TextField(blank=True, null=True)  # Dawka
     user_id = models.IntegerField(blank=True, null=True)
-    external_id = models.IntegerField()
+    external_id = models.IntegerField(db_index=True)
     in_use = models.BooleanField(default=True)
 
 
@@ -33,7 +33,7 @@ class Medicine(models.Model):
     ean = models.CharField(max_length=20, blank=True, null=True)  # Kod EAN
     in_use = models.BooleanField(default=True)
     refundation = models.BooleanField(blank=False, default=False)
-    external_id = models.IntegerField(blank=True, null=True)
+    external_id = models.IntegerField(blank=True, null=True, db_index=True)
 
 
 class Refundation(models.Model):

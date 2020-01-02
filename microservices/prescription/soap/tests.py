@@ -67,12 +67,17 @@ def get_prescription_data():
                'kluczPakietu': '11010203040506070809101112131415161718192011', 'kodPakietu': '0987'}
     podmiot = {'id_lokalne': settings.idPodmiotuLokalne, 'id': settings.idPodmiotuOidExt,
                'id_root': settings.idPodmiotuOidRoot, 'miasto': 'Warszawa', 'numer_domu': '12',
-               'regon14': '97619191000009', 'ulica': 'Waryńskiego'}
+               'regon14': '97619191000009', 'ulica': 'Waryńskiego', 'regon_length': 14}
     profile = {
-
+        'id': 1, 'user': 1, 'typ_podmiotu': 'PODMIOT_LECZNICZY', 'rola_biznesowa': 'LEKARZ_LEK_DENTYSTA_FELCZER',
+        'id_podmiotu_oid_root': '2.16.840.1.113883.3.4424.2.3.1',
+        'id_podmiotu_oid_ext': '000000926670', 'id_podmiotu_lokalne': '2.16.840.1.113883.3.4424.2.7.293',
+        'id_miejsca_pracy_oid_ext': '4', 'typ_podmiotu': 'PODMIOT_LECZNICZY',
+        'id_pracownika_oid_ext': '5992363'
     }
     pracownik = {'id_ext': '5992363', 'imie': 'Jan', 'nazwisko': 'Kowalski', 'telefon': '504485575'}
-    data = {'pracownik': pracownik, 'podmiot': podmiot, 'leki': leki, 'recepta': recepta, 'pacjent': pacjent}
+    data = {'pracownik': pracownik, 'podmiot': podmiot, 'leki': leki, 'recepta': recepta, 'pacjent': pacjent,
+            'profile': profile}
 
     return data
 
@@ -102,22 +107,18 @@ def test_cancelling_prescription():
     status, response = c.save_prescriptions(data)
     assert status
     external_id = \
-    response['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['wynikWeryfikacji']['weryfikowanaRecepta'][0][
-        'kluczRecepty']
+        response['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['wynikWeryfikacji']['weryfikowanaRecepta'][
+            0][
+            'kluczRecepty']
     # external_id = response['potwierdzenieOperacjiZapisu']['wynikZapisuPakietuRecept']['kluczPakietuRecept']
     data = {'pacjent': {'imie': 'Jan', 'nazwisko': 'Zapała', 'plec': 'M', 'data_urodzenia': '', 'miasto': 'Warszawa',
                         'kod_pocztowy': '02-933', 'ulica': 'Okrężna', 'numer_ulicy': '87', 'numer_lokalu': '12',
                         'drugie_imie': 'Stan', 'data_urodzenia': '19880101'},
             "numer_anulowania": str(uuid.uuid1()).replace('-', '')[0:22],
             'profile': {'id': 1, 'user': 1, 'rola_biznesowa': 'LEKARZ_LEK_DENTYSTA_FELCZER',
-                        'certificate_tls': '/media/certs/Podmiot_leczniczy_158-TLS.p12',
-                        'certificate_tls_password': 'VfkxFEnqyt',
-                        'certificate_wsse': '/media/certs/Podmiot_leczniczy_158-WSS.p12',
-                        'certificate_wsse_password': 'VfkxFEnqyt',
-                        'certificate_user': '/media/certs/Adam158_Leczniczy.p12',
-                        'certificate_user_password': 'VfkxFEnqyt', 'id_podmiotu_oid_ext': '000000926670',
-                        'id_podmiotu_lokalne': '2.16.840.1.113883.3.4424.2.7.293', 'id_miejsca_pracy_oid_ext': '4',
-                        'id_pracownika_oid_ext': '1111113'},
+                        'id_podmiotu_oid_ext': settings.idPodmiotuOidExt,
+                        'id_podmiotu_lokalne': settings.idPodmiotuLokalne, 'id_miejsca_pracy_oid_ext': '4',
+                        'id_pracownika_oid_ext': settings.idPracownikaOidExt},
             'podmiot': {'id_lokalne': settings.idPodmiotuLokalne, 'id': settings.idPodmiotuOidExt,
                         'id_root': settings.idPodmiotuOidRoot, 'miasto': 'Warszawa', 'numer_domu': '12',
                         'regon14': '97619191000009', 'ulica': 'Waryńskiego'},
@@ -128,7 +129,6 @@ def test_cancelling_prescription():
     # tests
     data['podmiot']['regon14'] = '97619191000009'
     data['pacjent']['pesel'] = '70032816894'
-    data['profile']['id_pracownika_oid_ext'] = '5992363'
     status, response = c.cancel_prescription(data)
     print(response)
     assert status
