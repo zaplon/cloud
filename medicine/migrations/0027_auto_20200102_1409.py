@@ -23,6 +23,5 @@ class Migration(migrations.Migration):
             model_name='medicine',
             name='external_id',
             field=models.IntegerField(blank=True, db_index=True, null=True),
-        ),
-        migrations.RunPython(load_medicines, migrations.RunPython.noop)
+        )
     ]
