@@ -309,7 +309,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 refundacja_kod = 'R' if m['refundation'].lower() == u'ryczałt' else m['refundation']
             leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
                          'tekst': tekst, 'postac': parent.form or '', 'wielkosc': m['amount'],
-                         'external_id': medicine.external_id,
+                         'external_id': medicine.parent.external_id,
                          'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
                          'numer_recepty': m['number']})
             data_wystawienia = prescription_data['date'][0:10].replace('-', '') if 'date' in prescription_data \
