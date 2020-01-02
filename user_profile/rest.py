@@ -1,8 +1,11 @@
 import json
 
+from OpenSSL import crypto
+from OpenSSL.crypto import Error
 from django.contrib.auth.password_validation import validate_password
 from django.db.models import Q, Min
 from rest_framework import serializers, viewsets, mixins
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, ListField
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -408,8 +411,27 @@ class InfoViewSet(viewsets.ReadOnlyModelViewSet):
 class NFZSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = NFZSettings
-        read_only_fields = ['id_pracownika_oid_ext']
+        read_only_fields = ['id_pracownika_oid_ext', 'id_podmiotu_oid_root', 'id_podmiotu_oid_ext']
         fields = [f.name for f in NFZSettings._meta.get_fields()] + ['id_pracownika_oid_ext']
+
+    def get_info_from_cert(self, attrs):
+        cert_file = attrs.get('certificate_wsse') or self.instance.certificate_wsse
+        if not cert_file:
+            return attrs
+        cert_password = attrs.get('certificate_wsse_password') or self.instance.certificate_wsse_password
+        try:
+            cert = crypto.load_pkcs12(cert_file.read(), cert_password).get_certificate()
+        except Error:
+            raise ValidationError({'certificate_wsse_password': 'Nie udało się odczytać certyfikatu przy użyciu podanego hasła.'})
+        subject = cert.get_subject()
+        id_root, id_ext = subject.serialNumber.replace(' ', '').split(':')
+        attrs['id_podmiotu_oid_root'] = id_root
+        attrs['id_podmiotu_oid_ext'] = id_ext
+        return attrs
+
+    def validate(self, attrs):
+        attrs = self.get_info_from_cert(attrs)
+        return super().validate(attrs)
 
 
 class NFZSettingsViewSet(viewsets.ModelViewSet):

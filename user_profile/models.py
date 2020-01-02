@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 from django.conf import settings
 from django.db import models
 import json
@@ -55,7 +56,7 @@ class NFZSettings(models.Model):
     certificate_user = models.FileField(null=True, blank=True, upload_to='certs')
     certificate_user_password = models.CharField(max_length=126, blank=True)
     id_podmiotu_oid_ext = models.CharField(max_length=126, blank=True)
-    id_podmiotu_oid_root = models.CharField(max_length=126, blank=True, default='2.16.840.1.113883.3.4424.2.4.68')
+    id_podmiotu_oid_root = models.CharField(max_length=126, blank=True)
     id_podmiotu_lokalne = models.CharField(max_length=126, blank=True)
     id_miejsca_pracy_oid_ext = models.CharField(max_length=8, blank=True)
 

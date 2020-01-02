@@ -26,4 +26,5 @@ django-jet
 python-memcached
 python-barcode
 django-rest-auth==0.9.3
+pyopenssl==19.1.0
 
