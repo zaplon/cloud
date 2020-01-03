@@ -245,6 +245,11 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         res_json = json.loads(res.content)
         if res.status_code == status.HTTP_401_UNAUTHORIZED:
             return Response(res_json, status=status.HTTP_401_UNAUTHORIZED)
+        if res_json.get('idZadania'):
+            serializer = self.get_serializer(data=prescription)
+            serializer.is_valid(raise_exception=True)
+            PrescriptionJob.objects.create(job_id=res_json.get('idZadania'), prescription=serializer.save())
+            return Response(res_json, status=status.HTTP_202_ACCEPTED)
         if 'major' in res_json['wynik'] and res_json['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
             prescription = serializer.data
             prescription['external_id'] = \

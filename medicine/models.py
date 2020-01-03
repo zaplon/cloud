@@ -113,3 +113,9 @@ class Prescription(SoftDeleteModel):
                                                   amount=m['amount'], notes=m.get('notes', ''),
                                                   refundation_id=refundation)
         return True
+
+
+class PrescriptionJob(models.Model):
+    job_id = models.CharField(max_length=128)
+    prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
+    finished = models.BooleanField(default=False)

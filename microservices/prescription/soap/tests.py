@@ -100,6 +100,12 @@ def test_sending_recepture_prescription():
     assert status
 
 
+def test_getting_prescription():
+    c = create_client()
+    status, res = c.get_prescription('123456')
+    assert not status
+
+
 def test_cancelling_prescription():
     c = create_client()
     data = get_prescription_data()

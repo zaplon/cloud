@@ -158,6 +158,16 @@ class PrescriptionClient(PrescriptionXMLHandler):
                 return False
             return True
 
+    def get_prescription(self, job_id):
+        try:
+            res = self.client.service.zapisPakietuRecept(pakietRecept={'identyfikatorZadania': job_id})
+        except:
+            print(etree.tostring(self.history.last_received['envelope']))
+            raise
+        res = serialize_object(res)
+        status = True if res.get('potwierdzenieOperacjiZapisu') else False
+        return status, serialize_object(res)
+
     def save_prescriptions(self, data):
         prescriptions = []
         leki = data.pop('leki')
@@ -173,6 +183,8 @@ class PrescriptionClient(PrescriptionXMLHandler):
         except:
             print(etree.tostring(self.client.history.last_received['envelope']))
             raise
+        if 'idZadania' in res:
+            return True, serialize_object(res)
         if 'major' in res['wynik'] and res['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
             status = True
         else:
@@ -210,6 +222,7 @@ class PrescriptionClient(PrescriptionXMLHandler):
 
     @staticmethod
     def _sign_prescription(tmp_prescription, prescription_p12, prescription_p12_pass):
+        prescription_p12_pass = prescription_p12_pass.replace('$', '\$')
         signed_prescription = subprocess.check_output(f'java --illegal-access=warn -jar {settings.SOAP_DIR}/prescription_signer/signer.jar "{tmp_prescription}" '
                                                       f'"{prescription_p12}" "{prescription_p12_pass}"', shell=True)
         if b'ERROR pl' in signed_prescription:

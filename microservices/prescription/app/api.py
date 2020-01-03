@@ -56,6 +56,17 @@ def cancel_prescription():
     return json_response(response, status_code=200 if status else 400)
 
 
+@bp.route('/get_prescription/', methods=['POST'])
+def get_prescription():
+    data = json.loads(request.data)
+    try:
+        c = PrescriptionClient(data['profile'])
+    except OpenSSL.crypto.Error:
+        return json_response(CREDENTIALS_ERROR, 401)
+    status, response = c.get_prescription(data['job_id'])
+    return json_response(response, status_code=200 if status else 400)
+
+
 @bp.route('/save_prescription/', methods=['POST'])
 def save_prescription():
     inputs = SaveJsonInputs(request)
