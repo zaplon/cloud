@@ -16,6 +16,10 @@ from visit.models import TabTypes
 
 
 class Profile(models.Model):
+    class Meta:
+        permissions = [
+            ("can_view_statistics", "Can view statistics"),
+        ]
     CssThemeChoices = (
         ('yeti', 'Yeti'),
         ('minty', 'Minty'),
@@ -23,7 +27,8 @@ class Profile(models.Model):
     )
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     mobile = models.IntegerField(blank=False, null=True)
-    role = models.CharField(choices=(('doctor', _('Lekarz')), ('admin', _('Administrator'))), max_length=10)
+    role = models.CharField(choices=(('doctor', _('Lekarz')), ('admin', _('Administrator')),
+                                     ('registration', _('Rejestracja'))), max_length=10)
     css_theme = models.CharField(choices=CssThemeChoices, default='yeti', max_length=10)
 
     def role_display(self):

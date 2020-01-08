@@ -74,7 +74,7 @@ class Command(BaseCommand):
                     # r.o =  row[xls_cols[i][o]]
 
                 # czy to nowy lek
-                m = Medicine.objects.filter(ean=r.ean)
+                m = Medicine.objects.filter(ean=r.ean).exclude(external_id='')
                 if len(m) > 0:
                     m = m[0]
                     m.in_use = True

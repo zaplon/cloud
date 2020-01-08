@@ -245,11 +245,12 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         res_json = json.loads(res.content)
         if res.status_code == status.HTTP_401_UNAUTHORIZED:
             return Response(res_json, status=status.HTTP_401_UNAUTHORIZED)
-        if res_json.get('idZadania'):
+        if res_json['potwierdzenieOperacjiZapisu'].get('idZadania'):
             serializer = self.get_serializer(data=prescription)
             serializer.is_valid(raise_exception=True)
-            PrescriptionJob.objects.create(job_id=res_json.get('idZadania'), prescription=serializer.save())
-            return Response(res_json, status=status.HTTP_202_ACCEPTED)
+            PrescriptionJob.objects.create(job_id=res_json['potwierdzenieOperacjiZapisu']['idZadania'],
+                                           prescription=serializer.save())
+            return Response(res_json['potwierdzenieOperacjiZapisu'], status=status.HTTP_202_ACCEPTED)
         if 'major' in res_json['wynik'] and res_json['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
             prescription = serializer.data
             prescription['external_id'] = \
@@ -313,8 +314,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 refundacja_tekst = m['refundation']
                 refundacja_kod = 'R' if m['refundation'].lower() == u'ryczałt' else m['refundation']
             leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
-                         'tekst': tekst, 'postac': parent.form or '', 'wielkosc': m['amount'],
-                         'external_id': medicine.parent.external_id,
+                         'tekst': tekst, 'postac': parent.form or '', 'ilosc': m['amount'], 'wielkosc': medicine.size,
+                         'external_id': medicine.parent.external_id, 'dawkowanie': m['dosage'],
                          'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
                          'numer_recepty': m['number']})
             data_wystawienia = prescription_data['date'][0:10].replace('-', '') if 'date' in prescription_data \

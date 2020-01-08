@@ -224,7 +224,7 @@ LANGUAGES = (
 
 
 MODULES = [
-    (True, 'stats', u'Statystyki'),
+    ('can_view_statistics', 'stats', u'Statystyki'),
     (['timetable.change_term', 'visit.change_visit'], 'calendar', u'Kalendarz'),
     ('user_profile.change_patient', 'patients', u'Lista pacjentów'),
     (True, 'archive', u'Archiwum'),

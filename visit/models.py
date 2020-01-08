@@ -33,7 +33,7 @@ class Tab(models.Model):
 
     title = models.CharField(max_length=100, verbose_name=u'Tytuł')
     doctor = models.ForeignKey('user_profile.Doctor', related_name='tabs', on_delete=models.CASCADE)
-    order = models.IntegerField(null=True, blank=True, verbose_name=u'Kolejność')
+    order = models.IntegerField(verbose_name=u'Kolejność')
     enabled = models.BooleanField(default=True, verbose_name=u'Włączona')
     type = models.CharField(max_length=16, choices=[(tag.name, tag.value) for tag in TabTypes],
                             default=TabTypes.DEFAULT.name, verbose_name=u'Typ')
@@ -52,7 +52,6 @@ class Tab(models.Model):
 
     class Meta:
         ordering = ['order']
-        unique_together = ('doctor', 'order',)
 
     def get_absolute_url(self):
         return reverse('tabs')
@@ -72,6 +71,7 @@ class VisitTab(models.Model):
     order = models.IntegerField(null=True, blank=True)
     type = models.CharField(max_length=32)
     visit = models.ForeignKey('Visit', related_name='tabs', on_delete=models.CASCADE)
+    tab = models.ForeignKey(Tab, on_delete=models.SET_NULL, null=True)
 
     @property
     def data(self):

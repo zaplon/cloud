@@ -17,8 +17,9 @@ class Command(BaseCommand):
         groups = {'Lekarze': ['_visit', '_result', '_term', '_medicine', '_template', '_tab',
                               'can_add_prescription', '_prescriptionnumber', '_refundation', '_prescription',
                               '_nfzsettings', '_patient'],
+                  'Rejestracja': ['_term', '_patient'],
                   'Administratorzy': ['_term',  '_result', '_user', '_service', '_localization', '_patient',
-                                      '_systemsettings']}
+                                      '_systemsettings', 'can_view_statistics']}
         for group_name, permissions_patterns in groups.items():
             permissions = Permission.objects.none()
             for p in permissions_patterns:

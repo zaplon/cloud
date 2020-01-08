@@ -99,11 +99,9 @@ class TemplateViewSet(SearchMixin, ModelViewSet):
 
 
 class TabSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(source='type_name')
-
     class Meta:
         model = Tab
-        fields = ('id', 'type', 'title', 'enabled', 'order')
+        fields = ('id', 'type', 'type_name', 'title', 'enabled', 'order', 'doctor')
 
 
 class TabViewSet(OnlyDoctorRecords, viewsets.ModelViewSet):
@@ -117,7 +115,7 @@ class VisitTabSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VisitTab
-        fields = ['id', 'title', 'data', 'type']
+        fields = ['id', 'title', 'data', 'type', 'tab']
 
 
 class VisitSerializer(serializers.ModelSerializer):

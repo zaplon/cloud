@@ -8,7 +8,22 @@
         <title>{{ lek.kategoria }}</title>
         <text>
             <paragraph ID="SBADM_1">
-                {{ lek.tekst }}
+                <content ID="p1_nazwaLeku" styleCode="xPLbig">{{ lek.nazwa }}</content>
+                <content ID="p1_mocSkladnikowLeku">{{ lek.moc }}</content>
+                <content ID="p1_postacLeku">{{ lek.postac }}</content>
+            </paragraph>
+            <paragraph>
+                <content ID="p1_iloscLeku">{{ lek.ilosc }}</content>
+                <content ID="p1_krotnosc_opis">op. po</content>
+                <content ID="p1_wielkoscOpakowania">{{ lek.wielkosc }}</content>
+            </paragraph>
+                <paragraph ID="DS_1">
+                <content ID="p1_stosowanie_opis_1">D.S.</content>
+                <content ID="p1_stosowanie_wartosc_1" styleCode="Bold">{{ lek.dawkowanie }}</content>
+            </paragraph>
+            <paragraph ID="ACT_2">
+                <content ID="p1_odplatnosc_opis">Odpłatność</content>
+                <content ID="p1_odplatnosc_wartosc" styleCode="Bold">{{ lek.refundacja_tekst }}</content>
             </paragraph>
         </text>
         <entry>
@@ -46,7 +61,7 @@
                                     <pharm:name>{{lek.nazwa}}</pharm:name>
                                     <pharm:formCode code="30066000" codeSystem="0.4.0.127.0.16.1.1.2.1"
                                                     displayName="{{lek.postac}}"/>
-                                    <pharm:capacityQuantity value="{{lek.wielkosc}}"/>
+                                    <pharm:capacityQuantity value="{{lek.ilosc}}"/>
                                 </pharm:containerPackagedMedicine>
                             </pharm:asContent>
                         </manufacturedMaterial>

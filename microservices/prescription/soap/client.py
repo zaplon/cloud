@@ -180,16 +180,17 @@ class PrescriptionClient(PrescriptionXMLHandler):
         objects = recepty(prescriptions)
         try:
             res = self.client.service.zapisPakietuRecept(pakietRecept={'recepty': objects})
-        except:
-            print(etree.tostring(self.client.history.last_received['envelope']))
+        except Exception as e:
+            print(e)
             raise
-        if 'idZadania' in res:
-            return True, serialize_object(res)
-        if 'major' in res['wynik'] and res['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
+        serialized_res = serialize_object(res)
+        if serialized_res['potwierdzenieOperacjiZapisu'].get('idZadania'):
+            return True, serialized_res
+        if 'major' in serialized_res['wynik'] and serialized_res['wynik']['major'] == 'urn:csioz:p1:kod:major:Sukces':
             status = True
         else:
             status = False
-        return status, serialize_object(res)
+        return status, serialized_res
 
     def cancel_prescription(self, data):
         tresc = self._prepare_prescription_cancellation(data)

@@ -150,10 +150,11 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
         
 class DoctorCalendarSerializer(serializers.ModelSerializer):
     first_term = serializers.DateTimeField(format=settings.DATE_FORMAT)
+    working_hours = ListField(source='get_working_hours')
 
     class Meta:
         model = Doctor
-        fields = ('id', 'name', 'first_term', 'terms_start', 'terms_end')
+        fields = ('id', 'name', 'first_term', 'terms_start', 'terms_end', 'working_hours', 'visit_duration')
 
 
 # ViewSets define the view behavior.
@@ -171,7 +172,7 @@ class DoctorViewSet(SearchMixin, viewsets.ModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
         get_params = self.request.GET
-        if not 'forCalendar' in get_params:
+        if 'calendar' not in get_params:
             return super().get_queryset()
         q = super(DoctorViewSet, self).get_queryset()
         if 'dateFrom' in get_params:
@@ -210,7 +211,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class UserInitSerializer(serializers.ModelSerializer):
     password = serializers.CharField()
     password2 = serializers.CharField(write_only=True)
-    role = serializers.ChoiceField(choices=(('doctor', 'Lekarz'), ('admin', 'Administrator')), write_only=True)
+    role = serializers.ChoiceField(choices=(('doctor', 'Lekarz'), ('admin', 'Administrator'),
+                                            ('registration', 'Rejestracja')))
     doctor = DoctorSerializer(read_only=True, required=False)
     role_display = serializers.CharField(source='profile.role_display', read_only=True)
 
@@ -231,6 +233,8 @@ class UserInitSerializer(serializers.ModelSerializer):
             Doctor.objects.create(user=instance)
         if role == 'admin':
             instance.groups.add(Group.objects.get(name='Administratorzy'))
+        if role == 'registration':
+            instance.groups.add(Group.objects.get(name='Rejestracja'))
         return instance
 
     def validate(self, data):
