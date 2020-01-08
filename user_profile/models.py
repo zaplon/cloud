@@ -28,7 +28,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     mobile = models.IntegerField(blank=False, null=True)
     role = models.CharField(choices=(('doctor', _('Lekarz')), ('admin', _('Administrator')),
-                                     ('registration', _('Rejestracja'))), max_length=10)
+                                     ('registration', _('Rejestracja'))), max_length=20)
     css_theme = models.CharField(choices=CssThemeChoices, default='yeti', max_length=10)
 
     def role_display(self):
