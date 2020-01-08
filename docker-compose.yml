@@ -47,7 +47,7 @@ services:
   memcached:
     image: memcached
   selenium:
-    image: selenium/standalone-chrome
+    build: selenium/docker/
   ezla:
     build: microservices/ezla/
     ports:

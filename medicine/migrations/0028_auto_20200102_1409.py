@@ -14,5 +14,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(load_medicines, migrations.RunPython.noop)
+        # migrations.RunPython(load_medicines, migrations.RunPython.noop)
     ]
