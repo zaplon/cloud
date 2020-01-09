@@ -118,7 +118,6 @@ class WorkingHoursSerializer(serializers.ModelSerializer):
         return self.instance
 
 
-# Serializers define the API representation.
 class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     name = CharField(source='get_name')
     working_hours = ListField(source='get_working_hours')
@@ -151,10 +150,23 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
 class DoctorCalendarSerializer(serializers.ModelSerializer):
     first_term = serializers.DateTimeField(format=settings.DATE_FORMAT)
     working_hours = ListField(source='get_working_hours')
+    default_service = serializers.SerializerMethodField()
+    has_many_services = serializers.SerializerMethodField()
 
     class Meta:
         model = Doctor
-        fields = ('id', 'name', 'first_term', 'terms_start', 'terms_end', 'working_hours', 'visit_duration')
+        fields = ('id', 'name', 'first_term', 'terms_start', 'terms_end', 'working_hours', 'visit_duration',
+                  'has_many_services', 'default_service')
+
+    def get_default_service(self, obj):
+        doctor_services = Service.objects.filter(doctors__in=[obj])
+        if doctor_services.count() == 1:
+            s = doctor_services.first()
+            return {'id': s.id, 'name': s.name}
+
+    def get_has_many_services(self, obj):
+        return Service.objects.filter(doctors__in=[obj]).count() > 1
+
 
 
 # ViewSets define the view behavior.

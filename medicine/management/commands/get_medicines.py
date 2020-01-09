@@ -74,7 +74,7 @@ class Command(BaseCommand):
                     data['size'] = '%s %s' % (child.attrib.get('wielkosc'), child.attrib.get('jednostkaWielkosci'))
                     try:
                         Medicine.objects.update_or_create(external_id=data['external_id'], defaults=data)
-                    except:
+                    except Medicine.MultipleObjectsReturned:
                         Medicine.objects.filter(external_id=data['external_id']).update(**data)
                     print('Medicine updated: %s' % data)
 
