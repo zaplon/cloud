@@ -212,9 +212,10 @@ class UserInitSerializer(serializers.ModelSerializer):
     password = serializers.CharField()
     password2 = serializers.CharField(write_only=True)
     role = serializers.ChoiceField(choices=(('doctor', 'Lekarz'), ('admin', 'Administrator'),
-                                            ('registration', 'Rejestracja')))
+                                            ('registration', 'Rejestracja')), write_only=True)
     doctor = DoctorSerializer(read_only=True, required=False)
     role_display = serializers.CharField(source='profile.role_display', read_only=True)
+    role_name = serializers.CharField(source='profile.role', read_only=True)
 
     def validate_password(self, value):
         validate_password(value)
@@ -244,7 +245,8 @@ class UserInitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'password', 'password2', 'role', 'doctor', 'role_display')
+        fields = ('id', 'username', 'first_name', 'last_name', 'password', 'password2', 'role', 'doctor',
+                  'role_display', 'role_name')
 
 
 class UserViewSet(SearchMixin, viewsets.ModelViewSet):
