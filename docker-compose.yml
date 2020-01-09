@@ -46,8 +46,8 @@ services:
     image: elasticsearch:6.5.1
   memcached:
     image: memcached
-  selenium:
-    build: selenium/docker/
+#  selenium:
+#    build: selenium/docker/
   ezla:
     build: microservices/ezla/
     ports:
