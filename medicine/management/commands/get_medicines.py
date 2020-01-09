@@ -54,7 +54,13 @@ class Command(BaseCommand):
                 data['composition'] = ' '.join(substances)
             for xml_field, db_field in self.xml_to_medicine_parent_dict.items():
                 data[db_field] = med.attrib.get(xml_field, '')
-            parent, _ = MedicineParent.objects.update_or_create(external_id=data['external_id'], defaults=data)
+            try:
+                parent, _ = MedicineParent.objects.update_or_create(external_id=data['external_id'], defaults=data)
+            except MedicineParent.MultipleObjectsReturned:
+                parents = MedicineParent.objects.filter(external_id=data['external_id'])
+                parents.update(**data)
+                parent = parents[0]
+
             sizes = med.findall('.//{%s}opakowanie' % namespace)
             if sizes:
                 for child in sizes:
@@ -66,7 +72,10 @@ class Command(BaseCommand):
                         data[db_field] = child.attrib.get(xml_field, '')
                     data['parent'] = parent
                     data['size'] = '%s %s' % (child.attrib.get('wielkosc'), child.attrib.get('jednostkaWielkosci'))
-                    Medicine.objects.update_or_create(external_id=data['external_id'], defaults=data)
+                    try:
+                        Medicine.objects.update_or_create(external_id=data['external_id'], defaults=data)
+                    except:
+                        Medicine.objects.filter(external_id=data['external_id']).update(**data)
                     print('Medicine updated: %s' % data)
 
     def handle(self, *args, **options):
