@@ -193,14 +193,21 @@ class PatientForm(forms.Form):
         return {'id': patient.id, 'label': patient.name_with_pesel}
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class PatientModelForm(forms.ModelForm):
     horizontal = True
     pesel = PLPESELField(label=u'Pesel', required=False)
+
     class Meta:
         model = Patient
-        fields = ['first_name', 'last_name', 'pesel', 'gender', 'city', 'postal_code', 'street', 'street_number',
-                  'apartment_number', 'email', 'mobile', 'info']
-
+        fields = ['first_name', 'last_name', 'pesel', 'birth_date', 'gender', 'city', 'postal_code', 'street',
+                  'street_number', 'apartment_number', 'email', 'mobile', 'info']
+        widgets = {
+            'birth_date': DateInput(),
+        }
 
 class SystemForm(forms.ModelForm):
     class Meta:

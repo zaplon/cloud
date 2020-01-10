@@ -192,7 +192,8 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=100, default='', verbose_name=u'Nazwisko')
     gender = models.CharField(max_length=1, verbose_name=u'Płeć', choices=(('M', u'Mężczyzna'), ('F', u'Kobieta')))
     pesel = models.CharField(max_length=11, blank=True, null=True, verbose_name=u'Pesel', unique=True)
-    birth_date = models.DateField(blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True,  verbose_name='Data urodzenia',
+                                  help_text=u'Zostanie odczytana z numeru pesel, jeżeli pozostawiona pusta')
     email = models.EmailField(blank=True, null=True, verbose_name=u'Email')
     postal_code = models.CharField(blank=True, max_length=6, verbose_name='Kod pocztowy')
     street = models.CharField(blank=True, max_length=200, verbose_name='Ulica')
@@ -219,6 +220,11 @@ class Patient(models.Model):
 
     def get_absolute_url(self):
         return reverse('patients')
+
+    def save(self, *args, **kwargs):
+        if self.pesel and len(self.pesel) == 11 and not self.birth_date:
+            self.birth_date = datetime.datetime.strptime(self.pesel[0:6], '%y%m%d')
+        return super().save(*args, **kwargs)
 
 
 class Note(models.Model):
