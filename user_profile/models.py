@@ -222,6 +222,8 @@ class Patient(models.Model):
         return reverse('patients')
 
     def save(self, *args, **kwargs):
+        if self.pesel == '':
+            self.pesel = None
         if self.pesel and len(self.pesel) == 11 and not self.birth_date:
             self.birth_date = datetime.datetime.strptime(self.pesel[0:6], '%y%m%d')
         return super().save(*args, **kwargs)
