@@ -204,10 +204,11 @@ class DoctorViewSet(SearchMixin, viewsets.ModelViewSet):
 class UserDetailSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(required=False)
     role_display = serializers.CharField(source='profile.role_display', read_only=True)
+    role_name = serializers.CharField(source='profile.role_name', read_only=True)
 
     class Meta:
         model = User
-        fields = [f.name for f in User._meta.fields] + ['role_display', 'doctor']
+        fields = [f.name for f in User._meta.fields] + ['role_display', 'role_name', 'doctor']
 
     def update(self, instance, validated_data):
         instance = super(UserDetailSerializer, self).update(instance, validated_data)

@@ -46,8 +46,10 @@ services:
     image: elasticsearch:6.5.1
   memcached:
     image: memcached
-#  selenium:
-#    build: selenium/docker/
+  selenium:
+    image: selenium/standalone-chrome-debug
+    ports:
+      - "4444:4444"
   ezla:
     build: microservices/ezla/
     ports:

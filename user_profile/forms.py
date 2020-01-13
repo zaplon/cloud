@@ -209,6 +209,7 @@ class PatientModelForm(forms.ModelForm):
             'birth_date': DateInput(),
         }
 
+
 class SystemForm(forms.ModelForm):
     class Meta:
         model = SystemSettings

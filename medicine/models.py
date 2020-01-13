@@ -64,6 +64,7 @@ class MedicineToPrescription(models.Model):
     external_id = models.CharField(max_length=64, blank=True)
     number = models.CharField(max_length=32, blank=True, null=True)
     composition = models.TextField(blank=True)
+    composition_name = models.CharField(max_length=256, blank=True)
 
     @property
     def medicine(self):

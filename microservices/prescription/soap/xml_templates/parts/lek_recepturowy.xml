@@ -10,6 +10,9 @@
         <paragraph>
             {% if lek.nazwa %}<content ID="p1_nazwaLeku">{{ lek.nazwa }}</content>{% endif %}
             {% if lek.ilosc %}<content ID="p1_iloscLeku">{{ lek.ilosc }}</content>{% endif %}
+            {% if lek.dawkowanie %}
+                <content ID="p1_stosowanie_wartosc_1" styleCode="Bold">{{ lek.dawkowanie }}</content>
+            {% endif %}
             <content ID="p1_receptura">{{ lek.receptura }}</content>
         </paragraph>
         {% if lek.refundacja_kod and lek.refundacja_kod != '100%' %}

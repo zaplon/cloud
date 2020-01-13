@@ -169,6 +169,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             number.save()
             p['number'] = number.nr if number else ''
         for m in p['medicines']:
+            if m.get('is_hand_made'):
+                continue
             medicine = Medicine.objects.get(id=m['medicine_id'])
             parent = medicine.parent
             m.update({'name': parent.name, 'dose': parent.dose, 'size': medicine.size, 'form': parent.form})
@@ -296,7 +298,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'kod_pocztowy': patient.postal_code, 'miasto': patient.city,
             'numer_ulicy': patient.street_number, 'numer_lokalu': patient.apartment_number,
             'ulica': patient.street,
-            'data_urodzenia': patient.birth_date,
+            'data_urodzenia': patient.birth_date.strftime('%Y%m%d') if patient.birth_date else '',
             'plec': 'M' if patient.gender == 'M' else 'F'
         }
         system_settings = SystemSettings.objects.get(id=1)
@@ -305,19 +307,23 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                      'profile': profile}
         leki = []
         for m in medicines:
-            medicine = Medicine.objects.get(id=m['medicine_id'])
-            parent = medicine.parent
-            tekst = f'{parent.name} {parent.dose or ""} {parent.form or ""} {m["amount"]} op. po {medicine.size} {m["dosage"]}'
             refundacja_tekst = refundacja_kod = '100%'
-            if m['refundation']:
-                tekst = f"{tekst} <br/>Odpłatność: {m['refundation']}"
+            if m.get('refundation'):
                 refundacja_tekst = m['refundation']
                 refundacja_kod = 'R' if m['refundation'].lower() == u'ryczałt' else m['refundation']
-            leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
-                         'tekst': tekst, 'postac': parent.form or '', 'ilosc': m['amount'], 'wielkosc': medicine.size,
-                         'external_id': medicine.parent.external_id, 'dawkowanie': m['dosage'],
-                         'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
-                         'numer_recepty': m['number']})
+            if m.get('composition'):
+                leki.append({'nazwa': m['composition_name'], 'receptura': m['composition'].replace('\n', '<br/>'),
+                             'dawkowanie': m['dosage'],
+                             'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
+                             'ilosc': m['amount'], 'jest_recepturowy': True, 'numer_recepty': m['number']})
+            else:
+                medicine = Medicine.objects.get(id=m['medicine_id'])
+                parent = medicine.parent
+                leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
+                             'postac': parent.form or '', 'ilosc': m['amount'], 'wielkosc': medicine.size,
+                             'external_id': medicine.parent.external_id, 'dawkowanie': m['dosage'],
+                             'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
+                             'numer_recepty': m['number']})
             data_wystawienia = prescription_data['date'][0:10].replace('-', '') if 'date' in prescription_data \
                 else datetime.today().strftime('%Y%m%d')
         recepta = {
@@ -339,7 +345,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         if os.environ.get('P1_ENV') == 'dev':
             # data['podmiot']['regon14'] = '97619191000009'
             data['pacjent']['pesel'] = '70032816894'
-            data['pacjent']['data_urodzenia'] = '19880420'
+            # data['pacjent']['data_urodzenia'] = '19880420'
             # data['profile']['id_pracownika_oid_ext'] = '5992363'
             data['recepta']['oddzial_nfz'] = '07'
         return data

@@ -57,6 +57,8 @@ class MedicineToPrescriptionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_medicine(self, instance):
+        if instance.composition:
+            return None
         return MedicineSerializer(instance=Medicine.objects.get(id=instance.medicine_id)).data
 
 

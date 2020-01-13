@@ -86,9 +86,15 @@
             <tbody>
                 {% for medicine in prescription.medicines %}
                     <tr style="height: 1.6cm; border-bottom: 2px dashed #999; vertical-align: middle;">
-                        <td>{{ medicine.name }} {% if medicine.form %}{{ medicine.form }}{% endif %}
+                        <td>
+                            {% if medicine.composition %}
+                            {{ medicine.composition_name }} {{ medicine.amount }} {{ medicine.composition }}
+                            {{ medicine.dosage }}
+                            {% else %}
+                            {{ medicine.name }} {% if medicine.form %}{{ medicine.form }}{% endif %}
                             {% if medicine.dose %}{{ medicine.dose }}{% endif %} {{  medicine.amount }} op. po
                             {{ medicine.size }} {{ medicine.dosage }} {% if medicine.notes %}{{ medicine.notes }}{% endif %}
+                            {% endif %}
                         </td>
                         <td style="border-left: 2px dashed #999;" class="text-center">
                             {% if medicine.refundation %}{{ medicine.refundation }} {% else %} 100% {% endif %}
