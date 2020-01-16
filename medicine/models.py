@@ -24,6 +24,7 @@ class MedicineParent(models.Model):
     user_id = models.IntegerField(blank=True, null=True)
     external_id = models.IntegerField(db_index=True)
     in_use = models.BooleanField(default=True)
+    refundation = models.BooleanField(blank=False, default=False)
 
 
 class Medicine(models.Model):

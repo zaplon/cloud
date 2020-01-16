@@ -51,6 +51,7 @@ class Command(BaseCommand):
 
         Refundation.objects.all().delete()
         Medicine.objects.all().update(refundation=False)
+        MedicineParent.objects.all().update(refundation=False)
 
         i = 0
         for sheet in sheets:
@@ -86,6 +87,8 @@ class Command(BaseCommand):
                     m = Medicine.objects.create(ean=r.ean, parent=p, size=r.size, in_use=1, refundation=1)
                 r.medicine = m
                 m.refundation = True
+                m.parent.refundation = True
+                m.parent.save()
                 m.save()
                 r.save()
             i += 1
