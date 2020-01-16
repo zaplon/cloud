@@ -61,8 +61,8 @@ def get_prescription_data():
                'numer_ulicy': '49b', 'numer_lokalu': '153', 'ulica': 'Sowińskiego'}
     leki = [{'nazwa': 'Aspiryna', 'kategoria': 'OTC', 'ean': '05909990760619', 'tekst': 'Aspiryna',
              'refundacja_kod': '100%', 'refundacja_tekst': '100%', 'external_id': '100083164',
-             'dawkowanie': '3x2', 'moc': '5mg', 'ilosc': 4,
-             'postac': 'tabletka', 'wielkosc': 10, 'numer_recepty': str(uuid.uuid1()).replace('-', '')[0:22]}
+             'dawkowanie': '3x2', 'moc': '5mg', 'ilosc': 4, 'wielkosc_int': 10,
+             'postac': 'tabletka', 'wielkosc': '10 tabl', 'numer_recepty': str(uuid.uuid1()).replace('-', '')[0:22]}
             ]
     recepta = {'oddzial_nfz': '07', 'uprawnienia_dodatkowe': 'x', 'data_wystawienia': today,
                'kluczPakietu': '11010203040506070809101112131415161718192011', 'kodPakietu': '0987'}

@@ -1,5 +1,6 @@
 import os
 import copy
+import re
 import uuid
 import codecs
 import requests
@@ -321,6 +322,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 parent = medicine.parent
                 leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
                              'postac': parent.form or '', 'ilosc': m['amount'], 'wielkosc': medicine.size,
+                             'wielkosc_int': re.search('[0-9]{1,}', medicine.size).group(),
+                             'uwagi': m['notes'],
                              'external_id': medicine.parent.external_id, 'dawkowanie': m['dosage'],
                              'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
                              'numer_recepty': m['number']})
