@@ -7,7 +7,9 @@ def adjust_tabs(apps, schema_editor):
     Doctor = apps.get_model('user_profile', 'Doctor')
     Tab = apps.get_model('visit', 'Tab')
     for d in Doctor.objects.all():
-        Tab.objects.filter(doctor=d).update(order=123124)
+        for t in d.tabs.all():
+            t.order = t.order + 100
+            t.save()
         for i, tab in enumerate(d.tabs.all().order_by('order')):
             tab.order = i + 1
             tab.save()

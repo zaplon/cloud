@@ -1,0 +1,6 @@
+before_script:
+  - pip install -r dev_deps.txt
+
+run-test:
+  script:
+    - pytest selenium/tests.py
