@@ -55,7 +55,6 @@
             {% else %}
             {% include 'parts/lek_gotowy.xml' %}
             {% endif %}
-            {% if recepta.uprawnienia_dodatkowe %}
             <component>
                 <section>
                     <templateId root="2.16.840.1.113883.10.20.1.9"/>
@@ -64,18 +63,20 @@
                     <code code="48768-6" codeSystem="2.16.840.1.113883.6.1"/>
                     <title>Dane o ubezpieczeniu i uprawnieniach</title>
                     <text>
-                        <paragraph ID="ACT_2">
-                            <content ID="p1_platnik_opis_1">Oddział NFZ</content>
-                            <content ID="p1_platnik_wartosc_1" styleCode="Bold">07</content>
+                        <paragraph ID="ACT_3">
+                            <content ID="p1_platnik_opis_1">{{ recepta.oddzial_nfz }}</content>
+                            <content ID="p1_platnik_wartosc_1" styleCode="Bold">{{ recepta.oddzial_nfz }}</content>
                         </paragraph>
+                        {% if recepta.uprawnienia_dodatkowe %}
                         <paragraph>
                             <content ID="p1_uprawnieniaDodatkowe_opis_1">Uprawnienia dodatkowe</content>
                             <content
                                     ID="p1_uprawnieniaDodatkowe_wartosc_1"
-                                    styleCode="Bold">IB
+                                    styleCode="Bold">{{ recepta.uprawnienia_dodatkowe }}
                             </content>
                             (<content ID="p1_dokumentUprawnien_wartosc_1">{{ recepta.uprawnienia_dodatkowe }}</content>)
                         </paragraph>
+                        {% endif %}
                     </text>
                     <entry>
                         <act classCode="ACT" moodCode="DEF">
@@ -84,66 +85,20 @@
                             <id nullFlavor="NA"/>
                             <code code="48768-6" codeSystem="2.16.840.1.113883.6.1" displayName="Payment source"/>
                             <text>
-                                <reference value="#ACT_2"/>
+                                <reference value="#ACT_3"/>
                             </text>
                             <statusCode code="completed"/>
                             <entryRelationship typeCode="COMP">
-                                <act classCode="ACT" moodCode="EVN">
-                                    <!-- Uprawnienie dodatkowe -->
-                                    <templateId root="2.16.840.1.113883.10.20.1.26"/>
-                                    <templateId root="2.16.840.1.113883.3.4424.13.10.4.61"/>
-                                    <id nullFlavor="NA"/>
-                                    <code code="PUBLICPOL" codeSystem="2.16.840.1.113883.5.4">
-                                        <qualifier>
-                                            <name code="RLUD" codeSystem="2.16.840.1.113883.3.4424.13.5.1"
-                                                  displayName="Refundacja leków wynikająca z uprawnień dodatkowych"/>
-                                            <value code="IB" codeSystem="2.16.840.1.113883.3.4424.11.3.1"
-                                                   displayName="IB"/>
-                                        </qualifier>
-                                    </code>
-                                    <text>
-                                        <reference value="#ACT_2"/>
-                                    </text>
-                                    <statusCode code="completed"/>
-                                    <performer typeCode="PRF">
-                                        <!-- Dane ubezpieczyciela/płatnika -->
-                                        <assignedEntity>
-                                            <id displayable="true" extension="{{ recepta.oddzial_nfz }}" root="2.16.840.1.113883.3.4424.3.1"/>
-                                        </assignedEntity>
-                                    </performer>
-                                    <entryRelationship typeCode="REFR">
-                                        <act classCode="ACT" moodCode="EVN">
-                                            <templateId root="2.16.840.1.113883.10.20.1.19"/>
-                                            <templateId root="2.16.840.1.113883.3.4424.13.10.4.53"/>
-                                            <id nullFlavor="NA"/>
-                                            <code nullFlavor="NA"/>
-                                            <entryRelationship typeCode="SUBJ">
-                                                <substanceAdministration classCode="SBADM" moodCode="PRMS">
-                                                    <id extension="B1B8B9D321E443A9882672-1"
-                                                        root="2.16.840.1.113883.3.4424.2.7.99999.2.3"/>
-                                                    <consumable>
-                                                        <manufacturedProduct>
-                                                            <manufacturedMaterial nullFlavor="NA"/>
-                                                        </manufacturedProduct>
-                                                    </consumable>
-                                                </substanceAdministration>
-                                            </entryRelationship>
-                                        </act>
-                                    </entryRelationship>
-                                    <reference typeCode="REFR">
-                                        <externalDocument classCode="DOC" moodCode="EVN">
-                                            <!-- Informacja o dokumencie potwierdzającym uprawnienie dodatkowe -->
-                                            <templateId root="2.16.840.1.113883.3.4424.13.10.4.59"/>
-                                            <text>{{ recepta.uprawnienia_dodatkowe }}</text>
-                                        </externalDocument>
-                                    </reference>
-                                </act>
+                                {% if recepta.uprawnienia_dodatkowe %}
+                                {% include 'parts/refundation/uprawnienia_dodatkowe.xml' %}
+                                {% else %}
+                                {% include 'parts/refundation/bez_uprawnien_dodatkowych.xml' %}
+                                {% endif %}
                             </entryRelationship>
                         </act>
                     </entry>
                 </section>
             </component>
-            {% endif %}
         </structuredBody>
     </component>
 </ClinicalDocument>

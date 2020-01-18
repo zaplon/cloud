@@ -64,9 +64,10 @@ def get_prescription_data():
              'dawkowanie': '3x2', 'moc': '5mg', 'ilosc': 4, 'wielkosc_int': 10,
              'postac': 'tabletka', 'wielkosc': '10 tabl', 'numer_recepty': str(uuid.uuid1()).replace('-', '')[0:22]}
             ]
-    recepta = {'oddzial_nfz': '07', 'uprawnienia_dodatkowe': 'x', 'data_wystawienia': today,
+    recepta = {'oddzial_nfz': '07', 'uprawnienia_dodatkowe': 'IB', 'data_wystawienia': today,
                'kluczPakietu': '11010203040506070809101112131415161718192011', 'kodPakietu': '0987'}
     podmiot = {'id_lokalne': settings.idPodmiotuLokalne, 'id': settings.idPodmiotuOidExt,
+               'name': 'Podmiot',
                'id_root': settings.idPodmiotuOidRoot, 'miasto': 'Warszawa', 'numer_domu': '12',
                'regon14': '97619191000009', 'ulica': 'Waryńskiego', 'regon_length': 14}
     profile = {

@@ -1,0 +1,50 @@
+<act classCode="ACT" moodCode="EVN">
+    <!-- Uprawnienie dodatkowe -->
+    <templateId root="2.16.840.1.113883.10.20.1.26"/>
+    <templateId root="2.16.840.1.113883.3.4424.13.10.4.61"/>
+    <id nullFlavor="NA"/>
+    <code code="PUBLICPOL" codeSystem="2.16.840.1.113883.5.4">
+        <qualifier>
+            <name code="RLUD" codeSystem="2.16.840.1.113883.3.4424.13.5.1"
+                  displayName="Refundacja leków wynikająca z uprawnień dodatkowych"/>
+            <value code="{{ recepta.uprawnienia_dodatkowe }}" codeSystem="2.16.840.1.113883.3.4424.11.3.1"
+                   displayName="{{ recepta.uprawnienia_dodatkowe }}"/>
+        </qualifier>
+    </code>
+    <text>
+        <reference value="#ACT_3"/>
+    </text>
+    <statusCode code="completed"/>
+    <performer typeCode="PRF">
+        <!-- Dane ubezpieczyciela/płatnika -->
+        <assignedEntity>
+            <id displayable="true" extension="{{ recepta.oddzial_nfz }}" root="2.16.840.1.113883.3.4424.3.1"/>
+        </assignedEntity>
+    </performer>
+    <entryRelationship typeCode="REFR">
+        <act classCode="ACT" moodCode="EVN">
+            <templateId root="2.16.840.1.113883.10.20.1.19"/>
+            <templateId root="2.16.840.1.113883.3.4424.13.10.4.53"/>
+            <id nullFlavor="NA"/>
+            <code nullFlavor="NA"/>
+            <entryRelationship typeCode="SUBJ">
+                <substanceAdministration classCode="SBADM" moodCode="PRMS">
+                    <id extension="{{ lek.numer_recepty }}-1"
+                        root="{{ podmiot.id_lokalne }}.2.3"/>
+                    <consumable>
+                        <manufacturedProduct>
+                            <manufacturedMaterial nullFlavor="NA"/>
+                        </manufacturedProduct>
+                    </consumable>
+                </substanceAdministration>
+            </entryRelationship>
+        </act>
+    </entryRelationship>
+    <reference typeCode="REFR">
+        <externalDocument classCode="DOC" moodCode="EVN">
+            <!-- Informacja o dokumencie potwierdzającym uprawnienie dodatkowe -->
+            <templateId root="2.16.840.1.113883.3.4424.13.10.4.59"/>
+            <text>{{ recepta.uprawnienia_dodatkowe }}</text>
+        </externalDocument>
+    </reference>
+</act>
