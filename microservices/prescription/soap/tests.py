@@ -60,14 +60,14 @@ def get_prescription_data():
                'data_urodzenia': '19880420',
                'numer_ulicy': '49b', 'numer_lokalu': '153', 'ulica': 'Sowińskiego'}
     leki = [{'nazwa': 'Aspiryna', 'kategoria': 'OTC', 'ean': '05909990760619', 'tekst': 'Aspiryna',
-             'refundacja_kod': '100%', 'refundacja_tekst': '100%', 'external_id': '100083164',
+             'refundacja_kod': '30%', 'refundacja_tekst': '30%', 'external_id': '100083164',
              'dawkowanie': '3x2', 'moc': '5mg', 'ilosc': 4, 'wielkosc_int': 10,
              'postac': 'tabletka', 'wielkosc': '10 tabl', 'numer_recepty': str(uuid.uuid1()).replace('-', '')[0:22]}
             ]
     recepta = {'oddzial_nfz': '07', 'uprawnienia_dodatkowe': 'IB', 'data_wystawienia': today,
                'kluczPakietu': '11010203040506070809101112131415161718192011', 'kodPakietu': '0987'}
     podmiot = {'id_lokalne': settings.idPodmiotuLokalne, 'id': settings.idPodmiotuOidExt,
-               'name': 'Podmiot',
+               'nazwa': 'Podmiot',
                'id_root': settings.idPodmiotuOidRoot, 'miasto': 'Warszawa', 'numer_domu': '12',
                'regon14': '97619191000009', 'ulica': 'Waryńskiego', 'regon_length': 14}
     profile = {

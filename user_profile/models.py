@@ -34,6 +34,9 @@ class Profile(models.Model):
     def role_display(self):
         return self.get_role_display()
 
+    def role_name(self):
+        return self.role
+
     # class Meta:
     #     permissions = (
     #         ("edit_term", u"Może edytować terminy"),

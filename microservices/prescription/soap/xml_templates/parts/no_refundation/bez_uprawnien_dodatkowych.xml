@@ -1,0 +1,35 @@
+<act classCode="ACT" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.3.4424.13.10.4.60"/>
+    <templateId root="2.16.840.1.113883.10.20.1.26"/>
+    <id nullFlavor="NAV"/>
+    <code code="PUBLICPOL" codeSystem="2.16.840.1.113883.5.4"/>
+    <text>
+        <reference value="#ACT_3"/>
+    </text>
+    <statusCode code="completed"/>
+    <performer typeCode="PRF">
+        <assignedEntity>
+            <id root="2.16.840.1.113883.3.4424.3.1" extension="{{ recepta.oddzial_nfz }}" displayable="true"/>
+        </assignedEntity>
+    </performer>
+    <entryRelationship typeCode="REFR">
+        <act classCode="ACT" moodCode="EVN">
+            <templateId root="2.16.840.1.113883.10.20.1.19"/>
+            <templateId root="2.16.840.1.113883.3.4424.13.10.4.53"/>
+            <id nullFlavor="NA"/>
+            <code nullFlavor="NA"/>
+            <entryRelationship typeCode="SUBJ">
+                <substanceAdministration classCode="SBADM" moodCode="PRMS">
+                    <id root="{{ podmiot.id_lokalne }}.2.3"
+                        extension="{{ lek.numer_recepty }}-1"/>
+                    <consumable>
+                        <manufacturedProduct>
+                            <manufacturedMaterial nullFlavor="NA">
+                            </manufacturedMaterial>
+                        </manufacturedProduct>
+                    </consumable>
+                </substanceAdministration>
+            </entryRelationship>
+        </act>
+    </entryRelationship>
+</act>

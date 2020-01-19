@@ -58,6 +58,48 @@
             {% else %}
             {% include 'parts/lek_gotowy.xml' %}
             {% endif %}
+            <component>
+                <section>
+                    <templateId root="2.16.840.1.113883.10.20.1.9"/>
+                    <templateId root="1.3.6.1.4.1.19376.1.5.3.1.1.5.3.7"/>
+                    <templateId root="2.16.840.1.113883.3.4424.13.10.3.69"/>
+                    <code code="48768-6" codeSystem="2.16.840.1.113883.6.1"/>
+                    <title>Dane o ubezpieczeniu i uprawnieniach</title>
+                    <text>
+                        <paragraph ID="ACT_3">
+                            <content ID="p1_platnik_opis_1">Oddział NFZ</content>
+                            <content ID="p1_platnik_wartosc_1" styleCode="Bold">07</content>
+                        </paragraph>
+                       {% if recepta.uprawnienia_dodatkowe %}
+                        <paragraph>
+                            <content ID="p1_uprawnieniaDodatkowe_opis_1">Uprawnienia dodatkowe</content>
+                            <content
+                                    ID="p1_uprawnieniaDodatkowe_wartosc_1"
+                                    styleCode="Bold">{{ recepta.uprawnienia_dodatkowe }}
+                            </content>
+                            (<content ID="p1_dokumentUprawnien_wartosc_1">{{ recepta.uprawnienia_dodatkowe }}</content>)
+                        </paragraph>
+                        {% endif %}
+                    </text>
+                    <entry>
+                        <act classCode="ACT" moodCode="DEF">
+                            <templateId root="2.16.840.1.113883.10.20.1.20"/>
+                            <templateId root="2.16.840.1.113883.3.4424.13.10.4.51"/>
+                            <id nullFlavor="NA"/>
+                            <code code="48768-6" codeSystem="2.16.840.1.113883.6.1" displayName="Payment source"/>
+                            <text><reference value="#ACT_3"/></text>
+                            <statusCode code="completed"/>
+                            <entryRelationship typeCode="COMP">
+                                {% if recepta.uprawnienia_dodatkowe %}
+                                {% include 'parts/no_refundation/uprawnienia_dodatkowe.xml' %}
+                                {% else %}
+                                {% include 'parts/no_refundation/bez_uprawnien_dodatkowych.xml' %}
+                                {% endif %}
+                            </entryRelationship>
+                        </act>
+                    </entry>
+                </section>
+            </component>
         </structuredBody>
     </component>
 </ClinicalDocument>

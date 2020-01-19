@@ -16,7 +16,7 @@
             <content ID="p1_receptura">{{ lek.receptura }}</content>
         </paragraph>
         {% if lek.refundacja_kod and lek.refundacja_kod != '100%' %}
-        <paragraph ID="ACT_3">
+        <paragraph ID="ACT_2">
             <content ID="p1_odplatnosc_opis">Odpłatność</content>
             <content ID="p1_odplatnosc_wartosc" styleCode="Bold">{{ lek.refundacja_tekst }}</content>
         </paragraph>
@@ -65,7 +65,7 @@
                             <code code="48768-6" codeSystem="2.16.840.1.113883.6.1"
                                   displayName="Payment source"/>
                             <text>
-                                <reference value="#ACT_3"/>
+                                <reference value="#ACT_2"/>
                             </text>
                             <statusCode code="completed"/>
                             <entryRelationship typeCode="COMP">
