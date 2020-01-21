@@ -12,6 +12,7 @@ from django.conf import settings
 import barcode
 from rest_framework import viewsets, serializers, status
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from wkhtmltopdf.utils import wkhtmltopdf
 from g_utils.rest import SearchMixin
@@ -52,11 +53,18 @@ class MedicineParentSerializer(serializers.ModelSerializer):
         return instance
 
 
+class MedicineParentPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 20
+
+
 # ViewSets define the view behavior.
 class MedicineParentViewSet(SearchMixin, viewsets.ModelViewSet):
     queryset = MedicineParent.objects.filter(in_use=True)
     serializer_class = MedicineParentSerializer
     lookup_field = 'pk'
+    pagination_class = MedicineParentPagination
 
     def get_queryset(self):
         q = super(MedicineParentViewSet, self).get_queryset()
@@ -323,7 +331,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
                              'postac': parent.form or '', 'ilosc': m['amount'], 'wielkosc': medicine.size,
                              'wielkosc_int': re.search('[0-9]{1,}', medicine.size).group(),
-                             'uwagi': m['notes'],
+                             'uwagi': m.get('notes', ''),
                              'external_id': medicine.parent.external_id, 'dawkowanie': m['dosage'],
                              'refundacja_tekst': refundacja_tekst, 'refundacja_kod': refundacja_kod,
                              'numer_recepty': m['number']})
