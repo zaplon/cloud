@@ -38,7 +38,7 @@ class PrescriptionTestCase(GabinetTestCase):
         G(PrescriptionNumber, doctor=doctor)
         self.prescription_data = {"patient": 1, "doctor": 1, "medicines": [
             {"medicine_id": 51230, "dosage": "2x1", "amount": "40", "notes": "uwaga", "refundation": None}], "nfz": "7",
-                                  "realisation_date": "2019-11-06", "permissions": "X", "number": True,
+                                  "realisation_date": "2019-11-06", "permissions": "X", "number": '123',
                                   "date": "2019-11-06T23:00:00.000Z"}
 
     def test_creating_prescription(self):
@@ -47,4 +47,4 @@ class PrescriptionTestCase(GabinetTestCase):
         res = self.client.post(url, json.dumps(self.prescription_data), content_type='application/json')
         self.assertEqual(res.status_code, 201)
         response_json = res.json()
-        self.assertEqual(len(response_json), 1)
+        self.assertEqual(response_json['patient'], 1)

@@ -6,7 +6,7 @@ class CreateUserTestCase(GabinetTestCase):
 
     def test_create_new_user(self):
         response = self.client.post('/rest/users/',
-                                    {'role': 'worker', 'username': 'test_register',
+                                    {'role': 'registration', 'username': 'test_register',
                                      'password': 'PXCASaa!!', 'password2': 'PXCASaa!!'})
         self.assertEqual(response.status_code, 201)
         logged_in = self.client.login(username='test_register', password='PXCASaa!!')
@@ -14,7 +14,7 @@ class CreateUserTestCase(GabinetTestCase):
 
     def test_passwords_need_to_match(self):
         response = self.client.post('/rest/users/',
-                                    {'username': 'test_register', 'role': 'worker',
+                                    {'username': 'test_register', 'role': 'registration',
                                      'password': 'PXCASaa!!', 'password2': 'PXCASaa!!33'})
         self.assertEqual(response.status_code, 400)
         errors = response.json()
