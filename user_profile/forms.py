@@ -175,7 +175,6 @@ class PatientForm(forms.Form):
     last_name = forms.CharField(max_length=100, label=u'Nazwisko')
     email = forms.EmailField(label=u'Adres email', required=False)
     pesel = PLPESELField(label=u'Pesel', required=False)
-    address = forms.CharField(max_length=200, required=False, label=u'Adres')
     mobile = forms.CharField(max_length=20, label=u'Numer telefonu', required=False)
 
     def clean_pesel(self):
@@ -188,7 +187,6 @@ class PatientForm(forms.Form):
     def save(self):
         patient = Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data.get('email', ''),
                                          mobile=self.cleaned_data.get('mobile', ''),
-                                         address=self.cleaned_data.get('address', ''),
                                first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
         return {'id': patient.id, 'label': patient.name_with_pesel}
 
