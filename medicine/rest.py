@@ -256,6 +256,8 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         res_json = json.loads(res.content)
         if res.status_code == status.HTTP_401_UNAUTHORIZED:
             return Response(res_json, status=status.HTTP_401_UNAUTHORIZED)
+        if res.status_code == status.HTTP_502_BAD_GATEWAY:
+            return Response(res_json, status=status.HTTP_400_BAD_REQUEST)
         if res_json['potwierdzenieOperacjiZapisu'].get('idZadania'):
             serializer = self.get_serializer(data=prescription)
             serializer.is_valid(raise_exception=True)

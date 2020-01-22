@@ -85,7 +85,7 @@ def save_prescription():
     except PrescriptionSigningError:
         return json_response(PRESCRIPTION_SIGNING_ERROR, 401)
     except:
-        return json_response(UNKNOWN_ERROR, 502)
+       return json_response(UNKNOWN_ERROR, 502)
     current_app.logger.info(result)
     status_code = 200 if status else 400
     return json_response(result, status_code)
