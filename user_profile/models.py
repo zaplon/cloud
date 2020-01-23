@@ -205,7 +205,7 @@ class Patient(models.Model):
     street_number = models.CharField(blank=True, max_length=10, verbose_name='Numer domu')
     apartment_number = models.CharField(blank=True, max_length=10, verbose_name='Numer lokalu')
     city = models.CharField(blank=True, max_length=100,  verbose_name=u'Miejscowość')
-    # address = models.CharField(blank=True, null=True, verbose_name=u'Adres', max_length=200)
+    address = models.CharField(blank=True, null=True, verbose_name=u'Adres', max_length=200)
     info = models.TextField(blank=True, null=True, verbose_name=u'Ważne informacje',
                             help_text=u'Informacje pomocnicze o alergiach, przebytych zabiegach, etc...')
 
@@ -214,7 +214,7 @@ class Patient(models.Model):
         return self.__str__()
 
     @property
-    def address(self):
+    def address_display(self):
         if self.apartment_number:
             return re.sub(' +', ' ', f'{self.street} {self.street_number}/{self.apartment_number} {self.postal_code} {self.city}')
         else:
