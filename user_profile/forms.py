@@ -177,6 +177,12 @@ class PatientForm(forms.Form):
     pesel = PLPESELField(label=u'Pesel', required=False)
     mobile = forms.CharField(max_length=20, label=u'Numer telefonu', required=False)
 
+    street = forms.CharField(max_length=64, label='Ulica', required=False)
+    street_number = forms.CharField(max_length=10, label='Numer ulicy', required=False)
+    apartment_number = forms.CharField(max_length=10, label='Numer mieszkania', required=False)
+    city = forms.CharField(max_length=64, label='Miejscowość', required=False)
+    postal_code = forms.CharField(max_length=6, label='Kod pocztowy', required=False)
+
     def clean_pesel(self):
         pesel = self.cleaned_data['pesel']
         pesel = None if len(pesel) == 0 else pesel
@@ -187,7 +193,12 @@ class PatientForm(forms.Form):
     def save(self):
         patient = Patient.objects.create(pesel=self.cleaned_data['pesel'], email=self.cleaned_data.get('email', ''),
                                          mobile=self.cleaned_data.get('mobile', ''),
-                               first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
+                                         city=self.cleaned_data.get('city', ''),
+                                         street=self.cleaned_data.get('street', ''),
+                                         street_number=self.cleaned_data.get('street_number', ''),
+                                         apartment_number=self.cleaned_data.get('apartment_number', ''),
+                                         postal_code=self.cleaned_data.get('postal_code', ''),
+                                         first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
         return {'id': patient.id, 'label': patient.name_with_pesel}
 
 
