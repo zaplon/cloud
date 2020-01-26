@@ -5,7 +5,7 @@ from django.db import migrations
 
 def fill_address_details(apps, schema_editor):
     Patient = apps.get_model('user_profile', 'Patient')
-    for p in Patient.objects.filter(address__isnull=True):
+    for p in Patient.objects.filter(address__isnull=False):
         match = re.search(r'[^\W\d_]{3,}', p.address, re.UNICODE)
         if match and not p.street:
             p.street = match.group(0)
