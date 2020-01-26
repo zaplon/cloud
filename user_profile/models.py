@@ -237,7 +237,13 @@ class Patient(models.Model):
         if self.pesel == '':
             self.pesel = None
         if self.pesel and len(self.pesel) == 11 and not self.birth_date:
-            self.birth_date = datetime.datetime.strptime(self.pesel[0:6], '%y%m%d')
+            bd = self.pesel[0:6]
+            if int(bd[2]) >= 2:
+                bd = bd[0:2] + str(int(bd[2]) - 2) + bd[3:]
+                bd = '20' + bd
+            else:
+                bd = '19' + bd
+            self.birth_date = datetime.datetime.strptime(bd, '%Y%m%d')
         return super().save(*args, **kwargs)
 
 
