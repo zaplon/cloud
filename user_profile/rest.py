@@ -21,14 +21,13 @@ from .models import Doctor, Patient, Note, Specialization, SystemSettings, NFZSe
 from datetime import datetime, date, timezone
 
 
-# Serializers define the API representation.
 class PatientSerializer(serializers.ModelSerializer):
     # first_name = CharField(source='user.first_name')
     # last_name = CharField(source='user.last_name')
     class Meta:
         model = Patient
         fields = ('id', 'mobile', 'first_name', 'last_name', 'pesel', 'address', 'name_with_pesel', 'info',
-                  'street', 'street_number', 'city', 'postal_code', 'gender', 'birth_date')
+                  'street', 'street_number', 'city', 'postal_code', 'gender', 'birth_date', 'address_display')
 
     def get_prescriptions(self, instance):
         pass
@@ -168,8 +167,6 @@ class DoctorCalendarSerializer(serializers.ModelSerializer):
         return Service.objects.filter(doctors__in=[obj]).count() > 1
 
 
-
-# ViewSets define the view behavior.
 class DoctorViewSet(SearchMixin, viewsets.ModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
@@ -299,6 +296,7 @@ class UserSerializer(serializers.ModelSerializer):
         return {'documents_header_left': settings.documents_header_left, 'logo': settings.logo.url,
                 'regon': settings.regon, 'nip': settings.nip,
                 'nfz_department': settings.nfz_department,
+                'city': settings.city,
                 'nfz': NFZSettingsSerializer(instance=nfz_settings).data,
                 'documents_header_right': settings.documents_header_right}
 

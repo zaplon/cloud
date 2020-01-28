@@ -5,21 +5,35 @@ from django.db import migrations
 
 def fill_address_details(apps, schema_editor):
     Patient = apps.get_model('user_profile', 'Patient')
-    for p in Patient.objects.filter(address__isnull=False):
-        match = re.search(r'[^\W\d_]{3,}', p.address, re.UNICODE)
-        if match and not p.street:
-            p.street = match.group(0)
-        if not p.city:
-            p.city = p.address.split(' ')[-1]
-        match = re.search(r'[0-9]{2}-[0-9]{3}', p.address)
-        if match and not p.postal_code:
-            p.postal_code = match.group(0)
-        match = re.search(r'[0-9]{1,}', p.address)
-        if match and not p.street_number:
-            p.street_number = match.group(0)
-        match = re.search(r'/[0-9]{1,}', p.address)
-        if match and not p.apartment_number:
-            p.apartment_number = match.group(0)[1:]
+    for p in Patient.objects.filter(address__isnull=False, city__isnull=True):
+        address = re.sub(' +', ' ', p.address).replace(',', '')
+
+        postal_code_match = re.search(r'[0-9]{2}-[0-9]{3}', address)
+        if postal_code_match:
+            postal_code = postal_code_match.group(0)
+            address = address.replace(postal_code, '')
+            p.postal_code = postal_code
+
+        street_and_number_match = re.search('[ul.|ul|UL]* [0-9]+[a-zA-Z]*/*[0-9]*', address)
+        if street_and_number_match:
+            street_and_number = street_and_number_match.group(0)
+            address = address.replace(street_and_number, '')
+            street_and_number = street_and_number.replace('ul.', ' ').replace('ul', '').replace('UL', '').strip()
+            if '/' in street_and_number:
+                street_and_number, apartment_number = street_and_number.split('/')
+                p.apartment_number = apartment_number
+            parts = street_and_number.split(' ')
+            p.street = ' '.join(parts[0:-2])
+            p.street_number = parts[-1]
+
+        street_number_match = re.search('[0-9]{1,}[a-zA-Z]{1,}', address)
+        if street_number_match:
+            street_number = street_number_match.group(0)
+            address = address.replace(street_number, '')
+            p.street_number = street_number
+
+        p.city = address
+
         p.save()
 
 

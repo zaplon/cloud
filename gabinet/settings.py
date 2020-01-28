@@ -240,7 +240,7 @@ MODULES = [
     (True, 'links', u'Linki'),
     (True, 'ewus', u'Ewus'),
     (True, 'zwolnienia', u'Zwolnienia'),
-    ('user_profile.change_systemsettings', 'settings', u'Ustawienia'),
+    ('user_profile.change_systemsettings', 'system_settings', u'Ustawienia'),
     ('user_profile.change_nfzsettings', 'nfz_settings', u'Ustawienia NFZ'),
     ('visit.change_visit', 'visits', u'Wizyty'),
     ('examination.change_examination', 'examinations', u'Badania dodatkowe'),

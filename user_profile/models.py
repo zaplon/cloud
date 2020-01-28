@@ -215,10 +215,13 @@ class Patient(models.Model):
 
     @property
     def address_display(self):
-        if self.apartment_number:
-            return re.sub(' +', ' ', f'{self.street} {self.street_number}/{self.apartment_number} {self.postal_code} {self.city}')
+        if self.street:
+            ad = f'{self.postal_code} {self.city} ul. {self.street} {self.street_number}'
         else:
-            return re.sub(' +', ' ', f'{self.street} {self.street_number} {self.postal_code} {self.city}')
+            ad = f'{self.postal_code} {self.city} {self.street_number}'
+        if self.apartment_number:
+            ad = f'{ad}/{self.apartment_number}'
+        return re.sub(' +', ' ', ad)
 
     @property
     def name_with_pesel(self):
@@ -243,7 +246,7 @@ class Patient(models.Model):
                 bd = '20' + bd
             else:
                 bd = '19' + bd
-            self.birth_date = datetime.datetime.strptime(bd, '%Y%m%d')
+            self.birth_date = datetime.datetime.strptime(bd, '%Y%m%d').date()
         return super().save(*args, **kwargs)
 
 
