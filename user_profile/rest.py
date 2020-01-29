@@ -32,6 +32,13 @@ class PatientSerializer(serializers.ModelSerializer):
     def get_prescriptions(self, instance):
         pass
 
+    def to_internal_value(self, data):
+        if data.get('pesel') and len(data['pesel']) == 11:
+            if not (self.instance and self.instance.gender) and not data.get('gender'):
+                data['gender'] = 'F' if int(data['pesel'][9]) % 2 == 0 else 'M'
+        return super().to_internal_value(data)
+
+
 
 class PatientAutocompleteSerializer(serializers.ModelSerializer):
     label = CharField(source='name_with_pesel')
