@@ -153,12 +153,13 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         code128 = barcode.get_barcode_class('code128')
         barcodes = {}
 
-        code = code128(patient.pesel)
-        barcode_pesel_filename = str(uuid.uuid4())
-        code.save(os.path.join(settings.MEDIA_ROOT, 'tmp', barcode_pesel_filename), options={'module_height': 5,
-                                                                                             'module_width': 0.2,
-                                                                                             'write_text': False})
-        barcodes['pesel'] = f'tmp/{barcode_pesel_filename}.svg'
+        if patient.pesel:
+            code = code128(patient.pesel)
+            barcode_pesel_filename = str(uuid.uuid4())
+            code.save(os.path.join(settings.MEDIA_ROOT, 'tmp', barcode_pesel_filename), options={'module_height': 5,
+                                                                                                 'module_width': 0.2,
+                                                                                                 'write_text': False})
+            barcodes['pesel'] = f'tmp/{barcode_pesel_filename}.svg'
 
         code = code128(_get_pwz(doctor.pwz))
         barcode_pwz_filename = str(uuid.uuid4())
