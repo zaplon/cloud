@@ -215,8 +215,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = [f.name for f in User._meta.fields] + ['role_display', 'role_name', 'doctor']
 
     def update(self, instance, validated_data):
-        instance = super(UserDetailSerializer, self).update(instance, validated_data)
         doctor = validated_data.pop('doctor', False)
+        instance = super(UserDetailSerializer, self).update(instance, validated_data)
         if doctor:
             doctor['working_hours'] = json.dumps(doctor.pop('get_working_hours'))
             specializations = doctor.pop('specializations')
