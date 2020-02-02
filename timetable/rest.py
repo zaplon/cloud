@@ -223,7 +223,8 @@ class TermListSerializer(serializers.ModelSerializer):
 class TermlistView(SearchMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = TermListSerializer
     queryset = Term.objects.filter(patient__isnull=False)
-    fields_mapping = {'patient_name': 'patient__first_name', 'patient_last_name': 'patient__last_name'}
+    fields_mapping = {'patient_name': 'patient__first_name', 'patient_last_name': 'patient__last_name',
+                      'updated': 'visit__updated'}
 
     def get_queryset(self):
         q = super().get_queryset()
