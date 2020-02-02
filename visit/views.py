@@ -218,9 +218,10 @@ class GabinetPdfView(APIView, PDFTemplateView):
         if 'as_link' in request.GET or 'to_archive' in request.GET:
             res = super(PDFTemplateView, self).get(request, *args, **kwargs)
             name = datetime.datetime.now().strftime('%s') + '.pdf'
-            for i in range(0,5):
+            for i in range(0,10):
                 try:
                     res.render()
+                    res.content
                 except:
                     sleep(1)
                 finally:
