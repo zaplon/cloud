@@ -218,11 +218,13 @@ class GabinetPdfView(APIView, PDFTemplateView):
         if 'as_link' in request.GET or 'to_archive' in request.GET:
             res = super(PDFTemplateView, self).get(request, *args, **kwargs)
             name = datetime.datetime.now().strftime('%s') + '.pdf'
-            try:
-                res.render()
-            except:
-                sleep(2)
-                res.render()
+            for i in range(0,5):
+                try:
+                    res.render()
+                except:
+                    sleep(1)
+                finally:
+                    break
             if 'as_link' in request.GET:
                 f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'wb')
                 f.write(res.content)
