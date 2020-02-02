@@ -224,7 +224,7 @@ class GabinetPdfView(APIView, PDFTemplateView):
                     res.content
                 except:
                     sleep(1)
-                finally:
+                else:
                     break
             if 'as_link' in request.GET:
                 f = open(os.path.join(settings.MEDIA_ROOT, 'tmp', 'pdf', name), 'wb')
