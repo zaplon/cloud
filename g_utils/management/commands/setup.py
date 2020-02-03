@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import csv
 
-from django.core.management.base import BaseCommand, CommandError
-
-from django.contrib.auth.models import Permission, Group, User
+from django.core.management.base import BaseCommand
 from django.core.management import call_command
 from visit.models import Icd10
-from user_profile.models import Specialization, Doctor, SystemSettings
+from user_profile.models import Specialization, SystemSettings
 from django.core.files import File
 
 

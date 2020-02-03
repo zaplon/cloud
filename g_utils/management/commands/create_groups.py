@@ -4,10 +4,6 @@ import csv
 from django.core.management.base import BaseCommand, CommandError
 
 from django.contrib.auth.models import Permission, Group, User
-from django.core.management import call_command
-from visit.models import Icd10
-from user_profile.models import Specialization, Doctor, SystemSettings
-from django.core.files import File
 
 
 class Command(BaseCommand):
@@ -16,7 +12,7 @@ class Command(BaseCommand):
     def create_groups(self):
         groups = {'Lekarze': ['_visit', '_result', '_term', '_medicine', '_template', '_tab',
                               'can_add_prescription', '_prescriptionnumber', '_refundation', '_prescription',
-                              '_nfzsettings', '_patient'],
+                              '_nfzsettings', '_patient', '_systemsettings'],
                   'Rejestracja': ['_term', '_patient', 'view_medicine', '_result'],
                   'Administratorzy': ['_term',  '_result', '_user', '_service', '_localization', '_patient',
                                       '_systemsettings', 'can_view_statistics']}

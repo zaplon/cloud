@@ -3,6 +3,7 @@ import json
 from OpenSSL import crypto
 from OpenSSL.crypto import Error
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Min
 from rest_framework import serializers, viewsets, mixins
 from rest_framework.exceptions import ValidationError
@@ -298,9 +299,9 @@ class UserSerializer(serializers.ModelSerializer):
     role = serializers.CharField(source='profile.role')
 
     def get_system_settings(self, instance):
-        settings = SystemSettings.objects.first()
+        settings = SystemSettings.get_user_settings(instance)
         nfz_settings = NFZSettings.objects.get(user=instance)
-        return {'documents_header_left': settings.documents_header_left, 'logo': settings.logo.url,
+        return {'documents_header_left': settings.documents_header_left,
                 'regon': settings.regon, 'nip': settings.nip,
                 'nfz_department': settings.nfz_department,
                 'city': settings.city,
@@ -418,6 +419,18 @@ class SystemSettingsSerializer(serializers.ModelSerializer):
 class SystemSettingsViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     serializer_class = SystemSettingsSerializer
     queryset = SystemSettings.objects.all()
+
+    def get_object(self):
+        return SystemSettings.get_user_settings(self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        if request.user.profile.role == 'admin':
+            return super().update(request, *args, **kwargs)
+        try:
+            request.user.system_settings
+        except ObjectDoesNotExist:
+            SystemSettings.objects.create(user=self.request.user)
+        return super().update(request, *args, **kwargs)
 
 
 class BookingSystemSettingsSerializer(serializers.ModelSerializer):

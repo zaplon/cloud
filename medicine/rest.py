@@ -148,7 +148,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         prescription = data
         doctor = Doctor.objects.get(id=prescription['doctor'])
         patient = Patient.objects.get(id=prescription['patient'])
-        system_settings = SystemSettings.objects.first()
+        system_settings = SystemSettings.get_user_settings(self.request.user)
 
         code128 = barcode.get_barcode_class('code128')
         barcodes = {}
@@ -313,7 +313,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
             'data_urodzenia': patient.birth_date.strftime('%Y%m%d') if patient.birth_date else '',
             'plec': 'M' if patient.gender == 'M' else 'F'
         }
-        system_settings = SystemSettings.objects.get(id=1)
+        system_settings = SystemSettings.get_user_settings(user)
         podmiot = self._get_podmiot(system_settings, profile)
         pracownik = {'imie': user.first_name, 'nazwisko': user.last_name, 'telefon': user.profile.mobile,
                      'profile': profile}
@@ -384,7 +384,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
         instance = self.get_object()
         user = request.user
         patient = instance.patient
-        system_settings = SystemSettings.objects.get(id=1)
+        system_settings = SystemSettings.get_user_settings(request.user)
         profil = NFZSettingsSerializer(instance=NFZSettings.objects.get(user=request.user)).data
         data = {
             'pacjent': {'imie': patient.first_name, 'nazwisko': patient.last_name, 'plec': patient.gender,

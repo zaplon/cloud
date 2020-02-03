@@ -32,7 +32,7 @@ class EditFormView(View):
         form = request.GET.get('form', 'no_form.html')
         template_name = form
         params = request.GET
-        settings = SystemSettings.objects.first()
+        settings = SystemSettings.get_user_settings(request.user)
         params['header_left'] = settings.documents_header_left,
         params['header_right'] = settings.documents_header_right,
         params['city'] = settings.city

@@ -193,7 +193,7 @@ class PDFView(APIView, PDFTemplateView):
     def get_context_data(self, **kwargs):
         context = self.data
         context['user'] = self.request.user
-        settings = SystemSettings.objects.first()
+        settings = SystemSettings.get_user_settings(self.request.user)
         context['header_left'] = settings.documents_header_left
         context['header_right'] = settings.documents_header_right
         return context

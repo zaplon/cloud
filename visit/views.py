@@ -20,7 +20,7 @@ from medicine.models import Prescription
 from result.models import Result
 from timetable.models import Term
 from user_profile.models import SystemSettings
-from visit.models import Template, Tab, Visit, VisitTab
+from visit.models import Visit, VisitTab
 from .forms import *
 import datetime
 import os
@@ -256,7 +256,7 @@ class PdfView(GabinetPdfView):
         barcode = createBarcodeDrawing('Code128', value=pesel, width=5 * cm, height=0.5 * cm)
         file_name = datetime.datetime.now().strftime('%s')
         barcode.save(formats=['png'], outDir=os.path.join(settings.MEDIA_ROOT, 'tmp', file_name), _renderPM_dpi=200)
-        system_settings = SystemSettings.objects.first()
+        system_settings = SystemSettings.get_user_settings(self.request.user)
         header_left = system_settings.documents_header_left
         header_right = system_settings.documents_header_right
         patient_age = get_age_from_pesel(pesel)

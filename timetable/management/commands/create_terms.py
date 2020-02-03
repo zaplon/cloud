@@ -8,9 +8,7 @@ from django.contrib.auth.models import Permission, Group, User
 from django.core.management import call_command
 
 from timetable.models import Term
-from visit.models import Icd10
-from user_profile.models import Specialization, Doctor, SystemSettings
-from django.core.files import File
+from user_profile.models import Doctor, SystemSettings
 
 
 class Command(BaseCommand):

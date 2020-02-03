@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import re
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 import json
 import datetime
@@ -285,7 +286,7 @@ class Code(models.Model):
 
 
 class SystemSettings(models.Model):
-    logo = models.ImageField(verbose_name='Logo')
+    logo = models.ImageField(verbose_name='Logo', blank=True)
     documents_header_left = models.TextField(verbose_name=u'Nagłówek dokumentów (lewa strona)', blank=True)
     documents_header_right = models.TextField(verbose_name=u'Nagłówek dokumentów (prawa strona)', blank=True)
     regon = models.CharField(max_length=14, blank=True, verbose_name=u'Numer REGON', validators=[REGONValidator()])
@@ -295,6 +296,18 @@ class SystemSettings(models.Model):
     street = models.CharField(max_length=200, blank=True, verbose_name=u'Ulica')
     street_number = models.CharField(max_length=10, blank=True, verbose_name=u'Numer domu')
     postal_code = models.CharField(blank=True, max_length=6, verbose_name='Kod pocztowy')
+    user = models.OneToOneField(User, related_name='system_settings', blank=True, null=True, on_delete=models.CASCADE)
+
+    @staticmethod
+    def get_user_settings(user):
+        if user.profile.role == 'admin':
+            return SystemSettings.objects.get(user__isnull=True)
+        else:
+            try:
+                settings = user.system_settings
+            except ObjectDoesNotExist:
+                settings = SystemSettings.objects.get(user__isnull=True)
+            return settings
 
     class Meta:
         verbose_name = 'Ustawienia systemowe'
