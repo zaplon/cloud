@@ -333,6 +333,7 @@ class PrescriptionViewSet(SearchMixin, viewsets.ModelViewSet):
                 parent = medicine.parent
                 leki.append({'nazwa': parent.name, 'kategoria': medicine.availability_cat, 'ean': medicine.ean,
                              'postac': parent.form or '', 'ilosc': m['amount'], 'wielkosc': medicine.size,
+                             'moc': parent.dose,
                              'wielkosc_int': re.search('[0-9]{1,}', medicine.size).group(),
                              'uwagi': m.get('notes', ''),
                              'external_id': medicine.parent.external_id, 'dawkowanie': m['dosage'],
